@@ -26,7 +26,7 @@
     }
 
     .logo img {
-      height: 113px;
+      height: 333px;
       width: auto;
       display: block;
     }
@@ -34,13 +34,14 @@
     .lang-switch {
       font-size: 1rem;
       padding: 0.5rem 1rem;
-      border: 1px solid #0e0e0e; /* рамка как у кнопки */
+      border: 1px solid #0e0e0e;
       cursor: pointer;
       display: flex;
       gap: 0.5rem;
       align-items: center;
       text-decoration: none;
       color: #0e0e0e;
+      border-radius: 25px; /* сильно скругленные края */
     }
 
     .lang-switch a {
@@ -62,6 +63,7 @@
     .hero-inner {
       max-width: 720px;
       margin: 0 auto;
+      text-align: center;
     }
 
     .hero h1 {
@@ -69,7 +71,6 @@
       font-weight: 700;
       margin: 0 0 1.5rem 0;
       line-height: 1;
-      text-align: center;
     }
 
     .hero p {
@@ -77,7 +78,6 @@
       line-height: 1.6;
       margin: 0 0 2.5rem 0;
       color: #333;
-      text-align: center;
     }
 
     .hero button {
@@ -89,6 +89,8 @@
       cursor: pointer;
       display: block;
       margin: 0 auto;
+      border-radius: 25px; /* сильно скругленные края */
+      transition: background 0.3s, color 0.3s;
     }
 
     .hero button:hover {
@@ -104,7 +106,7 @@
       <img src="/logo.png" alt="Play12 logo">
     </div>
 
-    <a class="lang-switch" href="/">
+    <a class="lang-switch" href="index-en.html">
       <span>EN</span> / <span>RU</span>
     </a>
   </header>
