@@ -9,7 +9,7 @@
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #dedcd9; /* цвет фона */
+      background: #dedcd9;
       color: #0e0e0e;
     }
 
@@ -19,16 +19,13 @@
       left: 0;
       width: 100%;
       padding: 1.5rem 2rem;
-    }
-
-    .header-inner {
       display: flex;
-      justify-content: center; /* центрируем логотип */
+      justify-content: flex-start; /* логотип слева */
       align-items: center;
     }
 
     .logo img {
-      height: 333px; /* новый размер логотипа */
+      height: 333px; /* размер логотипа */
       width: auto;
       display: block;
     }
@@ -98,10 +95,8 @@
 <body>
 
   <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <img src="/logo.png" alt="Play12 logo">
-      </div>
+    <div class="logo">
+      <img src="/logo.png" alt="Play12 logo">
     </div>
 
     <div class="lang-switch">
