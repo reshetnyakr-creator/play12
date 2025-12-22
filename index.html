@@ -20,23 +20,27 @@
       width: 100%;
       padding: 1.5rem 2rem;
       display: flex;
-      justify-content: flex-start; /* логотип слева */
+      justify-content: flex-start;
       align-items: center;
+      gap: 1rem; /* расстояние между логотипом и переключателем */
     }
 
     .logo img {
-      height: 113px;
+      height: 333px;
       width: auto;
       display: block;
     }
 
     .lang-switch {
-      position: absolute;
-      top: 1.5rem;
-      right: 2rem;
-      font-size: 0.9rem;
-      opacity: 0.7;
-      transform: translateX(-calc(4 * 1ch)); /* сдвигаем влево на 4 ширины знака */
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid #0e0e0e; /* рамка как у кнопки */
+      cursor: pointer;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      text-decoration: none;
+      color: #0e0e0e;
     }
 
     .lang-switch a {
@@ -45,7 +49,7 @@
     }
 
     .lang-switch a:hover {
-      opacity: 1;
+      opacity: 0.7;
     }
 
     .hero {
@@ -100,9 +104,9 @@
       <img src="/logo.png" alt="Play12 logo">
     </div>
 
-    <div class="lang-switch">
-      <a href="/">EN</a> / <a href="/ru">RU</a>
-    </div>
+    <a class="lang-switch" href="/">
+      <span>EN</span> / <span>RU</span>
+    </a>
   </header>
 
   <section class="hero">
