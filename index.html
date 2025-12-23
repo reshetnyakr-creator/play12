@@ -15,18 +15,15 @@
 
     /* Header */
     .site-header {
-      position: relative;
-      width: 100%;
       display: flex;
       justify-content: space-between; /* логотип слева, переключатель справа */
       align-items: center;
       padding: 1rem 2rem;
-      box-sizing: border-box;
+      flex-wrap: wrap;
     }
 
     .logo img {
-      height: 113px; /* большой размер */
-      max-height: 90vh; /* чтобы не выходило за экран */
+      height: 113px; /* фиксированный размер */
       width: auto;
       display: block;
     }
@@ -62,7 +59,6 @@
       justify-content: center;
       align-items: center;
       padding: 4rem 2rem;
-      box-sizing: border-box;
     }
 
     .hero-inner {
@@ -74,7 +70,6 @@
       font-size: clamp(3rem, 6vw, 5rem);
       font-weight: 700;
       margin: 0 0 1.5rem 0;
-      line-height: 1;
     }
 
     .hero p {
@@ -101,30 +96,19 @@
     }
 
     /* Адаптив */
-    @media (max-width: 1024px) {
-      .logo img {
-        height: 800px;
-      }
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 480px) {
       .site-header {
         flex-direction: column;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
       }
 
       .logo img {
-        height: 500px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .logo img {
-        height: 300px;
+        height: 113px; /* сохраняем тот же размер на мобильных */
       }
 
       .lang-switch {
+        margin-top: 0.5rem;
         font-size: 0.9rem;
         padding: 0.4rem 0.8rem;
       }
@@ -133,28 +117,26 @@
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="logo">
-      <img src="logo.svg" alt="Play12 logo">
-    </div>
+<header class="site-header">
+  <div class="logo">
+    <img src="logo.svg" alt="Play12 logo">
+  </div>
 
-    <a class="lang-switch" href="index-en.html">
-      <span>EN</span> / <span>RU</span>
-    </a>
-  </header>
+  <a class="lang-switch" href="index-en.html">
+    <span>EN</span> / <span>RU</span>
+  </a>
+</header>
 
-  <section class="hero">
-    <div class="hero-inner">
-      <h1>Музыка проще</h1>
-
-      <p>
-        Play12 — система записи и обучения игре на пианино,
-        в которой теория перестаёт мешать практике.
-      </p>
-
-      <button>Покажи мне Play12</button>
-    </div>
-  </section>
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Музыка проще</h1>
+    <p>
+      Play12 — система записи и обучения игре на пианино,
+      в которой теория перестаёт мешать практике.
+    </p>
+    <button>Покажи мне Play12</button>
+  </div>
+</section>
 
 </body>
 </html>
