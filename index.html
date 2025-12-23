@@ -16,16 +16,17 @@
     /* Header */
     .site-header {
       display: flex;
-      justify-content: space-between; /* логотип слева, переключатель справа */
+      justify-content: space-between;
       align-items: center;
       padding: 1rem 2rem;
       flex-wrap: wrap;
     }
 
     .logo img {
-      height: 113px; /* фиксированный размер */
-      width: auto;
+      max-height: 113px; /* ограничиваем высоту */
+      width: auto;       /* сохраняем пропорции */
       display: block;
+      max-width: 100%;   /* чтобы не выходило за экран */
     }
 
     /* Переключатель языка */
@@ -104,7 +105,7 @@
       }
 
       .logo img {
-        height: 113px; /* сохраняем тот же размер на мобильных */
+        max-height: 113px; /* сохраняем ту же высоту */
       }
 
       .lang-switch {
