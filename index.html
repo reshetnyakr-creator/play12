@@ -13,29 +13,30 @@
       color: #0e0e0e;
     }
 
+    /* Header */
     .site-header {
-      position: absolute;
-      top: 0;
-      left: 0;
+      position: relative;
       width: 100%;
-      padding: 1.5rem 2rem;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between; /* логотип слева, переключатель справа */
       align-items: center;
-      gap: 1rem; /* расстояние между логотипом и переключателем */
+      padding: 1rem 2rem;
+      box-sizing: border-box;
     }
 
     .logo img {
-      height: 1900px; /* размер SVG */
+      height: 1900px; /* большой размер */
+      max-height: 90vh; /* чтобы не выходило за экран */
       width: auto;
       display: block;
     }
 
+    /* Переключатель языка */
     .lang-switch {
       font-size: 1rem;
       padding: 0.5rem 1rem;
-      border: 1px solid #0e0e0e; /* рамка */
-      border-radius: 25px; /* сильно скругленные края */
+      border: 1px solid #0e0e0e;
+      border-radius: 25px;
       cursor: pointer;
       display: flex;
       gap: 0.5rem;
@@ -53,16 +54,19 @@
       opacity: 0.7;
     }
 
+    /* Hero */
     .hero {
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
       padding: 4rem 2rem;
+      box-sizing: border-box;
     }
 
     .hero-inner {
       max-width: 720px;
-      margin: 0 auto;
       text-align: center;
     }
 
@@ -87,9 +91,7 @@
       color: #0e0e0e;
       border: 1px solid #0e0e0e;
       cursor: pointer;
-      display: block;
-      margin: 0 auto;
-      border-radius: 25px; /* сильно скругленные края */
+      border-radius: 25px;
       transition: background 0.3s, color 0.3s;
     }
 
@@ -97,13 +99,43 @@
       background: #0e0e0e;
       color: #f5f5f5;
     }
+
+    /* Адаптив */
+    @media (max-width: 1024px) {
+      .logo img {
+        height: 800px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .site-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo img {
+        height: 500px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo img {
+        height: 300px;
+      }
+
+      .lang-switch {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
 
   <header class="site-header">
     <div class="logo">
-      <img src="/logo.svg" alt="Play12 logo">
+      <img src="logo.svg" alt="Play12 logo">
     </div>
 
     <a class="lang-switch" href="index-en.html">
