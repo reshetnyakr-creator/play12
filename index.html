@@ -140,6 +140,32 @@
     <button>Покажи мне Play12</button>
   </div>
 </section>
+<script>
+  const btn = document.querySelector(".hero button");
+  const video = document.createElement("video");
 
+  video.id = "intro-video";
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.style.display = "none";
+  video.style.width = "100%";
+  video.style.maxWidth = "720px";
+  video.style.marginTop = "2rem";
+
+  const source = document.createElement("source");
+  source.src = "assets/1225 (1)(7).mov";
+  source.type = "video/mp4"; // можно оставить mp4, но лучше переконвертировать mov → mp4
+
+  video.appendChild(source);
+
+  const heroInner = document.querySelector(".hero-inner");
+  heroInner.appendChild(video);
+
+  btn.addEventListener("click", () => {
+    video.style.display = "block";
+    video.play();
+  });
+</script>
 </body>
 </html>
