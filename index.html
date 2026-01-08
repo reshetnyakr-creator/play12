@@ -23,30 +23,20 @@
     }
 
     .logo img {
-      max-height: 113px;
+      height: 113px;
       width: auto;
       display: block;
-      max-width: 100%;
     }
 
-    /* Переключатель языка */
     .lang-switch {
       font-size: 1rem;
       padding: 0.5rem 1rem;
       border: 1px solid #0e0e0e;
       border-radius: 25px;
       cursor: pointer;
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
       text-decoration: none;
       color: #0e0e0e;
       transition: background 0.3s, color 0.3s;
-    }
-
-    .lang-switch a {
-      color: inherit;
-      text-decoration: none;
     }
 
     .lang-switch:hover {
@@ -58,7 +48,6 @@
     .hero {
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 4rem 2rem;
@@ -71,18 +60,16 @@
 
     .hero h1 {
       font-size: clamp(3rem, 6vw, 5rem);
-      font-weight: 700;
-      margin: 0 0 1.5rem 0;
+      margin-bottom: 1.5rem;
     }
 
     .hero p {
       font-size: 1.25rem;
       line-height: 1.6;
-      margin: 0 0 2.5rem 0;
-      color: #333;
+      margin-bottom: 2.5rem;
     }
 
-    .hero button {
+    .cta-btn {
       font-size: 1rem;
       padding: 0.9rem 1.6rem;
       background: transparent;
@@ -93,27 +80,30 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    .hero button:hover {
+    .cta-btn:hover {
       background: #0e0e0e;
       color: #f5f5f5;
     }
 
-    /* Адаптив */
+    /* Video */
+    .video-wrapper {
+      display: none;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    video {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 12px;
+    }
+
     @media (max-width: 480px) {
       .site-header {
         flex-direction: column;
-        align-items: center;
         gap: 0.5rem;
-      }
-
-      .logo img {
-        max-height: 113px;
-      }
-
-      .lang-switch {
-        margin-top: 0.5rem;
-        font-size: 0.9rem;
-        padding: 0.4rem 0.8rem;
       }
     }
   </style>
@@ -125,47 +115,39 @@
     <img src="logo.svg" alt="Play12 logo">
   </div>
 
-  <a class="lang-switch" href="index-en.html">
-    <span>EN</span> / <span>RU</span>
-  </a>
+  <a class="lang-switch" href="index-en.html">EN / RU</a>
 </header>
 
-<section class="hero">
+<section class="hero" id="hero">
   <div class="hero-inner">
     <h1>Музыка проще</h1>
     <p>
       Play12 — система записи и обучения игре на пианино,
       в которой теория перестаёт мешать практике.
     </p>
-    <button>Покажи мне Play12</button>
+    <button class="cta-btn" id="playButton">Покажи мне Play12</button>
   </div>
 </section>
+
+<section class="video-wrapper" id="videoSection">
+  <video id="introVideo" controls>
+    <source src="assets/SMP12.mp4" type="video/mp4">
+    Ваш браузер не поддерживает видео.
+  </video>
+</section>
+
 <script>
-  const btn = document.querySelector(".hero button");
-  const video = document.createElement("video");
+  const playButton = document.getElementById('playButton');
+  const hero = document.getElementById('hero');
+  const videoSection = document.getElementById('videoSection');
+  const video = document.getElementById('introVideo');
 
-  video.id = "intro-video";
-  video.muted = true;
-  video.loop = true;
-  video.playsInline = true;
-  video.style.display = "none";
-  video.style.width = "100%";
-  video.style.maxWidth = "720px";
-  video.style.marginTop = "2rem";
-
-  const source = document.createElement("source");
-  source.src = "assets/1225 (1)(7).mov";
-  source.type = "video/mp4"; // можно оставить mp4, но лучше переконвертировать mov → mp4
-
-  video.appendChild(source);
-
-  const heroInner = document.querySelector(".hero-inner");
-  heroInner.appendChild(video);
-
-  btn.addEventListener("click", () => {
-    video.style.display = "block";
+  playButton.addEventListener('click', () => {
+    hero.style.display = 'none';
+    videoSection.style.display = 'flex';
     video.play();
   });
 </script>
+
 </body>
 </html>
