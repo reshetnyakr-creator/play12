@@ -59,36 +59,38 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 2rem 1rem;
+      padding: 4rem 2rem;
     }
 
     .hero-inner {
-      width: 100%;
-      max-width: 600px;
+      max-width: 720px;
       text-align: center;
     }
 
     .hero h1 {
-      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-size: clamp(1.8rem, 8vw, 3.5rem);
       margin-bottom: 1rem;
       word-break: break-word;
+      line-height: 1.1;
+      text-align: center;
     }
 
     .hero p {
-      font-size: clamp(1rem, 4vw, 1.25rem);
-      line-height: 1.4;
-      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
     }
 
     .cta-btn {
       font-size: 1rem;
-      padding: 0.8rem 1.5rem;
+      padding: 0.9rem 1.6rem;
       background: transparent;
       color: #0e0e0e;
       border: 1px solid #0e0e0e;
       cursor: pointer;
       border-radius: 25px;
       transition: background 0.3s, color 0.3s;
+      margin: 0.5rem;
     }
 
     .cta-btn:hover {
@@ -102,27 +104,24 @@
       min-height: 100vh;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-      padding: 1rem;
+      padding: 2rem;
       background-color: #dedcd9;
-    }
-
-    .video-wrapper video {
-      width: 100%;
-      max-width: 600px;
-      height: auto;
-      border-radius: 12px;
-    }
-
-    /* Кнопки после видео */
-    #afterVideoButtons {
-      display: none;
       flex-direction: column;
+    }
+
+    video {
+      max-width: 100%;
+      max-height: 60vh;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    /* Four buttons after video */
+    .video-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 1rem;
-      margin-top: 1.5rem;
-      align-items: center;
-      width: 100%;
-      max-width: 300px;
     }
 
     @media (max-width: 480px) {
@@ -131,17 +130,20 @@
         gap: 0.5rem;
       }
 
+      .hero {
+        padding: 2rem 1rem;
+      }
+
       .hero h1 {
         font-size: 2rem;
       }
 
-      .hero p {
-        font-size: 1rem;
+      video {
+        max-height: 40vh;
       }
 
-      .cta-btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.95rem;
+      .video-buttons {
+        flex-direction: column;
       }
     }
   </style>
@@ -152,6 +154,7 @@
   <div class="logo">
     <img src="logo.svg" alt="Play12 logo">
   </div>
+
   <a class="lang-switch" href="index-en.html">EN / RU</a>
 </header>
 
@@ -171,8 +174,7 @@
     <source src="assets/SMP12.mp4" type="video/mp4">
     Ваш браузер не поддерживает видео.
   </video>
-
-  <div id="afterVideoButtons">
+  <div class="video-buttons" id="videoButtons">
     <button class="cta-btn">Учебник</button>
     <button class="cta-btn">Уроки</button>
     <button class="cta-btn">Ноты</button>
@@ -185,18 +187,18 @@
   const hero = document.getElementById('hero');
   const videoSection = document.getElementById('videoSection');
   const video = document.getElementById('introVideo');
-  const buttonsDiv = document.getElementById('afterVideoButtons');
+  const videoButtons = document.getElementById('videoButtons');
 
-  // Показать видео при клике
+  videoButtons.style.display = 'none';
+
   playButton.addEventListener('click', () => {
     hero.style.display = 'none';
     videoSection.style.display = 'flex';
     video.play();
   });
 
-  // Показать кнопки после окончания видео
   video.addEventListener('ended', () => {
-    buttonsDiv.style.display = 'flex';
+    videoButtons.style.display = 'flex';
   });
 </script>
 
