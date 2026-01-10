@@ -59,26 +59,28 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 4rem 2rem;
+      padding: 2rem 1rem;
     }
 
     .hero-inner {
+      width: 100%;
       max-width: 720px;
       text-align: center;
     }
 
     .hero h1 {
-      font-size: clamp(1.8rem, 8vw, 3.5rem);
-      margin-bottom: 1rem;
-      word-break: break-word;
+      font-size: 10vw; /* масштабируемый под ширину экрана */
+      max-font-size: 5rem;
+      margin: 0 0 1.5rem 0;
       line-height: 1.1;
-      text-align: center;
+      word-break: normal;
     }
 
     .hero p {
       font-size: 1.25rem;
       line-height: 1.6;
-      margin-bottom: 2.5rem;
+      margin: 0 0 2rem 0;
+      color: #333;
     }
 
     .cta-btn {
@@ -91,6 +93,7 @@
       border-radius: 25px;
       transition: background 0.3s, color 0.3s;
       margin: 0.5rem;
+      display: inline-block;
     }
 
     .cta-btn:hover {
@@ -106,22 +109,12 @@
       align-items: center;
       padding: 2rem;
       background-color: #dedcd9;
-      flex-direction: column;
     }
 
     video {
       max-width: 100%;
-      max-height: 60vh;
+      max-height: 90vh;
       border-radius: 12px;
-      margin-bottom: 2rem;
-    }
-
-    /* Four buttons after video */
-    .video-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
     }
 
     @media (max-width: 480px) {
@@ -130,20 +123,17 @@
         gap: 0.5rem;
       }
 
-      .hero {
-        padding: 2rem 1rem;
-      }
-
       .hero h1 {
-        font-size: 2rem;
+        font-size: 12vw; /* чуть больше для маленьких экранов */
       }
 
-      video {
-        max-height: 40vh;
+      .hero-inner {
+        padding: 0 1rem;
       }
 
-      .video-buttons {
-        flex-direction: column;
+      .cta-btn {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
       }
     }
   </style>
@@ -160,7 +150,7 @@
 
 <section class="hero" id="hero">
   <div class="hero-inner">
-    <h1>Музыка проще</h1>
+    <h1>Play12</h1>
     <p>
       Play12 — система записи и обучения игре на пианино,
       в которой теория перестаёт мешать практике.
@@ -174,12 +164,13 @@
     <source src="assets/SMP12.mp4" type="video/mp4">
     Ваш браузер не поддерживает видео.
   </video>
-  <div class="video-buttons" id="videoButtons">
-    <button class="cta-btn">Учебник</button>
-    <button class="cta-btn">Уроки</button>
-    <button class="cta-btn">Ноты</button>
-    <button class="cta-btn">Сделать Play12 лучше</button>
-  </div>
+</section>
+
+<section class="buttons-wrapper" id="buttonsSection" style="display:none; text-align:center; padding:2rem;">
+  <button class="cta-btn">Учебник</button>
+  <button class="cta-btn">Уроки</button>
+  <button class="cta-btn">Ноты</button>
+  <button class="cta-btn">Сделать Play12 лучше</button>
 </section>
 
 <script>
@@ -187,9 +178,7 @@
   const hero = document.getElementById('hero');
   const videoSection = document.getElementById('videoSection');
   const video = document.getElementById('introVideo');
-  const videoButtons = document.getElementById('videoButtons');
-
-  videoButtons.style.display = 'none';
+  const buttonsSection = document.getElementById('buttonsSection');
 
   playButton.addEventListener('click', () => {
     hero.style.display = 'none';
@@ -197,8 +186,10 @@
     video.play();
   });
 
+  // Показываем кнопки после окончания видео
   video.addEventListener('ended', () => {
-    videoButtons.style.display = 'flex';
+    videoSection.style.display = 'none';
+    buttonsSection.style.display = 'block';
   });
 </script>
 
