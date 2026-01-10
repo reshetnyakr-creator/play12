@@ -31,15 +31,13 @@
       flex-wrap: wrap;
     }
 
-    /* Логотип */
     .logo img {
-      width: 100%;
-      max-width: 300px; /* для десктопа */
-      height: auto;
+      height: 113px;
+      width: auto;
       display: block;
+      cursor: pointer;
     }
 
-    /* Переключатель языка */
     .lang-switch {
       font-size: 1rem;
       padding: 0.5rem 1rem;
@@ -103,6 +101,7 @@
       justify-content: center;
       align-items: center;
       padding: 2rem;
+      background-color: #dedcd9;
     }
 
     video {
@@ -111,28 +110,14 @@
       border-radius: 12px;
     }
 
-    /* Кнопки после видео */
-    .buttons-wrapper {
-      display: none;
-      text-align: center;
-      padding: 2rem;
-    }
-
     @media (max-width: 480px) {
       .site-header {
         flex-direction: column;
-        align-items: center;
         gap: 0.5rem;
       }
 
-      .logo img {
-        max-width: 90vw; /* логотип не выходит за ширину экрана */
-      }
-
-      .lang-switch {
-        margin-top: 0.5rem;
-        font-size: 0.9rem;
-        padding: 0.4rem 0.8rem;
+      .hero-inner {
+        padding: 0 1rem;
       }
 
       .cta-btn {
@@ -146,7 +131,7 @@
 
 <header class="site-header">
   <div class="logo">
-    <img src="logo.svg" alt="Play12 logo">
+    <img src="logo.svg" alt="Play12 logo" id="logo">
   </div>
 
   <a class="lang-switch" href="index-en.html">EN / RU</a>
@@ -169,11 +154,12 @@
   </video>
 </section>
 
-<section class="buttons-wrapper" id="buttonsSection">
-  <button class="cta-btn">Учебник</button>
-  <button class="cta-btn">Уроки</button>
-  <button class="cta-btn">Ноты</button>
-  <button class="cta-btn">Сделать Play12 лучше</button>
+<section class="buttons-wrapper" id="buttonsSection" style="display:none; text-align:center; padding:2rem;">
+  <button class="cta-btn" id="btnTextbook">Учебник</button>
+  <button class="cta-btn" id="btnLessons">Уроки</button>
+  <button class="cta-btn" id="btnNotes">Ноты</button>
+  <button class="cta-btn" id="btnImprove">Сделать Play12 лучше</button>
+  <button class="cta-btn" id="btnReplay">Ещё раз</button>
 </section>
 
 <script>
@@ -182,16 +168,35 @@
   const videoSection = document.getElementById('videoSection');
   const video = document.getElementById('introVideo');
   const buttonsSection = document.getElementById('buttonsSection');
+  const logo = document.getElementById('logo');
+  const btnReplay = document.getElementById('btnReplay');
 
+  // Клик по логотипу - перезагрузка страницы
+  logo.addEventListener('click', () => {
+    location.reload();
+  });
+
+  // Запуск видео по кнопке
   playButton.addEventListener('click', () => {
     hero.style.display = 'none';
     videoSection.style.display = 'flex';
+    buttonsSection.style.display = 'none';
+    video.currentTime = 0;
     video.play();
   });
 
+  // Показываем кнопки после окончания видео
   video.addEventListener('ended', () => {
     videoSection.style.display = 'none';
     buttonsSection.style.display = 'block';
+  });
+
+  // Кнопка "Ещё раз" запускает видео снова
+  btnReplay.addEventListener('click', () => {
+    buttonsSection.style.display = 'none';
+    videoSection.style.display = 'flex';
+    video.currentTime = 0;
+    video.play();
   });
 </script>
 
