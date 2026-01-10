@@ -6,9 +6,7 @@
   <title>Play12 — Музыка проще</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -18,9 +16,7 @@
     }
 
     header,
-    section {
-      background-color: #dedcd9;
-    }
+    section { background-color: #dedcd9; }
 
     /* Header */
     .site-header {
@@ -33,6 +29,7 @@
 
     .logo img {
       height: 113px;
+      max-width: 100%;
       width: auto;
       display: block;
       cursor: pointer;
@@ -116,9 +113,12 @@
         gap: 0.5rem;
       }
 
-      .hero-inner {
-        padding: 0 1rem;
+      .logo img {
+        height: auto;           /* адаптивная высота */
+        max-height: 80px;       /* ограничение на мобильных */
       }
+
+      .hero-inner { padding: 0 1rem; }
 
       .cta-btn {
         font-size: 0.9rem;
@@ -133,7 +133,6 @@
   <div class="logo">
     <img src="logo.svg" alt="Play12 logo" id="logo">
   </div>
-
   <a class="lang-switch" href="index-en.html">EN / RU</a>
 </header>
 
@@ -171,12 +170,8 @@
   const logo = document.getElementById('logo');
   const btnReplay = document.getElementById('btnReplay');
 
-  // Клик по логотипу - перезагрузка страницы
-  logo.addEventListener('click', () => {
-    location.reload();
-  });
+  logo.addEventListener('click', () => location.reload());
 
-  // Запуск видео по кнопке
   playButton.addEventListener('click', () => {
     hero.style.display = 'none';
     videoSection.style.display = 'flex';
@@ -185,13 +180,11 @@
     video.play();
   });
 
-  // Показываем кнопки после окончания видео
   video.addEventListener('ended', () => {
     videoSection.style.display = 'none';
     buttonsSection.style.display = 'block';
   });
 
-  // Кнопка "Ещё раз" запускает видео снова
   btnReplay.addEventListener('click', () => {
     buttonsSection.style.display = 'none';
     videoSection.style.display = 'flex';
