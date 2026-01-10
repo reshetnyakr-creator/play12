@@ -31,12 +31,15 @@
       flex-wrap: wrap;
     }
 
+    /* Логотип */
     .logo img {
-      height: 113px;
-      width: auto;
+      width: 100%;
+      max-width: 300px; /* для десктопа */
+      height: auto;
       display: block;
     }
 
+    /* Переключатель языка */
     .lang-switch {
       font-size: 1rem;
       padding: 0.5rem 1rem;
@@ -68,18 +71,10 @@
       text-align: center;
     }
 
-    .hero h1 {
-      font-size: 10vw; /* масштабируемый под ширину экрана */
-      max-font-size: 5rem;
-      margin: 0 0 1.5rem 0;
-      line-height: 1.1;
-      word-break: normal;
-    }
-
     .hero p {
       font-size: 1.25rem;
       line-height: 1.6;
-      margin: 0 0 2rem 0;
+      margin-bottom: 2rem;
       color: #333;
     }
 
@@ -108,7 +103,6 @@
       justify-content: center;
       align-items: center;
       padding: 2rem;
-      background-color: #dedcd9;
     }
 
     video {
@@ -117,18 +111,28 @@
       border-radius: 12px;
     }
 
+    /* Кнопки после видео */
+    .buttons-wrapper {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+
     @media (max-width: 480px) {
       .site-header {
         flex-direction: column;
+        align-items: center;
         gap: 0.5rem;
       }
 
-      .hero h1 {
-        font-size: 12vw; /* чуть больше для маленьких экранов */
+      .logo img {
+        max-width: 90vw; /* логотип не выходит за ширину экрана */
       }
 
-      .hero-inner {
-        padding: 0 1rem;
+      .lang-switch {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
       }
 
       .cta-btn {
@@ -150,7 +154,6 @@
 
 <section class="hero" id="hero">
   <div class="hero-inner">
-    <h1>Play12</h1>
     <p>
       Play12 — система записи и обучения игре на пианино,
       в которой теория перестаёт мешать практике.
@@ -166,7 +169,7 @@
   </video>
 </section>
 
-<section class="buttons-wrapper" id="buttonsSection" style="display:none; text-align:center; padding:2rem;">
+<section class="buttons-wrapper" id="buttonsSection">
   <button class="cta-btn">Учебник</button>
   <button class="cta-btn">Уроки</button>
   <button class="cta-btn">Ноты</button>
@@ -186,7 +189,6 @@
     video.play();
   });
 
-  // Показываем кнопки после окончания видео
   video.addEventListener('ended', () => {
     videoSection.style.display = 'none';
     buttonsSection.style.display = 'block';
