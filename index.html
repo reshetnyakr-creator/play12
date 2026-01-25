@@ -21,7 +21,7 @@
       align-items: flex-start;
       padding: 1rem;
       position: relative;
-      z-index: 10;
+      z-index: 50;
     }
 
     .logo img {
@@ -40,6 +40,10 @@
       font-size: 0.9rem;
       background: transparent;
       cursor: pointer;
+      display: inline-block;
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .lang-switch:hover {
@@ -49,10 +53,11 @@
 
     /* HERO */
     .hero {
-      min-height: 100vh;
+      min-height: calc(100vh - 80px);
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      padding: 1.5rem;
       padding-top: 5.2rem;
       padding-bottom: 9rem;
       position: relative;
@@ -73,8 +78,10 @@
       letter-spacing: 0.02em;
     }
 
-    /* BUTTONS */
+    /* Buttons */
     .btn {
+      display: inline-block;
+      margin: 0.4rem;
       padding: 0.8rem 1.4rem;
       font-size: 0.95rem;
       border-radius: 22px;
@@ -82,6 +89,10 @@
       background: transparent;
       cursor: pointer;
       color: #0e0e0e;
+      text-decoration: none;
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn:hover {
@@ -89,6 +100,7 @@
       color: #ffffff;
     }
 
+    /* Fixed bottom actions */
     .hero-actions {
       position: fixed;
       left: 0;
@@ -103,11 +115,11 @@
     }
 
     .hero-actions .btn {
+      margin: 0;
       width: min(360px, 92vw);
     }
 
-    /* === КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ === */
-
+    /* Оверлеи: чтобы видео/меню не уезжали вниз */
     .video-wrapper,
     .buttons-wrapper {
       position: fixed;
@@ -128,9 +140,11 @@
     .buttons-wrapper {
       flex-direction: column;
       gap: 0.6rem;
+      text-align: center;
     }
 
     .buttons-wrapper .btn {
+      margin: 0;
       width: min(360px, 92vw);
     }
 
@@ -150,6 +164,10 @@
       .tagline {
         font-size: 1.6rem;
       }
+
+      .hero-actions {
+        bottom: 2.0rem;
+      }
     }
   </style>
 </head>
@@ -157,65 +175,84 @@
 <body>
 
 <header>
-  <a href="/" class="logo">
+  <a href="/" class="logo" id="homeLink" aria-label="Play12 Home">
     <img src="logo.svg" alt="Play12 logo">
   </a>
   <a class="lang-switch" href="index-en.html">EN / RU</a>
 </header>
 
-<section class="hero">
+<section class="hero" id="hero">
   <div class="hero-inner">
     <h1 class="tagline">инструкция к игре на пианино</h1>
   </div>
 
   <div class="hero-actions" id="heroActions">
-    <button class="btn" id="playBtn">Покажи мне Play12</button>
-    <button class="btn" id="skipBtn">Уже смотрел</button>
+    <button class="btn" id="playBtn" type="button">Покажи мне Play12</button>
+    <button class="btn" id="skipBtn" type="button">Уже смотрел</button>
   </div>
 </section>
 
 <section class="video-wrapper" id="videoSection">
   <video id="video" controls>
     <source src="assets/SMP12.mp4" type="video/mp4">
+    Ваш браузер не поддерживает видео.
   </video>
 </section>
 
 <section class="buttons-wrapper" id="menu">
-  <button class="btn">Учебник</button>
-  <button class="btn">Уроки</button>
-  <button class="btn">Ноты</button>
-  <button class="btn">Сделать Play12 лучше</button>
-  <button class="btn" id="replayBtn">Ещё раз</button>
+  <button class="btn" type="button">Учебник</button>
+  <button class="btn" type="button">Уроки</button>
+  <button class="btn" type="button">Ноты</button>
+  <button class="btn" type="button">Сделать Play12 лучше</button>
+  <button class="btn" id="replayBtn" type="button">Ещё раз</button>
 </section>
 
 <script>
-  const heroActions = document.getElementById('heroActions');
+  const hero = document.getElementById('hero');
   const videoSection = document.getElementById('videoSection');
   const menu = document.getElementById('menu');
   const video = document.getElementById('video');
 
-  playBtn.onclick = () => {
-    heroActions.style.display = 'none';
+  function resetToStart() {
+    // старт: виден hero (включая надпись), скрыты видео и меню
+    hero.style.display = 'flex';
+    videoSection.style.display = 'none';
+    menu.style.display = 'none';
+
+    try { video.pause(); } catch(e) {}
+    video.currentTime = 0;
+
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById('homeLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    resetToStart();
+    history.replaceState(null, '', '/');
+  });
+
+  document.getElementById('playBtn').onclick = () => {
+    hero.style.display = 'none';            // надпись исчезает
     menu.style.display = 'none';
     videoSection.style.display = 'flex';
     video.currentTime = 0;
     video.play();
   };
 
-  skipBtn.onclick = () => {
-    heroActions.style.display = 'none';
+  document.getElementById('skipBtn').onclick = () => {
+    hero.style.display = 'none';            // надпись исчезает
     videoSection.style.display = 'none';
     menu.style.display = 'flex';
   };
 
   video.onended = () => {
     videoSection.style.display = 'none';
-    heroActions.style.display = 'none';
-    menu.style.display = 'flex';
+    menu.style.display = 'flex';            // надпись уже скрыта, т.к. hero скрыт
   };
 
-  replayBtn.onclick = () => {
+  document.getElementById('replayBtn').onclick = () => {
     menu.style.display = 'none';
+    hero.style.display = 'none';            // надпись скрыта
     videoSection.style.display = 'flex';
     video.currentTime = 0;
     video.play();
