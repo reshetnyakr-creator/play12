@@ -39,6 +39,7 @@
       display: inline-block;
       -webkit-appearance: none;
       appearance: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .hero,
@@ -47,8 +48,16 @@
       min-height: calc(100vh - 80px);
       display: flex;
       justify-content: center;
+      padding: 6.5rem 1.5rem 1.5rem;
+    }
+
+    .hero {
+      align-items: flex-start;
+    }
+
+    .video-wrapper,
+    .buttons-wrapper {
       align-items: center;
-      padding: 1.5rem;
     }
 
     .hero-inner {
@@ -57,10 +66,13 @@
       width: 100%;
     }
 
-    .hero p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
+    /* Tagline (replaces old hero paragraph) */
+    .tagline {
+      margin: 0 0 2.2rem 0;
+      font-size: clamp(1.4rem, 3.6vw, 2.2rem);
+      line-height: 1.25;
+      font-weight: 500;
+      letter-spacing: 0.02em;
     }
 
     /* Buttons: fix iOS blue text + keep consistent style */
@@ -109,6 +121,17 @@
         align-items: center;
         gap: 0.6rem;
       }
+
+      .tagline {
+        margin-bottom: 2rem;
+        font-size: 1.55rem;
+      }
+
+      .hero,
+      .video-wrapper,
+      .buttons-wrapper {
+        padding-top: 5.5rem;
+      }
     }
   </style>
 </head>
@@ -124,7 +147,7 @@
 
 <section class="hero" id="hero">
   <div class="hero-inner">
-    <p>инструкция к игре на пианино</p>
+    <h1 class="tagline">инструкция к игре на пианино</h1>
 
     <button class="btn" id="playBtn" type="button">Покажи мне Play12</button>
     <button class="btn" id="skipBtn" type="button">Уже смотрел</button>
@@ -139,7 +162,7 @@
 </section>
 
 <section class="buttons-wrapper" id="menu">
-  <button class="btn" id="tutorialBtn" type="button">Учебник</button>
+  <button class="btn" type="button">Учебник</button>
   <button class="btn" type="button">Уроки</button>
   <button class="btn" type="button">Ноты</button>
   <button class="btn" type="button">Сделать Play12 лучше</button>
