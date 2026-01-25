@@ -1,3 +1,10 @@
+Понял. Вношу только 3 изменения:
+	1.	lang-switch получает такой же hover, как .btn (чёрный фон + белый текст).
+	2.	Кнопки меню получают тот же размер, что у hero-кнопок (min(360px, 92vw)), и остаются в таких же круглых рамках (они уже такие).
+	3.	Текст инструкция к игре на пианино остаётся после «Уже смотрел» и после окончания видео → значит hero не прячем, а только скрываем hero-actions и показываем нужную секцию.
+
+Ниже — полный файл целиком.
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -40,6 +47,14 @@
       -webkit-appearance: none;
       appearance: none;
       -webkit-tap-highlight-color: transparent;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    /* CHANGE 1: hover как у всех кнопок */
+    .lang-switch:hover {
+      background: #0e0e0e;
+      color: #ffffff;
     }
 
     /* Sections */
@@ -137,6 +152,12 @@
       text-align: center;
     }
 
+    /* CHANGE 2: меню-кнопки такого же размера, как hero-кнопки */
+    .buttons-wrapper .btn {
+      margin: 0;
+      width: min(360px, 92vw);
+    }
+
     /* Mobile: lang switch under logo */
     @media (max-width: 480px) {
       header {
@@ -198,31 +219,35 @@
 </section>
 
 <script>
-  const hero = document.getElementById('hero');
   const heroActions = document.getElementById('heroActions');
   const videoSection = document.getElementById('videoSection');
   const video = document.getElementById('video');
   const menu = document.getElementById('menu');
 
+  // CHANGE 3: герой (текст) НЕ скрываем; прячем только hero-actions
   document.getElementById('playBtn').onclick = () => {
-    hero.style.display = 'none';
+    heroActions.style.display = 'none';
+    menu.style.display = 'none';
     videoSection.style.display = 'flex';
     video.currentTime = 0;
     video.play();
   };
 
   document.getElementById('skipBtn').onclick = () => {
-    hero.style.display = 'none';
+    heroActions.style.display = 'none';
+    videoSection.style.display = 'none';
     menu.style.display = 'flex';
   };
 
   video.onended = () => {
     videoSection.style.display = 'none';
+    heroActions.style.display = 'none';
     menu.style.display = 'flex';
   };
 
   document.getElementById('replayBtn').onclick = () => {
     menu.style.display = 'none';
+    heroActions.style.display = 'none';
     videoSection.style.display = 'flex';
     video.currentTime = 0;
     video.play();
