@@ -18,7 +18,7 @@
     header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       padding: 1rem;
     }
 
@@ -42,17 +42,22 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* Sections */
     .hero,
     .video-wrapper,
     .buttons-wrapper {
       min-height: calc(100vh - 80px);
       display: flex;
       justify-content: center;
-      padding: 6.5rem 1.5rem 1.5rem;
+      padding: 1.5rem;
     }
 
+    /* HERO: текст выше + место под фиксированные кнопки */
     .hero {
       align-items: flex-start;
+      padding-top: 5.2rem;      /* поднимает заголовок выше */
+      padding-bottom: 9rem;     /* чтобы текст не «упирался» в нижние кнопки */
+      position: relative;
     }
 
     .video-wrapper,
@@ -66,16 +71,15 @@
       width: 100%;
     }
 
-    /* Tagline (replaces old hero paragraph) */
     .tagline {
-      margin: 0 0 2.2rem 0;
+      margin: 0;
       font-size: clamp(1.4rem, 3.6vw, 2.2rem);
       line-height: 1.25;
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: 0.02em;
     }
 
-    /* Buttons: fix iOS blue text + keep consistent style */
+    /* Buttons: style */
     .btn {
       display: inline-block;
       margin: 0.4rem;
@@ -95,6 +99,25 @@
     .btn:hover {
       background: #0e0e0e;
       color: #ffffff;
+    }
+
+    /* Fixed bottom actions (hero buttons only) */
+    .hero-actions {
+      position: fixed;
+      left: 0;
+      bottom: 2.2rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      z-index: 50;
+      padding: 0 1rem;
+    }
+
+    .hero-actions .btn {
+      margin: 0;
+      width: min(360px, 92vw);
     }
 
     .video-wrapper,
@@ -122,15 +145,17 @@
         gap: 0.6rem;
       }
 
-      .tagline {
-        margin-bottom: 2rem;
-        font-size: 1.55rem;
+      .hero {
+        padding-top: 4.8rem;   /* ещё чуть выше */
+        padding-bottom: 9.5rem;
       }
 
-      .hero,
-      .video-wrapper,
-      .buttons-wrapper {
-        padding-top: 5.5rem;
+      .tagline {
+        font-size: 1.6rem;
+      }
+
+      .hero-actions {
+        bottom: 2.0rem;
       }
     }
   </style>
@@ -148,7 +173,10 @@
 <section class="hero" id="hero">
   <div class="hero-inner">
     <h1 class="tagline">инструкция к игре на пианино</h1>
+  </div>
 
+  <!-- КНОПКИ ВНИЗУ ЭКРАНА -->
+  <div class="hero-actions" id="heroActions">
     <button class="btn" id="playBtn" type="button">Покажи мне Play12</button>
     <button class="btn" id="skipBtn" type="button">Уже смотрел</button>
   </div>
@@ -171,6 +199,7 @@
 
 <script>
   const hero = document.getElementById('hero');
+  const heroActions = document.getElementById('heroActions');
   const videoSection = document.getElementById('videoSection');
   const video = document.getElementById('video');
   const menu = document.getElementById('menu');
