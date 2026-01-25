@@ -15,15 +15,17 @@
       color: #0e0e0e;
     }
 
-    /* ===== HEADER / TOP ZONE ===== */
+    /* ===== TOP ZONE (orange) ===== */
     header {
       background: #E96E40;
       padding: 1rem;
     }
 
-    .header-inner {
-      max-width: 720px;
-      margin: 0 auto;
+    /* ВАЖНО: логика header как на главной */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
     .logo {
@@ -37,15 +39,18 @@
       display: block;
     }
 
-    .subtitle {
-      margin-top: 0.4rem;
-      font-size: 0.95rem;
-      letter-spacing: 0.02em;
+    .header-content {
+      margin-top: 0.6rem;
     }
 
-    /* ===== TABLE OF CONTENTS ===== */
+    .subtitle {
+      margin: 0.2rem 0 0;
+      font-size: 0.95rem;
+      color: #0e0e0e;
+    }
+
     .toc {
-      margin-top: 2rem;
+      margin-top: 1.6rem;
     }
 
     .toc a {
@@ -60,7 +65,7 @@
       text-decoration: underline;
     }
 
-    /* ===== MAIN CONTENT ===== */
+    /* ===== MAIN CONTENT (grey) ===== */
     main {
       max-width: 720px;
       margin: 0 auto;
@@ -83,10 +88,21 @@
       margin-bottom: 1rem;
     }
 
-    /* ===== MOBILE ===== */
+    /* Mobile: как на главной — центрируем верх */
     @media (max-width: 480px) {
-      header {
-        padding: 1rem 1rem 1.4rem;
+      .topbar {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .header-content {
+        width: 100%;
+      }
+
+      /* оглавление слева — как у тебя на скрине */
+      .toc {
+        margin-top: 1.2rem;
       }
 
       .logo img {
@@ -99,12 +115,15 @@
 <body>
 
 <header>
-  <div class="header-inner">
+  <div class="topbar">
     <a href="index.html" class="logo" aria-label="Play12 Home">
       <img src="logo.svg" alt="Play12 logo">
     </a>
+    <!-- справа ничего не ставим, чтобы логика совпадала с главной -->
+  </div>
 
-    <div class="subtitle">Учебник</div>
+  <div class="header-content">
+    <p class="subtitle">Учебник</p>
 
     <nav class="toc">
       <a href="#intro">Введение</a>
@@ -118,19 +137,12 @@
 </header>
 
 <main>
-
   <section id="intro"></section>
-
   <section id="twelve-notes"></section>
-
   <section id="symbols"></section>
-
   <section id="zero-point"></section>
-
   <section id="cycles"></section>
-
   <section id="ready"></section>
-
 </main>
 
 </body>
