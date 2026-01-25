@@ -20,6 +20,8 @@
       justify-content: space-between;
       align-items: flex-start;
       padding: 1rem;
+      position: relative;
+      z-index: 10;
     }
 
     .logo img {
@@ -36,41 +38,25 @@
       text-decoration: none;
       color: #0e0e0e;
       font-size: 0.9rem;
-      display: inline-block;
-      -webkit-appearance: none;
-      appearance: none;
-      -webkit-tap-highlight-color: transparent;
       background: transparent;
       cursor: pointer;
     }
 
-    /* CHANGE 1: hover как у всех кнопок */
     .lang-switch:hover {
       background: #0e0e0e;
       color: #ffffff;
     }
 
-    /* Sections */
-    .hero,
-    .video-wrapper,
-    .buttons-wrapper {
-      min-height: calc(100vh - 80px);
+    /* HERO */
+    .hero {
+      min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 1.5rem;
-    }
-
-    /* HERO: текст выше + место под фиксированные кнопки */
-    .hero {
       align-items: flex-start;
-      padding-top: 5.2rem;      /* поднимает заголовок выше */
-      padding-bottom: 9rem;     /* чтобы текст не «упирался» в нижние кнопки */
+      padding-top: 5.2rem;
+      padding-bottom: 9rem;
       position: relative;
-    }
-
-    .video-wrapper,
-    .buttons-wrapper {
-      align-items: center;
+      z-index: 1;
     }
 
     .hero-inner {
@@ -87,10 +73,8 @@
       letter-spacing: 0.02em;
     }
 
-    /* Buttons: style */
+    /* BUTTONS */
     .btn {
-      display: inline-block;
-      margin: 0.4rem;
       padding: 0.8rem 1.4rem;
       font-size: 0.95rem;
       border-radius: 22px;
@@ -98,10 +82,6 @@
       background: transparent;
       cursor: pointer;
       color: #0e0e0e;
-      text-decoration: none;
-      -webkit-appearance: none;
-      appearance: none;
-      -webkit-tap-highlight-color: transparent;
     }
 
     .btn:hover {
@@ -109,7 +89,6 @@
       color: #ffffff;
     }
 
-    /* Fixed bottom actions (hero buttons only) */
     .hero-actions {
       position: fixed;
       left: 0;
@@ -119,18 +98,25 @@
       flex-direction: column;
       align-items: center;
       gap: 0.8rem;
-      z-index: 50;
+      z-index: 20;
       padding: 0 1rem;
     }
 
     .hero-actions .btn {
-      margin: 0;
       width: min(360px, 92vw);
     }
 
+    /* === КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ === */
+
     .video-wrapper,
     .buttons-wrapper {
+      position: fixed;
+      inset: 0;
       display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 15;
+      padding: 1.5rem;
     }
 
     video {
@@ -142,16 +128,13 @@
     .buttons-wrapper {
       flex-direction: column;
       gap: 0.6rem;
-      text-align: center;
     }
 
-    /* CHANGE 2: меню-кнопки такого же размера, как hero-кнопки */
     .buttons-wrapper .btn {
-      margin: 0;
       width: min(360px, 92vw);
     }
 
-    /* Mobile: lang switch under logo */
+    /* Mobile */
     @media (max-width: 480px) {
       header {
         flex-direction: column;
@@ -160,16 +143,12 @@
       }
 
       .hero {
-        padding-top: 4.8rem;   /* ещё чуть выше */
+        padding-top: 4.8rem;
         padding-bottom: 9.5rem;
       }
 
       .tagline {
         font-size: 1.6rem;
-      }
-
-      .hero-actions {
-        bottom: 2.0rem;
       }
     }
   </style>
@@ -178,47 +157,44 @@
 <body>
 
 <header>
-  <a href="/" class="logo" aria-label="Play12 Home">
+  <a href="/" class="logo">
     <img src="logo.svg" alt="Play12 logo">
   </a>
   <a class="lang-switch" href="index-en.html">EN / RU</a>
 </header>
 
-<section class="hero" id="hero">
+<section class="hero">
   <div class="hero-inner">
     <h1 class="tagline">инструкция к игре на пианино</h1>
   </div>
 
-  <!-- КНОПКИ ВНИЗУ ЭКРАНА -->
   <div class="hero-actions" id="heroActions">
-    <button class="btn" id="playBtn" type="button">Покажи мне Play12</button>
-    <button class="btn" id="skipBtn" type="button">Уже смотрел</button>
+    <button class="btn" id="playBtn">Покажи мне Play12</button>
+    <button class="btn" id="skipBtn">Уже смотрел</button>
   </div>
 </section>
 
 <section class="video-wrapper" id="videoSection">
   <video id="video" controls>
     <source src="assets/SMP12.mp4" type="video/mp4">
-    Ваш браузер не поддерживает видео.
   </video>
 </section>
 
 <section class="buttons-wrapper" id="menu">
-  <button class="btn" type="button">Учебник</button>
-  <button class="btn" type="button">Уроки</button>
-  <button class="btn" type="button">Ноты</button>
-  <button class="btn" type="button">Сделать Play12 лучше</button>
-  <button class="btn" id="replayBtn" type="button">Ещё раз</button>
+  <button class="btn">Учебник</button>
+  <button class="btn">Уроки</button>
+  <button class="btn">Ноты</button>
+  <button class="btn">Сделать Play12 лучше</button>
+  <button class="btn" id="replayBtn">Ещё раз</button>
 </section>
 
 <script>
   const heroActions = document.getElementById('heroActions');
   const videoSection = document.getElementById('videoSection');
-  const video = document.getElementById('video');
   const menu = document.getElementById('menu');
+  const video = document.getElementById('video');
 
-  // CHANGE 3: герой (текст) НЕ скрываем; прячем только hero-actions
-  document.getElementById('playBtn').onclick = () => {
+  playBtn.onclick = () => {
     heroActions.style.display = 'none';
     menu.style.display = 'none';
     videoSection.style.display = 'flex';
@@ -226,7 +202,7 @@
     video.play();
   };
 
-  document.getElementById('skipBtn').onclick = () => {
+  skipBtn.onclick = () => {
     heroActions.style.display = 'none';
     videoSection.style.display = 'none';
     menu.style.display = 'flex';
@@ -238,9 +214,8 @@
     menu.style.display = 'flex';
   };
 
-  document.getElementById('replayBtn').onclick = () => {
+  replayBtn.onclick = () => {
     menu.style.display = 'none';
-    heroActions.style.display = 'none';
     videoSection.style.display = 'flex';
     video.currentTime = 0;
     video.play();
