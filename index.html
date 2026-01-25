@@ -26,6 +26,7 @@
       max-width: 100%;
       height: auto;
       max-height: 64px;
+      display: block;
     }
 
     .lang-switch {
@@ -33,8 +34,11 @@
       border: 1px solid #0e0e0e;
       border-radius: 20px;
       text-decoration: none;
-      color: inherit;
+      color: #0e0e0e;
       font-size: 0.9rem;
+      display: inline-block;
+      -webkit-appearance: none;
+      appearance: none;
     }
 
     .hero,
@@ -59,6 +63,7 @@
       margin-bottom: 2rem;
     }
 
+    /* Buttons: fix iOS blue text + keep consistent style */
     .btn {
       display: inline-block;
       margin: 0.4rem;
@@ -68,11 +73,16 @@
       border: 1px solid #0e0e0e;
       background: transparent;
       cursor: pointer;
+      color: #0e0e0e;
+      text-decoration: none;
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn:hover {
       background: #0e0e0e;
-      color: #fff;
+      color: #ffffff;
     }
 
     .video-wrapper,
@@ -91,13 +101,22 @@
       gap: 0.6rem;
       text-align: center;
     }
+
+    /* Mobile: lang switch under logo */
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+      }
+    }
   </style>
 </head>
 
 <body>
 
 <header>
-  <a href="/" class="logo">
+  <a href="/" class="logo" aria-label="Play12 Home">
     <img src="logo.svg" alt="Play12 logo">
   </a>
   <a class="lang-switch" href="index-en.html">EN / RU</a>
@@ -105,28 +124,26 @@
 
 <section class="hero" id="hero">
   <div class="hero-inner">
-    <p>
-      Play12 — система записи и обучения игре на пианино,
-      в которой теория перестаёт мешать практике.
-    </p>
+    <p>инструкция к игре на пианино</p>
 
-    <button class="btn" id="playBtn">Покажи мне Play12</button>
-    <button class="btn" id="skipBtn">Уже смотрел</button>
+    <button class="btn" id="playBtn" type="button">Покажи мне Play12</button>
+    <button class="btn" id="skipBtn" type="button">Уже смотрел</button>
   </div>
 </section>
 
 <section class="video-wrapper" id="videoSection">
   <video id="video" controls>
     <source src="assets/SMP12.mp4" type="video/mp4">
+    Ваш браузер не поддерживает видео.
   </video>
 </section>
 
 <section class="buttons-wrapper" id="menu">
-  <button class="btn">Учебник</button>
-  <button class="btn">Уроки</button>
-  <button class="btn">Ноты</button>
-  <button class="btn">Сделать Play12 лучше</button>
-  <button class="btn" id="replayBtn">Ещё раз</button>
+  <button class="btn" id="tutorialBtn" type="button">Учебник</button>
+  <button class="btn" type="button">Уроки</button>
+  <button class="btn" type="button">Ноты</button>
+  <button class="btn" type="button">Сделать Play12 лучше</button>
+  <button class="btn" id="replayBtn" type="button">Ещё раз</button>
 </section>
 
 <script>
@@ -162,5 +179,3 @@
 
 </body>
 </html>
-
-
