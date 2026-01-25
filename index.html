@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Play12 — Музыка проще</title>
+  <title>Play12</title>
 
   <style>
     * { box-sizing: border-box; }
@@ -13,8 +13,10 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #dedcd9;
       color: #0e0e0e;
+      min-height: 100vh;
     }
 
+    /* HEADER */
     header {
       display: flex;
       justify-content: space-between;
@@ -23,8 +25,6 @@
     }
 
     .logo img {
-      max-width: 100%;
-      height: auto;
       max-height: 64px;
       display: block;
     }
@@ -36,28 +36,17 @@
       text-decoration: none;
       color: #0e0e0e;
       font-size: 0.9rem;
-      display: inline-block;
       -webkit-appearance: none;
       appearance: none;
-      -webkit-tap-highlight-color: transparent;
     }
 
-    .hero,
-    .video-wrapper,
-    .buttons-wrapper {
+    /* MAIN */
+    .hero {
       min-height: calc(100vh - 80px);
       display: flex;
       justify-content: center;
-      padding: 6.5rem 1.5rem 1.5rem;
-    }
-
-    .hero {
-      align-items: flex-start;
-    }
-
-    .video-wrapper,
-    .buttons-wrapper {
       align-items: center;
+      padding: 1rem;
     }
 
     .hero-inner {
@@ -66,30 +55,40 @@
       width: 100%;
     }
 
-    /* Tagline (replaces old hero paragraph) */
     .tagline {
-      margin: 0 0 2.2rem 0;
-      font-size: clamp(1.4rem, 3.6vw, 2.2rem);
-      line-height: 1.25;
+      font-size: clamp(1.5rem, 3.8vw, 2.3rem);
       font-weight: 500;
+      line-height: 1.25;
       letter-spacing: 0.02em;
+      margin: 0;
     }
 
-    /* Buttons: fix iOS blue text + keep consistent style */
+    /* BUTTONS */
+    .actions {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+      pointer-events: none; /* чтобы клики шли только по кнопкам */
+    }
+
     .btn {
-      display: inline-block;
-      margin: 0.4rem;
-      padding: 0.8rem 1.4rem;
+      pointer-events: auto;
+      padding: 0.9rem 1.6rem;
       font-size: 0.95rem;
-      border-radius: 22px;
+      border-radius: 24px;
       border: 1px solid #0e0e0e;
       background: transparent;
       cursor: pointer;
       color: #0e0e0e;
-      text-decoration: none;
       -webkit-appearance: none;
       appearance: none;
-      -webkit-tap-highlight-color: transparent;
+      min-width: 240px;
+      text-align: center;
     }
 
     .btn:hover {
@@ -97,40 +96,19 @@
       color: #ffffff;
     }
 
-    .video-wrapper,
-    .buttons-wrapper {
-      display: none;
-    }
-
-    video {
-      max-width: 100%;
-      max-height: 80vh;
-      border-radius: 12px;
-    }
-
-    .buttons-wrapper {
-      flex-direction: column;
-      gap: 0.6rem;
-      text-align: center;
-    }
-
-    /* Mobile: lang switch under logo */
+    /* MOBILE */
     @media (max-width: 480px) {
       header {
         flex-direction: column;
-        align-items: center;
         gap: 0.6rem;
       }
 
-      .tagline {
-        margin-bottom: 2rem;
-        font-size: 1.55rem;
+      .actions {
+        bottom: 2rem;
       }
 
-      .hero,
-      .video-wrapper,
-      .buttons-wrapper {
-        padding-top: 5.5rem;
+      .btn {
+        min-width: 220px;
       }
     }
   </style>
@@ -139,66 +117,22 @@
 <body>
 
 <header>
-  <a href="/" class="logo" aria-label="Play12 Home">
+  <a href="/" class="logo">
     <img src="logo.svg" alt="Play12 logo">
   </a>
   <a class="lang-switch" href="index-en.html">EN / RU</a>
 </header>
 
-<section class="hero" id="hero">
+<main class="hero">
   <div class="hero-inner">
     <h1 class="tagline">инструкция к игре на пианино</h1>
-
-    <button class="btn" id="playBtn" type="button">Покажи мне Play12</button>
-    <button class="btn" id="skipBtn" type="button">Уже смотрел</button>
   </div>
-</section>
+</main>
 
-<section class="video-wrapper" id="videoSection">
-  <video id="video" controls>
-    <source src="assets/SMP12.mp4" type="video/mp4">
-    Ваш браузер не поддерживает видео.
-  </video>
-</section>
-
-<section class="buttons-wrapper" id="menu">
-  <button class="btn" type="button">Учебник</button>
-  <button class="btn" type="button">Уроки</button>
-  <button class="btn" type="button">Ноты</button>
-  <button class="btn" type="button">Сделать Play12 лучше</button>
-  <button class="btn" id="replayBtn" type="button">Ещё раз</button>
-</section>
-
-<script>
-  const hero = document.getElementById('hero');
-  const videoSection = document.getElementById('videoSection');
-  const video = document.getElementById('video');
-  const menu = document.getElementById('menu');
-
-  document.getElementById('playBtn').onclick = () => {
-    hero.style.display = 'none';
-    videoSection.style.display = 'flex';
-    video.currentTime = 0;
-    video.play();
-  };
-
-  document.getElementById('skipBtn').onclick = () => {
-    hero.style.display = 'none';
-    menu.style.display = 'flex';
-  };
-
-  video.onended = () => {
-    videoSection.style.display = 'none';
-    menu.style.display = 'flex';
-  };
-
-  document.getElementById('replayBtn').onclick = () => {
-    menu.style.display = 'none';
-    videoSection.style.display = 'flex';
-    video.currentTime = 0;
-    video.play();
-  };
-</script>
+<div class="actions">
+  <button class="btn" id="playBtn">Покажи мне Play12</button>
+  <button class="btn" id="skipBtn">Уже смотрел</button>
+</div>
 
 </body>
 </html>
