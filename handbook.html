@@ -63,18 +63,28 @@
 
     .toc {
   margin-top: 1.6rem;
-  text-align: left;
+  text-align: left;              /* левый край */
+  max-width: 720px;              /* как main */
 }
-    .toc a {
-      display: block;
-      text-decoration: none;
-      color: #dedcd9;
-      font-size: 1.1rem;
-      line-height: 1.7;
-      margin-bottom: 0.6rem;
-    }
 
-    .toc a:hover { text-decoration: none; }
+.toc a {
+  display: block;
+  text-decoration: none;
+  color: #dedcd9;
+  font-size: 1.06rem;
+  line-height: 1.35;             /* “учебник”, не “стихи” */
+  margin: 0 0 0.85rem 0;         /* ровнее ритм */
+  cursor: default;               /* меньше ощущение “кнопки” */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.toc a:hover {
+  text-decoration: none;
+}
+
+.toc a strong {
+  font-weight: 700;              /* “Глава N.” жирным */
+}
 
     /* ===== MAIN CONTENT (grey) ===== */
     main {
@@ -127,35 +137,13 @@
   <div class="header-content">
     <p class="subtitle">Учебник</p>
 
-  <nav class="toc">
-  <a href="#intro">
-    Введение
-  </a>
-
-  <a href="#twelve-notes">
-    <div>Глава 1</div>
-    <div>В музыке всего 12 нот</div>
-  </a>
-
-  <a href="#zero-point">
-    <div>Глава 2</div>
-    <div>Какая же из них 0?</div>
-  </a>
-
-  <a href="#cycles">
-    <div>Глава 3</div>
-    <div>Как узнать, какая именно клавиша тебе нужна</div>
-  </a>
-
-  <a href="#chapter4">
-    <div>Глава 4</div>
-    <div>Как долго держать клавишу</div>
-  </a>
-
-  <a href="#chapter5">
-    <div>Глава 5</div>
-    <div>В каком порядке нажимать клавиши</div>
-  </a>
+ <nav class="toc">
+  <a href="#intro">Введение</a>
+  <a href="#chapter1"><strong>Глава 1.</strong> В музыке всего 12 нот</a>
+  <a href="#chapter2"><strong>Глава 2.</strong> Какая же из них 0?</a>
+  <a href="#chapter3"><strong>Глава 3.</strong> Как узнать, какая именно клавиша тебе нужна</a>
+  <a href="#chapter4"><strong>Глава 4.</strong> Как долго держать клавишу</a>
+  <a href="#chapter5"><strong>Глава 5.</strong> В каком порядке нажимать клавиши</a>
 </nav>
   </div>
 </header>
