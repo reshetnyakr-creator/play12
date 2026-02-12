@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="347.12mm" height="580.38mm" version="1.1" viewBox="0 0 347.12 580.38" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <radialGradient id="radialGradient127-8-1" cx="-599.91" cy="-324.09" r="92.831" gradientTransform="matrix(1.5467 .0080813 -.00066426 .13367 1659 566.03)" gradientUnits="userSpaceOnUse" xlink:href="#linearGradient126"/>
+  <linearGradient id="linearGradient126">
+   <stop stop-color="#f60000" offset="0"/>
+   <stop stop-color="#9d0050" stop-opacity="0" offset="1"/>
+  </linearGradient>
+  <radialGradient id="radialGradient127-82-6-7" cx="-599.91" cy="-324.09" r="92.831" gradientTransform="matrix(-.48422 -1.5529 .12417 -.04071 577.62 -426.91)" gradientUnits="userSpaceOnUse" xlink:href="#linearGradient126"/>
+  <linearGradient id="linearGradient26" x1="157.26" x2="258.14" y1="-365.59" y2="-365.59" gradientTransform="matrix(.26642 0 0 .26642 882.42 607.79)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#fff" offset="0"/>
+  </linearGradient>
+ </defs>
+ <g transform="translate(954.56 13.834)">
+  <g transform="matrix(.26458 0 0 .26458 -934.09 739.35)">
+   <rect x="288.79" y="-1200.4" width="213.99" height="546.59" rx="106.99" ry="106.99" fill="#0381ed" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.446" style="paint-order:stroke fill markers"/>
+  </g>
+  <g transform="matrix(.26458 0 0 .26458 -837.41 739.35)">
+   <rect x="288.79" y="-1200.4" width="213.99" height="546.59" rx="106.99" ry="106.99" fill="#0381ed" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.446" style="paint-order:stroke fill markers"/>
+  </g>
+  <g transform="matrix(.26458 0 0 .26458 -741.04 353.95)">
+   <rect x="288.79" y="-1389.3" width="215.43" height="2192.1" rx="105.64" ry="106.99" fill="#0381ed" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.446" style="paint-order:stroke fill markers"/>
+  </g>
+  <g stroke-linecap="round" stroke-linejoin="round" stroke-width=".265">
+   <rect transform="scale(-1,1)" x="806.01" y="471.97" width="46.738" height="89.732" rx="23.5" ry="23.5" fill="url(#radialGradient127-82-6-7)" stroke="#000600"/>
+   <text transform="scale(.98754 1.0126)" x="-855.63892" y="529.00226" fill="#ffffff" font-family="inter" font-size="51.155px" stroke="#000000" xml:space="preserve"><tspan x="-855.63892" y="529.00226" fill="#ffffff" stroke="#000000" stroke-width=".265">4</tspan></text>
+   <rect transform="scale(-1,1)" x="612.76" y="471.97" width="46.738" height="89.732" rx="23.5" ry="23.5" fill-opacity="0" stroke="#000600"/>
+  </g>
+  <g stroke-linecap="round" stroke-linejoin="round">
+   <text transform="scale(.98753 1.0126)" x="-657.35156" y="528.99811" fill="#000000" font-family="inter" font-size="51.154px" stroke="#ffffff" stroke-width=".265" xml:space="preserve"><tspan x="-657.35156" y="528.99811" stroke="#ffffff" stroke-width=".265">7</tspan></text>
+   <rect x="-954.37" y="421.74" width="56.617" height="144.62" rx="28.309" ry="28.309" fill="#0381ed" stroke="#fff" stroke-width=".38258" style="paint-order:stroke fill markers"/>
+   <g>
+    <rect transform="scale(-1,1)" x="902.69" y="471.97" width="46.736" height="89.729" rx="23.366" ry="23.963" stroke="#000600" stroke-width=".26736"/>
+    <text transform="scale(-.98753 1.0126)" x="922.0694" y="528.99774" fill="url(#linearGradient26)" font-family="inter" font-size="51.152px" stroke-width=".26736" xml:space="preserve"><tspan x="922.0694" y="528.99774" fill="url(#linearGradient26)" stroke-width=".26736">0</tspan></text>
+    <rect transform="scale(-1,1)" x="709.45" y="471.97" width="46.738" height="89.732" rx="23.5" ry="23.5" fill="url(#radialGradient127-8-1)" stroke="#000600" stroke-width=".265"/>
+    <text transform="scale(.98754 1.0126)" x="-756.68994" y="528.75244" fill="#ffffff" font-family="inter" font-size="51.155px" stroke="#000000" stroke-width=".265" xml:space="preserve"><tspan x="-756.68994" y="528.75244" fill="#ffffff" stroke="#000000" stroke-width=".265">5</tspan></text>
+   </g>
+  </g>
+ </g>
+</svg>
