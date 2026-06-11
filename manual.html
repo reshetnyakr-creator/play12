@@ -6,220 +6,241 @@
 
 <title>Play12 Manual Basic</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
-body {
-  font-family: "Inter", sans-serif;
-  background: #F5F5F5;
-  color: #111111;
+body{
+font-family:Inter,sans-serif;
+background:#DEDCD9;
+color:#111;
 }
 
-header {
-  height: 96px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 58px;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+header{
+height:92px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 60px;
+border-bottom:1px solid rgba(0,0,0,0.08);
 }
 
-.logo-link {
-  display: block;
-  opacity: 0.75;
-  transition: opacity 0.25s ease;
+.logo{
+height:60px;
 }
 
-.logo-link:hover {
-  opacity: 1;
+nav{
+display:flex;
+gap:48px;
 }
 
-.logo-img {
-  display: block;
-  width: 120px;
-  height: auto;
+nav a{
+text-decoration:none;
+color:#111;
+font-weight:600;
 }
 
-nav {
-  display: flex;
-  align-items: center;
-  gap: 44px;
+.container{
+max-width:1100px;
+margin:0 auto;
+padding:80px 40px;
 }
 
-nav a {
-  position: relative;
-  color: #111111;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: 500;
-  padding-bottom: 8px;
+.hero{
+margin-bottom:80px;
 }
 
-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 3px;
-  background: #CEF932;
-  transition: width 0.25s ease;
+.hero h1{
+font-size:72px;
+line-height:0.95;
+margin-bottom:24px;
 }
 
-nav a:hover::after {
-  width: 100%;
+.hero p{
+font-size:24px;
+color:#555;
 }
 
-.manual {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 90px 28px 120px;
+.toc{
+background:white;
+padding:32px;
+border-radius:24px;
+margin-bottom:80px;
 }
 
-h1 {
-  font-size: clamp(48px, 6vw, 82px);
-  line-height: 0.95;
-  font-weight: 900;
-  letter-spacing: -0.06em;
-  margin-bottom: 28px;
+.toc h2{
+margin-bottom:20px;
 }
 
-.subtitle {
-  font-size: 24px;
-  line-height: 1.4;
-  color: #555555;
-  margin-bottom: 80px;
+.toc ul{
+list-style:none;
+line-height:2;
 }
 
-.chapter {
-  margin-bottom: 80px;
+.toc a{
+text-decoration:none;
+color:#111;
 }
 
-.chapter-label {
-  font-size: 16px;
-  font-weight: 700;
-  color: #E96E40;
-  margin-bottom: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.section{
+margin-bottom:100px;
 }
 
-h2 {
-  font-size: 36px;
-  line-height: 1.15;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  margin-bottom: 24px;
+.section h2{
+font-size:42px;
+margin-bottom:24px;
 }
 
-p {
-  font-size: 21px;
-  line-height: 1.65;
-  color: #444444;
-  margin-bottom: 20px;
+.section p{
+font-size:22px;
+line-height:1.7;
+max-width:850px;
+margin-bottom:24px;
 }
 
-.back-link {
-  display: inline-block;
-  margin-top: 40px;
-  color: #111111;
-  text-decoration: none;
-  font-weight: 700;
-  border-bottom: 3px solid #CEF932;
-  padding-bottom: 6px;
+.back{
+display:inline-block;
+margin-top:40px;
+text-decoration:none;
+font-weight:700;
+color:#E96E40;
 }
 
-@media (max-width: 920px) {
-  header {
-    height: 92px;
-    padding: 22px;
-  }
+@media (max-width:720px){
 
-  .logo-img {
-    width: 120px;
-  }
-
-  nav {
-    gap: 28px;
-  }
-
-  nav a:nth-child(n+3) {
-    display: none;
-  }
-
-  .manual {
-    padding: 60px 22px 90px;
-  }
-
-  h1 {
-    font-size: 52px;
-  }
-
-  .subtitle {
-    font-size: 22px;
-    margin-bottom: 60px;
-  }
-
-  h2 {
-    font-size: 32px;
-  }
-
-  p {
-    font-size: 19px;
-  }
+header{
+padding:22px;
+height:auto;
+flex-direction:column;
+align-items:flex-start;
+gap:22px;
 }
+
+nav{
+flex-wrap:wrap;
+gap:16px 22px;
+}
+
+.hero h1{
+font-size:52px;
+}
+
+.hero p{
+font-size:18px;
+}
+
+.section h2{
+font-size:32px;
+}
+
+.section p{
+font-size:18px;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-  <a href="index.html" class="logo-link" aria-label="Play12 homepage">
-    <img src="P12 logo.png" alt="Play12 logo" class="logo-img">
-  </a>
 
-  <nav>
-    <a href="manual.html">Manual</a>
-    <a href="#">Manifesto</a>
-    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
-    <a href="https://www.instagram.com/play12_official/">Instagram</a>
-    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
-    <a href="https://x.com/play12_official">X</a>
-  </nav>
+<a href="index.html">
+<img src="P12 logo.png" class="logo">
+</a>
+
+<nav>
+<a href="manual.html">Manual</a>
+<a href="#">Manifesto</a>
+<a href="#">YouTube</a>
+<a href="#">Instagram</a>
+<a href="#">TikTok</a>
+<a href="#">X</a>
+</nav>
+
 </header>
 
-<main class="manual">
+<div class="container">
 
-  <h1>Play12 Manual Basic</h1>
+<div class="hero">
+<h1>Play12 Manual Basic</h1>
+<p>Learn the rules. Then start playing.</p>
+</div>
 
-  <p class="subtitle">
-    Learn the rules. Then start playing.
-  </p>
+<div class="toc">
 
-  <section class="chapter">
-    <div class="chapter-label">Introduction</div>
-    <h2>Welcome to Play12</h2>
+<h2>Contents</h2>
 
-    <p>
-      This page will contain the complete Play12 Manual Basic.
-    </p>
+<ul>
+<li><a href="#intro">Introduction</a></li>
 
-    <p>
-      The manual is currently being prepared for publication.
-    </p>
-  </section>
+<li><a href="#block1">Block 1. Getting Started</a></li>
+<li><a href="#block2">Block 2. Note Combinations</a></li>
+<li><a href="#block3">Block 3. Rhythm</a></li>
 
-  <a href="index.html" class="back-link">← Back to Home</a>
+<li><a href="#next">What's Next?</a></li>
+</ul>
 
-</main>
+</div>
+
+<section id="intro" class="section">
+<h2>Introduction</h2>
+
+<p>
+Welcome to Play12.
+</p>
+
+<p>
+This page will contain the complete Play12 Manual Basic.
+</p>
+
+</section>
+
+<section id="block1" class="section">
+<h2>Block 1. Getting Started</h2>
+
+<p>
+Content coming next.
+</p>
+
+</section>
+
+<section id="block2" class="section">
+<h2>Block 2. Note Combinations</h2>
+
+<p>
+Content coming next.
+</p>
+
+</section>
+
+<section id="block3" class="section">
+<h2>Block 3. Rhythm</h2>
+
+<p>
+Content coming next.
+</p>
+
+</section>
+
+<section id="next" class="section">
+<h2>What's Next?</h2>
+
+<p>
+Content coming next.
+</p>
+</section>
+
+<a href="index.html" class="back">
+← Back to Home
+</a>
+
+</div>
 
 </body>
 </html>
