@@ -1,1 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Play12 — A Simpler Way To Start Playing Piano</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:#DEDCD9;
+color:#111;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:32px 60px;
+border-bottom:1px solid rgba(0,0,0,.08);
+}
+
+.logo{
+font-size:42px;
+font-weight:800;
+}
+
+.logo span{
+color:#E96E40;
+}
+
+nav{
+display:flex;
+gap:40px;
+}
+
+nav a{
+text-decoration:none;
+color:#111;
+font-size:18px;
+}
+
+.hero{
+min-height:calc(100vh - 100px);
+display:grid;
+grid-template-columns:1fr 1fr;
+align-items:center;
+padding:80px 60px;
+gap:60px;
+}
+
+.hero h1{
+font-size:88px;
+line-height:0.95;
+font-weight:800;
+margin-bottom:30px;
+}
+
+.hero h1 span{
+color:#E96E40;
+}
+
+.tagline{
+font-size:32px;
+font-weight:600;
+margin-bottom:30px;
+}
+
+.description{
+font-size:26px;
+line-height:1.5;
+max-width:700px;
+color:#555;
+margin-bottom:40px;
+}
+
+.buttons{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.btn-primary{
+background:#E96E40;
+color:white;
+padding:18px 34px;
+border-radius:14px;
+text-decoration:none;
+font-weight:600;
+font-size:20px;
+}
+
+.btn-secondary{
+border:2px solid #CEF932;
+padding:18px 34px;
+border-radius:14px;
+text-decoration:none;
+color:#111;
+font-weight:600;
+font-size:20px;
+}
+
+.keyboard{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100%;
+}
+
+.keyboard-box{
+width:500px;
+height:500px;
+background:white;
+border-radius:30px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:160px;
+font-weight:800;
+color:#CEF932;
+box-shadow:0 20px 60px rgba(0,0,0,.08);
+}
+
+.note{
+color:#111;
+}
+
+@media(max-width:1000px){
+
+.hero{
+grid-template-columns:1fr;
+}
+
+.hero h1{
+font-size:60px;
+}
+
+.tagline{
+font-size:24px;
+}
+
+.description{
+font-size:20px;
+}
+
+.keyboard{
+display:none;
+}
+
+header{
+padding:24px;
+}
+
+.hero{
+padding:40px 24px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+Play<span>12</span>
+</div>
+
+<nav>
+<a href="#">Manual</a>
+<a href="#">Manifesto</a>
+<a href="#">YouTube</a>
+</nav>
+
+</header>
+
+<section class="hero">
+
+<div>
+
+<h1>
+There Are Only<br>
+<span>12 Notes</span><br>
+In Music.
+</h1>
+
+<div class="tagline">
+A Simpler Way To Start Playing Piano
+</div>
+
+<div class="description">
+Play12 is a piano learning system built around visual and numerical logic instead of traditional music notation.
+</div>
+
+<div class="buttons">
+<a class="btn-primary" href="#">
+Read Manual
+</a>
+
+<a class="btn-secondary" href="#">
+Download PDF
+</a>
+</div>
+
+</div>
+
+<div class="keyboard">
+
+<div class="keyboard-box">
+12
+</div>
+
+</div>
+
+</section>
+
+</body>
+</html>
