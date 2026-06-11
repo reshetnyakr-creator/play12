@@ -80,13 +80,15 @@ padding:80px 40px;
 }
 
 .hero{
-margin-bottom:80px;
+margin-bottom:100px;
 }
 
 .hero h1{
-font-size:72px;
-line-height:0.95;
-margin-bottom:24px;
+    font-size: clamp(62px, 6vw, 96px);
+    line-height: 0.96;
+    font-weight: 900;
+    letter-spacing: -0.06em;
+    margin-bottom: 24px;
 }
 
 .hero p{
@@ -194,7 +196,9 @@ font-size:18px;
 <div class="container">
 
 <div class="hero">
-<h1>Play12 Manual Basic</h1>
+<h1>
+<span style="color:#111111;">Play</span><span style="color:#E96E40;">12 Manual</span>
+</h1>
 <p>Learn the rules. Then start playing.</p>
 </div>
 
