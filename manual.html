@@ -20,30 +20,59 @@ background:#DEDCD9;
 color:#111;
 }
 
-header{
-height:92px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 60px;
-border-bottom:1px solid rgba(0,0,0,0.08);
+header {
+    height: 96px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 58px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
-.logo{
-height:60px;
+.logo-link {
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
 }
 
-nav{
-display:flex;
-gap:48px;
+.logo-link:hover {
+  opacity: 1;
 }
 
-nav a{
-text-decoration:none;
-color:#111;
-font-weight:600;
+.logo-img {
+  display: block;
+  width: 120px;
+  height: auto;
+}
+nav {
+  display: flex;
+  align-items: center;
+  gap: 44px;
 }
 
+nav a {
+  position: relative;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 8px;
+}
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+  
 .container{
 max-width:1100px;
 margin:0 auto;
@@ -151,7 +180,7 @@ font-size:18px;
 <header>
 
 <a href="index.html">
-<img src="P12 logo.png" class="logo">
+<img src="P12 logo.png" class="logo-img">
 </a>
 
 <nav>
