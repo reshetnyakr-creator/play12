@@ -6,162 +6,234 @@
 
 <title>Play12 — A Simpler Way To Start Playing Piano</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-background:#DEDCD9;
-color:#111;
+body {
+  font-family: "Inter", sans-serif;
+  background: #F5F5F5;
+  color: #111111;
 }
 
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:32px 60px;
-border-bottom:1px solid rgba(0,0,0,.08);
+header {
+  height: 96px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 58px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.logo{
-font-size:42px;
-font-weight:800;
+.logo-link {
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
 }
 
-.logo span{
-color:#E96E40;
+.logo-link:hover {
+  opacity: 1;
 }
 
-nav{
-display:flex;
-gap:40px;
+.logo-img {
+  display: block;
+  width: 76px;
+  height: auto;
 }
 
-nav a{
-text-decoration:none;
-color:#111;
-font-size:18px;
+nav {
+  display: flex;
+  align-items: center;
+  gap: 44px;
 }
 
-.hero{
-min-height:calc(100vh - 100px);
-display:grid;
-grid-template-columns:1fr 1fr;
-align-items:center;
-padding:80px 60px;
-gap:60px;
+nav a {
+  position: relative;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 8px;
 }
 
-.hero h1{
-font-size:88px;
-line-height:0.95;
-font-weight:800;
-margin-bottom:30px;
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
 }
 
-.hero h1 span{
-color:#E96E40;
+nav a:hover::after {
+  width: 100%;
 }
 
-.tagline{
-font-size:32px;
-font-weight:600;
-margin-bottom:30px;
+.hero {
+  min-height: calc(100vh - 96px);
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: 44px;
+  padding: 70px 58px 80px;
 }
 
-.description{
-font-size:26px;
-line-height:1.5;
-max-width:700px;
-color:#555;
-margin-bottom:40px;
+.hero-content {
+  max-width: 650px;
 }
 
-.buttons{
-display:flex;
-gap:20px;
-flex-wrap:wrap;
+h1 {
+  font-size: clamp(62px, 6vw, 96px);
+  line-height: 0.96;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  margin-bottom: 34px;
 }
 
-.btn-primary{
-background:#E96E40;
-color:white;
-padding:18px 34px;
-border-radius:14px;
-text-decoration:none;
-font-weight:600;
-font-size:20px;
+.accent {
+  color: #E96E40;
 }
 
-.btn-secondary{
-border:2px solid #CEF932;
-padding:18px 34px;
-border-radius:14px;
-text-decoration:none;
-color:#111;
-font-weight:600;
-font-size:20px;
+.tagline {
+  font-size: clamp(24px, 2vw, 34px);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  margin-bottom: 28px;
 }
 
-.keyboard{
-display:flex;
-justify-content:center;
-align-items:center;
-height:100%;
+.description {
+  max-width: 560px;
+  font-size: 22px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #555555;
+  margin-bottom: 42px;
 }
 
-.keyboard-box{
-width:500px;
-height:500px;
-background:white;
-border-radius:30px;
-display:flex;
-justify-content:center;
-align-items:center;
-font-size:160px;
-font-weight:800;
-color:#CEF932;
-box-shadow:0 20px 60px rgba(0,0,0,.08);
+.buttons {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
 }
 
-.note{
-color:#111;
+.button {
+  min-width: 220px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px 32px;
+  border: 2px solid #CEF932;
+  border-radius: 10px;
+  color: #111111;
+  background: transparent;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 700;
+  transition: all 0.25s ease;
 }
 
-@media(max-width:1000px){
-
-.hero{
-grid-template-columns:1fr;
+.button:hover {
+  background: #E96E40;
+  border-color: #E96E40;
+  color: #ffffff;
 }
 
-.hero h1{
-font-size:60px;
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.tagline{
-font-size:24px;
+.keyboard-img {
+  width: min(100%, 820px);
+  height: auto;
+  display: block;
 }
 
-.description{
-font-size:20px;
+@media (max-width: 1100px) {
+  header {
+    padding: 0 28px;
+  }
+
+  nav {
+    gap: 24px;
+  }
+
+  nav a {
+    font-size: 16px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 56px 28px 70px;
+  }
+
+  .hero-content {
+    max-width: 760px;
+  }
+
+  .hero-visual {
+    justify-content: flex-start;
+  }
+
+  .keyboard-img {
+    width: min(100%, 720px);
+  }
 }
 
-.keyboard{
-display:none;
-}
+@media (max-width: 720px) {
+  header {
+    height: auto;
+    padding: 22px 22px;
+    align-items: flex-start;
+    gap: 22px;
+  }
 
-header{
-padding:24px;
-}
+  .logo-img {
+    width: 58px;
+  }
 
-.hero{
-padding:40px 24px;
-}
+  nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 16px 22px;
+  }
 
+  nav a {
+    font-size: 15px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 46px 22px 60px;
+  }
+
+  h1 {
+    font-size: 52px;
+    margin-bottom: 26px;
+  }
+
+  .tagline {
+    font-size: 24px;
+  }
+
+  .description {
+    font-size: 18px;
+  }
+
+  .button {
+    width: 100%;
+  }
 }
 </style>
 </head>
@@ -169,58 +241,46 @@ padding:40px 24px;
 <body>
 
 <header>
+  <a href="/" class="logo-link" aria-label="Play12 homepage">
+    <img src="P12 logo.png" alt="Play12 logo" class="logo-img">
+  </a>
 
-<div class="logo">
-Play<span>12</span>
-</div>
-
-<nav>
-<a href="#">Manual</a>
-<a href="#">Manifesto</a>
-<a href="#">YouTube</a>
-</nav>
-
+  <nav>
+    <a href="#">Manual</a>
+    <a href="#">Manifesto</a>
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
+  </nav>
 </header>
 
-<section class="hero">
+<main class="hero" id="hero">
+  <section class="hero-content">
+    <h1>
+      There Are Only<br>
+      <span class="accent">12 Notes</span><br>
+      In Music.
+    </h1>
 
-<div>
+    <div class="tagline">
+      A Simpler Way To Start Playing Piano
+    </div>
 
-<h1>
-There Are Only<br>
-<span>12 Notes</span><br>
-In Music.
-</h1>
+    <p class="description">
+      Play12 is a piano learning system built around visual and numerical logic instead of traditional music notation.
+    </p>
 
-<div class="tagline">
-A Simpler Way To Start Playing Piano
-</div>
+    <div class="buttons">
+      <a class="button" href="#">Read Manual</a>
+      <a class="button" href="#">Download PDF</a>
+    </div>
+  </section>
 
-<div class="description">
-Play12 is a piano learning system built around visual and numerical logic instead of traditional music notation.
-</div>
-
-<div class="buttons">
-<a class="btn-primary" href="#">
-Read Manual
-</a>
-
-<a class="btn-secondary" href="#">
-Download PDF
-</a>
-</div>
-
-</div>
-
-<div class="keyboard">
-
-<div class="keyboard-box">
-12
-</div>
-
-</div>
-
-</section>
+  <section class="hero-visual" aria-label="Play12 keyboard illustration">
+    <img src="Hero-keyboard.png" alt="Play12 numbered piano keyboard" class="keyboard-img">
+  </section>
+</main>
 
 </body>
 </html>
