@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Play12 Manual Basic</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -13,32 +18,84 @@
 }
 
 body {
-  font-family: Inter, sans-serif;
-  background: #DEDCD9;
+  font-family: "Inter", sans-serif;
+  background: #F5F5F5;
   color: #111111;
-  line-height: 1.7;
 }
 
-.container {
+header {
+  height: 96px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 58px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.logo-link {
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
+}
+
+.logo-link:hover {
+  opacity: 1;
+}
+
+.logo-img {
+  display: block;
+  width: 120px;
+  height: auto;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+}
+
+nav a {
+  position: relative;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 8px;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+.manual {
   max-width: 900px;
   margin: 0 auto;
-  padding: 80px 28px;
-}
-
-.logo {
-  width: 120px;
-  margin-bottom: 60px;
+  padding: 90px 28px 120px;
 }
 
 h1 {
-  font-size: 52px;
-  line-height: 1.1;
-  margin-bottom: 20px;
+  font-size: clamp(48px, 6vw, 82px);
+  line-height: 0.95;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  margin-bottom: 28px;
 }
 
 .subtitle {
-  font-size: 22px;
-  color: #666666;
+  font-size: 24px;
+  line-height: 1.4;
+  color: #555555;
   margin-bottom: 80px;
 }
 
@@ -46,45 +103,77 @@ h1 {
   margin-bottom: 80px;
 }
 
-.chapter h2 {
-  font-size: 32px;
-  margin-bottom: 20px;
+.chapter-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #E96E40;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.chapter p {
-  font-size: 20px;
-  margin-bottom: 18px;
+h2 {
+  font-size: 36px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+p {
+  font-size: 21px;
+  line-height: 1.65;
+  color: #444444;
+  margin-bottom: 20px;
 }
 
 .back-link {
   display: inline-block;
   margin-top: 40px;
+  color: #111111;
   text-decoration: none;
-  color: #E96E40;
-  font-weight: 600;
+  font-weight: 700;
+  border-bottom: 3px solid #CEF932;
+  padding-bottom: 6px;
 }
 
 @media (max-width: 920px) {
+  header {
+    height: 92px;
+    padding: 22px;
+  }
 
-  .container {
-    padding: 40px 24px;
+  .logo-img {
+    width: 120px;
+  }
+
+  nav {
+    gap: 28px;
+  }
+
+  nav a:nth-child(n+3) {
+    display: none;
+  }
+
+  .manual {
+    padding: 60px 22px 90px;
   }
 
   h1 {
-    font-size: 38px;
+    font-size: 52px;
   }
 
   .subtitle {
-    font-size: 20px;
-    margin-bottom: 50px;
+    font-size: 22px;
+    margin-bottom: 60px;
   }
 
-  .chapter h2 {
-    font-size: 28px;
+  h2 {
+    font-size: 32px;
   }
 
-  .chapter p {
-    font-size: 18px;
+  p {
+    font-size: 19px;
   }
 }
 </style>
@@ -93,34 +182,44 @@ h1 {
 <body>
 
 <header>
-  <a href="index.html" class="logo-link">
+  <a href="index.html" class="logo-link" aria-label="Play12 homepage">
     <img src="P12 logo.png" alt="Play12 logo" class="logo-img">
   </a>
 
   <nav>
     <a href="manual.html">Manual</a>
     <a href="#">Manifesto</a>
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
   </nav>
 </header>
 
-<main class="manual-container">
+<main class="manual">
 
   <h1>Play12 Manual Basic</h1>
 
-  <p class="manual-subtitle">
+  <p class="subtitle">
     Learn the rules. Then start playing.
   </p>
 
   <section class="chapter">
-    <h2>Introduction</h2>
+    <div class="chapter-label">Introduction</div>
+    <h2>Welcome to Play12</h2>
 
-    <p>Welcome to Play12.</p>
+    <p>
+      This page will contain the complete Play12 Manual Basic.
+    </p>
 
-    <p>This page will contain the complete Play12 Manual Basic.</p>
-
-    <p>The manual is currently being prepared for publication.</p>
+    <p>
+      The manual is currently being prepared for publication.
+    </p>
   </section>
+
+  <a href="index.html" class="back-link">← Back to Home</a>
 
 </main>
 
 </body>
+</html>
