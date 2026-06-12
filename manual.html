@@ -81,8 +81,9 @@ nav a:hover::after {
 .manual-hero {
   min-height: calc(100vh - 96px);
   display: grid;
-  grid-template-columns: 1fr;
-  align-items: start;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: 44px;
   padding: 70px 58px 80px;
 }
 
@@ -93,7 +94,11 @@ nav a:hover::after {
   letter-spacing: -0.06em;
   margin-bottom: 34px;
 }
-
+  
+.hero-content {
+  max-width: 650px;
+}
+  
 .manual-content {
   padding: 0 58px 120px;
   max-width: 980px;
@@ -310,11 +315,15 @@ nav a:hover::after {
 
 <main>
 
-  <section class="manual-hero">
+<section class="manual-hero">
+
+  <div class="hero-content">
     <h1>
       <span style="color:#111111;">Play</span><span style="color:#E96E40;">12 Manual</span>
     </h1>
-  </section>
+  </div>
+
+</section>
 
   <section class="manual-content">
 
