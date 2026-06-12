@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ч<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -29,11 +29,16 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 0 58px;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .logo-link {
   display: block;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
+}
+
+.logo-link:hover {
   opacity: 1;
 }
 
@@ -151,10 +156,28 @@ nav a:hover::after {
   padding-bottom: 6px;
 }
 
+.social-footer {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  header {
+    padding: 0 28px;
+  }
+
+  nav {
+    gap: 24px;
+  }
+
+  nav a {
+    font-size: 16px;
+  }
+}
+
 @media (max-width: 920px) {
   header {
     height: auto;
-    padding: 22px;
+    padding: 22px 22px;
     align-items: flex-start;
     gap: 22px;
   }
@@ -165,7 +188,7 @@ nav a:hover::after {
 
   nav {
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: flex-end;
     gap: 16px 22px;
   }
 
@@ -208,6 +231,55 @@ nav a:hover::after {
   .section p {
     font-size: 18px;
   }
+
+  .social-footer {
+    display: block !important;
+  }
+}
+
+@media (max-width: 720px) {
+  nav a:nth-child(n+3) {
+    display: none;
+  }
+
+  header {
+    height: 92px;
+    align-items: center;
+  }
+
+  nav {
+    gap: 28px;
+  }
+}
+
+.social-footer {
+  text-align: center;
+  padding: 50px 20px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.social-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.social-links a:hover {
+  color: #E96E40;
 }
 </style>
 </head>
@@ -215,7 +287,7 @@ nav a:hover::after {
 <body>
 
 <header>
-  <a href="index.html" class="logo-link" aria-label="Play12 homepage">
+  <a href="/" class="logo-link" aria-label="Play12 homepage">
     <img src="P12 logo.png" alt="Play12 logo" class="logo-img">
   </a>
 
@@ -295,11 +367,22 @@ nav a:hover::after {
       </p>
     </section>
 
-    <a href="index.html" class="back">← Back to Home</a>
+    <a href="/" class="back">← Back to Home</a>
 
   </section>
 
 </main>
+
+<footer class="social-footer">
+  <div class="social-title">Follow Play12</div>
+
+  <div class="social-links">
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
+  </div>
+</footer>
 
 </body>
 </html>
