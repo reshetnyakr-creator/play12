@@ -1,1 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Play12 Manual</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: #F5F5F5;
+  color: #111111;
+}
+
+header {
+  height: 96px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 58px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.logo-link {
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
+}
+
+.logo-link:hover {
+  opacity: 1;
+}
+
+.logo-img {
+  display: block;
+  width: 120px;
+  height: auto;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+}
+
+nav a {
+  position: relative;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 8px;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+.manual-hero {
+  padding: 129px 58px 80px;
+}
+
+.manual-hero h1 {
+  font-size: clamp(62px, 6vw, 96px);
+  line-height: 0.96;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  margin-bottom: 34px;
+}
+  
+.hero-content {
+  max-width: 650px;
+}
+  
+.manual-content {
+  padding: 0 58px 120px;
+  max-width: 980px;
+}
+
+.toc {
+  margin-bottom: 90px;
+}
+
+.toc h2 {
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 28px;
+}
+
+.toc ul {
+  list-style: none;
+}
+
+.toc li {
+  margin-bottom: 12px;
+}
+
+.toc a {
+  color: #111111;
+  text-decoration: none;
+  font-size: 21px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.toc a:hover {
+  color: #E96E40;
+}
+
+.section {
+  margin-bottom: 100px;
+}
+
+.section h2 {
+  font-size: 42px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+.section p {
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 200;
+  letter-spacing: -0.015em;
+  color: #444444;
+  margin-bottom: 24px;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 20px;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+  border-bottom: 3px solid #CEF932;
+  padding-bottom: 6px;
+}
+
+.social-footer {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  header {
+    padding: 0 28px;
+  }
+
+  nav {
+    gap: 24px;
+  }
+
+  nav a {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 920px) {
+  header {
+    height: auto;
+    padding: 22px 22px;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  .logo-img {
+    width: 120px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 16px 22px;
+  }
+
+  nav a {
+    font-size: 15px;
+  }
+
+ .manual-hero {
+  min-height: auto;
+  display: block;
+  padding: 46px 22px 60px;
+}
+
+  .manual-hero h1 {
+    font-size: 52px;
+  }
+
+  .manual-content {
+    padding: 0 22px 80px;
+  }
+
+  .toc {
+    margin-bottom: 70px;
+  }
+
+  .toc h2 {
+    font-size: 30px;
+  }
+
+  .toc a {
+    font-size: 18px;
+  }
+
+  .section {
+    margin-bottom: 80px;
+  }
+
+  .section h2 {
+    font-size: 32px;
+  }
+
+  .section p {
+    font-size: 18px;
+  }
+
+  .social-footer {
+    display: block !important;
+  }
+}
+
+@media (max-width: 720px) {
+  nav a:nth-child(n+3) {
+    display: none;
+  }
+
+  header {
+    height: 92px;
+    align-items: center;
+  }
+
+  nav {
+    gap: 28px;
+  }
+}
+
+.social-footer {
+  text-align: center;
+  padding: 50px 20px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.social-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.social-links a:hover {
+  color: #E96E40;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="/" class="logo-link" aria-label="Play12 homepage">
+    <img src="P12 logo.png" alt="Play12 logo" class="logo-img">
+  </a>
+
+  <nav>
+    <a href="manual.html">Manual</a>
+    <a href="#">Manifesto</a>
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="manual-hero">
+
+  <div class="hero-content">
+    <h1>
+      <span style="color:#111111;">Play</span><span style="color:#E96E40;">12 Manual</span>
+    </h1>
+  </div>
+
+</section>
+
+  <section class="manual-content">
+
+    <div class="toc">
+      <h2>Contents</h2>
+
+      <ul>
+        <li><a href="#intro">Introduction</a></li>
+        <li><a href="#block1">Block 1. Getting Started</a></li>
+        <li><a href="#block2">Block 2. Note Combinations</a></li>
+        <li><a href="#block3">Block 3. Rhythm</a></li>
+        <li><a href="#next">What's Next?</a></li>
+      </ul>
+    </div>
+
+  <section id="intro" class="section">
+  <h2>Introduction</h2>
+
+  <p>All music is made up of notes. Notes are defined by their pitch — which key to press, their duration — how long to hold it, and their loudness — how strongly to press it. They are also arranged in a specific order over time. In other words, playing music means pressing, holding, and releasing the right keys at the right time and with the right amount of force.</p>
+
+  <p>In Play12, notes are represented by the symbols 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, X, Y and by rainbow colors. The notation is designed so that you can immediately see which key to press, how long to hold it, and when to play it.</p>
+
+  <p>Sounds easy? Don't be fooled. In practice, it takes time for your movements to become accurate and confident. Every lesson happens at the piano. Every repetition improves your playing skill, and results appear faster because you are making music from the very beginning. Play12 is for people who want to learn piano by playing piano.</p>
+
+  <p>The Play12 learning material is divided into two parts:</p>
+
+  <p>Manual — explains the rules of playing.<br>
+  Practice — a collection of exercises for building playing skills.</p>
+
+  <p>They are connected through a shared chapter structure: each chapter in Play12 Practice corresponds to a chapter in the Play12 Manual.</p>
+
+  <p>At the beginning, you will need the cards. They help you quickly locate the correct keys. Below you will find a link to the cards and instructions on how to prepare them before you begin.</p>
+
+  <p>The material is arranged in sequence: each Block builds on the previous one. Some things may seem obvious. You can read the text quickly or slowly, return to specific sections, and review them whenever needed.</p>
+
+  <p>First, read Block 1 of the Play12 Manual to get a general understanding of the system. Then move on to Block 1 of Play12 Practice. During your training, return to the relevant sections of the Manual and review the material as needed. Then continue with Block 2 of the Play12 Manual and Block 2 of Play12 Practice, and so on.</p>
+
+  <p>And yes — read the Play12 Manual at your instrument.</p>
+
+  <p>Let's play.</p>
+</section>
+    <section id="block1" class="section">
+      <h2>Block 1. Getting Started</h2>
+
+      <p>
+        Content coming next.
+      </p>
+    </section>
+
+    <section id="block2" class="section">
+      <h2>Block 2. Note Combinations</h2>
+
+      <p>
+        Content coming next.
+      </p>
+    </section>
+
+    <section id="block3" class="section">
+      <h2>Block 3. Rhythm</h2>
+
+      <p>
+        Content coming next.
+      </p>
+    </section>
+
+    <section id="next" class="section">
+      <h2>What's Next?</h2>
+
+      <p>
+        Content coming next.
+      </p>
+    </section>
+
+    <a href="/" class="back">← Back to Home</a>
+
+  </section>
+
+</main>
+
+<footer class="social-footer">
+  <div class="social-title">Follow Play12</div>
+
+  <div class="social-links">
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
+  </div>
+</footer>
+
+</body>
+</html>
