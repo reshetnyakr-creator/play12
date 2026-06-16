@@ -3,19 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Play12 Practice</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
   font-family: "Inter", sans-serif;
   background: #F5F5F5;
   color: #111111;
@@ -23,39 +25,97 @@ body {
 
 header {
   height: 96px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0 58px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.logo-link {
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
+}
+
+.logo-link:hover {
+  opacity: 1;
+}
+
+.logo-img {
+  display: block;
+  width: 120px;
+  height: auto;
+}
+
+nav {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  gap: 44px;
 }
 
-.logo {
-  width: 120px;
+nav a {
+  position: relative;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 8px;
 }
 
-main {
-  max-width: 1000px;
-  margin: 0 auto;
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+.manual-hero {
   padding: 129px 58px 80px;
 }
 
-h1 {
-  margin: 0;
+.manual-hero h1 {
   font-size: clamp(62px, 6vw, 96px);
   line-height: 0.96;
   font-weight: 900;
   letter-spacing: -0.06em;
+  margin-bottom: 34px;
 }
 
-p {
-  font-size: 20px;
-  line-height: 1.5;
-  margin-top: 40px;
+.hero-content {
+  max-width: 650px;
+}
+
+.manual-content {
+  padding: 0 58px 120px;
+  max-width: 980px;
+}
+
+.section {
+  margin-bottom: 100px;
+}
+
+.section p {
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 200;
+  letter-spacing: -0.015em;
+  color: #444444;
+  margin-bottom: 24px;
+  max-width: 700px;
 }
 
 .back {
   display: inline-block;
-  margin-top: 60px;
+  margin-top: 20px;
   color: #111111;
   text-decoration: none;
   font-size: 18px;
@@ -64,20 +124,116 @@ p {
   padding-bottom: 6px;
 }
 
-@media (max-width: 920px) {
+.social-footer {
+  display: none !important;
+}
 
+@media (max-width: 1100px) {
   header {
     padding: 0 28px;
   }
 
-  main {
-    padding: 90px 28px 60px;
+  nav {
+    gap: 24px;
   }
 
-  h1 {
+  nav a {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 920px) {
+  header {
+    height: auto;
+    padding: 22px 22px;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  .logo-img {
+    width: 120px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 16px 22px;
+  }
+
+  nav a {
+    font-size: 15px;
+  }
+
+  .manual-hero {
+    min-height: auto;
+    display: block;
+    padding: 46px 22px 60px;
+  }
+
+  .manual-hero h1 {
     font-size: 52px;
   }
 
+  .manual-content {
+    padding: 0 22px 80px;
+  }
+
+  .section {
+    margin-bottom: 80px;
+  }
+
+  .section p {
+    font-size: 18px;
+  }
+
+  .social-footer {
+    display: block !important;
+  }
+}
+
+@media (max-width: 720px) {
+  nav a:nth-child(n+3) {
+    display: none;
+  }
+
+  header {
+    height: 92px;
+    align-items: center;
+  }
+
+  nav {
+    gap: 28px;
+  }
+}
+
+.social-footer {
+  text-align: center;
+  padding: 50px 20px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.social-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.social-links a:hover {
+  color: #E96E40;
 }
 </style>
 </head>
@@ -85,22 +241,50 @@ p {
 <body>
 
 <header>
-  <a href="index.html">
-    <img src="P12 logo.png" alt="Play12" class="logo">
+  <a href="/" class="logo-link" aria-label="Play12 homepage">
+    <img src="P12 logo.png" alt="Play12 logo" class="logo-img">
   </a>
+
+  <nav>
+    <a href="manual.html">Manual</a>
+    <a href="#">Manifesto</a>
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
+  </nav>
 </header>
 
 <main>
 
-<h1>Play12 Practice</h1>
+<section class="manual-hero">
+  <div class="hero-content">
+    <h1>
+      <span style="color:#111111;">Play</span><span style="color:#E96E40;">12 Practice</span>
+    </h1>
+  </div>
+</section>
 
-<p>Content coming next.</p>
+<section class="manual-content">
+  <section class="section">
+    <p>Content coming next.</p>
 
-<a href="manual.html" class="back">
-← Back to Manual
-</a>
+    <a href="manual.html" class="back">← Back to Manual</a>
+  </section>
+</section>
 
 </main>
+
+<footer class="social-footer">
+  <div class="social-title">Follow Play12</div>
+
+  <div class="social-links">
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
+  </div>
+</footer>
 
 </body>
 </html>
