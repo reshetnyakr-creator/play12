@@ -1,1 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Play12 Manual Intermediate</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: #F5F5F5;
+  color: #111111;
+}
+
+header {
+  height: 96px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 58px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.logo-link {
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
+}
+
+.logo-link:hover {
+  opacity: 1;
+}
+
+.logo-img {
+  display: block;
+  width: 120px;
+  height: auto;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+}
+
+nav a {
+  position: relative;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 8px;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+.email-link {
+  position: relative;
+  color: #444444;
+  text-decoration: none;
+}
+
+.email-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+.email-link:hover::after {
+  width: 100%;
+}
+  
+.manual-hero {
+  padding: 129px 58px 80px;
+}
+
+.manual-hero h1 {
+  font-size: clamp(62px, 6vw, 96px);
+  line-height: 0.96;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  margin-bottom: 34px;
+}
+
+.hero-content {
+  max-width: 650px;
+}
+
+.manual-content {
+  padding: 0 58px 120px;
+  max-width: 980px;
+}
+
+.section {
+  margin-bottom: 100px;
+}
+
+.section p {
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 200;
+  letter-spacing: -0.015em;
+  color: #444444;
+  margin-bottom: 24px;
+  max-width: 700px;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 20px;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+  border-bottom: 3px solid #CEF932;
+  padding-bottom: 6px;
+}
+
+.social-footer {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  header {
+    padding: 0 28px;
+  }
+
+  nav {
+    gap: 24px;
+  }
+
+  nav a {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 920px) {
+  header {
+    height: auto;
+    padding: 22px 22px;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  .logo-img {
+    width: 120px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 16px 22px;
+  }
+
+  nav a {
+    font-size: 15px;
+  }
+
+  .manual-hero {
+    min-height: auto;
+    display: block;
+    padding: 46px 22px 60px;
+  }
+
+  .manual-hero h1 {
+    font-size: 52px;
+  }
+
+  .manual-content {
+    padding: 0 22px 80px;
+  }
+
+  .section {
+    margin-bottom: 80px;
+  }
+
+  .section p {
+    font-size: 18px;
+  }
+
+  .social-footer {
+    display: block !important;
+  }
+}
+
+@media (max-width: 720px) {
+  nav a:nth-child(n+3) {
+    display: none;
+  }
+
+  header {
+    height: 92px;
+    align-items: center;
+  }
+
+  nav {
+    gap: 28px;
+  }
+}
+
+.social-footer {
+  text-align: center;
+  padding: 50px 20px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.social-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.social-links a:hover {
+  color: #E96E40;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="/" class="logo-link" aria-label="Play12 homepage">
+    <img src="P12 logo.png" alt="Play12 logo" class="logo-img">
+  </a>
+
+  <nav>
+    <a href="manual.html">Manual</a>
+    <a href="#">Manifesto</a>
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
+  </nav>
+</header>
+
+  <main>
+
+<section class="manual-hero">
+  <div class="hero-content">
+    <h1>
+      <span style="color:#111111;">Play</span><span style="color:#E96E40;">12 Manifesto</span>
+    </h1>
+  </div>
+</section>
+
+<section class="manual-content">
+  <section class="section">
+
+  <p>Music occupies a remarkable place in human life. Almost everyone listens to it.</p>
+
+  <p>It accompanies celebrations and funerals, first dates and final farewells, long journeys and short walks. We recognize familiar melodies after just a few notes. We hum songs whose lyrics we have long forgotten. We fall into a rhythm before we even notice it.</p>
+
+  <p>And yet millions of people are convinced that music is too complicated for them.</p>
+
+  <p>A strange contradiction: if music is so natural to human beings, why are so many people afraid to approach it?</p>
+
+  <p>For centuries, humanity has developed ways to preserve, study, and pass on musical knowledge.<br>
+  Symbols appeared.<br>
+  Rules appeared.<br>
+  Terms appeared.<br>
+  Methods of teaching appeared.<br>
+  Musical culture became richer.<br>
+  But alongside this growth came an ever-increasing amount of knowledge that seemed necessary before a person could begin.</p>
+
+  <p>Today, someone who decides to learn an instrument on their own often encounters hundreds of unfamiliar concepts before playing their first melody.<br>
+  Pages filled with symbols.<br>
+  Foreign terms.<br>
+  Long lists of things that must be understood, remembered, and learned.<br>
+  And most importantly — time.<br>
+  A lot of time.<br>
+  Time that most adults simply do not have.<br>
+  As a result, many people postpone music.<br>
+  Until life becomes less busy.<br>
+  Until their next vacation.<br>
+  Until next month.<br>
+  Until next year.<br>
+  Sometimes forever.</p>
+
+  <p>Gradually, it begins to feel as though music requires special preparation, special abilities, or a particular kind of mind. Yet more often than not, the problem is not the music itself, but the complexity of the path that leads to it.</p>
+
+  <p>Play12 began as an attempt to look at that path differently.<br>
+  Not to change music.<br>
+  Not to simplify music.<br>
+  But to simplify the introduction to it.</p>
+
+  <p>To replace unfamiliar symbols with familiar ones.<br>
+  To build on skills that people already use every day.<br>
+  Counting.<br>
+  Comparing.<br>
+  Recognizing patterns.<br>
+  Playing from the very beginning.<br>
+  Because understanding comes faster when theory meets practice.<br>
+  Because music does not exist on the pages of textbooks.<br>
+  It exists in sound.<br>
+  In movement.<br>
+  In playing.<br>
+  And because there are only 12 notes in music.</p>
+
+  <div class="manifesto-final">
+    <div>There Are Only</div>
+    <div><span>12 Notes</span></div>
+    <div>In Music.</div>
+  </div>
+
+  <p>Play12 is an independent project created by a small team of enthusiasts.</p>
+
+  <p>Everything you see here — the Manual, website, visual system and future Practice materials — is being developed without investors or institutional funding.</p>
+
+  <p>The most valuable support is using the system, sharing it with others and helping us improve it.</p>
+
+  <p>
+If you find mistakes, have suggestions, or ideas that could make Play12 better, please let us know:
+<a href="mailto:play12piano@gmail.com" class="email-link">
+  play12piano@gmail.com
+</a>
+</p>
+
+  <p>If you would also like to support the project financially, your contribution will help us create new learning materials, improve existing ones and make Play12 available to more people.</p>
+
+  <p>Every contribution, no matter the size, is appreciated.</p>
+
+  <p>Thank you for helping us build Play12.</p>
+
+  <a href="#" class="back">Support Play12 →</a>
+
+</section>
+</section>
+
+</main>
