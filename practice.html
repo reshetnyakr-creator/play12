@@ -78,6 +78,27 @@ nav a:hover::after {
   width: 100%;
 }
 
+.email-link {
+  position: relative;
+  color: #444444;
+  text-decoration: none;
+}
+
+.email-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+.email-link:hover::after {
+  width: 100%;
+}
+  
 .manual-hero {
   padding: 129px 58px 80px;
 }
@@ -277,8 +298,8 @@ nav a:hover::after {
 
   <p>
 If you find mistakes, have suggestions, or ideas that could make Play12 better, please let us know:
-<a href="mailto:play12piano@gmail.com" style="color:inherit;">
-play12piano@gmail.com
+<a href="mailto:play12piano@gmail.com" class="email-link">
+  play12piano@gmail.com
 </a>
 </p>
 
