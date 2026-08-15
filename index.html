@@ -148,6 +148,64 @@ h1 {
   color: #ffffff;
 }
 
+.download-trigger {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.language-modal {
+  width: min(520px, calc(100% - 44px));
+  margin: auto;
+  padding: 44px;
+  border: 2px solid #CEF932;
+  border-radius: 10px;
+  background: #F5F5F5;
+  color: #111111;
+}
+
+.language-modal::backdrop {
+  background: rgba(17, 17, 17, 0.55);
+}
+
+.language-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  border: 0;
+  background: transparent;
+  color: #111111;
+  font-family: inherit;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.language-modal h2 {
+  margin-bottom: 30px;
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-align: center;
+}
+
+.language-options {
+  display: flex;
+  gap: 18px;
+}
+
+.language-options .button {
+  min-width: 0;
+  flex: 1;
+}
+
+.language-modal-close:focus-visible,
+.download-trigger:focus-visible,
+.language-options .button:focus-visible {
+  outline: 3px solid #E96E40;
+  outline-offset: 4px;
+}
+
 .hero-visual {
   display: flex;
   justify-content: center;
@@ -241,6 +299,20 @@ h1 {
   .button {
     width: 100%;
   }
+
+  .language-modal {
+    padding: 42px 22px 28px;
+  }
+
+  .language-modal h2 {
+    font-size: 27px;
+  }
+
+  .language-options {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 720px) {
   nav a:nth-child(n+3) {
     display: none;
@@ -329,7 +401,7 @@ Built around counting, pattern recognition and logical thinking, Play12 uses ski
 
     <div class="buttons">
       <a class="button" href="manual.html">Read Manual</a>
-     <a class="button" href="assets/pdf/Play12_Manual_v_01.pdf" download>Download PDF</a>
+      <button class="button download-trigger" type="button" id="open-language-modal">Download PDF</button>
     </div>
   </section>
 
@@ -337,6 +409,15 @@ Built around counting, pattern recognition and logical thinking, Play12 uses ski
     <img src="Hero-keyboard.png" alt="Play12 numbered piano keyboard" class="keyboard-img">
   </section>
 </main>
+
+<dialog class="language-modal" id="language-modal" aria-labelledby="language-modal-title">
+  <button class="language-modal-close" type="button" aria-label="Close language selection">&times;</button>
+  <h2 id="language-modal-title">Choose your language</h2>
+  <div class="language-options">
+    <a class="button language-download" href="assets/pdf/Play12_Manual_v_01.pdf" download>English</a>
+    <a class="button language-download" href="assets/pdf/Play12_Manual_RU.pdf" download>Русский</a>
+  </div>
+</dialog>
 
 <footer class="social-footer">
   <div class="social-title">Follow Play12</div>
@@ -348,6 +429,25 @@ Built around counting, pattern recognition and logical thinking, Play12 uses ski
     <a href="https://x.com/play12_official">X</a>
   </div>
 </footer>
+
+<script>
+  const languageModal = document.getElementById("language-modal");
+  const openLanguageModal = document.getElementById("open-language-modal");
+  const closeLanguageModal = languageModal.querySelector(".language-modal-close");
+
+  openLanguageModal.addEventListener("click", () => languageModal.showModal());
+  closeLanguageModal.addEventListener("click", () => languageModal.close());
+
+  languageModal.addEventListener("click", (event) => {
+    if (event.target === languageModal) {
+      languageModal.close();
+    }
+  });
+
+  languageModal.querySelectorAll(".language-download").forEach((link) => {
+    link.addEventListener("click", () => languageModal.close());
+  });
+</script>
 
 </body>
 </html>
