@@ -137,6 +137,51 @@ nav a:hover::after {
   color: #E96E40;
 }
 
+.toc-block-toggle {
+  width: 100%;
+  max-width: 700px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #111111;
+  font: inherit;
+  font-size: 21px;
+  line-height: 1.5;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toc-block-toggle:hover,
+.toc-block-toggle:focus-visible {
+  color: #E96E40;
+}
+
+.toc-block-indicator {
+  flex: 0 0 auto;
+  font-weight: 500;
+}
+
+.toc-sublist {
+  padding: 8px 0 0 22px;
+}
+
+.toc-sublist[hidden] {
+  display: none;
+}
+
+.toc-sublist li {
+  margin-bottom: 8px;
+}
+
+.toc-sublist a {
+  font-size: 18px;
+}
+
 .section {
   margin-bottom: 100px;
 }
@@ -263,6 +308,18 @@ nav a:hover::after {
 
   .toc a {
     font-size: 18px;
+  }
+
+  .toc-block-toggle {
+    font-size: 18px;
+  }
+
+  .toc-sublist {
+    padding-left: 16px;
+  }
+
+  .toc-sublist a {
+    font-size: 16px;
   }
 
   .section {
@@ -394,9 +451,43 @@ nav a:hover::after {
 
       <ul>
         <li><a href="#intro">Introduction</a></li>
-        <li><a href="#block1">Block 1. Getting Started</a></li>
-        <li><a href="#block2">Block 2. Note Combinations</a></li>
-        <li><a href="#block3">Block 3. Rhythm</a></li>
+        <li>
+          <button class="toc-block-toggle" type="button" aria-expanded="false" aria-controls="toc-block1-chapters">
+            <span>Block 1. Getting Started</span><span class="toc-block-indicator" aria-hidden="true">+</span>
+          </button>
+          <ul class="toc-sublist" id="toc-block1-chapters" hidden>
+            <li><a href="#chapter1">Chapter 1. There Are Only 12 Notes in Music</a></li>
+            <li><a href="#chapter2">Chapter 2. You Decide Which Key Is 0</a></li>
+            <li><a href="#chapter3">Chapter 3. Block Length = Note Duration</a></li>
+            <li><a href="#chapter4">Chapter 4. Reading and Writing Notes in Play12</a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="toc-block-toggle" type="button" aria-expanded="false" aria-controls="toc-block2-chapters">
+            <span>Block 2. Note Combinations</span><span class="toc-block-indicator" aria-hidden="true">+</span>
+          </button>
+          <ul class="toc-sublist" id="toc-block2-chapters" hidden>
+            <li><a href="#block2-introduction">Introduction</a></li>
+            <li><a href="#chapter5">Chapter 5. Distances Between Notes</a></li>
+            <li><a href="#chapter6">Chapter 6. Chords</a></li>
+            <li><a href="#chapter7">Chapter 7. The Chord Builder in Play12</a></li>
+            <li><a href="#chord-code">How to Read a Chord Code</a></li>
+            <li><a href="#chapter8">Chapter 8. Key Order in Chords</a></li>
+            <li><a href="#chord-table">Chord Table</a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="toc-block-toggle" type="button" aria-expanded="false" aria-controls="toc-block3-chapters">
+            <span>Block 3. Rhythm</span><span class="toc-block-indicator" aria-hidden="true">+</span>
+          </button>
+          <ul class="toc-sublist" id="toc-block3-chapters" hidden>
+            <li><a href="#block3-introduction">Introduction</a></li>
+            <li><a href="#chapter9">Chapter 9. Pulse</a></li>
+            <li><a href="#chapter10">Chapter 10. Count</a></li>
+            <li><a href="#chapter11">Chapter 11. Internal Accents</a></li>
+            <li><a href="#chapter12">Chapter 12. Count Division</a></li>
+          </ul>
+        </li>
         <li><a href="#next">What's Next?</a></li>
       </ul>
     </div>
@@ -434,7 +525,7 @@ nav a:hover::after {
     <section id="block1" class="section">
       <h2>Block 1. Getting Started</h2>
 
-     <h2>Chapter 1. There Are Only 12 Notes in Music</h2>
+     <h2 id="chapter1">Chapter 1. There Are Only 12 Notes in Music</h2>
 
 <p>Here's a Little Trick.
 Choose any key and place the little finger of your left hand on it. Using that key as the first one, count 12 keys to the right and place the little finger of your right hand on the twelfth key. Between your two little fingers, you will find 7 white keys and 5 black keys.</p>
@@ -471,7 +562,7 @@ Choose any key and place the little finger of your left hand on it. Using that k
 <p>But a natural question appears:<br>
 Where should the counting begin?</p>
 
-<h2>Chapter 2. You Decide Which Key Is 0</h2>
+<h2 id="chapter2">Chapter 2. You Decide Which Key Is 0</h2>
 
 <p>It's time to play your first melody.</p>
 
@@ -520,7 +611,7 @@ And most importantly:<br>
 
 <p>Once 0 is known, every key can be identified by a color and a symbol. And you immediately know which key you are looking at. Now it's time to learn how long a key should be held and when it should be released.</p>
 
-<h2>Chapter 3. Block Length = Note Duration</h2>
+<h2 id="chapter3">Chapter 3. Block Length = Note Duration</h2>
 
   <p>
     Turn on some music you enjoy. Stand up and move with the rhythm. Dancing
@@ -653,7 +744,7 @@ And most importantly:<br>
     Next, let's learn how to write and read them.
   </p>
 
- <h2>Chapter 4. Reading and Writing Notes in Play12</h2>
+ <h2 id="chapter4">Chapter 4. Reading and Writing Notes in Play12</h2>
 
   <p>
     This is what <strong>When the Saints Go Marching In</strong> looks like when written in a Play12
@@ -746,7 +837,7 @@ And most importantly:<br>
     <section id="block2" class="section">
       <h2>Block 2. Note Combinations</h2>
 
-       <h2>Introduction</h2>
+       <h2 id="block2-introduction">Introduction</h2>
 
   <p>
     Congratulations! You have completed Block 1.
@@ -805,7 +896,7 @@ And most importantly:<br>
     and how to use them in your playing.
   </p>
 
-<h2>Chapter 5. Distances Between Notes</h2>
+<h2 id="chapter5">Chapter 5. Distances Between Notes</h2>
 
 <p>
   <strong>Task:</strong><br>
@@ -933,7 +1024,7 @@ And most importantly:<br>
   The next step is <strong>Chords.</strong>
 </p>
 
-<h2>Chapter 6. Chords</h2>
+<h2 id="chapter6">Chapter 6. Chords</h2>
 
 <p>
   A chord is a combination of two or more Distances.<br>
@@ -1076,7 +1167,7 @@ And most importantly:<br>
   In Play12, a chord can be thought of as a building block.
 </p>
 
-<h2>Chapter 7. The Chord Builder in Play12</h2>
+<h2 id="chapter7">Chapter 7. The Chord Builder in Play12</h2>
 
 <p>Building chords in Play12 is very simple. To build a chord, you need four elements:<br>
 Starting Key<br>
@@ -1123,7 +1214,7 @@ These are the shape-forming element. They are located between the Starting Key a
 <p><strong>Outer Distances</strong><br>
 These are located outside the chord framework and add additional shades to the sound.</p>
 
-<h2>How to Read a Chord Code</h2>
+<h2 id="chord-code">How to Read a Chord Code</h2>
 
 <p>When you see a chord code, break it down into its elements.<br>
 Example: [5]<u>479</u></p>
@@ -1172,7 +1263,7 @@ The code does not define the order of the keys.</p>
 
 <p>We will look in detail at how to choose the order of keys in the next chapter.</p>
 
-<h2>Chapter 8. Key Order in Chords</h2>
+<h2 id="chapter8">Chapter 8. Key Order in Chords</h2>
 
 <p>Return to the first four chords from Chapter 6:</p>
 
@@ -1309,7 +1400,7 @@ You can print it or open it on your phone.</p>
    
  <section class="section">
 
-<h2>Chord Table</h2>
+<h2 id="chord-table">Chord Table</h2>
 
 <img
   src="assets/manual/Chord_Table.png"
@@ -1322,7 +1413,7 @@ You can print it or open it on your phone.</p>
     <section id="block3" class="section">
       <h2>Block 3. Rhythm</h2>
 
-<h2>Introduction</h2>
+<h2 id="block3-introduction">Introduction</h2>
 
 <p style="text-align:center;">
 Music = Key Combinations + Rhythm.
@@ -1384,7 +1475,7 @@ A metronome provides a steady Pulse and helps you maintain a consistent tempo wi
 
 <section class="section">
 
-<h2>Chapter 9. Pulse</h2>
+<h2 id="chapter9">Chapter 9. Pulse</h2>
 
 <p>
 Pulse is a steady sequence of repeating beats. First, just listen to the Pulse — turn on a metronome.<br>
@@ -2162,6 +2253,18 @@ Roman Reshetnyak
     <a href="https://x.com/play12_official">X</a>
   </div>
 </footer>
+
+<script>
+  document.querySelectorAll('.toc-block-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const chapters = document.getElementById(toggle.getAttribute('aria-controls'));
+      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!isExpanded));
+      chapters.hidden = isExpanded;
+      toggle.querySelector('.toc-block-indicator').textContent = isExpanded ? '+' : '−';
+    });
+  });
+</script>
 
 </body>
 </html>
