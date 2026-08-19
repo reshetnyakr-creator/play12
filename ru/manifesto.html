@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Манифест Play12</title>
+
+<meta name="description" content="Познакомьтесь с идеями Play12 и простым практическим подходом к обучению музыке.">
+<link rel="canonical" href="https://play12.pro/ru/manifesto.html">
+<link rel="alternate" hreflang="en" href="https://play12.pro/manifesto.html">
+<link rel="alternate" hreflang="ru" href="https://play12.pro/ru/manifesto.html">
+<link rel="alternate" hreflang="x-default" href="https://play12.pro/manifesto.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: #F5F5F5;
+  color: #111111;
+}
+
+header {
+  height: 96px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 58px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.logo-link {
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.25s ease;
+}
+
+.logo-link:hover {
+  opacity: 1;
+}
+
+.logo-img {
+  display: block;
+  width: 120px;
+  height: auto;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+}
+
+nav a {
+  position: relative;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 8px;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+.email-link {
+  position: relative;
+  color: #444444;
+  text-decoration: none;
+}
+
+.email-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 3px;
+  background: #CEF932;
+  transition: width 0.25s ease;
+}
+
+.email-link:hover::after {
+  width: 100%;
+}
+
+.manifesto-final {
+  font-size: clamp(62px, 6vw, 96px);
+  line-height: 0.96;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  color: #111111;
+  margin: 70px 0 80px;
+}
+
+.manifesto-final span {
+  color: #E96E40;
+}
+  
+.manual-hero {
+  padding: 129px 58px 80px;
+}
+
+.manual-hero h1 {
+  font-size: clamp(62px, 6vw, 96px);
+  line-height: 0.96;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  margin-bottom: 34px;
+}
+
+.hero-content {
+  max-width: 900px;
+}
+
+.manual-content {
+  padding: 0 58px 120px;
+  max-width: 980px;
+}
+
+.section {
+  margin-bottom: 100px;
+}
+
+.section p {
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 200;
+  letter-spacing: -0.015em;
+  color: #444444;
+  margin-bottom: 24px;
+  max-width: 700px;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 20px;
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+  border-bottom: 3px solid #CEF932;
+  padding-bottom: 6px;
+}
+
+.social-footer {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  header {
+    padding: 0 28px;
+  }
+
+  nav {
+    gap: 24px;
+  }
+
+  nav a {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 920px) {
+  header {
+    height: auto;
+    padding: 22px 22px;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  .logo-img {
+    width: 120px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 16px 22px;
+  }
+
+  nav a {
+    font-size: 15px;
+  }
+
+  .manual-hero {
+    min-height: auto;
+    display: block;
+    padding: 46px 22px 60px;
+  }
+
+  .manual-hero h1 {
+    font-size: 52px;
+  }
+
+  .manual-content {
+    padding: 0 22px 80px;
+  }
+
+  .section {
+    margin-bottom: 80px;
+  }
+
+  .section p {
+    font-size: 18px;
+  }
+
+  .social-footer {
+    display: block !important;
+  }
+}
+
+@media (max-width: 720px) {
+  nav a:nth-child(n+3) {
+    display: none;
+  }
+
+  header {
+    height: 92px;
+    align-items: center;
+  }
+
+  nav {
+    gap: 28px;
+  }
+}
+
+.social-footer {
+  text-align: center;
+  padding: 50px 20px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.social-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  color: #111111;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.social-links a:hover {
+  color: #E96E40;
+}
+
+
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.language-switch a {
+  display: inline-block !important;
+  font-size: 15px;
+  font-weight: 700;
+  padding-bottom: 4px;
+}
+
+.language-switch a::after {
+  height: 2px;
+}
+
+.language-switch .active-language {
+  color: #E96E40;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="/ru/" class="logo-link" aria-label="Главная страница Play12">
+    <img src="../P12 logo.png" alt="Play12 logo" class="logo-img">
+  </a>
+
+  <nav>
+    <a href="manual.html">Инструкция</a>
+    <a href="manifesto.html">Манифест</a>
+    <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+    <a href="https://www.instagram.com/play12_official/">Instagram</a>
+    <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+    <a href="https://x.com/play12_official">X</a>
+    <span class="language-switch" aria-label="Выбор языка">
+      <a href="../manifesto.html" lang="en">EN</a><span aria-hidden="true">/</span><span class="active-language" aria-current="page">RU</span>
+    </span>
+  </nav>
+</header>
+
+  <main>
+<section class="manual-hero"><div class="hero-content"><h1><span style="color:#111111;">Манифест </span><span style="color:#E96E40;">Play12</span></h1></div></section>
+<section class="manual-content"><section class="section">
+<p>Музыка занимает удивительное место в жизни человека. Почти каждый слушает её.</p>
+<p>Она сопровождает праздники и похороны, первые свидания и последние прощания, долгие путешествия и короткие прогулки. Мы узнаём знакомую мелодию по нескольким нотам, напеваем песни, слова которых давно забыли, и попадаем в ритм раньше, чем успеваем это заметить.</p>
+<p>И всё же миллионы людей уверены, что музыка для них слишком сложна.</p>
+<p>Странное противоречие: если музыка так естественна для человека, почему столь многие боятся к ней приблизиться?</p>
+<p>На протяжении веков люди создавали способы сохранять, изучать и передавать музыкальные знания.<br>Появились символы.<br>Появились правила.<br>Появились термины.<br>Появились методики обучения.<br>Музыкальная культура становилась богаче.<br>Но вместе с этим росло количество знаний, которые казались обязательными ещё до того, как человек начнёт играть.</p>
+<p>Сегодня тот, кто решает самостоятельно освоить инструмент, часто встречает сотни незнакомых понятий прежде, чем сыграет первую мелодию.<br>Страницы, заполненные символами.<br>Иностранные термины.<br>Длинные списки того, что нужно понять, запомнить и выучить.<br>И главное — время.<br>Много времени.<br>Времени, которого у большинства взрослых просто нет.<br>В результате многие откладывают музыку.<br>Пока жизнь не станет менее загруженной.<br>До следующего отпуска.<br>До следующего месяца.<br>До следующего года.<br>Иногда навсегда.</p>
+<p>Постепенно возникает ощущение, будто музыка требует особой подготовки, особых способностей или определённого склада ума. Но чаще проблема не в самой музыке, а в сложности пути, который к ней ведёт.</p>
+<p>Play12 появилась как попытка посмотреть на этот путь иначе.<br>Не изменить музыку.<br>Не упростить музыку.<br>А упростить знакомство с ней.</p>
+<p>Заменить незнакомые символы знакомыми.<br>Опереться на навыки, которыми люди уже пользуются каждый день.<br>Счёт.<br>Сравнение.<br>Распознавание закономерностей.<br>Игра с самого начала.<br>Потому что понимание приходит быстрее, когда теория встречается с практикой.<br>Потому что музыка существует не на страницах учебников.<br>Она существует в звуке.<br>В движении.<br>В игре.<br>И потому что</p>
+<div class="manifesto-final"><div>В музыке</div><div><span>всего 12 нот.</span></div></div>
+<p>Play12 — независимый проект небольшой команды энтузиастов.</p>
+<p>Всё, что вы видите здесь, — Инструкция, сайт, визуальная система и будущие материалы Практикума — создаётся без инвесторов и финансирования со стороны организаций.</p>
+<p>Лучшая поддержка Play12 — пользоваться системой, рассказывать о ней другим и помогать нам делать её лучше.</p>
+<p>Если вы нашли ошибку, хотите поделиться предложением или идеей, которая сделает Play12 лучше, напишите нам: <a href="mailto:play12piano@gmail.com" class="email-link">play12piano@gmail.com</a></p>
+<p>Если вы также хотите поддержать проект финансово, ваш вклад поможет создавать новые учебные материалы, улучшать существующие и делать Play12 доступнее.</p>
+<p>Мы ценим любую поддержку независимо от суммы.</p>
+<p>Спасибо, что помогаете нам развивать Play12.</p>
+<a href="https://ko-fi.com/play12_official" target="_blank" rel="noopener noreferrer" class="back">Поддержать Play12 →</a>
+</section></section>
+</main>
