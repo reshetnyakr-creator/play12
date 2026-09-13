@@ -2,7 +2,7 @@
   'use strict';
 
   const STEPS = Object.freeze([
-    'WELCOME', 'MIDI_CONNECT', 'CHOOSE_ZERO', 'AUDIO_CHECK', 'LEARN_PLAY',
+    'WELCOME', 'MIDI_CONNECT', 'LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'AUDIO_CHECK', 'LEARN_PLAY',
     'LEARN_PAUSE', 'LEARN_TEMPO', 'LEARN_METRONOME', 'RIGHT_HAND_PLAY',
     'TEMPO_CHECK', 'LEARN_LOOP', 'LEFT_HAND_PLAY', 'BOTH_HANDS_PLAY',
     'ONBOARDING_COMPLETE'
@@ -30,7 +30,10 @@
         onboardingCompleted: value.onboardingCompleted === true,
         lastSessionExists: true,
         midiVerified: value.midiVerified === true,
-        midiUsbGuideSeen: value.midiUsbGuideSeen === true
+        midiUsbGuideSeen: value.midiUsbGuideSeen === true,
+        playLearned: value.playLearned === true,
+        pauseLearned: value.pauseLearned === true,
+        listenFragmentCompleted: value.listenFragmentCompleted === true
       };
     } catch (_) {
       return null;
@@ -62,6 +65,9 @@
     const midiStates = new Map([...root.querySelectorAll('[data-midi-connect-state]')]
       .map(element => [element.dataset.midiConnectState, element]));
     const pianoHost = root.querySelector('#onboarding-piano-host');
+    const playbackHost = root.querySelector('#onboarding-playback-host');
+    const listenPrompt = root.querySelector('#onboarding-listen-prompt');
+    const listenContinue = root.querySelector('#onboarding-listen-continue');
     const savedState = readSavedState(storage);
     const returning = hasExistingSession(storage);
     let state = savedState || {
@@ -70,13 +76,19 @@
       onboardingCompleted: false,
       lastSessionExists: returning,
       midiVerified: false,
-      midiUsbGuideSeen: false
+      midiUsbGuideSeen: false,
+      playLearned: false,
+      pauseLearned: false,
+      listenFragmentCompleted: false
     };
     let runtime = null;
     let pianoHome = null;
+    let stageHome = null;
     let removeNoteListener = null;
     let removeMidiStatusListener = null;
+    let removePlaybackStateListener = null;
     let midiConnectState = 'choice';
+    let listenPosition = 0;
 
     const exposeState = () => {
       Object.assign(root.dataset, {
@@ -86,6 +98,9 @@
         lastSessionExists: String(state.lastSessionExists),
         midiVerified: String(state.midiVerified),
         midiUsbGuideSeen: String(state.midiUsbGuideSeen),
+        playLearned: String(state.playLearned),
+        pauseLearned: String(state.pauseLearned),
+        listenFragmentCompleted: String(state.listenFragmentCompleted),
         midiConnectState
       });
     };
@@ -112,20 +127,64 @@
       runtime.pianoView.syncContainer?.();
     };
 
+    const moveStageToOnboarding = () => {
+      const stage = runtime?.stage;
+      if (!stage || !playbackHost) return;
+      restorePiano();
+      if (!stageHome) stageHome = { parent: stage.parentElement, nextSibling: stage.nextSibling };
+      if (stage.parentElement !== playbackHost) playbackHost.appendChild(stage);
+      document.body.classList.add('play12-onboarding-listen');
+      global.dispatchEvent(new Event('resize'));
+    };
+
+    const restoreStage = () => {
+      const stage = runtime?.stage;
+      if (!stage || !stageHome) return;
+      if (stageHome.nextSibling?.parentElement === stageHome.parent) stageHome.parent.insertBefore(stage, stageHome.nextSibling);
+      else stageHome.parent.appendChild(stage);
+      document.body.classList.remove('play12-onboarding-listen');
+      global.dispatchEvent(new Event('resize'));
+    };
+
+    const syncListenCopy = () => {
+      if (state.listenFragmentCompleted) {
+        listenPrompt.textContent = 'Now let’s build Play12 for your keyboard.';
+        listenContinue.hidden = false;
+      } else if (state.pauseLearned) {
+        listenPrompt.textContent = 'Continue.';
+        listenContinue.hidden = true;
+      } else if (state.playLearned && listenPosition >= 4.8) {
+        listenPrompt.textContent = 'Try pausing the music.';
+        listenContinue.hidden = true;
+      } else {
+        listenPrompt.textContent = 'Press Play or Space. You can pause the music at any time.';
+        listenContinue.hidden = true;
+      }
+      exposeState();
+    };
+
     const showStep = step => {
       for (const [name, element] of views) element.hidden = name !== step;
       if (step === 'MIDI_CONNECT') {
+        restoreStage();
         root.hidden = false;
         document.body.classList.add('play12-onboarding-active');
         document.body.classList.remove('play12-onboarding-dismissed');
         showMidiState('choice');
         movePianoToOnboarding();
+      } else if (step === 'LISTEN_AND_CONTROL') {
+        root.hidden = false;
+        document.body.classList.add('play12-onboarding-active');
+        document.body.classList.remove('play12-onboarding-dismissed');
+        moveStageToOnboarding();
+        syncListenCopy();
       }
       exposeState();
     };
 
     const showMvp = () => {
       restorePiano();
+      restoreStage();
       root.hidden = true;
       document.body.classList.remove('play12-onboarding-boot', 'play12-onboarding-active');
       document.body.classList.add('play12-onboarding-dismissed');
@@ -138,7 +197,10 @@
         onboardingCompleted: false,
         lastSessionExists: true,
         midiVerified: false,
-        midiUsbGuideSeen: false
+        midiUsbGuideSeen: false,
+        playLearned: false,
+        pauseLearned: false,
+        listenFragmentCompleted: false
       };
       saveState(storage, state);
       showStep('MIDI_CONNECT');
@@ -151,6 +213,7 @@
       else state = { ...state, lastSessionExists: true };
       saveState(storage, state);
       if (state.onboardingStep === 'MIDI_CONNECT') showStep('MIDI_CONNECT');
+      else if (state.onboardingStep === 'LISTEN_AND_CONTROL') showStep('LISTEN_AND_CONTROL');
       else if (state.onboardingStep === 'WELCOME') showStep('WELCOME');
       else showMvp();
       return { ...state };
@@ -180,8 +243,15 @@
       showMidiState('success');
     };
 
-    const advanceToChooseZero = () => {
+    const advanceToListen = () => {
       if (!state.midiVerified) return;
+      state = { ...state, onboardingStep: 'LISTEN_AND_CONTROL' };
+      saveState(storage, state);
+      showStep('LISTEN_AND_CONTROL');
+    };
+
+    const advanceToChooseZero = () => {
+      if (!state.listenFragmentCompleted) return;
       state = { ...state, onboardingStep: 'CHOOSE_ZERO' };
       saveState(storage, state);
       showMvp();
@@ -191,6 +261,7 @@
       runtime = nextRuntime;
       removeNoteListener?.();
       removeMidiStatusListener?.();
+      removePlaybackStateListener?.();
       removeNoteListener = runtime.noteEvents?.addNoteListener?.(event => {
         if (state.onboardingStep === 'MIDI_CONNECT' && midiConnectState === 'test' &&
             event.type === 'note-on' && event.source === 'midi' && event.velocity > 0) verifyMidi();
@@ -203,7 +274,25 @@
         else if (event.status === 'connected' && midiConnectState !== 'success') showMidiState('test');
         else if (event.status === 'error') showMidiState('permission-help');
       }) || null;
+      removePlaybackStateListener = runtime.playback?.addStateListener?.(snapshot => {
+        if (state.onboardingStep !== 'LISTEN_AND_CONTROL') return;
+        listenPosition = snapshot.position;
+        if (snapshot.running && !state.playLearned) {
+          state = { ...state, playLearned: true };
+          saveState(storage, state);
+        }
+        if (state.playLearned && !state.pauseLearned && snapshot.state === 'paused' && snapshot.position > 0 && !snapshot.ended) {
+          state = { ...state, pauseLearned: true };
+          saveState(storage, state);
+        }
+        if (state.pauseLearned && snapshot.ended && !state.listenFragmentCompleted) {
+          state = { ...state, listenFragmentCompleted: true };
+          saveState(storage, state);
+        }
+        syncListenCopy();
+      }) || null;
       if (state.onboardingStep === 'MIDI_CONNECT') movePianoToOnboarding();
+      if (state.onboardingStep === 'LISTEN_AND_CONTROL') moveStageToOnboarding();
     };
 
     document.body.classList.remove('play12-onboarding-boot');
@@ -219,8 +308,13 @@
     root.querySelector('#onboarding-midi-retry').addEventListener('click', beginMidiTest);
     root.querySelector('#onboarding-midi-show-guide').addEventListener('click', showUsbGuide);
     root.querySelector('#onboarding-midi-refresh').addEventListener('click', beginMidiTest);
-    root.querySelector('#onboarding-midi-continue').addEventListener('click', advanceToChooseZero);
+    root.querySelector('#onboarding-midi-continue').addEventListener('click', advanceToListen);
+    listenContinue.addEventListener('click', advanceToChooseZero);
     showStep('WELCOME');
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('onboardingPreview') === 'listen') {
+      state = { ...state, onboardingStarted: true, onboardingStep: 'LISTEN_AND_CONTROL', midiVerified: true };
+      showStep('LISTEN_AND_CONTROL');
+    }
 
     return Object.freeze({
       steps: STEPS,

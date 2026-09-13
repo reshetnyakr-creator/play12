@@ -240,8 +240,61 @@
 }
 
 .mvp-midi-connect[hidden],
-.mvp-midi-connect [hidden] {
+.mvp-midi-connect [hidden],
+.mvp-listen[hidden],
+.mvp-listen [hidden] {
   display: none;
+}
+
+.mvp-listen {
+  width: 100%;
+  display: grid;
+  gap: 30px;
+}
+
+.mvp-playback-host {
+  width: min(100%, 1280px);
+  min-width: 0;
+  justify-self: center;
+}
+
+.mvp-playback-host .playback-stage {
+  width: 100%;
+  height: min(68vh, 700px);
+  min-height: 560px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.mvp-playback-host :is(.playback-service-panel, .metronome-mode, .midi-diagnostic, .zero-chooser) {
+  display: none;
+}
+
+.mvp-playback-host .unified-playback-block {
+  display: block;
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(78% + 33px);
+  overflow: hidden;
+  box-sizing: border-box;
+  border: var(--playback-shell-border);
+  border-radius: var(--playback-shell-radius);
+  background: #fff;
+  box-shadow: 0 8px 30px rgba(17,24,39,.08);
+}
+
+.mvp-playback-host .playback-zone {
+  top: calc(100% - 33px);
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  border-radius: 0 0 var(--playback-shell-radius) var(--playback-shell-radius);
+  box-shadow: none;
+}
+
+.mvp-playback-host .play12-piano-view {
+  top: calc(78% + 38px);
 }
 
 .mvp-midi-copy {
@@ -363,6 +416,8 @@
   .mvp-midi-connect {
     gap: 28px;
   }
+
+  .mvp-playback-host .playback-stage { min-height: 560px; }
 
   .mvp-step-heading {
     font-size: 40px;

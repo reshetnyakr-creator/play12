@@ -193,6 +193,7 @@
       this.audio.setMetronomeLevel(this.metronomeVolumeInput?.value ?? 4);
       this.inputNotes = new Map();
       this.noteListeners = new Set();
+      this.stateListeners = new Set();
       this.audioResumePromise = Promise.resolve();
       if (this.pianoView) this.pianoView.mount.addEventListener("pointerdown", () => {
         this.unlockAudio();
@@ -271,6 +272,25 @@
     addNoteListener(listener) {
       this.noteListeners.add(listener);
       return () => this.noteListeners.delete(listener);
+    }
+    snapshot() {
+      const position = this.clock.position;
+      return {
+        state: this.stage.dataset.state || "paused",
+        position,
+        bpm: this.clock.bpm,
+        running: this.clock.running,
+        ended: position >= this.totalQuarters - EPSILON && !this.clock.running
+      };
+    }
+    addStateListener(listener) {
+      this.stateListeners.add(listener);
+      listener(this.snapshot());
+      return () => this.stateListeners.delete(listener);
+    }
+    emitState() {
+      const snapshot = this.snapshot();
+      for (const listener of this.stateListeners) listener(snapshot);
     }
     setRuntimeZeroNote(midiNote) {
       if (!Number.isInteger(midiNote)) throw new Error(`Invalid runtime zero MIDI note: ${midiNote}`);
@@ -516,8 +536,11 @@
       this.practiceModeInput?.addEventListener("change", () => this.changePracticeMode());
       document.addEventListener("keydown", event => {
         const target = event.target;
-        const editing = target && (target.matches("input,select,textarea,button") || target.isContentEditable);
-        if (event.code === "Space" && !editing) { event.preventDefault(); this.clock.running || this.countIn || this.waitingForInput ? this.requestPause() : this.play(); }
+        const interactive = target?.closest?.("button,input,select,textarea,[contenteditable]:not([contenteditable='false']),[role='button'],[role='checkbox'],[role='radio'],[role='slider'],[role='combobox'],[role='listbox'],[role='menu'],[role='menuitem'],[role='dialog'],[aria-modal='true']");
+        if (event.code === "Space" && !event.defaultPrevented && !interactive) {
+          event.preventDefault();
+          this.clock.running || this.countIn || this.waitingForInput ? this.requestPause() : this.play();
+        }
       });
     }
     async play() {
@@ -859,6 +882,7 @@
       if (this.pianoView) this.pianoView.setActiveMidis(soundingMidis);
       this.updateProgress(this.clock.position);
       this.positionOutput.value = `${position < 0 ? "Подводка" : "Позиция"}: ${position.toFixed(2)} q`;
+      this.emitState();
     }
     updateControls() {
       const busy = this.clock.running || !!this.preRollPrep || !!this.countIn || !!this.waitingForInput || !!this.loopGap;
@@ -870,6 +894,7 @@
       else if (this.loopGap) this.positionOutput.value = "Loop · пустой такт";
       else if (this.waitingForInput) this.positionOutput.value = `Practice · ожидается ${this.stage.dataset.expectedPitches}`;
       else if (this.pauseTarget != null) this.positionOutput.value = `Pause на ${this.pauseTarget.toFixed(2)} q`;
+      this.emitState();
     }
     flashBeatLamp(beat) {
       if (!this.beatLamp) return;

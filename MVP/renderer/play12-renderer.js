@@ -52,12 +52,11 @@
 
   function selectMeasureRange(document, measureCount) {
     const notes = [];
-    const selectedMeasures = [];
+    const selectedMeasures = document.score.parts[0].measures.slice(0, measureCount);
     let totalQuarters = 0;
     for (const part of document.score.parts) {
       let offset = 0;
       for (const measure of part.measures.slice(0, measureCount)) {
-        selectedMeasures.push(measure);
         const events = measure.events;
         const extent = events.reduce((v, e) => Math.max(v, fraction(e.start_quarters) + fraction(e.duration_quarters)), 0);
         const meter = measure.attributes.time;
@@ -72,8 +71,7 @@
         }
         offset += nominal;
       }
-      totalQuarters = offset;
-      break;
+      totalQuarters = Math.max(totalQuarters, offset);
     }
     if (selectedMeasures.length < measureCount) throw new Error(`The score has fewer than ${measureCount} measures`);
     return { notes, selectedMeasures, totalQuarters };
@@ -87,6 +85,10 @@
   function resolveDisplayFingering(document, note, cfg) {
     if (Number.isInteger(note.method.finger)) {
       return { finger: note.method.finger, mode: "selected", confidence: note.method.fingering_confidence };
+    }
+    const onboardingFinger = note.onboarding && note.onboarding.display_finger;
+    if (cfg.onboardingLayout && Number.isInteger(onboardingFinger)) {
+      return { finger: onboardingFinger, mode: "onboarding-layout", confidence: null };
     }
     const benchmarkFinger = cfg.benchmarkFingering && cfg.benchmarkFingering[note.id];
     if (Number.isInteger(benchmarkFinger)) {
@@ -142,7 +144,7 @@
     // Expanding the viewBox for ribbons must not scale down the established grid geometry.
     svg.style.width = `${renderedWidth}px`;
     svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", `Первые ${measureCount} тактов Für Elise в нотации Play12`);
+    svg.setAttribute("aria-label", `${document.score.title}: первые ${measureCount} такта в нотации Play12`);
     svg.classList.add("play12-score");
     svg.dataset.totalQuarters = String(endQ);
     svg.dataset.stepQuarters = String(stepQ);
@@ -181,9 +183,10 @@
       }
     }
 
-    const meter = "3/8";
-    const beatSteps = (4 / 8) / stepQ;
-    const measureSteps = 3 * beatSteps;
+    const time = selection.selectedMeasures[0].attributes.time;
+    const meter = `${time.beats}/${time.beat_type}`;
+    const beatSteps = (4 / time.beat_type) / stepQ;
+    const measureSteps = time.beats * beatSteps;
     const metricMap = cfg.metricMaps[meter];
     const countLabels = [];
     for (let s = 0; s < steps; s++) {

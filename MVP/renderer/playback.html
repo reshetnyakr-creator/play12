@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Play12 Playback UX v0.3 — Für Elise</title>
+  <title>Play12 — When the Saints Go Marching In</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="play12-renderer.css?v=active-note-1">
-  <link rel="stylesheet" href="play12-playback.css?v=playback-ux-bugfix-1">
-  <link rel="stylesheet" href="play12-onboarding.css?v=onboarding-midi-02">
+  <link rel="stylesheet" href="play12-renderer.css?v=saints-onboarding-03">
+  <link rel="stylesheet" href="play12-playback.css?v=saints-onboarding-03">
+  <link rel="stylesheet" href="play12-onboarding.css?v=saints-onboarding-03">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -104,11 +104,21 @@
         </div>
         <div id="onboarding-piano-host" class="mvp-piano-host" aria-label="Playable on-screen piano"></div>
       </section>
+      <section class="mvp-listen" data-onboarding-view="LISTEN_AND_CONTROL" hidden aria-labelledby="listen-title">
+        <div class="mvp-midi-copy">
+          <h1 id="listen-title" class="mvp-step-heading">Listen to how this fragment sounds.</h1>
+          <p id="onboarding-listen-prompt" class="mvp-step-message">Press Play or Space. You can pause the music at any time.</p>
+          <div class="mvp-actions">
+            <button id="onboarding-listen-continue" class="mvp-button mvp-button-primary" type="button" hidden>Continue</button>
+          </div>
+        </div>
+        <div id="onboarding-playback-host" class="mvp-playback-host"></div>
+      </section>
     </main>
   </section>
   <main class="playback-page">
     <header class="playback-header">
-      <div><h1>Für Elise — Playback UX v0.3</h1><p>Первые 24 такта · audio-clock</p></div>
+      <div><h1>When the Saints Go Marching In — Play12 Beginner</h1><p>Four-measure onboarding fragment · audio clock</p></div>
       <output id="position" class="playback-position" aria-live="off"></output>
     </header>
     <section id="playback-stage" class="playback-stage" aria-label="Движущееся нотное поле Play12">
@@ -139,17 +149,19 @@
         <label>BPM <input id="bpm" type="number" min="20" max="300" step="1" value="72"></label>
         <label>Volume <select id="metronome-volume"><option>0</option><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
       </section>
-      <div id="playline" class="playback-zone" aria-label="Playback Zone">
-        <div class="playback-zone-transport" aria-label="Основное управление воспроизведением">
-          <button id="play" type="button">Play</button>
-          <button id="pause" type="button">Pause</button>
-          <button id="restart" type="button">Restart</button>
+      <div id="unified-playback-block" class="unified-playback-block">
+        <div id="playline" class="playback-zone" aria-label="Playback Zone">
+          <div class="playback-zone-transport" aria-label="Playback controls">
+            <button id="play" type="button">Play</button>
+            <button id="pause" type="button">Pause</button>
+            <button id="restart" type="button">Restart</button>
+          </div>
+          <span id="progress-head" class="playback-progress-head" aria-hidden="true"></span>
+          <span id="timecode" class="playback-timecode">00:00 / 00:00</span>
         </div>
-        <span id="progress-head" class="playback-progress-head" aria-hidden="true"></span>
-        <span id="timecode" class="playback-timecode">00:00 / 00:00</span>
+        <div id="grid-pulse" class="playback-grid-pulse" aria-hidden="true"></div>
+        <div id="play12-score" class="play12-render-root playback-score"></div>
       </div>
-      <div id="grid-pulse" class="playback-grid-pulse" aria-hidden="true"></div>
-      <div id="play12-score" class="play12-render-root playback-score"></div>
       <div id="piano-view" class="play12-piano-view" aria-label="Piano View"></div>
       <section id="zero-chooser" class="zero-chooser" hidden aria-label="Choose Your 0">
         <strong>Choose Your 0</strong>
@@ -173,13 +185,13 @@
       </aside>
     </section>
   </main>
-  <script src="play12-renderer.js?v=active-note-1"></script>
+  <script src="play12-renderer.js?v=saints-onboarding-03"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=onboarding-midi-02"></script>
-  <script src="play12-playback.js?v=practice-loop-boundary-1"></script>
+  <script src="play12-playback.js?v=saints-onboarding-03"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=midi-recovery-01"></script>
+  <script src="play12-onboarding.js?v=saints-onboarding-03"></script>
   <script>
     window.play12Onboarding = Play12Onboarding.create({
       root: document.getElementById('play12-onboarding'),
@@ -188,15 +200,16 @@
     });
     const playbackParams = new URLSearchParams(location.search);
     Promise.all([
-      fetch('../examples/fur_elise_first_24_measures.candidates.v0.2.play12.json').then(r => r.json()),
-      fetch('../benchmarks/fur_elise_first_8_fingering_v1.json').then(r => r.json()),
-      fetch('../examples/fur_elise_first_24_exact_segments.json').then(r => r.json()),
+      fetch('../examples/when_the_saints_play12_beginner.play12.json').then(r => r.json()),
       Play12CardThemes.loadReadyAssets()
-    ]).then(([score, benchmark, segments, cardTheme]) => {
-      const benchmarkFingering = Object.fromEntries(benchmark.events.map(event => [event.event_id, event.benchmark_finger]));
-      const tempo = score.score.parts[0].measures.flatMap(measure => measure.tempo_marks || [])[0];
-      if (!tempo || !Number.isFinite(tempo.bpm)) throw new Error('В Play12 JSON отсутствует начальный BPM');
-      document.getElementById('bpm').value = String(tempo.bpm);
+    ]).then(([score, cardTheme]) => {
+      const onboardingBpm = 96;
+      document.getElementById('bpm').value = String(onboardingBpm);
+      document.getElementById('metronome').checked = false;
+      document.getElementById('count-in').checked = false;
+      document.getElementById('music-audio').checked = true;
+      document.getElementById('practice-mode').checked = false;
+      document.getElementById('loop').checked = false;
       const savedLoopGap = localStorage.getItem('play12.loop-gap');
       document.getElementById('loop-gap').value = savedLoopGap === 'empty-round' ? 'empty-round' : 'direct';
       const savedMetronomeVolume = Number(localStorage.getItem('play12.metronome-volume'));
@@ -214,7 +227,7 @@
         : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
       const initialZeroMidi = Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
-        measureCount: 24, gridResolution: resolution, candidatePreview: true, candidateDebug: false, benchmarkFingering, segments
+        measureCount: 4, gridResolution: resolution, candidatePreview: false, candidateDebug: false, onboardingLayout: true
       });
       const svg = render('1/16');
       const pianoView = Play12PianoView.render({
@@ -229,7 +242,7 @@
       const timelineOffset = Math.min(...globalStarts);
       const rounds = [];
       let globalMeasureStart = 0;
-      for (const measure of score.score.parts[0].measures.slice(0, 24)) {
+      for (const measure of score.score.parts[0].measures.slice(0, 4)) {
         const time = measure.attributes.time;
         const length = time.beats * 4 / time.beat_type;
         rounds.push({
@@ -254,7 +267,7 @@
         svg, stage: document.getElementById('playback-stage'), playline: document.getElementById('playline'),
         playButton: document.getElementById('play'), pauseButton: document.getElementById('pause'),
         restartButton: document.getElementById('restart'), bpmInput: document.getElementById('bpm'),
-        positionOutput: document.getElementById('position'), initialBpm: tempo.bpm,
+        positionOutput: document.getElementById('position'), initialBpm: onboardingBpm,
         metronomeInput: document.getElementById('metronome'), countInInput: document.getElementById('count-in'),
         musicAudioInput: document.getElementById('music-audio'), practiceModeInput: document.getElementById('practice-mode'), timelineOffset, rounds,
         previousRoundButton: document.getElementById('previous-round'), nextRoundButton: document.getElementById('next-round'),
@@ -328,7 +341,9 @@
       window.play12Onboarding.connectRuntime({
         pianoView,
         noteEvents: window.play12Playback,
-        midiDiagnostic: window.play12MidiDiagnostic || null
+        midiDiagnostic: window.play12MidiDiagnostic || null,
+        playback: window.play12Playback,
+        stage: document.getElementById('playback-stage')
       });
       document.getElementById('grid-resolution').addEventListener('change', event => {
         window.play12Playback.pauseImmediate();
