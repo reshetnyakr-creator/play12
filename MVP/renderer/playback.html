@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=final-visual-polish-03b">
+  <link rel="stylesheet" href="play12-onboarding.css?v=choose-zero-local-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -110,10 +110,10 @@
         <div class="mvp-player-layout">
           <aside class="mvp-onboarding-progress" aria-label="Onboarding progress">
             <ol>
-              <li class="is-active" aria-current="step"><span>1</span><strong>Listen</strong></li>
-              <li><span>2</span><strong>Choose your 0</strong></li>
-              <li><span>3</span><strong>Try it yourself</strong></li>
-              <li><span>4</span><strong>You can do it!</strong></li>
+              <li data-progress-step="1" class="is-active" aria-current="step"><span>1</span><strong>Listen</strong></li>
+              <li data-progress-step="2"><span>2</span><strong>Choose your 0</strong></li>
+              <li data-progress-step="3"><span>3</span><strong>Try it yourself</strong></li>
+              <li data-progress-step="4"><span>4</span><strong>You can do it!</strong></li>
             </ol>
             <p class="mvp-motivation">Music can be simple.<br><strong>You’ve got this.</strong></p>
           </aside>
@@ -137,10 +137,11 @@
               </div>
               <p>Play12 Learning Version</p>
             </div>
-            <small>Step 1 of 4</small>
+            <small id="onboarding-song-step">Step 1 of 4</small>
           </aside>
         </div>
         <div id="onboarding-listen-piano-host" class="mvp-piano-host mvp-listen-piano-host" aria-label="Playable on-screen piano"></div>
+        <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden>Choose Your 0</button>
         <p id="onboarding-piano-callout" class="mvp-handwritten-note mvp-piano-callout" aria-hidden="true" hidden>Always visible. Play it with your mouse. <span>↓</span></p>
       </section>
     </main>
@@ -192,10 +193,16 @@
         <div id="play12-score" class="play12-render-root playback-score"></div>
       </div>
       <div id="piano-view" class="play12-piano-view" aria-label="Piano View"></div>
-      <section id="zero-chooser" class="zero-chooser" hidden aria-label="Choose Your 0">
-        <strong>Choose Your 0</strong>
-        <p id="zero-prompt">Press a piano key to set it as 0</p>
-        <div><button id="use-zero" type="button" disabled>Use this 0</button><button id="choose-another-zero" type="button" disabled>Choose another</button></div>
+      <section id="zero-chooser" class="zero-chooser mvp-zero-chooser-card" hidden aria-label="Choose Your 0" role="dialog" aria-modal="true">
+        <div id="zero-instruction">
+          <strong>Choose your 0</strong>
+          <p id="zero-prompt">Press any comfortable key on your piano, or choose a key with your mouse on the on-screen piano</p>
+        </div>
+        <div id="zero-confirmation" hidden>
+          <strong>Confirm your 0</strong>
+          <p id="zero-candidate"></p>
+          <div class="mvp-zero-actions"><button id="use-zero" class="mvp-button mvp-button-primary" type="button">Yes</button><button id="choose-another-zero" class="mvp-button mvp-button-secondary" type="button">Choose another 0</button></div>
+        </div>
       </section>
       <aside id="midi-diagnostic" class="midi-diagnostic" hidden data-ui-module="midi-diagnostic" aria-label="Web MIDI Diagnostic">
         <div class="midi-diagnostic-heading"><strong>Web MIDI Diagnostic v0.1</strong><button id="enable-midi" type="button">Enable MIDI</button></div>
@@ -247,7 +254,7 @@
   <script src="play12-playback.js?v=visual-polish-02b"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=final-visual-polish-03"></script>
+  <script src="play12-onboarding.js?v=choose-zero-local-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -383,52 +390,66 @@
       });
       const zeroChooser = document.getElementById('zero-chooser');
       const zeroPrompt = document.getElementById('zero-prompt');
+      const zeroInstruction = document.getElementById('zero-instruction');
+      const zeroConfirmation = document.getElementById('zero-confirmation');
+      const zeroCandidate = document.getElementById('zero-candidate');
       const chooseZero = document.getElementById('choose-zero');
+      const onboardingChooseZero = document.getElementById('onboarding-choose-zero');
       const useZero = document.getElementById('use-zero');
       const chooseAnotherZero = document.getElementById('choose-another-zero');
       let choosingZero = false;
-      let previewZeroMidi = null;
-      let previewPitchClass = null;
+      let candidateZeroMidi = null;
+      let candidateZeroPitchClass = null;
       const waitForZero = () => {
-        previewZeroMidi = null;
-        previewPitchClass = null;
-        zeroPrompt.textContent = 'Press a piano key to set it as 0';
-        useZero.disabled = true;
-        chooseAnotherZero.disabled = true;
+        candidateZeroMidi = null;
+        candidateZeroPitchClass = null;
+        delete zeroChooser.dataset.candidateZeroPitchClass;
+        delete zeroChooser.dataset.candidateLayoutZeroNote;
+        zeroInstruction.hidden = false;
+        zeroConfirmation.hidden = true;
+        zeroPrompt.textContent = 'Press any comfortable key on your piano, or choose a key with your mouse on the on-screen piano';
       };
-      const previewZero = selectedMidiNote => {
+      const previewZero = (selectedMidiNote, source) => {
         const midiNote = Play12PianoView.layoutZeroForMidi(selectedMidiNote, 21);
-        if (!choosingZero || !Number.isInteger(midiNote) || midiNote < 21 || midiNote > 108) return;
-        previewPitchClass = ((selectedMidiNote % 12) + 12) % 12;
-        previewZeroMidi = midiNote;
-        pianoView.setZeroMidi(midiNote);
-        window.play12Playback.setRuntimeZeroNote(midiNote);
-        Object.assign(document.getElementById('playback-stage').dataset, {
-          selectedPitchClass: String(previewPitchClass), layoutZeroNote: String(midiNote), zeroMidi: String(midiNote)
+        if (!choosingZero || !['mouse', 'midi'].includes(source) || !Number.isInteger(midiNote) || midiNote < 21 || midiNote > 108) return;
+        candidateZeroPitchClass = ((selectedMidiNote % 12) + 12) % 12;
+        candidateZeroMidi = midiNote;
+        Object.assign(zeroChooser.dataset, {
+          candidateZeroPitchClass: String(candidateZeroPitchClass), candidateLayoutZeroNote: String(candidateZeroMidi)
         });
-        zeroPrompt.textContent = `Pitch class ${previewPitchClass} · layout MIDI ${midiNote} is previewed as 0`;
-        useZero.disabled = false;
-        chooseAnotherZero.disabled = false;
+        zeroCandidate.textContent = `Pitch class ${candidateZeroPitchClass} · layout MIDI ${candidateZeroMidi}`;
+        zeroInstruction.hidden = true;
+        zeroConfirmation.hidden = false;
       };
-      window.play12Playback.addNoteListener(event => previewZero(event.midiNote));
-      chooseZero.addEventListener('click', () => {
+      const beginZeroSelection = () => {
         choosingZero = true;
+        zeroChooser.dataset.choosingZero = 'true';
         zeroChooser.hidden = false;
         waitForZero();
+      };
+      window.play12Playback.addNoteListener(event => {
+        if (event.type === 'note-on' && event.velocity > 0) previewZero(event.midiNote, event.source);
       });
+      chooseZero.addEventListener('click', beginZeroSelection);
+      onboardingChooseZero?.addEventListener('click', beginZeroSelection);
+      window.addEventListener('play12:choose-zero-open', beginZeroSelection);
       chooseAnotherZero.addEventListener('click', waitForZero);
       useZero.addEventListener('click', () => {
-        if (previewZeroMidi == null) return;
-        localStorage.setItem(zeroStorageKey, String(previewZeroMidi));
-        localStorage.setItem(zeroPitchClassStorageKey, String(previewPitchClass));
+        if (candidateZeroMidi == null) return;
+        pianoView.setZeroMidi(candidateZeroMidi);
+        window.play12Playback.setRuntimeZeroNote(candidateZeroMidi);
+        localStorage.setItem(zeroStorageKey, String(candidateZeroMidi));
+        localStorage.setItem(zeroPitchClassStorageKey, String(candidateZeroPitchClass));
         choosingZero = false;
+        zeroChooser.dataset.choosingZero = 'false';
         zeroChooser.hidden = true;
-        chooseZero.textContent = 'Change 0';
         Object.assign(document.getElementById('playback-stage').dataset, {
-          selectedPitchClass: String(previewPitchClass), layoutZeroNote: String(previewZeroMidi), zeroMidi: String(previewZeroMidi)
+          selectedPitchClass: String(candidateZeroPitchClass), layoutZeroNote: String(candidateZeroMidi), zeroMidi: String(candidateZeroMidi)
         });
+        window.dispatchEvent(new CustomEvent('play12:zero-confirmed', { detail: {
+          selectedPitchClass: candidateZeroPitchClass, layoutZeroNote: candidateZeroMidi
+        }}));
       });
-      if (Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108) chooseZero.textContent = 'Change 0';
       if (playbackParams.get('midi') === '1') {
         document.getElementById('midi-diagnostic').hidden = false;
         window.play12MidiDiagnostic = Play12MidiDiagnostic.create({
