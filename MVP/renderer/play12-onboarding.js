@@ -69,6 +69,10 @@
     const playbackHost = root.querySelector('#onboarding-playback-host');
     const listenPianoHost = root.querySelector('#onboarding-listen-piano-host');
     const listenPrompt = root.querySelector('#onboarding-listen-prompt');
+    const listenCoach = root.querySelector('#onboarding-listen-coach');
+    const pianoCallout = root.querySelector('#onboarding-piano-callout');
+    const songTitleViewport = root.querySelector('#onboarding-song-title-viewport');
+    const songTitle = root.querySelector('#onboarding-song-title');
     const listenContinue = root.querySelector('#onboarding-listen-continue');
     const savedState = readSavedState(storage);
     const returning = hasExistingSession(storage);
@@ -92,6 +96,40 @@
     let removePlaybackStateListener = null;
     let midiConnectState = 'choice';
     let listenPosition = 0;
+    let listenPlaybackRunning = false;
+    let listenPlaybackState = 'paused';
+    let annotationResumeArmed = false;
+    let pianoAnnotationShown = false;
+    let pianoAnnotationTimer = null;
+    let playerClipFrame = 0;
+
+    const syncSongTitleMarquee = () => {
+      if (!songTitleViewport || !songTitle) return;
+      songTitle.classList.remove('is-marquee');
+      songTitle.style.removeProperty('--mvp-marquee-distance');
+      const overflow = Math.ceil(songTitle.scrollWidth - songTitleViewport.clientWidth);
+      songTitleViewport.dataset.overflowing = String(overflow > 1);
+      if (overflow > 1) {
+        songTitle.style.setProperty('--mvp-marquee-distance', `${overflow}px`);
+        songTitle.classList.add('is-marquee');
+      }
+    };
+
+    const showPianoAnnotationOnce = () => {
+      if (!pianoCallout || pianoAnnotationShown) return;
+      pianoAnnotationShown = true;
+      pianoCallout.hidden = false;
+      pianoCallout.classList.add('is-visible');
+      pianoAnnotationTimer = global.setTimeout(() => {
+        pianoCallout.classList.remove('is-visible');
+        pianoCallout.hidden = true;
+      }, 7000);
+    };
+
+    const syncPlayerClip = () => {
+      cancelAnimationFrame(playerClipFrame);
+      playerClipFrame = requestAnimationFrame(() => runtime?.playback?.layoutCoreGeometry?.());
+    };
     let fixedPianoResizeHandler = null;
 
     const syncFixedPiano = () => {
@@ -100,8 +138,12 @@
       runtime.pianoView.syncContainer?.();
       requestAnimationFrame(() => {
         const height = Math.ceil(mount.getBoundingClientRect().height);
-        root.style.setProperty('--mvp-fixed-piano-space', `${height + 24}px`);
-        document.documentElement.style.setProperty('--mvp-fixed-piano-space', `${height + 24}px`);
+        const playbackHeight = document.body.classList.contains('play12-onboarding-listen') ? 50 : 0;
+        const reserved = height + playbackHeight + 36;
+        root.style.setProperty('--mvp-fixed-piano-height', `${height}px`);
+        document.documentElement.style.setProperty('--mvp-fixed-piano-height', `${height}px`);
+        root.style.setProperty('--mvp-fixed-piano-space', `${reserved}px`);
+        document.documentElement.style.setProperty('--mvp-fixed-piano-space', `${reserved}px`);
       });
     };
 
@@ -111,8 +153,13 @@
       mount.classList.add('is-fixed-piano-view');
       document.body.classList.add('play12-fixed-piano-visible');
       if (!fixedPianoResizeHandler) {
-        fixedPianoResizeHandler = () => syncFixedPiano();
+        fixedPianoResizeHandler = () => {
+          syncFixedPiano();
+          syncPlayerClip();
+          syncSongTitleMarquee();
+        };
         global.addEventListener('resize', fixedPianoResizeHandler);
+        root.addEventListener('scroll', syncPlayerClip, { passive: true });
       }
       syncFixedPiano();
     };
@@ -184,17 +231,39 @@
     };
 
     const syncListenCopy = () => {
+      const showCoach = text => {
+        if (!listenCoach) return;
+        if (!listenCoach.hidden && listenCoach.dataset.copy === text) return;
+        listenCoach.dataset.copy = text;
+        listenPrompt.innerHTML = text;
+        listenCoach.hidden = false;
+        listenCoach.classList.remove('is-entering');
+        void listenCoach.offsetWidth;
+        listenCoach.classList.add('is-entering');
+      };
+      const hideCoach = () => {
+        if (!listenCoach) return;
+        listenCoach.classList.remove('is-entering');
+        listenCoach.hidden = true;
+      };
       if (state.listenFragmentCompleted) {
-        listenPrompt.textContent = 'Now let’s build Play12 for your keyboard.';
+        hideCoach();
         listenContinue.hidden = false;
       } else if (state.pauseLearned) {
-        listenPrompt.textContent = 'Continue.';
+        if (listenPlaybackRunning) hideCoach();
+        else showCoach('Continue');
+        listenContinue.hidden = true;
+      } else if (listenPlaybackState === 'pause-queued') {
+        hideCoach();
         listenContinue.hidden = true;
       } else if (state.playLearned && listenPosition >= 4.8) {
-        listenPrompt.textContent = 'Try pausing the music.';
+        showCoach('Try pausing the music');
+        listenContinue.hidden = true;
+      } else if (state.playLearned) {
+        hideCoach();
         listenContinue.hidden = true;
       } else {
-        listenPrompt.textContent = 'Press Play or Space. You can pause the music at any time.';
+        showCoach('Listen to how the melody sounds<br>Press Play or Space');
         listenContinue.hidden = true;
       }
       exposeState();
@@ -214,6 +283,7 @@
         document.body.classList.add('play12-onboarding-active');
         document.body.classList.remove('play12-onboarding-dismissed');
         moveStageToOnboarding();
+        requestAnimationFrame(syncSongTitleMarquee);
         syncListenCopy();
       }
       exposeState();
@@ -241,6 +311,13 @@
         pauseLearned: false,
         listenFragmentCompleted: false
       };
+      annotationResumeArmed = false;
+      pianoAnnotationShown = false;
+      clearTimeout(pianoAnnotationTimer);
+      if (pianoCallout) {
+        pianoCallout.hidden = true;
+        pianoCallout.classList.remove('is-visible');
+      }
       saveState(storage, state);
       showStep('MIDI_CONNECT');
       return { ...state };
@@ -321,7 +398,14 @@
       }) || null;
       removePlaybackStateListener = runtime.playback?.addStateListener?.(snapshot => {
         if (state.onboardingStep !== 'LISTEN_AND_CONTROL') return;
+        const previousPlaybackState = listenPlaybackState;
         listenPosition = snapshot.position;
+        listenPlaybackRunning = snapshot.running;
+        listenPlaybackState = snapshot.state;
+        if (snapshot.state === 'paused' && snapshot.position === 0) annotationResumeArmed = false;
+        if (snapshot.state === 'paused' && previousPlaybackState !== 'paused' && snapshot.position > 0 && !snapshot.ended && !pianoAnnotationShown) {
+          annotationResumeArmed = true;
+        }
         if (snapshot.running && !state.playLearned) {
           state = { ...state, playLearned: true };
           saveState(storage, state);
@@ -329,6 +413,10 @@
         if (state.playLearned && !state.pauseLearned && snapshot.state === 'paused' && snapshot.position > 0 && !snapshot.ended) {
           state = { ...state, pauseLearned: true };
           saveState(storage, state);
+        }
+        if (snapshot.running && previousPlaybackState === 'paused' && annotationResumeArmed) {
+          annotationResumeArmed = false;
+          showPianoAnnotationOnce();
         }
         if (state.pauseLearned && snapshot.ended && !state.listenFragmentCompleted) {
           state = { ...state, listenFragmentCompleted: true };
@@ -358,7 +446,10 @@
     listenContinue.addEventListener('click', advanceToChooseZero);
     showStep('WELCOME');
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('onboardingPreview') === 'listen') {
-      state = { ...state, onboardingStarted: true, onboardingStep: 'LISTEN_AND_CONTROL', midiVerified: true };
+      state = {
+        ...state, onboardingStarted: true, onboardingStep: 'LISTEN_AND_CONTROL', midiVerified: true,
+        playLearned: false, pauseLearned: false, listenFragmentCompleted: false
+      };
       showStep('LISTEN_AND_CONTROL');
     }
 
