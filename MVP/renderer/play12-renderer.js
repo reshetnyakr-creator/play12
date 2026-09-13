@@ -24,6 +24,7 @@
     metricOpacity: { primary: 0.36, secondary: 0.24, weak: 0.12 },
     metricMaps: { "3/8": ["primary", "weak", "weak"], "4/4": ["primary", "weak", "secondary", "weak"] },
     countWords: { 1: "РАЗ", 2: "ДВА", 3: "ТРИ", 4: "ЧЕТЫРЕ" },
+    countAnd: "И",
   };
 
   function fraction(value) {
@@ -217,7 +218,7 @@
           class: "play12-cell",
         });
       }
-      const countText = withinBeat === 0 ? cfg.countWords[beat + 1] : "И";
+      const countText = withinBeat === 0 ? cfg.countWords[beat + 1] : cfg.countAnd;
       countLabels.push({ text: countText, x: handWidth + countWidth / 2, y: y + height * 0.63, beat: withinBeat === 0, primary: withinBeat === 0 && beat === 0 });
     }
 

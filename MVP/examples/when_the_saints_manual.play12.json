@@ -2250,7 +2250,7 @@
                 "type": "whole",
                 "dots": 0,
                 "method": {
-                  "finger": 1,
+                  "finger": 2,
                   "fingering_source": "methodist",
                   "fingering_confidence": 1.0,
                   "fingering_exception_id": null,
@@ -2263,17 +2263,17 @@
                   "exceptions": []
                 },
                 "pitch": {
-                  "step": "C",
+                  "step": "D",
                   "alter": 0,
                   "octave": 5,
-                  "midi": 72
+                  "midi": 74
                 },
                 "play12_symbol": {
-                  "value": "0",
+                  "value": "2",
                   "origin": "play12_manual"
                 },
                 "ties": [],
-                "source_fingering": 1
+                "source_fingering": 2
               },
               {
                 "id": "manual.m7.e52",

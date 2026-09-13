@@ -281,7 +281,9 @@
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
         onboardingLayout: true, noteSelectionEnabled: saintsReviewMode,
         selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => reviewController?.select(eventId),
-        zeroNote: score.play12.zero_pitch_class
+        zeroNote: score.play12.zero_pitch_class,
+        countWords: saintsManualReviewMode ? { 1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR' } : Play12Renderer.defaults.countWords,
+        countAnd: saintsManualReviewMode ? 'AND' : Play12Renderer.defaults.countAnd
       });
       const svg = render(compositionReviewMode ? reviewGrid.value : '1/16');
       const pianoView = Play12PianoView.render({
