@@ -9,16 +9,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=active-note-1">
   <link rel="stylesheet" href="play12-playback.css?v=playback-ux-bugfix-1">
-  <link rel="stylesheet" href="play12-onboarding.css?v=guided-onboarding-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=site-alignment-01">
 </head>
 <body class="play12-onboarding-boot">
-  <section id="play12-onboarding" class="play12-onboarding" aria-label="Play12 onboarding">
-    <div class="play12-onboarding-card">
-      <div class="play12-onboarding-actions">
-        <button id="onboarding-start" class="play12-onboarding-primary" type="button">Начать</button>
-        <button id="onboarding-continue" class="play12-onboarding-secondary" type="button" hidden>Продолжить</button>
+  <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
+    <header class="mvp-site-header">
+      <img class="mvp-site-logo" src="../../P12%20logo.png" alt="Play12">
+    </header>
+    <main class="mvp-page">
+      <div class="mvp-content">
+        <div class="mvp-actions">
+          <button id="onboarding-start" class="mvp-button mvp-button-primary" type="button">Начать</button>
+          <button id="onboarding-continue" class="mvp-button mvp-button-secondary" type="button" hidden>Продолжить</button>
+        </div>
       </div>
-    </div>
+    </main>
   </section>
   <main class="playback-page">
     <header class="playback-header">
