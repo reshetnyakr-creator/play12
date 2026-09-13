@@ -29,7 +29,8 @@
         onboardingStep: value.onboardingStep,
         onboardingCompleted: value.onboardingCompleted === true,
         lastSessionExists: true,
-        midiVerified: value.midiVerified === true
+        midiVerified: value.midiVerified === true,
+        midiUsbGuideSeen: value.midiUsbGuideSeen === true
       };
     } catch (_) {
       return null;
@@ -68,7 +69,8 @@
       onboardingStep: 'WELCOME',
       onboardingCompleted: false,
       lastSessionExists: returning,
-      midiVerified: false
+      midiVerified: false,
+      midiUsbGuideSeen: false
     };
     let runtime = null;
     let pianoHome = null;
@@ -83,6 +85,7 @@
         onboardingCompleted: String(state.onboardingCompleted),
         lastSessionExists: String(state.lastSessionExists),
         midiVerified: String(state.midiVerified),
+        midiUsbGuideSeen: String(state.midiUsbGuideSeen),
         midiConnectState
       });
     };
@@ -134,7 +137,8 @@
         onboardingStep: 'MIDI_CONNECT',
         onboardingCompleted: false,
         lastSessionExists: true,
-        midiVerified: false
+        midiVerified: false,
+        midiUsbGuideSeen: false
       };
       saveState(storage, state);
       showStep('MIDI_CONNECT');
@@ -156,11 +160,19 @@
       showMidiState('test');
       runtime?.noteEvents?.unlockAudio?.();
       if (!runtime?.midiDiagnostic) {
-        showMidiState('error');
+        showMidiState('unsupported');
         return;
       }
       runtime.midiDiagnostic.enable();
     };
+
+    const showUsbGuide = () => {
+      state = { ...state, midiUsbGuideSeen: true };
+      saveState(storage, state);
+      showMidiState('guide');
+    };
+
+    const showPermissionHelp = () => showMidiState('permission-help');
 
     const verifyMidi = () => {
       state = { ...state, midiVerified: true };
@@ -184,8 +196,12 @@
             event.type === 'note-on' && event.source === 'midi' && event.velocity > 0) verifyMidi();
       }) || null;
       removeMidiStatusListener = runtime.midiDiagnostic?.addStatusListener?.(event => {
-        if (state.onboardingStep !== 'MIDI_CONNECT' || midiConnectState !== 'test') return;
-        if (event.status === 'unavailable' || event.status === 'error') showMidiState('error');
+        if (state.onboardingStep !== 'MIDI_CONNECT') return;
+        if (event.status === 'unavailable') showMidiState(event.detail?.safari ? 'unsupported-safari' : 'unsupported');
+        else if (event.status === 'permission-denied') showMidiState('permission-denied');
+        else if (event.status === 'no-input') showMidiState('device-not-found');
+        else if (event.status === 'connected' && midiConnectState !== 'success') showMidiState('test');
+        else if (event.status === 'error') showMidiState('permission-help');
       }) || null;
       if (state.onboardingStep === 'MIDI_CONNECT') movePianoToOnboarding();
     };
@@ -196,9 +212,13 @@
     startButton.addEventListener('click', startNew);
     continueButton.addEventListener('click', continueSession);
     root.querySelector('#onboarding-midi-ready').addEventListener('click', beginMidiTest);
-    root.querySelector('#onboarding-midi-guide').addEventListener('click', () => showMidiState('guide'));
+    root.querySelector('#onboarding-midi-guide').addEventListener('click', showUsbGuide);
     root.querySelector('#onboarding-midi-check').addEventListener('click', beginMidiTest);
-    root.querySelector('#onboarding-midi-help').addEventListener('click', () => showMidiState('guide'));
+    root.querySelector('#onboarding-midi-browser-help').addEventListener('click', showPermissionHelp);
+    root.querySelector('#onboarding-midi-request-access').addEventListener('click', beginMidiTest);
+    root.querySelector('#onboarding-midi-retry').addEventListener('click', beginMidiTest);
+    root.querySelector('#onboarding-midi-show-guide').addEventListener('click', showUsbGuide);
+    root.querySelector('#onboarding-midi-refresh').addEventListener('click', beginMidiTest);
     root.querySelector('#onboarding-midi-continue').addEventListener('click', advanceToChooseZero);
     showStep('WELCOME');
 

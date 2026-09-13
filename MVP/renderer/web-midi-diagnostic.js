@@ -34,6 +34,7 @@
       this.inputHandlers = new Map();
       this.statusListeners = new Set();
       this.currentStatus = null;
+      this.enablePromise = null;
       this.fields = Object.fromEntries([
         "status", "input-name", "manufacturer", "event-type", "note", "pitch", "velocity", "channel", "active-notes", "message"
       ].map(name => [name, root.querySelector(`#midi-${name}`)]));
@@ -44,7 +45,7 @@
       if (!("requestMIDIAccess" in navigator)) {
         enableButton.disabled = true;
         this.fields.message.textContent = "Web MIDI API недоступен в этом браузере.";
-        this.setStatus("unavailable");
+        this.setStatus("unavailable", { safari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent) });
       }
     }
 
@@ -60,20 +61,31 @@
     }
 
     async enable() {
+      if (this.access) {
+        this.refreshInputs();
+        return this.access;
+      }
+      if (this.enablePromise) return this.enablePromise;
       this.enableButton.disabled = true;
       this.fields.message.textContent = "Запрашивается доступ к MIDI input…";
       this.setStatus("requesting");
-      try {
-        this.access = await navigator.requestMIDIAccess({ sysex: false, software: false });
-        this.access.addEventListener("statechange", () => this.refreshInputs());
-        this.refreshInputs();
-        this.fields.message.textContent = "MIDI input включён. Нажмите клавишу на подключённом MIDI-устройстве.";
-      } catch (error) {
-        this.enableButton.disabled = false;
-        this.fields.status.textContent = "Not connected";
-        this.fields.message.textContent = `Доступ к MIDI не получен: ${error.message}`;
-        this.setStatus("error");
-      }
+      this.enablePromise = navigator.requestMIDIAccess({ sysex: false, software: false })
+        .then(access => {
+          this.access = access;
+          this.access.addEventListener("statechange", () => this.refreshInputs());
+          this.refreshInputs();
+          this.fields.message.textContent = "MIDI input включён. Нажмите клавишу на подключённом MIDI-устройстве.";
+          return access;
+        })
+        .catch(error => {
+          this.enableButton.disabled = false;
+          this.fields.status.textContent = "Not connected";
+          this.fields.message.textContent = "MIDI access was not granted.";
+          this.setStatus(error?.name === "NotAllowedError" ? "permission-denied" : "error", { name: error?.name || "Error" });
+          return null;
+        })
+        .finally(() => { this.enablePromise = null; });
+      return this.enablePromise;
     }
 
     refreshInputs() {
@@ -98,7 +110,7 @@
         }
       }
       this.root.classList.toggle("is-connected", connected.length > 0);
-      this.setStatus(connected.length ? "connected" : "waiting-for-device");
+      this.setStatus(connected.length ? "connected" : "no-input");
       this.fields.status.textContent = connected.length ? "Connected" : "Not connected";
       this.fields["input-name"].textContent = connected.map(input => input.name || "Unnamed MIDI input").join(", ") || "—";
       this.fields.manufacturer.textContent = connected.map(input => input.manufacturer).filter(Boolean).join(", ") || "—";

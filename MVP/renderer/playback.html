@@ -60,6 +60,9 @@
           <div data-midi-connect-state="test" hidden>
             <h1 class="mvp-step-heading">Let’s check the connection</h1>
             <p class="mvp-step-message">Press any key on your piano</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-browser-help" class="mvp-button mvp-button-secondary" type="button">Not working? Check browser settings</button>
+            </div>
           </div>
           <div data-midi-connect-state="success" hidden>
             <h1 class="mvp-step-heading">Ready</h1>
@@ -68,12 +71,35 @@
               <button id="onboarding-midi-continue" class="mvp-button mvp-button-primary" type="button">Continue</button>
             </div>
           </div>
-          <div data-midi-connect-state="error" hidden>
-            <h1 class="mvp-step-heading">Couldn’t receive a MIDI signal</h1>
-            <p class="mvp-step-message">Check your browser permission and the USB connection.</p>
+          <div data-midi-connect-state="permission-help" hidden>
+            <h1 class="mvp-step-heading">Allow browser access to MIDI</h1>
+            <p class="mvp-step-message">When you connect for the first time, your browser may ask for permission to use MIDI devices. Choose Allow.</p>
             <div class="mvp-actions">
-              <button id="onboarding-midi-help" class="mvp-button mvp-button-secondary" type="button">Connection help</button>
+              <button id="onboarding-midi-request-access" class="mvp-button mvp-button-primary" type="button">Request MIDI access</button>
             </div>
+          </div>
+          <div data-midi-connect-state="permission-denied" hidden>
+            <h1 class="mvp-step-heading">MIDI access is blocked</h1>
+            <p class="mvp-step-message">Allow MIDI access for play12.pro in your browser settings, then try again.</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-retry" class="mvp-button mvp-button-primary" type="button">Check again</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="device-not-found" hidden>
+            <h1 class="mvp-step-heading">MIDI keyboard not found</h1>
+            <p class="mvp-step-message">Check the USB connection and make sure your piano is turned on.</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-show-guide" class="mvp-button mvp-button-secondary" type="button">Show connection diagram</button>
+              <button id="onboarding-midi-refresh" class="mvp-button mvp-button-primary" type="button">Refresh connection</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="unsupported-safari" hidden>
+            <h1 class="mvp-step-heading">Safari does not support Web MIDI</h1>
+            <p class="mvp-step-message">Open Play12 in Chrome, Edge, Yandex Browser, or another Chromium browser to connect your piano.</p>
+          </div>
+          <div data-midi-connect-state="unsupported" hidden>
+            <h1 class="mvp-step-heading">MIDI connection is not supported</h1>
+            <p class="mvp-step-message">This browser cannot connect to a MIDI keyboard. Open Play12 in a browser that supports Web MIDI.</p>
           </div>
         </div>
         <div id="onboarding-piano-host" class="mvp-piano-host" aria-label="Playable on-screen piano"></div>
@@ -151,9 +177,9 @@
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=onboarding-midi-02"></script>
   <script src="play12-playback.js?v=practice-loop-boundary-1"></script>
-  <script src="web-midi-diagnostic.js?v=onboarding-midi-02"></script>
+  <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=onboarding-midi-02"></script>
+  <script src="play12-onboarding.js?v=midi-recovery-01"></script>
   <script>
     window.play12Onboarding = Play12Onboarding.create({
       root: document.getElementById('play12-onboarding'),
