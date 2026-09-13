@@ -6,7 +6,7 @@
   <title>Play12 Playback UX v0.3 — Für Elise</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=active-note-1">
   <link rel="stylesheet" href="play12-playback.css?v=playback-ux-bugfix-1">
   <link rel="stylesheet" href="play12-onboarding.css?v=site-alignment-01">
@@ -14,13 +14,26 @@
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
     <header class="mvp-site-header">
-      <img class="mvp-site-logo" src="../../P12%20logo.png" alt="Play12">
+      <a class="mvp-logo-link" href="/" aria-label="Play12 homepage">
+        <img class="mvp-site-logo" src="../../P12%20logo.png" alt="Play12 logo">
+      </a>
+      <nav class="mvp-site-nav" aria-label="Play12 navigation">
+        <a href="/manual.html">Manual</a>
+        <a href="/manifesto.html">Manifesto</a>
+        <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+        <a href="https://www.instagram.com/play12_official/">Instagram</a>
+        <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+        <a href="https://x.com/play12_official">X</a>
+        <span class="mvp-language-switch" aria-label="Language selection">
+          <span class="mvp-active-language" aria-current="page">EN</span><span aria-hidden="true">/</span><a href="/ru/" lang="ru">RU</a>
+        </span>
+      </nav>
     </header>
     <main class="mvp-page">
       <div class="mvp-content">
         <div class="mvp-actions">
-          <button id="onboarding-start" class="mvp-button mvp-button-primary" type="button">Начать</button>
-          <button id="onboarding-continue" class="mvp-button mvp-button-secondary" type="button" hidden>Продолжить</button>
+          <button id="onboarding-start" class="mvp-button mvp-button-primary" type="button">Start</button>
+          <button id="onboarding-continue" class="mvp-button mvp-button-secondary" type="button" hidden>Continue</button>
         </div>
       </div>
     </main>

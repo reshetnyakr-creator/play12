@@ -10,6 +10,7 @@ The minimal reusable CSS foundation currently lives in `renderer/play12-onboardi
 
 - `mvp-shell`
 - `mvp-site-header` / `mvp-site-logo`
+- `mvp-logo-link` / `mvp-site-nav` / `mvp-language-switch`
 - `mvp-page` / `mvp-content`
 - `mvp-heading` / `mvp-body-text`
 - `mvp-actions`
