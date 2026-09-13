@@ -30,6 +30,7 @@
         onboardingCompleted: value.onboardingCompleted === true,
         lastSessionExists: true,
         midiVerified: value.midiVerified === true,
+        inputMode: value.inputMode === 'midi' || value.inputMode === 'demo' ? value.inputMode : null,
         midiUsbGuideSeen: value.midiUsbGuideSeen === true,
         playLearned: value.playLearned === true,
         pauseLearned: value.pauseLearned === true,
@@ -66,6 +67,7 @@
       .map(element => [element.dataset.midiConnectState, element]));
     const pianoHost = root.querySelector('#onboarding-piano-host');
     const playbackHost = root.querySelector('#onboarding-playback-host');
+    const listenPianoHost = root.querySelector('#onboarding-listen-piano-host');
     const listenPrompt = root.querySelector('#onboarding-listen-prompt');
     const listenContinue = root.querySelector('#onboarding-listen-continue');
     const savedState = readSavedState(storage);
@@ -76,6 +78,7 @@
       onboardingCompleted: false,
       lastSessionExists: returning,
       midiVerified: false,
+      inputMode: null,
       midiUsbGuideSeen: false,
       playLearned: false,
       pauseLearned: false,
@@ -97,6 +100,7 @@
         onboardingCompleted: String(state.onboardingCompleted),
         lastSessionExists: String(state.lastSessionExists),
         midiVerified: String(state.midiVerified),
+        inputMode: state.inputMode || 'none',
         midiUsbGuideSeen: String(state.midiUsbGuideSeen),
         playLearned: String(state.playLearned),
         pauseLearned: String(state.pauseLearned),
@@ -130,9 +134,14 @@
     const moveStageToOnboarding = () => {
       const stage = runtime?.stage;
       if (!stage || !playbackHost) return;
-      restorePiano();
       if (!stageHome) stageHome = { parent: stage.parentElement, nextSibling: stage.nextSibling };
       if (stage.parentElement !== playbackHost) playbackHost.appendChild(stage);
+      if (runtime?.pianoView?.mount && listenPianoHost) {
+        const mount = runtime.pianoView.mount;
+        if (!pianoHome) pianoHome = { parent: mount.parentElement, nextSibling: mount.nextSibling };
+        if (mount.parentElement !== listenPianoHost) listenPianoHost.appendChild(mount);
+        runtime.pianoView.syncContainer?.();
+      }
       document.body.classList.add('play12-onboarding-listen');
       global.dispatchEvent(new Event('resize'));
     };
@@ -188,6 +197,7 @@
       root.hidden = true;
       document.body.classList.remove('play12-onboarding-boot', 'play12-onboarding-active');
       document.body.classList.add('play12-onboarding-dismissed');
+      exposeState();
     };
 
     const startNew = () => {
@@ -197,6 +207,7 @@
         onboardingCompleted: false,
         lastSessionExists: true,
         midiVerified: false,
+        inputMode: null,
         midiUsbGuideSeen: false,
         playLearned: false,
         pauseLearned: false,
@@ -238,13 +249,19 @@
     const showPermissionHelp = () => showMidiState('permission-help');
 
     const verifyMidi = () => {
-      state = { ...state, midiVerified: true };
+      state = { ...state, midiVerified: true, inputMode: 'midi' };
       saveState(storage, state);
       showMidiState('success');
     };
 
+    const enterDemoMode = () => {
+      state = { ...state, inputMode: 'demo', midiVerified: false, onboardingStep: 'LISTEN_AND_CONTROL' };
+      saveState(storage, state);
+      showStep('LISTEN_AND_CONTROL');
+    };
+
     const advanceToListen = () => {
-      if (!state.midiVerified) return;
+      if (!state.midiVerified && state.inputMode !== 'demo') return;
       state = { ...state, onboardingStep: 'LISTEN_AND_CONTROL' };
       saveState(storage, state);
       showStep('LISTEN_AND_CONTROL');
@@ -302,6 +319,7 @@
     continueButton.addEventListener('click', continueSession);
     root.querySelector('#onboarding-midi-ready').addEventListener('click', beginMidiTest);
     root.querySelector('#onboarding-midi-guide').addEventListener('click', showUsbGuide);
+    root.querySelector('#onboarding-demo').addEventListener('click', enterDemoMode);
     root.querySelector('#onboarding-midi-check').addEventListener('click', beginMidiTest);
     root.querySelector('#onboarding-midi-browser-help').addEventListener('click', showPermissionHelp);
     root.querySelector('#onboarding-midi-request-access').addEventListener('click', beginMidiTest);

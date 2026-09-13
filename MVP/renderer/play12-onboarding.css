@@ -215,6 +215,21 @@
   background: var(--play12-site-action-hover);
 }
 
+.mvp-button-tertiary {
+  flex-basis: 100%;
+  min-height: 44px;
+  border: 0;
+  color: var(--play12-site-text-secondary);
+  background: transparent;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.mvp-button-tertiary:hover,
+.mvp-button-tertiary:active {
+  color: var(--play12-site-action-hover);
+}
+
 .mvp-button:focus-visible {
   outline: 3px solid var(--play12-site-action-hover);
   outline-offset: 4px;
@@ -260,8 +275,8 @@
 
 .mvp-playback-host .playback-stage {
   width: 100%;
-  height: min(68vh, 700px);
-  min-height: 560px;
+  height: min(54vh, 590px);
+  min-height: 460px;
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -275,7 +290,7 @@
   display: block;
   position: absolute;
   inset: 0 0 auto;
-  height: calc(78% + 33px);
+  height: 100%;
   overflow: hidden;
   box-sizing: border-box;
   border: var(--playback-shell-border);
@@ -291,10 +306,6 @@
   border-left: 0;
   border-radius: 0 0 var(--playback-shell-radius) var(--playback-shell-radius);
   box-shadow: none;
-}
-
-.mvp-playback-host .play12-piano-view {
-  top: calc(78% + 38px);
 }
 
 .mvp-midi-copy {
@@ -343,6 +354,13 @@
 .mvp-piano-host {
   width: 100%;
   min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.mvp-listen-piano-host {
+  width: 100%;
+  justify-self: stretch;
 }
 
 .mvp-piano-host .play12-piano-view {
@@ -351,7 +369,7 @@
   left: auto;
   top: auto;
   min-height: 0;
-  max-width: 100%;
+  max-width: none;
   transform: none;
 }
 
@@ -417,7 +435,7 @@
     gap: 28px;
   }
 
-  .mvp-playback-host .playback-stage { min-height: 560px; }
+  .mvp-playback-host .playback-stage { min-height: 440px; }
 
   .mvp-step-heading {
     font-size: 40px;

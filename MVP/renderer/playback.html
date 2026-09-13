@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=editable-review-02">
   <link rel="stylesheet" href="play12-playback.css?v=editable-review-02">
-  <link rel="stylesheet" href="play12-onboarding.css?v=saints-onboarding-03">
+  <link rel="stylesheet" href="play12-onboarding.css?v=saints-demo-listen-04">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -43,6 +43,7 @@
             <div class="mvp-actions">
               <button id="onboarding-midi-ready" class="mvp-button mvp-button-primary" type="button">Already connected</button>
               <button id="onboarding-midi-guide" class="mvp-button mvp-button-secondary" type="button">How to connect?</button>
+              <button id="onboarding-demo" class="mvp-button mvp-button-tertiary" type="button">I don’t have a piano yet — view demo</button>
             </div>
           </div>
           <div data-midi-connect-state="guide" hidden>
@@ -113,12 +114,13 @@
           </div>
         </div>
         <div id="onboarding-playback-host" class="mvp-playback-host"></div>
+        <div id="onboarding-listen-piano-host" class="mvp-piano-host mvp-listen-piano-host" aria-label="Playable on-screen piano"></div>
       </section>
     </main>
   </section>
   <main class="playback-page">
     <header class="playback-header">
-      <div><h1>When the Saints Go Marching In — Play12 Beginner</h1><p>Four-measure onboarding fragment · audio clock</p></div>
+      <div><h1>When the Saints Go Marching In — Play12 Manual</h1><p>Approved onboarding fragment · audio clock</p></div>
       <output id="position" class="playback-position" aria-live="off"></output>
     </header>
     <section id="playback-stage" class="playback-stage" aria-label="Движущееся нотное поле Play12">
@@ -137,7 +139,7 @@
           <div class="playback-service-panel-heading">Settings</div>
           <div class="playback-service-panel-body settings-panel-body">
             <button id="choose-zero" type="button">Choose your 0</button>
-            <label>Grid <select id="grid-resolution"><option>1/16</option><option>1/32</option><option>1/64</option></select></label>
+            <label>Grid <select id="grid-resolution"><option selected>1/8</option><option>1/16</option><option>1/32</option><option>1/64</option></select></label>
             <label class="module-toggle"><input id="count-in" type="checkbox" checked> Count-in</label>
             <label class="module-toggle"><input id="music-audio" type="checkbox" checked> Music Audio</label>
             <label class="module-toggle"><input id="practice-mode" type="checkbox"> Practice Mode</label>
@@ -213,11 +215,11 @@
   </main>
   <script src="play12-renderer.js?v=manual-count-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
-  <script src="piano-view.js?v=onboarding-midi-02"></script>
+  <script src="piano-view.js?v=full-width-onboarding-04"></script>
   <script src="play12-playback.js?v=saints-onboarding-03"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=saints-onboarding-03"></script>
+  <script src="play12-onboarding.js?v=saints-demo-listen-05"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -236,7 +238,7 @@
       continueButton: document.getElementById('onboarding-continue')
     });
     Promise.all([
-      fetch(saintsManualReviewMode ? '../examples/when_the_saints_manual.play12.json' : '../examples/when_the_saints_play12_beginner.play12.json').then(r => r.json()),
+      fetch(saintsReviewMode ? '../examples/when_the_saints_play12_beginner.play12.json' : '../examples/when_the_saints_manual.play12.json').then(r => r.json()),
       Play12CardThemes.loadReadyAssets(),
       saintsReviewMode ? fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json()) : Promise.resolve(null)
     ]).then(([baseScore, cardTheme, seedReviewOverlay]) => {
@@ -276,16 +278,16 @@
         gridSelect: reviewGrid
       }) : null;
       if (reviewController) score = reviewController.effective();
-      const reviewMeasureCount = compositionReviewMode ? score.score.parts[0].measures.length : 4;
+      const reviewMeasureCount = score.score.parts[0].measures.length;
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
         onboardingLayout: true, noteSelectionEnabled: saintsReviewMode,
         selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => reviewController?.select(eventId),
         zeroNote: score.play12.zero_pitch_class,
-        countWords: saintsManualReviewMode ? { 1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR' } : Play12Renderer.defaults.countWords,
-        countAnd: saintsManualReviewMode ? 'AND' : Play12Renderer.defaults.countAnd
+        countWords: saintsReviewMode ? Play12Renderer.defaults.countWords : { 1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR' },
+        countAnd: saintsReviewMode ? Play12Renderer.defaults.countAnd : 'AND'
       });
-      const svg = render(compositionReviewMode ? reviewGrid.value : '1/16');
+      const svg = render(compositionReviewMode ? reviewGrid.value : '1/8');
       const pianoView = Play12PianoView.render({
         mount: document.getElementById('piano-view'),
         zeroMidi: initialZeroMidi,
@@ -297,7 +299,7 @@
       const globalStarts = [...svg.querySelectorAll('g[data-event-id]')].map(node => Number(node.dataset.globalStartQuarters));
       // The Manual transcription starts on the strong beat even though its
       // first note enters on TWO. Preserve the empty ONE / AND lead-in.
-      const timelineOffset = saintsManualReviewMode ? 0 : Math.min(...globalStarts);
+      const timelineOffset = saintsReviewMode ? Math.min(...globalStarts) : 0;
       const rounds = [];
       let globalMeasureStart = 0;
       for (const measure of score.score.parts[0].measures.slice(0, reviewMeasureCount)) {
@@ -413,7 +415,7 @@
         playback: window.play12Playback,
         stage: document.getElementById('playback-stage')
       });
-      if (!saintsReviewMode) reviewGrid.addEventListener('change', event => {
+      if (!compositionReviewMode) reviewGrid.addEventListener('change', event => {
         window.play12Playback.pauseImmediate();
         window.play12Playback.replaceSvg(render(event.target.value));
       });

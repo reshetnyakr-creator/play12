@@ -74,6 +74,9 @@
     }
 
     bindGeometry() {
+      // Onboarding boots with the underlying playback page hidden. Geometry
+      // becomes measurable only after Piano View is moved into a visible step.
+      if (!this.mount.getClientRects().length) return;
       const faces=[...this.keyboardSvg.querySelectorAll("path")].filter(path=>!path.closest('[display="none"]'))
         .map(path=>({path,bounds:this.boundsInPianoCoordinates(path)})).filter(item=>item.bounds.width>0&&item.bounds.height>0)
         .sort((a,b)=>(a.bounds.left+a.bounds.width/2)-(b.bounds.left+b.bounds.width/2));
@@ -161,8 +164,9 @@
       const parent=this.mount.parentElement, availableHeight=Math.max(0,parent.clientHeight*.22-42);
       if(parent.classList.contains("mvp-piano-host")){
         const availableWidth=Math.max(0,parent.clientWidth);
-        this.mount.style.width=`${availableWidth}px`;
-        this.mount.style.height=`${availableWidth*VIEW_HEIGHT/PIANO_WIDTH}px`;
+        const targetWidth=Math.max(1100,availableWidth);
+        this.mount.style.width=`${targetWidth}px`;
+        this.mount.style.height=`${targetWidth*VIEW_HEIGHT/PIANO_WIDTH}px`;
         return;
       }
       this.mount.style.width=`${Math.min(parent.clientWidth-2,availableHeight*PIANO_WIDTH/VIEW_HEIGHT+18)}px`;
@@ -172,6 +176,7 @@
       this.resizeObserver.disconnect();
       this.resizeObserver.observe(this.mount.parentElement);
       this.fitReferenceAspect();
+      if(!this.keys.size) requestAnimationFrame(()=>this.bindGeometry());
     }
     setZeroMidi(zeroMidi){if(zeroMidi!==this.zeroMidi)this.render(zeroMidi);}
     setZeroNote(zeroNote){this.setZeroMidi(this.zeroMidiFor(zeroNote));}
