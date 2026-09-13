@@ -93,7 +93,7 @@ def event(index: int, measure: int, start: int, duration: int, hand: str, finger
 
 def main() -> None:
     measures = []
-    for measure_index in range(10):
+    for measure_index in range(9):
         events = [event(i, *row) for i, row in enumerate(NOTES) if row[0] == measure_index]
         measures.append({
             "index": measure_index, "number": str(measure_index + 1), "implicit": False,
@@ -116,7 +116,7 @@ def main() -> None:
         },
         "manual_transcription": {
             "reading_order": "bottom_to_top_then_left_field_to_right_field",
-            "round_count": 10, "last_round_contains_only_release_space_after_beat_one": True,
+            "round_count": 9, "last_round_contains_only_release_space_after_beat_one": False,
             "grid_resolution": "1/8", "count": ["ONE", "AND", "TWO", "AND", "THREE", "AND", "FOUR", "AND"],
         },
     }

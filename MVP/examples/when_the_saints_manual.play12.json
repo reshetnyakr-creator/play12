@@ -2614,23 +2614,6 @@
                 "source_fingering": 1
               }
             ]
-          },
-          {
-            "index": 9,
-            "number": "10",
-            "implicit": false,
-            "attributes": {
-              "divisions": 2,
-              "time": {
-                "beats": 4,
-                "beat_type": 4
-              },
-              "key_fifths": 0,
-              "staves": 2
-            },
-            "tempo_marks": [],
-            "dynamic_marks": [],
-            "events": []
           }
         ]
       }
@@ -2638,8 +2621,8 @@
   },
   "manual_transcription": {
     "reading_order": "bottom_to_top_then_left_field_to_right_field",
-    "round_count": 10,
-    "last_round_contains_only_release_space_after_beat_one": true,
+    "round_count": 9,
+    "last_round_contains_only_release_space_after_beat_one": false,
     "grid_resolution": "1/8",
     "count": [
       "ONE",
