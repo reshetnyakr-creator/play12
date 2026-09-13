@@ -35,7 +35,8 @@
         playLearned: value.playLearned === true,
         pauseLearned: value.pauseLearned === true,
         listenFragmentCompleted: value.listenFragmentCompleted === true,
-        chooseZeroCompleted: value.chooseZeroCompleted === true
+        chooseZeroCompleted: value.chooseZeroCompleted === true,
+        zeroChangeHintShown: value.zeroChangeHintShown === true
       };
     } catch (_) {
       return null;
@@ -77,6 +78,7 @@
     const songStep = root.querySelector('#onboarding-song-step');
     const listenContinue = root.querySelector('#onboarding-listen-continue');
     const onboardingChooseZero = root.querySelector('#onboarding-choose-zero');
+    const zeroCallout = root.querySelector('#onboarding-zero-callout');
     const progressItems = new Map([...root.querySelectorAll('[data-progress-step]')]
       .map(element => [Number(element.dataset.progressStep), element]));
     const savedState = readSavedState(storage);
@@ -92,7 +94,8 @@
       playLearned: false,
       pauseLearned: false,
       listenFragmentCompleted: false,
-      chooseZeroCompleted: false
+      chooseZeroCompleted: false,
+      zeroChangeHintShown: false
     };
     let runtime = null;
     let pianoHome = null;
@@ -107,6 +110,7 @@
     let annotationResumeArmed = false;
     let pianoAnnotationShown = false;
     let pianoAnnotationTimer = null;
+    let zeroAnnotationTimer = null;
     let playerClipFrame = 0;
 
     const syncSongTitleMarquee = () => {
@@ -129,6 +133,19 @@
       pianoAnnotationTimer = global.setTimeout(() => {
         pianoCallout.classList.remove('is-visible');
         pianoCallout.hidden = true;
+      }, 7000);
+    };
+
+    const showZeroAnnotation = () => {
+      if (!zeroCallout) return;
+      zeroCallout.hidden = false;
+      zeroCallout.classList.remove('is-visible');
+      void zeroCallout.offsetWidth;
+      zeroCallout.classList.add('is-visible');
+      clearTimeout(zeroAnnotationTimer);
+      zeroAnnotationTimer = global.setTimeout(() => {
+        zeroCallout.classList.remove('is-visible');
+        zeroCallout.hidden = true;
       }, 7000);
     };
 
@@ -186,6 +203,7 @@
         pauseLearned: String(state.pauseLearned),
         listenFragmentCompleted: String(state.listenFragmentCompleted),
         chooseZeroCompleted: String(state.chooseZeroCompleted),
+        zeroChangeHintShown: String(state.zeroChangeHintShown),
         midiConnectState
       });
     };
@@ -340,14 +358,20 @@
         playLearned: false,
         pauseLearned: false,
         listenFragmentCompleted: false,
-        chooseZeroCompleted: false
+        chooseZeroCompleted: false,
+        zeroChangeHintShown: false
       };
       annotationResumeArmed = false;
       pianoAnnotationShown = false;
       clearTimeout(pianoAnnotationTimer);
+      clearTimeout(zeroAnnotationTimer);
       if (pianoCallout) {
         pianoCallout.hidden = true;
         pianoCallout.classList.remove('is-visible');
+      }
+      if (zeroCallout) {
+        zeroCallout.hidden = true;
+        zeroCallout.classList.remove('is-visible');
       }
       saveState(storage, state);
       showStep('MIDI_CONNECT');
@@ -413,10 +437,12 @@
 
     const handleZeroConfirmed = () => {
       if (state.onboardingStep !== 'CHOOSE_ZERO') return;
-      state = { ...state, chooseZeroCompleted: true };
+      const shouldShowHint = !state.zeroChangeHintShown;
+      state = { ...state, chooseZeroCompleted: true, zeroChangeHintShown: true };
       saveState(storage, state);
       syncProgress();
       exposeState();
+      if (shouldShowHint) showZeroAnnotation();
     };
 
     const connectRuntime = nextRuntime => {
@@ -462,6 +488,7 @@
           state = { ...state, listenFragmentCompleted: true, onboardingStep: 'CHOOSE_ZERO' };
           saveState(storage, state);
           showStep('CHOOSE_ZERO');
+          global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
           return;
         }
         syncListenCopy();
@@ -501,7 +528,8 @@
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('onboardingPreview') === 'choose-zero') {
       state = {
         ...state, onboardingStarted: true, onboardingStep: 'CHOOSE_ZERO', inputMode: 'demo', midiVerified: false,
-        playLearned: true, pauseLearned: true, listenFragmentCompleted: true, chooseZeroCompleted: false
+        playLearned: true, pauseLearned: true, listenFragmentCompleted: true, chooseZeroCompleted: false,
+        zeroChangeHintShown: false
       };
       saveState(storage, state);
       showStep('CHOOSE_ZERO');

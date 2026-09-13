@@ -715,6 +715,39 @@
   outline: none;
 }
 
+.mvp-zero-callout {
+  position: fixed;
+  z-index: 63;
+  left: calc(var(--mvp-piano-left-x, 12px) + 218px);
+  bottom: calc(var(--mvp-fixed-piano-height, 220px) + 92px);
+  max-width: 250px;
+  margin: 0;
+  color: rgba(17, 17, 17, .58);
+  font-size: 17px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mvp-zero-callout[hidden] {
+  display: none;
+}
+
+.mvp-zero-callout.is-visible {
+  animation: mvp-piano-callout-seven-seconds 7s ease both;
+}
+
+.mvp-zero-callout span {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: -36px;
+  margin: 0;
+  color: rgba(17, 17, 17, .58);
+  font-family: "Bradley Hand", "Comic Sans MS", cursive;
+  font-size: 34px;
+  line-height: 1;
+  transform: rotate(-5deg);
+}
+
 .mvp-zero-chooser-card {
   position: fixed;
   z-index: 90;
