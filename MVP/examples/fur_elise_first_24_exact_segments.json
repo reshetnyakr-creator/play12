@@ -1,0 +1,509 @@
+{
+  "format": "play12-segments",
+  "version": "0.1",
+  "source": {
+    "title": "Für Elise in A Minor",
+    "measure_range": [
+      1,
+      24
+    ]
+  },
+  "match_policy": {
+    "alignment": "measure",
+    "fields": [
+      "pitch.midi",
+      "relative_start",
+      "duration",
+      "hand",
+      "voice"
+    ],
+    "transposition_invariant": false,
+    "rhythmic_variation": false,
+    "similarity_matching": false,
+    "contained_repeats_suppressed": true
+  },
+  "segments": [
+    {
+      "segment_id": "exact-1caf3c16c3",
+      "match_type": "exact",
+      "measure_length": 7,
+      "display_color": "#6F7FA3",
+      "occurrences": [
+        {
+          "measure_start": 2,
+          "measure_end": 8,
+          "start_quarters_global": "3/2",
+          "end_quarters_global": "12",
+          "event_ids": [
+            "P1.m1.e0",
+            "P1.m1.e1",
+            "P1.m1.e2",
+            "P1.m1.e3",
+            "P1.m1.e4",
+            "P1.m1.e5",
+            "P1.m2.e0",
+            "P1.m2.e2",
+            "P1.m2.e3",
+            "P1.m2.e4",
+            "P1.m2.e5",
+            "P1.m2.e6",
+            "P1.m2.e7",
+            "P1.m3.e0",
+            "P1.m3.e2",
+            "P1.m3.e3",
+            "P1.m3.e4",
+            "P1.m3.e5",
+            "P1.m3.e6",
+            "P1.m3.e7",
+            "P1.m4.e0",
+            "P1.m4.e2",
+            "P1.m4.e3",
+            "P1.m4.e4",
+            "P1.m4.e5",
+            "P1.m4.e6",
+            "P1.m4.e7",
+            "P1.m5.e0",
+            "P1.m5.e1",
+            "P1.m5.e2",
+            "P1.m5.e3",
+            "P1.m5.e4",
+            "P1.m5.e5",
+            "P1.m6.e0",
+            "P1.m6.e2",
+            "P1.m6.e3",
+            "P1.m6.e4",
+            "P1.m6.e5",
+            "P1.m6.e6",
+            "P1.m6.e7",
+            "P1.m7.e0",
+            "P1.m7.e2",
+            "P1.m7.e3",
+            "P1.m7.e4",
+            "P1.m7.e5",
+            "P1.m7.e6",
+            "P1.m7.e7"
+          ]
+        },
+        {
+          "measure_start": 17,
+          "measure_end": 23,
+          "start_quarters_global": "24",
+          "end_quarters_global": "69/2",
+          "event_ids": [
+            "P1.m16.e0",
+            "P1.m16.e1",
+            "P1.m16.e2",
+            "P1.m16.e3",
+            "P1.m16.e4",
+            "P1.m16.e5",
+            "P1.m17.e0",
+            "P1.m17.e2",
+            "P1.m17.e3",
+            "P1.m17.e4",
+            "P1.m17.e5",
+            "P1.m17.e6",
+            "P1.m17.e7",
+            "P1.m18.e0",
+            "P1.m18.e2",
+            "P1.m18.e3",
+            "P1.m18.e4",
+            "P1.m18.e5",
+            "P1.m18.e6",
+            "P1.m18.e7",
+            "P1.m19.e0",
+            "P1.m19.e2",
+            "P1.m19.e3",
+            "P1.m19.e4",
+            "P1.m19.e5",
+            "P1.m19.e6",
+            "P1.m19.e7",
+            "P1.m20.e0",
+            "P1.m20.e1",
+            "P1.m20.e2",
+            "P1.m20.e3",
+            "P1.m20.e4",
+            "P1.m20.e5",
+            "P1.m21.e0",
+            "P1.m21.e2",
+            "P1.m21.e3",
+            "P1.m21.e4",
+            "P1.m21.e5",
+            "P1.m21.e6",
+            "P1.m21.e7",
+            "P1.m22.e0",
+            "P1.m22.e2",
+            "P1.m22.e3",
+            "P1.m22.e4",
+            "P1.m22.e5",
+            "P1.m22.e6",
+            "P1.m22.e7"
+          ]
+        }
+      ]
+    },
+    {
+      "segment_id": "exact-17a4dafcf1",
+      "match_type": "exact",
+      "measure_length": 1,
+      "display_color": "#9A7B8F",
+      "occurrences": [
+        {
+          "measure_start": 10,
+          "measure_end": 10,
+          "start_quarters_global": "27/2",
+          "end_quarters_global": "15",
+          "event_ids": [
+            "P1.m9.e0",
+            "P1.m9.e2",
+            "P1.m9.e3",
+            "P1.m9.e4",
+            "P1.m9.e5",
+            "P1.m9.e6",
+            "P1.m9.e7"
+          ]
+        },
+        {
+          "measure_start": 24,
+          "measure_end": 24,
+          "start_quarters_global": "69/2",
+          "end_quarters_global": "36",
+          "event_ids": [
+            "P1.m23.e0",
+            "P1.m23.e2",
+            "P1.m23.e3",
+            "P1.m23.e4",
+            "P1.m23.e5",
+            "P1.m23.e6",
+            "P1.m23.e7"
+          ]
+        }
+      ]
+    }
+  ],
+  "event_segment_ids": {
+    "P1.m1.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m1.e1": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m1.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m1.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m1.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m1.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m2.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m2.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m2.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m2.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m2.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m2.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m2.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m3.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m3.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m3.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m3.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m3.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m3.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m3.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m4.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m4.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m4.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m4.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m4.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m4.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m4.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m5.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m5.e1": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m5.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m5.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m5.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m5.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m6.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m6.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m6.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m6.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m6.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m6.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m6.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m7.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m7.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m7.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m7.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m7.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m7.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m7.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m16.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m16.e1": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m16.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m16.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m16.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m16.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m17.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m17.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m17.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m17.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m17.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m17.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m17.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m18.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m18.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m18.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m18.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m18.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m18.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m18.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m19.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m19.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m19.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m19.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m19.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m19.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m19.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m20.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m20.e1": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m20.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m20.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m20.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m20.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m21.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m21.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m21.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m21.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m21.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m21.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m21.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m22.e0": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m22.e2": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m22.e3": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m22.e4": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m22.e5": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m22.e6": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m22.e7": [
+      "exact-1caf3c16c3"
+    ],
+    "P1.m9.e0": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m9.e2": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m9.e3": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m9.e4": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m9.e5": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m9.e6": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m9.e7": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m23.e0": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m23.e2": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m23.e3": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m23.e4": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m23.e5": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m23.e6": [
+      "exact-17a4dafcf1"
+    ],
+    "P1.m23.e7": [
+      "exact-17a4dafcf1"
+    ]
+  }
+}

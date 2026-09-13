@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play12 Playback UX v0.3 — Für Elise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="play12-renderer.css?v=active-note-1">
+  <link rel="stylesheet" href="play12-playback.css?v=playback-ux-bugfix-1">
+</head>
+<body>
+  <main class="playback-page">
+    <header class="playback-header">
+      <div><h1>Für Elise — Playback UX v0.3</h1><p>Первые 24 такта · audio-clock</p></div>
+      <output id="position" class="playback-position" aria-live="off"></output>
+    </header>
+    <section id="playback-stage" class="playback-stage" aria-label="Движущееся нотное поле Play12">
+        <section id="round-loop-module" class="playback-service-panel round-loop-control">
+          <div class="playback-service-panel-heading">Round / Loop Control</div>
+          <div class="playback-service-panel-body">
+            <div class="round-navigation"><button id="previous-round" type="button" aria-label="Previous round">←</button><button id="next-round" type="button" aria-label="Next round">→</button></div>
+            <label class="module-toggle"><input id="loop" type="checkbox"> Loop</label>
+            <label>Gap <select id="loop-gap"><option value="direct">Direct</option><option value="empty-round">Empty round</option></select></label>
+            <label>From <select id="loop-start"></select></label>
+            <span aria-hidden="true">→</span>
+            <label>To <select id="loop-end"></select></label>
+          </div>
+        </section>
+        <section id="settings-module" class="playback-service-panel settings-control">
+          <div class="playback-service-panel-heading">Settings</div>
+          <div class="playback-service-panel-body settings-panel-body">
+            <button id="choose-zero" type="button">Choose your 0</button>
+            <label>Grid <select id="grid-resolution"><option>1/16</option><option>1/32</option><option>1/64</option></select></label>
+            <label class="module-toggle"><input id="count-in" type="checkbox" checked> Count-in</label>
+            <label class="module-toggle"><input id="music-audio" type="checkbox" checked> Music Audio</label>
+            <label class="module-toggle"><input id="practice-mode" type="checkbox"> Practice Mode</label>
+          </div>
+        </section>
+      <section id="metronome-module" class="metronome-mode" aria-label="Metronome Mode">
+        <span id="metronome-beat-lamp" class="metronome-beat-lamp" aria-hidden="true"></span>
+        <label class="module-toggle"><input id="metronome" type="checkbox" checked> Metronome</label>
+        <label>BPM <input id="bpm" type="number" min="20" max="300" step="1" value="72"></label>
+        <label>Volume <select id="metronome-volume"><option>0</option><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
+      </section>
+      <div id="playline" class="playback-zone" aria-label="Playback Zone">
+        <div class="playback-zone-transport" aria-label="Основное управление воспроизведением">
+          <button id="play" type="button">Play</button>
+          <button id="pause" type="button">Pause</button>
+          <button id="restart" type="button">Restart</button>
+        </div>
+        <span id="progress-head" class="playback-progress-head" aria-hidden="true"></span>
+        <span id="timecode" class="playback-timecode">00:00 / 00:00</span>
+      </div>
+      <div id="grid-pulse" class="playback-grid-pulse" aria-hidden="true"></div>
+      <div id="play12-score" class="play12-render-root playback-score"></div>
+      <div id="piano-view" class="play12-piano-view" aria-label="Piano View"></div>
+      <section id="zero-chooser" class="zero-chooser" hidden aria-label="Choose Your 0">
+        <strong>Choose Your 0</strong>
+        <p id="zero-prompt">Press a piano key to set it as 0</p>
+        <div><button id="use-zero" type="button" disabled>Use this 0</button><button id="choose-another-zero" type="button" disabled>Choose another</button></div>
+      </section>
+      <aside id="midi-diagnostic" class="midi-diagnostic" hidden data-ui-module="midi-diagnostic" aria-label="Web MIDI Diagnostic">
+        <div class="midi-diagnostic-heading"><strong>Web MIDI Diagnostic v0.1</strong><button id="enable-midi" type="button">Enable MIDI</button></div>
+        <dl>
+          <div><dt>MIDI status</dt><dd id="midi-status">Not connected</dd></div>
+          <div><dt>Input</dt><dd id="midi-input-name">—</dd></div>
+          <div><dt>Manufacturer</dt><dd id="midi-manufacturer">—</dd></div>
+          <div><dt>Event</dt><dd id="midi-event-type">—</dd></div>
+          <div><dt>MIDI note</dt><dd id="midi-note">—</dd></div>
+          <div><dt>Pitch</dt><dd id="midi-pitch">—</dd></div>
+          <div><dt>Velocity</dt><dd id="midi-velocity">—</dd></div>
+          <div><dt>Channel</dt><dd id="midi-channel">—</dd></div>
+          <div><dt>Active MIDI notes</dt><dd id="midi-active-notes">—</dd></div>
+        </dl>
+        <p id="midi-message" class="midi-diagnostic-message" aria-live="polite">Нажмите Enable MIDI и разрешите доступ к подключённому инструменту.</p>
+      </aside>
+    </section>
+  </main>
+  <script src="play12-renderer.js?v=active-note-1"></script>
+  <script src="cards-svg-theme.js?v=approved-strips-1"></script>
+  <script src="piano-view.js?v=choose-zero-4-penultimate-clip"></script>
+  <script src="play12-playback.js?v=practice-loop-boundary-1"></script>
+  <script src="web-midi-diagnostic.js?v=choose-zero-4-penultimate-clip"></script>
+  <script src="draggable-modules.js?v=fixed-core-2"></script>
+  <script>
+    const playbackParams = new URLSearchParams(location.search);
+    Promise.all([
+      fetch('../examples/fur_elise_first_24_measures.candidates.v0.2.play12.json').then(r => r.json()),
+      fetch('../benchmarks/fur_elise_first_8_fingering_v1.json').then(r => r.json()),
+      fetch('../examples/fur_elise_first_24_exact_segments.json').then(r => r.json()),
+      Play12CardThemes.loadReadyAssets()
+    ]).then(([score, benchmark, segments, cardTheme]) => {
+      const benchmarkFingering = Object.fromEntries(benchmark.events.map(event => [event.event_id, event.benchmark_finger]));
+      const tempo = score.score.parts[0].measures.flatMap(measure => measure.tempo_marks || [])[0];
+      if (!tempo || !Number.isFinite(tempo.bpm)) throw new Error('В Play12 JSON отсутствует начальный BPM');
+      document.getElementById('bpm').value = String(tempo.bpm);
+      const savedLoopGap = localStorage.getItem('play12.loop-gap');
+      document.getElementById('loop-gap').value = savedLoopGap === 'empty-round' ? 'empty-round' : 'direct';
+      const savedMetronomeVolume = Number(localStorage.getItem('play12.metronome-volume'));
+      document.getElementById('metronome-volume').value = String(Number.isInteger(savedMetronomeVolume) && savedMetronomeVolume >= 0 && savedMetronomeVolume <= 6 ? savedMetronomeVolume : 4);
+      const scoreRoot = document.getElementById('play12-score');
+      const zeroStorageKey = 'play12.zero_note.midi';
+      const zeroPitchClassStorageKey = 'play12.zero_note.pitch_class';
+      const savedZeroMidi = Number(localStorage.getItem(zeroStorageKey));
+      const savedPitchClass = Number(localStorage.getItem(zeroPitchClassStorageKey));
+      const pitchClasses = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+      const referenceZeroNote = Array.from({length: 88}, (_, index) => index + 21).find(midi => pitchClasses[midi % 12] === score.play12.zero_pitch_class);
+      if (!Number.isInteger(referenceZeroNote)) throw new Error(`Не удалось определить reference zero для ${score.play12.zero_pitch_class}`);
+      const restoredPitchClass = Number.isInteger(savedPitchClass) && savedPitchClass >= 0 && savedPitchClass < 12
+        ? savedPitchClass
+        : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
+      const initialZeroMidi = Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
+      const render = resolution => Play12Renderer.render(score, scoreRoot, {
+        measureCount: 24, gridResolution: resolution, candidatePreview: true, candidateDebug: false, benchmarkFingering, segments
+      });
+      const svg = render('1/16');
+      const pianoView = Play12PianoView.render({
+        mount: document.getElementById('piano-view'),
+        zeroMidi: initialZeroMidi,
+        colors: Play12Renderer.defaults.colors,
+        cardTheme,
+        minMidi: 21,
+        maxMidi: 108
+      });
+      const globalStarts = [...svg.querySelectorAll('g[data-event-id]')].map(node => Number(node.dataset.globalStartQuarters));
+      const timelineOffset = Math.min(...globalStarts);
+      const rounds = [];
+      let globalMeasureStart = 0;
+      for (const measure of score.score.parts[0].measures.slice(0, 24)) {
+        const time = measure.attributes.time;
+        const length = time.beats * 4 / time.beat_type;
+        rounds.push({
+          index: measure.index,
+          start: Math.max(0, globalMeasureStart - timelineOffset),
+          end: globalMeasureStart + length - timelineOffset,
+          beats: time.beats,
+          beatType: time.beat_type,
+          beatQuarters: 4 / time.beat_type,
+          measureQuarters: length
+        });
+        globalMeasureStart += length;
+      }
+      const loopStart = document.getElementById('loop-start');
+      const loopEnd = document.getElementById('loop-end');
+      rounds.forEach((round, index) => {
+        loopStart.add(new Option(`Round ${index + 1}`, index));
+        loopEnd.add(new Option(`Round ${index + 1}`, index));
+      });
+      loopEnd.value = '0';
+      window.play12Playback = Play12Playback.start({
+        svg, stage: document.getElementById('playback-stage'), playline: document.getElementById('playline'),
+        playButton: document.getElementById('play'), pauseButton: document.getElementById('pause'),
+        restartButton: document.getElementById('restart'), bpmInput: document.getElementById('bpm'),
+        positionOutput: document.getElementById('position'), initialBpm: tempo.bpm,
+        metronomeInput: document.getElementById('metronome'), countInInput: document.getElementById('count-in'),
+        musicAudioInput: document.getElementById('music-audio'), practiceModeInput: document.getElementById('practice-mode'), timelineOffset, rounds,
+        previousRoundButton: document.getElementById('previous-round'), nextRoundButton: document.getElementById('next-round'),
+        loopInput: document.getElementById('loop'), loopGapInput: document.getElementById('loop-gap'), loopStartInput: loopStart, loopEndInput: loopEnd,
+        metronomeVolumeInput: document.getElementById('metronome-volume'),
+        gridResolutionInput: document.getElementById('grid-resolution'), pulse: document.getElementById('grid-pulse'),
+        progressHead: document.getElementById('progress-head'), timecode: document.getElementById('timecode'), pianoView,
+        referenceZeroNote, runtimeZeroNote: initialZeroMidi,
+        beatLamp: document.getElementById('metronome-beat-lamp')
+      });
+      Object.assign(document.getElementById('playback-stage').dataset, {
+        selectedPitchClass: String(restoredPitchClass), layoutZeroNote: String(initialZeroMidi), zeroMidi: String(initialZeroMidi)
+      });
+      const zeroChooser = document.getElementById('zero-chooser');
+      const zeroPrompt = document.getElementById('zero-prompt');
+      const chooseZero = document.getElementById('choose-zero');
+      const useZero = document.getElementById('use-zero');
+      const chooseAnotherZero = document.getElementById('choose-another-zero');
+      let choosingZero = false;
+      let previewZeroMidi = null;
+      let previewPitchClass = null;
+      const waitForZero = () => {
+        previewZeroMidi = null;
+        previewPitchClass = null;
+        zeroPrompt.textContent = 'Press a piano key to set it as 0';
+        useZero.disabled = true;
+        chooseAnotherZero.disabled = true;
+      };
+      const previewZero = selectedMidiNote => {
+        const midiNote = Play12PianoView.layoutZeroForMidi(selectedMidiNote, 21);
+        if (!choosingZero || !Number.isInteger(midiNote) || midiNote < 21 || midiNote > 108) return;
+        previewPitchClass = ((selectedMidiNote % 12) + 12) % 12;
+        previewZeroMidi = midiNote;
+        pianoView.setZeroMidi(midiNote);
+        window.play12Playback.setRuntimeZeroNote(midiNote);
+        Object.assign(document.getElementById('playback-stage').dataset, {
+          selectedPitchClass: String(previewPitchClass), layoutZeroNote: String(midiNote), zeroMidi: String(midiNote)
+        });
+        zeroPrompt.textContent = `Pitch class ${previewPitchClass} · layout MIDI ${midiNote} is previewed as 0`;
+        useZero.disabled = false;
+        chooseAnotherZero.disabled = false;
+      };
+      window.play12Playback.addNoteListener(event => previewZero(event.midiNote));
+      chooseZero.addEventListener('click', () => {
+        choosingZero = true;
+        zeroChooser.hidden = false;
+        waitForZero();
+      });
+      chooseAnotherZero.addEventListener('click', waitForZero);
+      useZero.addEventListener('click', () => {
+        if (previewZeroMidi == null) return;
+        localStorage.setItem(zeroStorageKey, String(previewZeroMidi));
+        localStorage.setItem(zeroPitchClassStorageKey, String(previewPitchClass));
+        choosingZero = false;
+        zeroChooser.hidden = true;
+        chooseZero.textContent = 'Change 0';
+        Object.assign(document.getElementById('playback-stage').dataset, {
+          selectedPitchClass: String(previewPitchClass), layoutZeroNote: String(previewZeroMidi), zeroMidi: String(previewZeroMidi)
+        });
+      });
+      if (Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108) chooseZero.textContent = 'Change 0';
+      if (playbackParams.get('midi') === '1') {
+        document.getElementById('midi-diagnostic').hidden = false;
+        window.play12MidiDiagnostic = Play12MidiDiagnostic.create({
+          root: document.getElementById('midi-diagnostic'),
+          enableButton: document.getElementById('enable-midi'),
+          pianoView,
+          noteEvents: window.play12Playback
+        });
+      }
+      document.getElementById('grid-resolution').addEventListener('change', event => {
+        window.play12Playback.pauseImmediate();
+        window.play12Playback.replaceSvg(render(event.target.value));
+      });
+      if (playbackParams.has('at')) window.play12Playback.seek(Number(playbackParams.get('at')));
+      localStorage.removeItem('play12.ui-module-position.play-mode');
+      window.play12DraggableModules = Play12DraggableModules.init({
+        boundary: document.getElementById('playback-stage'),
+        modules: [
+          ['metronome-mode', document.getElementById('metronome-module')],
+          ['round-loop-control', document.getElementById('round-loop-module')],
+          ['settings', document.getElementById('settings-module')],
+          ['midi-diagnostic', document.getElementById('midi-diagnostic')]
+        ]
+      });
+    }).catch(error => { document.getElementById('play12-score').textContent = error.message; });
+  </script>
+</body>
+</html>

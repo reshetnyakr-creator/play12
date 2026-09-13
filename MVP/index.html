@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Play12 MVP</title>
+</head>
+<body>
+  <p>Opening Play12 MVP…</p>
+  <script>
+    const params = new URLSearchParams(location.search);
+    if (!params.has('midi')) params.set('midi', '1');
+    location.replace(`renderer/playback.html?${params}`);
+  </script>
+</body>
+</html>
