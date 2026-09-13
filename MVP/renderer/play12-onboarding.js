@@ -34,7 +34,8 @@
         midiUsbGuideSeen: value.midiUsbGuideSeen === true,
         playLearned: value.playLearned === true,
         pauseLearned: value.pauseLearned === true,
-        listenFragmentCompleted: value.listenFragmentCompleted === true
+        listenFragmentCompleted: value.listenFragmentCompleted === true,
+        chooseZeroCompleted: value.chooseZeroCompleted === true
       };
     } catch (_) {
       return null;
@@ -73,7 +74,11 @@
     const pianoCallout = root.querySelector('#onboarding-piano-callout');
     const songTitleViewport = root.querySelector('#onboarding-song-title-viewport');
     const songTitle = root.querySelector('#onboarding-song-title');
+    const songStep = root.querySelector('#onboarding-song-step');
     const listenContinue = root.querySelector('#onboarding-listen-continue');
+    const onboardingChooseZero = root.querySelector('#onboarding-choose-zero');
+    const progressItems = new Map([...root.querySelectorAll('[data-progress-step]')]
+      .map(element => [Number(element.dataset.progressStep), element]));
     const savedState = readSavedState(storage);
     const returning = hasExistingSession(storage);
     let state = savedState || {
@@ -86,7 +91,8 @@
       midiUsbGuideSeen: false,
       playLearned: false,
       pauseLearned: false,
-      listenFragmentCompleted: false
+      listenFragmentCompleted: false,
+      chooseZeroCompleted: false
     };
     let runtime = null;
     let pianoHome = null;
@@ -137,13 +143,16 @@
       if (!mount?.classList.contains('is-fixed-piano-view')) return;
       runtime.pianoView.syncContainer?.();
       requestAnimationFrame(() => {
-        const height = Math.ceil(mount.getBoundingClientRect().height);
+        const pianoRect = mount.getBoundingClientRect();
+        const height = Math.ceil(pianoRect.height);
         const playbackHeight = document.body.classList.contains('play12-onboarding-listen') ? 50 : 0;
         const reserved = height + playbackHeight + 36;
         root.style.setProperty('--mvp-fixed-piano-height', `${height}px`);
         document.documentElement.style.setProperty('--mvp-fixed-piano-height', `${height}px`);
         root.style.setProperty('--mvp-fixed-piano-space', `${reserved}px`);
         document.documentElement.style.setProperty('--mvp-fixed-piano-space', `${reserved}px`);
+        root.style.setProperty('--mvp-piano-left-x', `${pianoRect.left}px`);
+        document.documentElement.style.setProperty('--mvp-piano-left-x', `${pianoRect.left}px`);
       });
     };
 
@@ -176,8 +185,22 @@
         playLearned: String(state.playLearned),
         pauseLearned: String(state.pauseLearned),
         listenFragmentCompleted: String(state.listenFragmentCompleted),
+        chooseZeroCompleted: String(state.chooseZeroCompleted),
         midiConnectState
       });
+    };
+
+    const syncProgress = () => {
+      const activeStep = state.onboardingStep === 'CHOOSE_ZERO' ? 2 : 1;
+      for (const [number, element] of progressItems) {
+        const completed = number < activeStep || (number === 2 && state.chooseZeroCompleted);
+        element.classList.toggle('is-active', number === activeStep && !completed);
+        element.classList.toggle('is-complete', completed);
+        if (number === activeStep && !completed) element.setAttribute('aria-current', 'step');
+        else element.removeAttribute('aria-current');
+      }
+      if (onboardingChooseZero) onboardingChooseZero.hidden = state.onboardingStep !== 'CHOOSE_ZERO';
+      if (songStep) songStep.textContent = `Step ${activeStep} of 4`;
     };
 
     const showMidiState = value => {
@@ -270,7 +293,9 @@
     };
 
     const showStep = step => {
-      for (const [name, element] of views) element.hidden = name !== step;
+      const visibleView = step === 'CHOOSE_ZERO' ? 'LISTEN_AND_CONTROL' : step;
+      for (const [name, element] of views) element.hidden = name !== visibleView;
+      document.body.classList.toggle('play12-onboarding-choose-zero', step === 'CHOOSE_ZERO');
       if (step === 'MIDI_CONNECT') {
         restoreStage();
         root.hidden = false;
@@ -278,14 +303,19 @@
         document.body.classList.remove('play12-onboarding-dismissed');
         showMidiState('choice');
         movePianoToOnboarding();
-      } else if (step === 'LISTEN_AND_CONTROL') {
+      } else if (step === 'LISTEN_AND_CONTROL' || step === 'CHOOSE_ZERO') {
         root.hidden = false;
         document.body.classList.add('play12-onboarding-active');
         document.body.classList.remove('play12-onboarding-dismissed');
         moveStageToOnboarding();
         requestAnimationFrame(syncSongTitleMarquee);
-        syncListenCopy();
+        if (step === 'LISTEN_AND_CONTROL') syncListenCopy();
+        else {
+          if (listenCoach) listenCoach.hidden = true;
+          if (listenContinue) listenContinue.hidden = true;
+        }
       }
+      syncProgress();
       exposeState();
     };
 
@@ -309,7 +339,8 @@
         midiUsbGuideSeen: false,
         playLearned: false,
         pauseLearned: false,
-        listenFragmentCompleted: false
+        listenFragmentCompleted: false,
+        chooseZeroCompleted: false
       };
       annotationResumeArmed = false;
       pianoAnnotationShown = false;
@@ -330,6 +361,7 @@
       saveState(storage, state);
       if (state.onboardingStep === 'MIDI_CONNECT') showStep('MIDI_CONNECT');
       else if (state.onboardingStep === 'LISTEN_AND_CONTROL') showStep('LISTEN_AND_CONTROL');
+      else if (state.onboardingStep === 'CHOOSE_ZERO') showStep('CHOOSE_ZERO');
       else if (state.onboardingStep === 'WELCOME') showStep('WELCOME');
       else showMvp();
       return { ...state };
@@ -376,7 +408,15 @@
       if (!state.listenFragmentCompleted) return;
       state = { ...state, onboardingStep: 'CHOOSE_ZERO' };
       saveState(storage, state);
-      showMvp();
+      showStep('CHOOSE_ZERO');
+      global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
+    };
+
+    const handleZeroConfirmed = () => {
+      if (state.onboardingStep !== 'CHOOSE_ZERO') return;
+      state = { ...state, chooseZeroCompleted: true };
+      saveState(storage, state);
+      syncProgress();
     };
 
     const connectRuntime = nextRuntime => {
@@ -425,7 +465,8 @@
         syncListenCopy();
       }) || null;
       if (state.onboardingStep === 'MIDI_CONNECT') movePianoToOnboarding();
-      if (state.onboardingStep === 'LISTEN_AND_CONTROL') moveStageToOnboarding();
+      if (state.onboardingStep === 'LISTEN_AND_CONTROL' || state.onboardingStep === 'CHOOSE_ZERO') moveStageToOnboarding();
+      if (state.onboardingStep === 'CHOOSE_ZERO') global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
     };
 
     document.body.classList.remove('play12-onboarding-boot');
@@ -444,6 +485,7 @@
     root.querySelector('#onboarding-midi-refresh').addEventListener('click', beginMidiTest);
     root.querySelector('#onboarding-midi-continue').addEventListener('click', advanceToListen);
     listenContinue.addEventListener('click', advanceToChooseZero);
+    global.addEventListener('play12:zero-confirmed', handleZeroConfirmed);
     showStep('WELCOME');
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('onboardingPreview') === 'listen') {
       state = {
@@ -451,6 +493,15 @@
         playLearned: false, pauseLearned: false, listenFragmentCompleted: false
       };
       showStep('LISTEN_AND_CONTROL');
+    }
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('onboardingPreview') === 'choose-zero') {
+      state = {
+        ...state, onboardingStarted: true, onboardingStep: 'CHOOSE_ZERO', inputMode: 'demo', midiVerified: false,
+        playLearned: true, pauseLearned: true, listenFragmentCompleted: true, chooseZeroCompleted: false
+      };
+      saveState(storage, state);
+      showStep('CHOOSE_ZERO');
+      global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
     }
 
     return Object.freeze({
