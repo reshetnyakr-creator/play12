@@ -193,12 +193,18 @@
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-onboarding.js?v=saints-onboarding-03"></script>
   <script>
-    window.play12Onboarding = Play12Onboarding.create({
+    const playbackParams = new URLSearchParams(location.search);
+    const saintsReviewMode = playbackParams.get('review') === 'when-the-saints';
+    if (saintsReviewMode) {
+      document.body.classList.remove('play12-onboarding-boot', 'play12-onboarding-active');
+      document.body.classList.add('play12-onboarding-dismissed', 'play12-composition-review');
+      document.getElementById('play12-onboarding').hidden = true;
+    }
+    window.play12Onboarding = saintsReviewMode ? null : Play12Onboarding.create({
       root: document.getElementById('play12-onboarding'),
       startButton: document.getElementById('onboarding-start'),
       continueButton: document.getElementById('onboarding-continue')
     });
-    const playbackParams = new URLSearchParams(location.search);
     Promise.all([
       fetch('../examples/when_the_saints_play12_beginner.play12.json').then(r => r.json()),
       Play12CardThemes.loadReadyAssets()
@@ -222,12 +228,15 @@
       const pitchClasses = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
       const referenceZeroNote = Array.from({length: 88}, (_, index) => index + 21).find(midi => pitchClasses[midi % 12] === score.play12.zero_pitch_class);
       if (!Number.isInteger(referenceZeroNote)) throw new Error(`Не удалось определить reference zero для ${score.play12.zero_pitch_class}`);
-      const restoredPitchClass = Number.isInteger(savedPitchClass) && savedPitchClass >= 0 && savedPitchClass < 12
-        ? savedPitchClass
-        : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
+      const restoredPitchClass = saintsReviewMode
+        ? referenceZeroNote % 12
+        : Number.isInteger(savedPitchClass) && savedPitchClass >= 0 && savedPitchClass < 12
+          ? savedPitchClass
+          : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
       const initialZeroMidi = Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
+      const reviewMeasureCount = saintsReviewMode ? score.score.parts[0].measures.length : 4;
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
-        measureCount: 4, gridResolution: resolution, candidatePreview: false, candidateDebug: false, onboardingLayout: true
+        measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false, onboardingLayout: true
       });
       const svg = render('1/16');
       const pianoView = Play12PianoView.render({
@@ -242,7 +251,7 @@
       const timelineOffset = Math.min(...globalStarts);
       const rounds = [];
       let globalMeasureStart = 0;
-      for (const measure of score.score.parts[0].measures.slice(0, 4)) {
+      for (const measure of score.score.parts[0].measures.slice(0, reviewMeasureCount)) {
         const time = measure.attributes.time;
         const length = time.beats * 4 / time.beat_type;
         rounds.push({
@@ -338,7 +347,7 @@
           noteEvents: window.play12Playback
         });
       }
-      window.play12Onboarding.connectRuntime({
+      window.play12Onboarding?.connectRuntime({
         pianoView,
         noteEvents: window.play12Playback,
         midiDiagnostic: window.play12MidiDiagnostic || null,

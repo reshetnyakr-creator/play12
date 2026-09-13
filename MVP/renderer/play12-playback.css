@@ -16,6 +16,7 @@ html, body { margin: 0; min-height: 100%; background: #f7f7f5; }
 .playback-controls output { min-width: 150px; color: #62666c; font-size: 12px; }
 .playback-stage { position: relative; height: min(78vh, 760px); min-height: 480px; overflow: hidden; background: #fff; box-shadow: 0 8px 30px rgba(17,24,39,.08); }
 .unified-playback-block { display: contents; }
+.play12-composition-review :is(.playback-header, .playback-service-panel, .metronome-mode, .midi-diagnostic, .zero-chooser) { display: none !important; }
 .playback-service-panel { position: absolute; z-index: 31; top: 12px; width: max-content; max-width: 410px; box-sizing: border-box; padding: 9px 10px; border: var(--playback-shell-border); border-radius: var(--playback-shell-radius); background: var(--playback-shell-fill); box-shadow: 0 5px 18px rgba(17,24,39,.12); font: 400 11px/1.35 Inter, Arial, sans-serif; pointer-events: auto; }
 .round-loop-control { left: 12px; width: max-content; max-width: calc(100% - 24px); }
 .round-loop-control .playback-service-panel-body { flex-wrap: wrap; }
