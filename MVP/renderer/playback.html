@@ -211,7 +211,7 @@
       </section>
     </section>
   </main>
-  <script src="play12-renderer.js?v=editable-review-02"></script>
+  <script src="play12-renderer.js?v=manual-count-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=onboarding-midi-02"></script>
   <script src="play12-playback.js?v=saints-onboarding-03"></script>
@@ -295,7 +295,9 @@
         maxMidi: 108
       });
       const globalStarts = [...svg.querySelectorAll('g[data-event-id]')].map(node => Number(node.dataset.globalStartQuarters));
-      const timelineOffset = Math.min(...globalStarts);
+      // The Manual transcription starts on the strong beat even though its
+      // first note enters on TWO. Preserve the empty ONE / AND lead-in.
+      const timelineOffset = saintsManualReviewMode ? 0 : Math.min(...globalStarts);
       const rounds = [];
       let globalMeasureStart = 0;
       for (const measure of score.score.parts[0].measures.slice(0, reviewMeasureCount)) {
