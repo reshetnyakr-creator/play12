@@ -409,7 +409,6 @@
       state = { ...state, onboardingStep: 'CHOOSE_ZERO' };
       saveState(storage, state);
       showStep('CHOOSE_ZERO');
-      global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
     };
 
     const handleZeroConfirmed = () => {
@@ -459,14 +458,18 @@
           showPianoAnnotationOnce();
         }
         if (state.pauseLearned && snapshot.ended && !state.listenFragmentCompleted) {
-          state = { ...state, listenFragmentCompleted: true };
+          state = { ...state, listenFragmentCompleted: true, onboardingStep: 'CHOOSE_ZERO' };
           saveState(storage, state);
+          showStep('CHOOSE_ZERO');
+          return;
         }
         syncListenCopy();
       }) || null;
       if (state.onboardingStep === 'MIDI_CONNECT') movePianoToOnboarding();
       if (state.onboardingStep === 'LISTEN_AND_CONTROL' || state.onboardingStep === 'CHOOSE_ZERO') moveStageToOnboarding();
-      if (state.onboardingStep === 'CHOOSE_ZERO') global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
+      if (state.onboardingStep === 'CHOOSE_ZERO' && new URLSearchParams(location.search).get('onboardingPreview') === 'choose-zero') {
+        global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
+      }
     };
 
     document.body.classList.remove('play12-onboarding-boot');
