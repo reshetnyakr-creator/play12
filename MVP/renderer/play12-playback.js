@@ -366,10 +366,19 @@
         ? shellPadding
         : pianoRect.left - stageRect.left + (pianoRect.width - scoreWidth) / 2;
       this.svg.parentElement.style.left = `${scoreLeft}px`;
+      if (compactPlayer) {
+        const scoreRect = this.svg.getBoundingClientRect();
+        this.playline.style.setProperty("--mvp-note-field-center-x", `${(scoreRect.left + scoreRect.right) / 2}px`);
+      }
+      const executionHeight = Math.max(0, this.executionY());
       // Extend the clipped score one physical pixel under the opaque zone.
       // This hides fractional-transform antialias seams without exposing past music.
-      this.svg.parentElement.style.height = `${this.executionY() + 1}px`;
+      this.svg.parentElement.style.height = `${executionHeight + 1}px`;
       this.svg.parentElement.style.overflow = "hidden";
+      if (compactPlayer && document.body.classList.contains("play12-onboarding-listen")) {
+        const shell = this.stage.querySelector(".unified-playback-block");
+        if (shell) shell.style.height = `${executionHeight + 1}px`;
+      }
       if (this.playline.dataset.dragPositioned !== "true") {
         this.playline.style.left = `${compactPlayer ? 0 : scoreLeft - lineOverhang}px`;
         this.playline.style.right = "auto";

@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=visual-implementation-02">
+  <link rel="stylesheet" href="play12-onboarding.css?v=visual-polish-02">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -130,14 +130,18 @@
             </div>
           </div>
           <aside class="mvp-song-card">
-            <span>Now playing</span>
-            <strong>When the Saints<br>Go Marching In</strong>
-            <p>Play12 learning version</p>
+            <div class="mvp-song-copy">
+              <span>Now playing</span>
+              <div id="onboarding-song-title-viewport" class="mvp-song-title-viewport">
+                <strong id="onboarding-song-title" class="mvp-song-title-track">When the Saints Go Marching In</strong>
+              </div>
+              <p>Play12 Learning Version</p>
+            </div>
             <small>Step 1 of 4</small>
           </aside>
         </div>
         <div id="onboarding-listen-piano-host" class="mvp-piano-host mvp-listen-piano-host" aria-label="Playable on-screen piano"></div>
-        <p class="mvp-handwritten-note mvp-piano-callout" aria-hidden="true">Always visible. Play it with your mouse. <span>↘</span></p>
+        <p id="onboarding-piano-callout" class="mvp-handwritten-note mvp-piano-callout" aria-hidden="true" hidden>Always visible. Play it with your mouse. <span>↘</span></p>
       </section>
     </main>
   </section>
@@ -240,10 +244,10 @@
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=player-shell-01"></script>
-  <script src="play12-playback.js?v=visual-implementation-02"></script>
+  <script src="play12-playback.js?v=visual-polish-02b"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=visual-implementation-02"></script>
+  <script src="play12-onboarding.js?v=visual-polish-02b"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);

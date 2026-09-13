@@ -70,6 +70,9 @@
     const listenPianoHost = root.querySelector('#onboarding-listen-piano-host');
     const listenPrompt = root.querySelector('#onboarding-listen-prompt');
     const listenCoach = root.querySelector('#onboarding-listen-coach');
+    const pianoCallout = root.querySelector('#onboarding-piano-callout');
+    const songTitleViewport = root.querySelector('#onboarding-song-title-viewport');
+    const songTitle = root.querySelector('#onboarding-song-title');
     const listenContinue = root.querySelector('#onboarding-listen-continue');
     const savedState = readSavedState(storage);
     const returning = hasExistingSession(storage);
@@ -95,6 +98,38 @@
     let listenPosition = 0;
     let listenPlaybackRunning = false;
     let listenPlaybackState = 'paused';
+    let annotationResumeArmed = false;
+    let pianoAnnotationShown = false;
+    let pianoAnnotationTimer = null;
+    let playerClipFrame = 0;
+
+    const syncSongTitleMarquee = () => {
+      if (!songTitleViewport || !songTitle) return;
+      songTitle.classList.remove('is-marquee');
+      songTitle.style.removeProperty('--mvp-marquee-distance');
+      const overflow = Math.ceil(songTitle.scrollWidth - songTitleViewport.clientWidth);
+      songTitleViewport.dataset.overflowing = String(overflow > 1);
+      if (overflow > 1) {
+        songTitle.style.setProperty('--mvp-marquee-distance', `${overflow}px`);
+        songTitle.classList.add('is-marquee');
+      }
+    };
+
+    const showPianoAnnotationOnce = () => {
+      if (!pianoCallout || pianoAnnotationShown) return;
+      pianoAnnotationShown = true;
+      pianoCallout.hidden = false;
+      pianoCallout.classList.add('is-visible');
+      pianoAnnotationTimer = global.setTimeout(() => {
+        pianoCallout.classList.remove('is-visible');
+        pianoCallout.hidden = true;
+      }, 7000);
+    };
+
+    const syncPlayerClip = () => {
+      cancelAnimationFrame(playerClipFrame);
+      playerClipFrame = requestAnimationFrame(() => runtime?.playback?.layoutCoreGeometry?.());
+    };
     let fixedPianoResizeHandler = null;
 
     const syncFixedPiano = () => {
@@ -118,8 +153,13 @@
       mount.classList.add('is-fixed-piano-view');
       document.body.classList.add('play12-fixed-piano-visible');
       if (!fixedPianoResizeHandler) {
-        fixedPianoResizeHandler = () => syncFixedPiano();
+        fixedPianoResizeHandler = () => {
+          syncFixedPiano();
+          syncPlayerClip();
+          syncSongTitleMarquee();
+        };
         global.addEventListener('resize', fixedPianoResizeHandler);
+        root.addEventListener('scroll', syncPlayerClip, { passive: true });
       }
       syncFixedPiano();
     };
@@ -243,6 +283,7 @@
         document.body.classList.add('play12-onboarding-active');
         document.body.classList.remove('play12-onboarding-dismissed');
         moveStageToOnboarding();
+        requestAnimationFrame(syncSongTitleMarquee);
         syncListenCopy();
       }
       exposeState();
@@ -270,6 +311,13 @@
         pauseLearned: false,
         listenFragmentCompleted: false
       };
+      annotationResumeArmed = false;
+      pianoAnnotationShown = false;
+      clearTimeout(pianoAnnotationTimer);
+      if (pianoCallout) {
+        pianoCallout.hidden = true;
+        pianoCallout.classList.remove('is-visible');
+      }
       saveState(storage, state);
       showStep('MIDI_CONNECT');
       return { ...state };
@@ -350,9 +398,14 @@
       }) || null;
       removePlaybackStateListener = runtime.playback?.addStateListener?.(snapshot => {
         if (state.onboardingStep !== 'LISTEN_AND_CONTROL') return;
+        const previousPlaybackState = listenPlaybackState;
         listenPosition = snapshot.position;
         listenPlaybackRunning = snapshot.running;
         listenPlaybackState = snapshot.state;
+        if (snapshot.state === 'paused' && snapshot.position === 0) annotationResumeArmed = false;
+        if (snapshot.state === 'paused' && previousPlaybackState !== 'paused' && snapshot.position > 0 && !snapshot.ended && !pianoAnnotationShown) {
+          annotationResumeArmed = true;
+        }
         if (snapshot.running && !state.playLearned) {
           state = { ...state, playLearned: true };
           saveState(storage, state);
@@ -360,6 +413,10 @@
         if (state.playLearned && !state.pauseLearned && snapshot.state === 'paused' && snapshot.position > 0 && !snapshot.ended) {
           state = { ...state, pauseLearned: true };
           saveState(storage, state);
+        }
+        if (snapshot.running && previousPlaybackState === 'paused' && annotationResumeArmed) {
+          annotationResumeArmed = false;
+          showPianoAnnotationOnce();
         }
         if (state.pauseLearned && snapshot.ended && !state.listenFragmentCompleted) {
           state = { ...state, listenFragmentCompleted: true };
