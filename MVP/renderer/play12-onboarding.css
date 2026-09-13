@@ -1,0 +1,66 @@
+:root {
+  --play12-onboarding-ink: #111111;
+  --play12-onboarding-surface: #f8f8f6;
+  --play12-onboarding-muted: #6f747c;
+}
+
+.play12-onboarding-boot {
+  overflow: hidden;
+}
+
+.play12-onboarding-boot .playback-page,
+.play12-onboarding-active .playback-page {
+  visibility: hidden;
+}
+
+.play12-onboarding {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 24px;
+  background: var(--play12-onboarding-surface);
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.play12-onboarding[hidden] {
+  display: none;
+}
+
+.play12-onboarding-card {
+  display: grid;
+  justify-items: center;
+  gap: 28px;
+}
+
+.play12-onboarding-actions {
+  display: grid;
+  min-width: min(280px, calc(100vw - 48px));
+  gap: 10px;
+}
+
+.play12-onboarding-actions button {
+  min-height: 52px;
+  padding: 0 28px;
+  border: 1px solid var(--play12-onboarding-ink);
+  border-radius: 14px;
+  font: 500 18px/1 Inter, system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.play12-onboarding-primary {
+  color: #ffffff;
+  background: var(--play12-onboarding-ink);
+}
+
+.play12-onboarding-secondary {
+  color: var(--play12-onboarding-ink);
+  background: transparent;
+}
+
+.play12-onboarding-actions button:focus-visible {
+  outline: 3px solid #fc7b00;
+  outline-offset: 3px;
+}

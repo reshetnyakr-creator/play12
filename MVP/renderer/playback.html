@@ -9,8 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=active-note-1">
   <link rel="stylesheet" href="play12-playback.css?v=playback-ux-bugfix-1">
+  <link rel="stylesheet" href="play12-onboarding.css?v=guided-onboarding-01">
 </head>
-<body>
+<body class="play12-onboarding-boot">
+  <section id="play12-onboarding" class="play12-onboarding" aria-label="Play12 onboarding">
+    <div class="play12-onboarding-card">
+      <div class="play12-onboarding-actions">
+        <button id="onboarding-start" class="play12-onboarding-primary" type="button">Начать</button>
+        <button id="onboarding-continue" class="play12-onboarding-secondary" type="button" hidden>Продолжить</button>
+      </div>
+    </div>
+  </section>
   <main class="playback-page">
     <header class="playback-header">
       <div><h1>Für Elise — Playback UX v0.3</h1><p>Первые 24 такта · audio-clock</p></div>
@@ -84,7 +93,13 @@
   <script src="play12-playback.js?v=practice-loop-boundary-1"></script>
   <script src="web-midi-diagnostic.js?v=choose-zero-4-penultimate-clip"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
+  <script src="play12-onboarding.js?v=guided-onboarding-01"></script>
   <script>
+    window.play12Onboarding = Play12Onboarding.create({
+      root: document.getElementById('play12-onboarding'),
+      startButton: document.getElementById('onboarding-start'),
+      continueButton: document.getElementById('onboarding-continue')
+    });
     const playbackParams = new URLSearchParams(location.search);
     Promise.all([
       fetch('../examples/fur_elise_first_24_measures.candidates.v0.2.play12.json').then(r => r.json()),
