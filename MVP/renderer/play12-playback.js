@@ -358,6 +358,7 @@
       if (compactPlayer) {
         this.stage.style.width = `${scoreWidth + shellPadding * 2}px`;
         this.stage.dataset.playerShellPadding = String(shellPadding);
+        this.playline.style.setProperty("--mvp-note-field-width", `${scoreWidth}px`);
       }
       const stageRect = this.stage.getBoundingClientRect();
       const pianoRect = this.pianoView.mount.getBoundingClientRect();

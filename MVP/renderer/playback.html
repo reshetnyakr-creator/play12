@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=player-shell-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=visual-implementation-02">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -106,15 +106,38 @@
         <div id="onboarding-piano-host" class="mvp-piano-host" aria-label="Playable on-screen piano"></div>
       </section>
       <section class="mvp-listen" data-onboarding-view="LISTEN_AND_CONTROL" hidden aria-labelledby="listen-title">
-        <div class="mvp-midi-copy">
-          <h1 id="listen-title" class="mvp-step-heading">Listen to how this fragment sounds.</h1>
-          <p id="onboarding-listen-prompt" class="mvp-step-message">Press Play or Space. You can pause the music at any time.</p>
-          <div class="mvp-actions">
-            <button id="onboarding-listen-continue" class="mvp-button mvp-button-primary" type="button" hidden>Continue</button>
+        <h1 id="listen-title" class="mvp-visually-hidden">Listen to When the Saints Go Marching In</h1>
+        <div class="mvp-player-layout">
+          <aside class="mvp-onboarding-progress" aria-label="Onboarding progress">
+            <ol>
+              <li class="is-active" aria-current="step"><span>1</span><strong>Listen</strong></li>
+              <li><span>2</span><strong>Choose your 0</strong></li>
+              <li><span>3</span><strong>Try it yourself</strong></li>
+              <li><span>4</span><strong>You can do it!</strong></li>
+            </ol>
+            <p class="mvp-motivation">Music can be simple.<br><strong>You’ve got this.</strong></p>
+          </aside>
+          <div class="mvp-player-column">
+            <div class="mvp-player-stage-wrap">
+              <div id="onboarding-playback-host" class="mvp-playback-host"></div>
+              <div id="onboarding-listen-coach" class="mvp-listen-coach" role="status" aria-live="polite">
+                <p id="onboarding-listen-prompt">Listen to how the melody sounds.<br>Press Play or Space.</p>
+              </div>
+            </div>
+            <p class="mvp-handwritten-note mvp-notes-callout" aria-hidden="true">Notes move down toward the piano <span>↓</span></p>
+            <div class="mvp-actions mvp-listen-complete-action">
+              <button id="onboarding-listen-continue" class="mvp-button mvp-button-primary" type="button" hidden>Continue</button>
+            </div>
           </div>
+          <aside class="mvp-song-card">
+            <span>Now playing</span>
+            <strong>When the Saints<br>Go Marching In</strong>
+            <p>Play12 learning version</p>
+            <small>Step 1 of 4</small>
+          </aside>
         </div>
-        <div id="onboarding-playback-host" class="mvp-playback-host"></div>
         <div id="onboarding-listen-piano-host" class="mvp-piano-host mvp-listen-piano-host" aria-label="Playable on-screen piano"></div>
+        <p class="mvp-handwritten-note mvp-piano-callout" aria-hidden="true">Always visible. Play it with your mouse. <span>↘</span></p>
       </section>
     </main>
   </section>
@@ -139,7 +162,7 @@
           <div class="playback-service-panel-heading">Settings</div>
           <div class="playback-service-panel-body settings-panel-body">
             <button id="choose-zero" type="button">Choose your 0</button>
-            <label>Grid <select id="grid-resolution"><option selected>1/8</option><option>1/16</option><option>1/32</option><option>1/64</option></select></label>
+            <label>Grid <select id="grid-resolution"><option selected>1/4</option><option>1/8</option><option>1/16</option><option>1/32</option><option>1/64</option></select></label>
             <label class="module-toggle"><input id="count-in" type="checkbox" checked> Count-in</label>
             <label class="module-toggle"><input id="music-audio" type="checkbox" checked> Music Audio</label>
             <label class="module-toggle"><input id="practice-mode" type="checkbox"> Practice Mode</label>
@@ -217,10 +240,10 @@
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=player-shell-01"></script>
-  <script src="play12-playback.js?v=player-shell-01"></script>
+  <script src="play12-playback.js?v=visual-implementation-02"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=player-shell-01"></script>
+  <script src="play12-onboarding.js?v=visual-implementation-02"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -290,7 +313,7 @@
         countWords: saintsReviewMode ? Play12Renderer.defaults.countWords : { 1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR' },
         countAnd: saintsReviewMode ? Play12Renderer.defaults.countAnd : 'AND'
       });
-      const svg = render(compositionReviewMode ? reviewGrid.value : '1/8');
+      const svg = render(compositionReviewMode ? reviewGrid.value : '1/4');
       const pianoView = Play12PianoView.render({
         mount: document.getElementById('piano-view'),
         zeroMidi: initialZeroMidi,

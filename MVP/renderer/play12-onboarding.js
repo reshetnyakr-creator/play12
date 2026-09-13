@@ -69,6 +69,7 @@
     const playbackHost = root.querySelector('#onboarding-playback-host');
     const listenPianoHost = root.querySelector('#onboarding-listen-piano-host');
     const listenPrompt = root.querySelector('#onboarding-listen-prompt');
+    const listenCoach = root.querySelector('#onboarding-listen-coach');
     const listenContinue = root.querySelector('#onboarding-listen-continue');
     const savedState = readSavedState(storage);
     const returning = hasExistingSession(storage);
@@ -92,6 +93,8 @@
     let removePlaybackStateListener = null;
     let midiConnectState = 'choice';
     let listenPosition = 0;
+    let listenPlaybackRunning = false;
+    let listenPlaybackState = 'paused';
     let fixedPianoResizeHandler = null;
 
     const syncFixedPiano = () => {
@@ -100,8 +103,12 @@
       runtime.pianoView.syncContainer?.();
       requestAnimationFrame(() => {
         const height = Math.ceil(mount.getBoundingClientRect().height);
-        root.style.setProperty('--mvp-fixed-piano-space', `${height + 24}px`);
-        document.documentElement.style.setProperty('--mvp-fixed-piano-space', `${height + 24}px`);
+        const playbackHeight = document.body.classList.contains('play12-onboarding-listen') ? 50 : 0;
+        const reserved = height + playbackHeight + 36;
+        root.style.setProperty('--mvp-fixed-piano-height', `${height}px`);
+        document.documentElement.style.setProperty('--mvp-fixed-piano-height', `${height}px`);
+        root.style.setProperty('--mvp-fixed-piano-space', `${reserved}px`);
+        document.documentElement.style.setProperty('--mvp-fixed-piano-space', `${reserved}px`);
       });
     };
 
@@ -184,17 +191,39 @@
     };
 
     const syncListenCopy = () => {
+      const showCoach = text => {
+        if (!listenCoach) return;
+        if (!listenCoach.hidden && listenCoach.dataset.copy === text) return;
+        listenCoach.dataset.copy = text;
+        listenPrompt.innerHTML = text;
+        listenCoach.hidden = false;
+        listenCoach.classList.remove('is-entering');
+        void listenCoach.offsetWidth;
+        listenCoach.classList.add('is-entering');
+      };
+      const hideCoach = () => {
+        if (!listenCoach) return;
+        listenCoach.classList.remove('is-entering');
+        listenCoach.hidden = true;
+      };
       if (state.listenFragmentCompleted) {
-        listenPrompt.textContent = 'Now let’s build Play12 for your keyboard.';
+        hideCoach();
         listenContinue.hidden = false;
       } else if (state.pauseLearned) {
-        listenPrompt.textContent = 'Continue.';
+        if (listenPlaybackRunning) hideCoach();
+        else showCoach('Continue.');
+        listenContinue.hidden = true;
+      } else if (listenPlaybackState === 'pause-queued') {
+        hideCoach();
         listenContinue.hidden = true;
       } else if (state.playLearned && listenPosition >= 4.8) {
-        listenPrompt.textContent = 'Try pausing the music.';
+        showCoach('Try pausing the music.');
+        listenContinue.hidden = true;
+      } else if (state.playLearned) {
+        hideCoach();
         listenContinue.hidden = true;
       } else {
-        listenPrompt.textContent = 'Press Play or Space. You can pause the music at any time.';
+        showCoach('Listen to how the melody sounds.<br>Press Play or Space.');
         listenContinue.hidden = true;
       }
       exposeState();
@@ -322,6 +351,8 @@
       removePlaybackStateListener = runtime.playback?.addStateListener?.(snapshot => {
         if (state.onboardingStep !== 'LISTEN_AND_CONTROL') return;
         listenPosition = snapshot.position;
+        listenPlaybackRunning = snapshot.running;
+        listenPlaybackState = snapshot.state;
         if (snapshot.running && !state.playLearned) {
           state = { ...state, playLearned: true };
           saveState(storage, state);
@@ -358,7 +389,10 @@
     listenContinue.addEventListener('click', advanceToChooseZero);
     showStep('WELCOME');
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('onboardingPreview') === 'listen') {
-      state = { ...state, onboardingStarted: true, onboardingStep: 'LISTEN_AND_CONTROL', midiVerified: true };
+      state = {
+        ...state, onboardingStarted: true, onboardingStep: 'LISTEN_AND_CONTROL', midiVerified: true,
+        playLearned: false, pauseLearned: false, listenFragmentCompleted: false
+      };
       showStep('LISTEN_AND_CONTROL');
     }
 
