@@ -148,6 +148,10 @@
   justify-content: center;
 }
 
+.mvp-content[hidden] {
+  display: none;
+}
+
 .mvp-heading {
   margin: 0 0 34px;
   font-size: clamp(62px, 6vw, 96px);
@@ -229,6 +233,75 @@
   background: var(--play12-site-bg);
 }
 
+.mvp-midi-connect {
+  width: 100%;
+  display: grid;
+  gap: 42px;
+}
+
+.mvp-midi-connect[hidden],
+.mvp-midi-connect [hidden] {
+  display: none;
+}
+
+.mvp-midi-copy {
+  width: min(100%, 920px);
+  justify-self: center;
+  text-align: center;
+}
+
+.mvp-step-heading {
+  margin: 0 0 24px;
+  color: var(--play12-site-text);
+  font-size: clamp(36px, 4.5vw, 64px);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.mvp-step-message {
+  margin: 0 0 30px;
+  color: var(--play12-site-text-secondary);
+  font-size: clamp(19px, 2vw, 25px);
+  line-height: 1.4;
+}
+
+.mvp-step-success {
+  color: #087a36;
+}
+
+.mvp-midi-guide-image {
+  display: block;
+  width: min(100%, 920px);
+  height: auto;
+  margin: 0 auto 24px;
+}
+
+.mvp-midi-guide-steps {
+  width: min(100%, 720px);
+  margin: 0 auto 30px;
+  padding-left: 28px;
+  color: var(--play12-site-text-secondary);
+  font-size: 18px;
+  line-height: 1.55;
+  text-align: left;
+}
+
+.mvp-piano-host {
+  width: 100%;
+  min-width: 0;
+}
+
+.mvp-piano-host .play12-piano-view {
+  position: relative;
+  inset: auto;
+  left: auto;
+  top: auto;
+  min-height: 0;
+  max-width: 100%;
+  transform: none;
+}
+
 @media (max-width: 1100px) {
   :root {
     --play12-site-page-gutter: 28px;
@@ -285,6 +358,18 @@
   .mvp-actions,
   .mvp-button {
     width: 100%;
+  }
+
+  .mvp-midi-connect {
+    gap: 28px;
+  }
+
+  .mvp-step-heading {
+    font-size: 40px;
+  }
+
+  .mvp-midi-guide-steps {
+    font-size: 16px;
   }
 }
 

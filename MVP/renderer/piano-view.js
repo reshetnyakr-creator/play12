@@ -159,7 +159,19 @@
 
     fitReferenceAspect() {
       const parent=this.mount.parentElement, availableHeight=Math.max(0,parent.clientHeight*.22-42);
+      if(parent.classList.contains("mvp-piano-host")){
+        const availableWidth=Math.max(0,parent.clientWidth);
+        this.mount.style.width=`${availableWidth}px`;
+        this.mount.style.height=`${availableWidth*VIEW_HEIGHT/PIANO_WIDTH}px`;
+        return;
+      }
       this.mount.style.width=`${Math.min(parent.clientWidth-2,availableHeight*PIANO_WIDTH/VIEW_HEIGHT+18)}px`;
+      this.mount.style.height="";
+    }
+    syncContainer(){
+      this.resizeObserver.disconnect();
+      this.resizeObserver.observe(this.mount.parentElement);
+      this.fitReferenceAspect();
     }
     setZeroMidi(zeroMidi){if(zeroMidi!==this.zeroMidi)this.render(zeroMidi);}
     setZeroNote(zeroNote){this.setZeroMidi(this.zeroMidiFor(zeroNote));}

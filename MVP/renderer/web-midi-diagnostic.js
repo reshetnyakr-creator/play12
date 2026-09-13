@@ -32,6 +32,8 @@
       this.activeMidiNotes = new Set();
       this.activeMidiTokens = new Map();
       this.inputHandlers = new Map();
+      this.statusListeners = new Set();
+      this.currentStatus = null;
       this.fields = Object.fromEntries([
         "status", "input-name", "manufacturer", "event-type", "note", "pitch", "velocity", "channel", "active-notes", "message"
       ].map(name => [name, root.querySelector(`#midi-${name}`)]));
@@ -42,12 +44,25 @@
       if (!("requestMIDIAccess" in navigator)) {
         enableButton.disabled = true;
         this.fields.message.textContent = "Web MIDI API недоступен в этом браузере.";
+        this.setStatus("unavailable");
       }
+    }
+
+    setStatus(status, detail = null) {
+      this.currentStatus = { status, detail };
+      for (const listener of this.statusListeners) listener(this.currentStatus);
+    }
+
+    addStatusListener(listener) {
+      this.statusListeners.add(listener);
+      if (this.currentStatus) listener(this.currentStatus);
+      return () => this.statusListeners.delete(listener);
     }
 
     async enable() {
       this.enableButton.disabled = true;
       this.fields.message.textContent = "Запрашивается доступ к MIDI input…";
+      this.setStatus("requesting");
       try {
         this.access = await navigator.requestMIDIAccess({ sysex: false, software: false });
         this.access.addEventListener("statechange", () => this.refreshInputs());
@@ -57,6 +72,7 @@
         this.enableButton.disabled = false;
         this.fields.status.textContent = "Not connected";
         this.fields.message.textContent = `Доступ к MIDI не получен: ${error.message}`;
+        this.setStatus("error");
       }
     }
 
@@ -82,6 +98,7 @@
         }
       }
       this.root.classList.toggle("is-connected", connected.length > 0);
+      this.setStatus(connected.length ? "connected" : "waiting-for-device");
       this.fields.status.textContent = connected.length ? "Connected" : "Not connected";
       this.fields["input-name"].textContent = connected.map(input => input.name || "Unnamed MIDI input").join(", ") || "—";
       this.fields.manufacturer.textContent = connected.map(input => input.manufacturer).filter(Boolean).join(", ") || "—";

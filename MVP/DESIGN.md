@@ -16,5 +16,6 @@ The minimal reusable CSS foundation currently lives in `renderer/play12-onboardi
 - `mvp-actions`
 - `mvp-button`, `mvp-button-primary`, `mvp-button-secondary`
 - `mvp-card`
+- `mvp-midi-connect` / `mvp-piano-host`
 
 Shared `--play12-site-*` tokens mirror the corresponding values on the main site.

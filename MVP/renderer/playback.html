@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=active-note-1">
   <link rel="stylesheet" href="play12-playback.css?v=playback-ux-bugfix-1">
-  <link rel="stylesheet" href="play12-onboarding.css?v=site-alignment-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=onboarding-midi-02">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -30,12 +30,54 @@
       </nav>
     </header>
     <main class="mvp-page">
-      <div class="mvp-content">
+      <div class="mvp-content" data-onboarding-view="WELCOME">
         <div class="mvp-actions">
           <button id="onboarding-start" class="mvp-button mvp-button-primary" type="button">Start</button>
           <button id="onboarding-continue" class="mvp-button mvp-button-secondary" type="button" hidden>Continue</button>
         </div>
       </div>
+      <section class="mvp-midi-connect" data-onboarding-view="MIDI_CONNECT" hidden aria-labelledby="midi-connect-title">
+        <div class="mvp-midi-copy">
+          <div data-midi-connect-state="choice">
+            <h1 id="midi-connect-title" class="mvp-step-heading">Connect your piano</h1>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-ready" class="mvp-button mvp-button-primary" type="button">Already connected</button>
+              <button id="onboarding-midi-guide" class="mvp-button mvp-button-secondary" type="button">How to connect?</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="guide" hidden>
+            <h1 class="mvp-step-heading">How to connect</h1>
+            <img class="mvp-midi-guide-image" src="assets/midi-connection-guide.png" alt="Digital piano connected to a computer with a USB cable">
+            <ol class="mvp-midi-guide-steps">
+              <li>Find the USB TO HOST or USB COMPUTER port on your piano.</li>
+              <li>Connect your piano to the computer with a USB cable.</li>
+              <li>Turn your piano on.</li>
+            </ol>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-check" class="mvp-button mvp-button-primary" type="button">Check connection</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="test" hidden>
+            <h1 class="mvp-step-heading">Let’s check the connection</h1>
+            <p class="mvp-step-message">Press any key on your piano</p>
+          </div>
+          <div data-midi-connect-state="success" hidden>
+            <h1 class="mvp-step-heading">Ready</h1>
+            <p class="mvp-step-message mvp-step-success">Your computer is receiving a signal from the piano ✓</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-continue" class="mvp-button mvp-button-primary" type="button">Continue</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="error" hidden>
+            <h1 class="mvp-step-heading">Couldn’t receive a MIDI signal</h1>
+            <p class="mvp-step-message">Check your browser permission and the USB connection.</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-help" class="mvp-button mvp-button-secondary" type="button">Connection help</button>
+            </div>
+          </div>
+        </div>
+        <div id="onboarding-piano-host" class="mvp-piano-host" aria-label="Playable on-screen piano"></div>
+      </section>
     </main>
   </section>
   <main class="playback-page">
@@ -107,11 +149,11 @@
   </main>
   <script src="play12-renderer.js?v=active-note-1"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
-  <script src="piano-view.js?v=choose-zero-4-penultimate-clip"></script>
+  <script src="piano-view.js?v=onboarding-midi-02"></script>
   <script src="play12-playback.js?v=practice-loop-boundary-1"></script>
-  <script src="web-midi-diagnostic.js?v=choose-zero-4-penultimate-clip"></script>
+  <script src="web-midi-diagnostic.js?v=onboarding-midi-02"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=guided-onboarding-01"></script>
+  <script src="play12-onboarding.js?v=onboarding-midi-02"></script>
   <script>
     window.play12Onboarding = Play12Onboarding.create({
       root: document.getElementById('play12-onboarding'),
@@ -257,6 +299,11 @@
           noteEvents: window.play12Playback
         });
       }
+      window.play12Onboarding.connectRuntime({
+        pianoView,
+        noteEvents: window.play12Playback,
+        midiDiagnostic: window.play12MidiDiagnostic || null
+      });
       document.getElementById('grid-resolution').addEventListener('change', event => {
         window.play12Playback.pauseImmediate();
         window.play12Playback.replaceSvg(render(event.target.value));
