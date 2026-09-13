@@ -64,6 +64,11 @@
   outline: none;
 }
 
+.play12-score g[role="button"] { cursor: pointer; outline: none; }
+.play12-score g.is-review-selected > rect:first-of-type {
+  filter: drop-shadow(0 0 5px #FC7B00) drop-shadow(0 0 1px #FC7B00);
+}
+
 .play12-auto-candidate:focus rect,
 .play12-reviewed-candidate:focus rect {
   stroke-width: 2;

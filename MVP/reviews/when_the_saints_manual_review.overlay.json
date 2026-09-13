@@ -1,0 +1,8 @@
+{
+  "format": "play12-manual-review-overlay",
+  "version": "0.1",
+  "composition_id": "when-the-saints-play12-beginner",
+  "base_file": "../examples/when_the_saints_play12_beginner.play12.json",
+  "edits": {},
+  "history": []
+}

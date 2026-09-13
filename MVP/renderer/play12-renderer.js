@@ -252,13 +252,17 @@
       group.setAttribute("data-midi", note.pitch.midi);
       group.setAttribute("data-dynamic", dynamic);
       group.setAttribute("data-fingering-mode", displayFingering.mode);
+      group.setAttribute("data-measure-index", note.measureIndex);
       if (displayFingering.confidence != null) group.setAttribute("data-fingering-confidence", displayFingering.confidence);
       if (displayFingering.mode === "auto-candidate") group.classList.add("play12-auto-candidate");
       if (displayFingering.mode === "review") group.classList.add("play12-reviewed-candidate");
-      if (displayFingering.candidate) {
+      if (cfg.noteSelectionEnabled || displayFingering.candidate) {
         group.setAttribute("role", "button");
         group.setAttribute("tabindex", "0");
-        group.setAttribute("aria-label", `${note.pitch.step}${note.pitch.alter === 1 ? "#" : note.pitch.alter === -1 ? "b" : ""}${note.pitch.octave}, ${note.hand}, кандидат: палец ${displayFingering.candidate.finger}`);
+        group.setAttribute("aria-label", cfg.noteSelectionEnabled
+          ? `${note.pitch.step}${note.pitch.alter === 1 ? "#" : note.pitch.alter === -1 ? "b" : ""}${note.pitch.octave}, ${note.hand}, edit note`
+          : `${note.pitch.step}${note.pitch.alter === 1 ? "#" : note.pitch.alter === -1 ? "b" : ""}${note.pitch.octave}, ${note.hand}, кандидат: палец ${displayFingering.candidate.finger}`);
+        if (cfg.selectedEventId === note.id) group.classList.add("is-review-selected");
         if (typeof cfg.onNoteSelect === "function") {
           group.addEventListener("click", () => cfg.onNoteSelect(note.id));
           group.addEventListener("keydown", (event) => {

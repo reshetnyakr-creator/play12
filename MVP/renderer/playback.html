@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="play12-renderer.css?v=saints-onboarding-03">
-  <link rel="stylesheet" href="play12-playback.css?v=saints-onboarding-03">
+  <link rel="stylesheet" href="play12-renderer.css?v=editable-review-02">
+  <link rel="stylesheet" href="play12-playback.css?v=editable-review-02">
   <link rel="stylesheet" href="play12-onboarding.css?v=saints-onboarding-03">
 </head>
 <body class="play12-onboarding-boot">
@@ -183,15 +183,38 @@
         </dl>
         <p id="midi-message" class="midi-diagnostic-message" aria-live="polite">Нажмите Enable MIDI и разрешите доступ к подключённому инструменту.</p>
       </aside>
+      <aside id="composition-review-inspector" class="composition-review-inspector" hidden aria-label="Selected note inspector">
+        <div class="composition-review-heading"><strong>Note Inspector</strong><span id="review-status">Selected</span><button id="review-close" type="button" aria-label="Close note inspector">×</button></div>
+        <dl class="composition-review-info">
+          <div><dt>Event ID</dt><dd id="review-event-id">—</dd></div>
+          <div><dt>Pitch</dt><dd><span id="review-pitch-name">—</span> · MIDI <input id="review-midi" type="number" min="21" max="108" step="1"></dd></div>
+          <div><dt>Play12</dt><dd id="review-symbol">—</dd></div>
+          <div><dt>Hand</dt><dd><select id="review-hand"><option value="R">RH</option><option value="L">LH</option></select></dd></div>
+          <div><dt>Finger</dt><dd><select id="review-finger"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></dd></div>
+          <div><dt>Finger source</dt><dd id="review-fingering-source">—</dd></div>
+          <div><dt>Start (q)</dt><dd><input id="review-start" type="number" min="0" step="any"></dd></div>
+          <div><dt>Duration (q)</dt><dd><input id="review-duration" type="number" min="0" step="any"></dd></div>
+          <div><dt>Measure</dt><dd id="review-measure">—</dd></div>
+          <div><dt>Grid</dt><dd><select id="review-grid-select"><option>1/4</option><option selected>1/8</option><option>1/16</option><option>1/32</option><option>1/64</option></select><span id="review-grid" hidden>1/8</span></dd></div>
+        </dl>
+        <div class="composition-review-actions">
+          <button id="review-save" type="button">Save edit</button>
+          <button id="review-undo" type="button">Undo last edit</button>
+          <button id="review-reset" type="button">Reset selected note</button>
+          <button id="review-delete" type="button">Delete selected note</button>
+          <button id="review-reset-all" type="button">Reset all manual edits</button>
+        </div>
+      </aside>
     </section>
   </main>
-  <script src="play12-renderer.js?v=saints-onboarding-03"></script>
+  <script src="play12-renderer.js?v=editable-review-02"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=onboarding-midi-02"></script>
   <script src="play12-playback.js?v=saints-onboarding-03"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-onboarding.js?v=saints-onboarding-03"></script>
+  <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
     const saintsReviewMode = playbackParams.get('review') === 'when-the-saints';
@@ -207,8 +230,10 @@
     });
     Promise.all([
       fetch('../examples/when_the_saints_play12_beginner.play12.json').then(r => r.json()),
-      Play12CardThemes.loadReadyAssets()
-    ]).then(([score, cardTheme]) => {
+      Play12CardThemes.loadReadyAssets(),
+      fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json())
+    ]).then(([baseScore, cardTheme, seedReviewOverlay]) => {
+      let score = baseScore;
       const onboardingBpm = 96;
       document.getElementById('bpm').value = String(onboardingBpm);
       document.getElementById('metronome').checked = false;
@@ -234,11 +259,21 @@
           ? savedPitchClass
           : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
       const initialZeroMidi = Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
+      const reviewGrid = saintsReviewMode ? document.getElementById('review-grid-select') : document.getElementById('grid-resolution');
+      const reviewController = saintsReviewMode ? Play12CompositionReview.create({
+        baseDocument: baseScore,
+        seedOverlay: seedReviewOverlay,
+        root: document.getElementById('composition-review-inspector'),
+        gridSelect: reviewGrid
+      }) : null;
+      if (reviewController) score = reviewController.effective();
       const reviewMeasureCount = saintsReviewMode ? score.score.parts[0].measures.length : 4;
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
-        measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false, onboardingLayout: true
+        measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
+        onboardingLayout: true, noteSelectionEnabled: saintsReviewMode,
+        selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => reviewController?.select(eventId)
       });
-      const svg = render('1/16');
+      const svg = render(saintsReviewMode ? reviewGrid.value : '1/16');
       const pianoView = Play12PianoView.render({
         mount: document.getElementById('piano-view'),
         zeroMidi: initialZeroMidi,
@@ -282,10 +317,16 @@
         previousRoundButton: document.getElementById('previous-round'), nextRoundButton: document.getElementById('next-round'),
         loopInput: document.getElementById('loop'), loopGapInput: document.getElementById('loop-gap'), loopStartInput: loopStart, loopEndInput: loopEnd,
         metronomeVolumeInput: document.getElementById('metronome-volume'),
-        gridResolutionInput: document.getElementById('grid-resolution'), pulse: document.getElementById('grid-pulse'),
+        gridResolutionInput: reviewGrid, pulse: document.getElementById('grid-pulse'),
         progressHead: document.getElementById('progress-head'), timecode: document.getElementById('timecode'), pianoView,
         referenceZeroNote, runtimeZeroNote: initialZeroMidi,
         beatLamp: document.getElementById('metronome-beat-lamp')
+      });
+      reviewController?.connect(effectiveScore => {
+        score = effectiveScore;
+        window.play12Playback.pauseImmediate();
+        window.play12Playback.replaceSvg(render(reviewGrid.value));
+        reviewController.syncSelection();
       });
       Object.assign(document.getElementById('playback-stage').dataset, {
         selectedPitchClass: String(restoredPitchClass), layoutZeroNote: String(initialZeroMidi), zeroMidi: String(initialZeroMidi)
@@ -354,7 +395,7 @@
         playback: window.play12Playback,
         stage: document.getElementById('playback-stage')
       });
-      document.getElementById('grid-resolution').addEventListener('change', event => {
+      if (!saintsReviewMode) reviewGrid.addEventListener('change', event => {
         window.play12Playback.pauseImmediate();
         window.play12Playback.replaceSvg(render(event.target.value));
       });
