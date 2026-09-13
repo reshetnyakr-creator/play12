@@ -251,19 +251,19 @@
         listenContinue.hidden = false;
       } else if (state.pauseLearned) {
         if (listenPlaybackRunning) hideCoach();
-        else showCoach('Continue.');
+        else showCoach('Continue');
         listenContinue.hidden = true;
       } else if (listenPlaybackState === 'pause-queued') {
         hideCoach();
         listenContinue.hidden = true;
       } else if (state.playLearned && listenPosition >= 4.8) {
-        showCoach('Try pausing the music.');
+        showCoach('Try pausing the music');
         listenContinue.hidden = true;
       } else if (state.playLearned) {
         hideCoach();
         listenContinue.hidden = true;
       } else {
-        showCoach('Listen to how the melody sounds.<br>Press Play or Space.');
+        showCoach('Listen to how the melody sounds<br>Press Play or Space');
         listenContinue.hidden = true;
       }
       exposeState();

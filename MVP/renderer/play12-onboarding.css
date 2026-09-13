@@ -659,7 +659,7 @@
 
 .mvp-playback-host .unified-playback-block {
   border-color: rgba(17, 17, 17, .22);
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
   background: rgba(255, 255, 255, .78);
   box-shadow: 0 16px 45px rgba(17, 24, 39, .075);
 }
@@ -780,6 +780,31 @@
   animation: mvp-piano-callout-seven-seconds 7s ease both;
 }
 
+.mvp-piano-callout span {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 18px;
+  width: 0;
+  height: 56px;
+  margin: 0;
+  border-left: 1.5px solid rgba(17, 17, 17, .48);
+  color: transparent;
+  font-size: 0;
+}
+
+.mvp-piano-callout span::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  bottom: 0;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid rgba(17, 17, 17, .48);
+  border-bottom: 1.5px solid rgba(17, 17, 17, .48);
+  transform: translate(4px, 0) rotate(45deg);
+  transform-origin: center;
+}
+
 @keyframes mvp-coach-arrive {
   0% { opacity: 0; transform: translate(-50%, -48%) scale(.94); }
   35% { opacity: 1; transform: translate(-50%, -50%) scale(1.015); }
@@ -806,10 +831,6 @@
     gap: 10px;
   }
 
-  .mvp-piano-callout,
-  .mvp-notes-callout {
-    display: none;
-  }
 }
 
 @media (max-width: 760px) {
