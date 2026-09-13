@@ -139,9 +139,13 @@
     const edgePadding = Math.max(1, cfg.gridLineWidth * cfg.noteBorderRatio);
     const ribbonWidth = cfg.segmentRibbonWidth * cfg.zoom;
     const ribbonGap = cfg.segmentRibbonGap * cfg.zoom;
-    const ribbonSpace = cfg.segments && cfg.segments.segments.length ? ribbonWidth + ribbonGap : 0;
-    const renderedWidth = totalWidth + edgePadding * 2 + ribbonSpace;
-    svg.setAttribute("viewBox", `${-edgePadding - ribbonSpace} ${-edgePadding} ${renderedWidth} ${steps * height + edgePadding * 2}`);
+    const segmentList = cfg.segments?.segments || [];
+    const hasLeftRibbons = segmentList.some((segment) => segment.hand === "L" || !segment.hand);
+    const hasRightRibbons = segmentList.some((segment) => segment.hand === "R");
+    const leftRibbonSpace = hasLeftRibbons ? ribbonWidth + ribbonGap : 0;
+    const rightRibbonSpace = hasRightRibbons ? ribbonWidth + ribbonGap : 0;
+    const renderedWidth = totalWidth + edgePadding * 2 + leftRibbonSpace + rightRibbonSpace;
+    svg.setAttribute("viewBox", `${-edgePadding - leftRibbonSpace} ${-edgePadding} ${renderedWidth} ${steps * height + edgePadding * 2}`);
     // Expanding the viewBox for ribbons must not scale down the established grid geometry.
     svg.style.width = `${renderedWidth}px`;
     svg.setAttribute("role", "img");
@@ -161,13 +165,13 @@
     };
 
     if (cfg.segments) {
-      for (const segment of cfg.segments.segments) {
+      for (const segment of segmentList) {
         for (const occurrence of segment.occurrences) {
           const occurrenceStart = fraction(occurrence.start_quarters_global);
           const occurrenceEnd = fraction(occurrence.end_quarters_global);
           const y = (steps - (occurrenceEnd - startQ) / stepQ) * height;
           const ribbon = make("rect", {
-            x: -ribbonGap - ribbonWidth,
+            x: segment.hand === "R" ? totalWidth + ribbonGap : -ribbonGap - ribbonWidth,
             y,
             width: ribbonWidth,
             height: ((occurrenceEnd - occurrenceStart) / stepQ) * height,
@@ -176,9 +180,10 @@
             "fill-opacity": 0.78,
             class: "play12-segment-ribbon",
             "data-segment-id": segment.segment_id,
+            "data-hand": segment.hand || "both",
           });
           const title = global.document.createElementNS(svgNS, "title");
-          title.textContent = `${segment.segment_id}: такты ${occurrence.measure_start}–${occurrence.measure_end}`;
+          title.textContent = `${segment.segment_id} · ${segment.hand || "both"}: rounds ${occurrence.measure_start}–${occurrence.measure_end}`;
           ribbon.appendChild(title);
         }
       }

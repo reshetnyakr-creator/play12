@@ -353,23 +353,31 @@
       if (!this.svg?.isConnected || !this.pianoView?.mount?.isConnected) return;
       const lineOverhang = Number(this.svg.querySelector(".play12-cell").getAttribute("width"));
       const scoreWidth = this.svg.getBoundingClientRect().width;
+      const compactPlayer = this.stage.closest(".mvp-playback-host");
+      const shellPadding = 7;
+      if (compactPlayer) {
+        this.stage.style.width = `${scoreWidth + shellPadding * 2}px`;
+        this.stage.dataset.playerShellPadding = String(shellPadding);
+      }
       const stageRect = this.stage.getBoundingClientRect();
       const pianoRect = this.pianoView.mount.getBoundingClientRect();
-      const scoreLeft = pianoRect.left - stageRect.left + (pianoRect.width - scoreWidth) / 2;
+      const scoreLeft = compactPlayer
+        ? shellPadding
+        : pianoRect.left - stageRect.left + (pianoRect.width - scoreWidth) / 2;
       this.svg.parentElement.style.left = `${scoreLeft}px`;
       // Extend the clipped score one physical pixel under the opaque zone.
       // This hides fractional-transform antialias seams without exposing past music.
       this.svg.parentElement.style.height = `${this.executionY() + 1}px`;
       this.svg.parentElement.style.overflow = "hidden";
       if (this.playline.dataset.dragPositioned !== "true") {
-        this.playline.style.left = `${scoreLeft - lineOverhang}px`;
+        this.playline.style.left = `${compactPlayer ? 0 : scoreLeft - lineOverhang}px`;
         this.playline.style.right = "auto";
       }
-      this.playline.style.width = `${scoreWidth + lineOverhang * 2}px`;
+      this.playline.style.width = `${compactPlayer ? scoreWidth + shellPadding * 2 : scoreWidth + lineOverhang * 2}px`;
       this.playline.style.height = `${this.cellHeight}px`;
-      this.pulse.style.left = `${scoreLeft - lineOverhang}px`;
+      this.pulse.style.left = `${compactPlayer ? 0 : scoreLeft - lineOverhang}px`;
       this.pulse.style.right = "auto";
-      this.pulse.style.width = `${scoreWidth + lineOverhang * 2}px`;
+      this.pulse.style.width = `${compactPlayer ? scoreWidth + shellPadding * 2 : scoreWidth + lineOverhang * 2}px`;
       const zoneRect = this.playline.getBoundingClientRect();
       const zoneBorder = parseFloat(getComputedStyle(this.playline).borderLeftWidth) || 0;
       const cellRects = [...this.svg.querySelectorAll(".play12-cell")].map(cell => cell.getBoundingClientRect());

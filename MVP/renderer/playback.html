@@ -7,9 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="play12-renderer.css?v=editable-review-02">
-  <link rel="stylesheet" href="play12-playback.css?v=editable-review-02">
-  <link rel="stylesheet" href="play12-onboarding.css?v=saints-demo-listen-04">
+  <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
+  <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=player-shell-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -213,13 +213,14 @@
       </section>
     </section>
   </main>
-  <script src="play12-renderer.js?v=manual-count-01"></script>
+  <script src="play12-renderer.js?v=player-shell-01"></script>
+  <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
-  <script src="piano-view.js?v=full-width-onboarding-04"></script>
-  <script src="play12-playback.js?v=saints-onboarding-03"></script>
+  <script src="piano-view.js?v=player-shell-01"></script>
+  <script src="play12-playback.js?v=player-shell-01"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=saints-demo-listen-05"></script>
+  <script src="play12-onboarding.js?v=player-shell-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -279,8 +280,10 @@
       }) : null;
       if (reviewController) score = reviewController.effective();
       const reviewMeasureCount = score.score.parts[0].measures.length;
+      const repetitionSegments = Play12Repetitions.detect(score);
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
+        segments: repetitionSegments,
         onboardingLayout: true, noteSelectionEnabled: saintsReviewMode,
         selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => reviewController?.select(eventId),
         zeroNote: score.play12.zero_pitch_class,

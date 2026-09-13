@@ -162,8 +162,10 @@
 
     fitReferenceAspect() {
       const parent=this.mount.parentElement, availableHeight=Math.max(0,parent.clientHeight*.22-42);
-      if(parent.classList.contains("mvp-piano-host")){
-        const availableWidth=Math.max(0,parent.clientWidth);
+      if(parent.classList.contains("mvp-piano-host")||this.mount.classList.contains("is-fixed-piano-view")){
+        const availableWidth=this.mount.classList.contains("is-fixed-piano-view")
+          ? Math.max(0,global.innerWidth-24)
+          : Math.max(0,parent.clientWidth);
         const targetWidth=Math.max(1100,availableWidth);
         this.mount.style.width=`${targetWidth}px`;
         this.mount.style.height=`${targetWidth*VIEW_HEIGHT/PIANO_WIDTH}px`;

@@ -139,7 +139,7 @@
   align-items: center;
   justify-items: center;
   box-sizing: border-box;
-  padding: 70px var(--play12-site-page-gutter) 80px;
+  padding: 70px var(--play12-site-page-gutter) max(80px, var(--mvp-fixed-piano-space, 80px));
 }
 
 .mvp-content {
@@ -268,13 +268,17 @@
 }
 
 .mvp-playback-host {
-  width: min(100%, 1280px);
+  width: max-content;
+  max-width: 100%;
   min-width: 0;
   justify-self: center;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .mvp-playback-host .playback-stage {
-  width: 100%;
+  width: auto;
+  max-width: none;
   height: min(54vh, 590px);
   min-height: 460px;
   border: 0;
@@ -289,7 +293,7 @@
 .mvp-playback-host .unified-playback-block {
   display: block;
   position: absolute;
-  inset: 0 0 auto;
+  inset: 0;
   height: 100%;
   overflow: hidden;
   box-sizing: border-box;
@@ -306,6 +310,18 @@
   border-left: 0;
   border-radius: 0 0 var(--playback-shell-radius) var(--playback-shell-radius);
   box-shadow: none;
+}
+
+.mvp-playback-host .playback-score {
+  box-sizing: border-box;
+}
+
+.mvp-playback-host .play12-segment-ribbon[data-hand="L"] {
+  filter: saturate(.78);
+}
+
+.mvp-playback-host .play12-segment-ribbon[data-hand="R"] {
+  filter: saturate(.78);
 }
 
 .mvp-midi-copy {
@@ -371,6 +387,22 @@
   min-height: 0;
   max-width: none;
   transform: none;
+}
+
+.play12-fixed-piano-visible .play12-piano-view.is-fixed-piano-view {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  right: auto;
+  top: auto;
+  bottom: 12px;
+  max-width: none;
+  transform: translateX(-50%);
+  box-shadow: 0 10px 34px rgba(17, 24, 39, .16);
+}
+
+.play12-fixed-piano-visible .playback-page {
+  padding-bottom: var(--mvp-fixed-piano-space, 220px);
 }
 
 @media (max-width: 1100px) {

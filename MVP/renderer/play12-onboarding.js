@@ -92,6 +92,30 @@
     let removePlaybackStateListener = null;
     let midiConnectState = 'choice';
     let listenPosition = 0;
+    let fixedPianoResizeHandler = null;
+
+    const syncFixedPiano = () => {
+      const mount = runtime?.pianoView?.mount;
+      if (!mount?.classList.contains('is-fixed-piano-view')) return;
+      runtime.pianoView.syncContainer?.();
+      requestAnimationFrame(() => {
+        const height = Math.ceil(mount.getBoundingClientRect().height);
+        root.style.setProperty('--mvp-fixed-piano-space', `${height + 24}px`);
+        document.documentElement.style.setProperty('--mvp-fixed-piano-space', `${height + 24}px`);
+      });
+    };
+
+    const keepPianoFixed = () => {
+      const mount = runtime?.pianoView?.mount;
+      if (!mount) return;
+      mount.classList.add('is-fixed-piano-view');
+      document.body.classList.add('play12-fixed-piano-visible');
+      if (!fixedPianoResizeHandler) {
+        fixedPianoResizeHandler = () => syncFixedPiano();
+        global.addEventListener('resize', fixedPianoResizeHandler);
+      }
+      syncFixedPiano();
+    };
 
     const exposeState = () => {
       Object.assign(root.dataset, {
@@ -120,6 +144,7 @@
       const mount = runtime.pianoView.mount;
       if (!pianoHome) pianoHome = { parent: mount.parentElement, nextSibling: mount.nextSibling };
       if (mount.parentElement !== pianoHost) pianoHost.appendChild(mount);
+      keepPianoFixed();
       runtime.pianoView.syncContainer?.();
     };
 
@@ -140,10 +165,12 @@
         const mount = runtime.pianoView.mount;
         if (!pianoHome) pianoHome = { parent: mount.parentElement, nextSibling: mount.nextSibling };
         if (mount.parentElement !== listenPianoHost) listenPianoHost.appendChild(mount);
+        keepPianoFixed();
         runtime.pianoView.syncContainer?.();
       }
       document.body.classList.add('play12-onboarding-listen');
       global.dispatchEvent(new Event('resize'));
+      requestAnimationFrame(() => runtime?.playback?.layoutCoreGeometry?.());
     };
 
     const restoreStage = () => {
@@ -153,6 +180,7 @@
       else stageHome.parent.appendChild(stage);
       document.body.classList.remove('play12-onboarding-listen');
       global.dispatchEvent(new Event('resize'));
+      requestAnimationFrame(() => runtime?.playback?.layoutCoreGeometry?.());
     };
 
     const syncListenCopy = () => {
