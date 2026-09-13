@@ -416,6 +416,7 @@
       state = { ...state, chooseZeroCompleted: true };
       saveState(storage, state);
       syncProgress();
+      exposeState();
     };
 
     const connectRuntime = nextRuntime => {
