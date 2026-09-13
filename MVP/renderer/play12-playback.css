@@ -18,6 +18,10 @@ html, body { margin: 0; min-height: 100%; background: #f7f7f5; }
 .unified-playback-block { display: contents; }
 .play12-composition-review :is(.playback-header, .playback-service-panel, .metronome-mode, .midi-diagnostic, .zero-chooser) { display: none !important; }
 .play12-composition-review .composition-review-inspector { display: block; }
+.manual-review-toolbar { position: fixed; z-index: 70; top: 16px; right: 16px; display: flex; align-items: center; gap: 12px; padding: 9px 12px; border: var(--playback-shell-border); border-radius: var(--playback-shell-radius); background: rgba(255,255,255,.96); box-shadow: 0 8px 30px rgba(17,24,39,.12); font: 12px/1.3 Inter,Arial,sans-serif; }
+.manual-review-toolbar[hidden] { display: none !important; }
+.manual-review-toolbar label { display: flex; align-items: center; gap: 6px; color: #62666c; }
+.manual-review-toolbar select { padding: 4px 6px; border: 1px solid #c9cdd1; border-radius: 5px; background: #fff; font: inherit; }
 .composition-review-inspector { position: fixed; z-index: 80; top: 16px; right: 16px; width: 300px; max-height: calc(100vh - 32px); overflow: auto; box-sizing: border-box; padding: 12px; border: var(--playback-shell-border); border-radius: var(--playback-shell-radius); background: rgba(255,255,255,.96); box-shadow: 0 8px 30px rgba(17,24,39,.14); font: 12px/1.35 Inter,Arial,sans-serif; }
 .composition-review-inspector[hidden] { display: none !important; }
 .composition-review-heading { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px; margin-bottom: 10px; }

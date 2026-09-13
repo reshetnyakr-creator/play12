@@ -205,6 +205,10 @@
           <button id="review-reset-all" type="button">Reset all manual edits</button>
         </div>
       </aside>
+      <section id="manual-review-toolbar" class="manual-review-toolbar" hidden aria-label="Manual score review controls">
+        <strong>Manual score review</strong>
+        <label>Grid <select id="manual-review-grid"><option>1/4</option><option selected>1/8</option><option>1/16</option><option>1/32</option><option>1/64</option></select></label>
+      </section>
     </section>
   </main>
   <script src="play12-renderer.js?v=editable-review-02"></script>
@@ -218,20 +222,23 @@
   <script>
     const playbackParams = new URLSearchParams(location.search);
     const saintsReviewMode = playbackParams.get('review') === 'when-the-saints';
-    if (saintsReviewMode) {
+    const saintsManualReviewMode = playbackParams.get('review') === 'when-the-saints-manual';
+    const compositionReviewMode = saintsReviewMode || saintsManualReviewMode;
+    if (compositionReviewMode) {
       document.body.classList.remove('play12-onboarding-boot', 'play12-onboarding-active');
       document.body.classList.add('play12-onboarding-dismissed', 'play12-composition-review');
       document.getElementById('play12-onboarding').hidden = true;
     }
-    window.play12Onboarding = saintsReviewMode ? null : Play12Onboarding.create({
+    if (saintsManualReviewMode) document.getElementById('manual-review-toolbar').hidden = false;
+    window.play12Onboarding = compositionReviewMode ? null : Play12Onboarding.create({
       root: document.getElementById('play12-onboarding'),
       startButton: document.getElementById('onboarding-start'),
       continueButton: document.getElementById('onboarding-continue')
     });
     Promise.all([
-      fetch('../examples/when_the_saints_play12_beginner.play12.json').then(r => r.json()),
+      fetch(saintsManualReviewMode ? '../examples/when_the_saints_manual.play12.json' : '../examples/when_the_saints_play12_beginner.play12.json').then(r => r.json()),
       Play12CardThemes.loadReadyAssets(),
-      fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json())
+      saintsReviewMode ? fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json()) : Promise.resolve(null)
     ]).then(([baseScore, cardTheme, seedReviewOverlay]) => {
       let score = baseScore;
       const onboardingBpm = 96;
@@ -251,15 +258,17 @@
       const savedZeroMidi = Number(localStorage.getItem(zeroStorageKey));
       const savedPitchClass = Number(localStorage.getItem(zeroPitchClassStorageKey));
       const pitchClasses = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-      const referenceZeroNote = Array.from({length: 88}, (_, index) => index + 21).find(midi => pitchClasses[midi % 12] === score.play12.zero_pitch_class);
+      const referenceZeroNote = Number.isInteger(score.play12.reference_zero_midi)
+        ? score.play12.reference_zero_midi
+        : Array.from({length: 88}, (_, index) => index + 21).find(midi => pitchClasses[midi % 12] === score.play12.zero_pitch_class);
       if (!Number.isInteger(referenceZeroNote)) throw new Error(`Не удалось определить reference zero для ${score.play12.zero_pitch_class}`);
-      const restoredPitchClass = saintsReviewMode
+      const restoredPitchClass = compositionReviewMode
         ? referenceZeroNote % 12
         : Number.isInteger(savedPitchClass) && savedPitchClass >= 0 && savedPitchClass < 12
           ? savedPitchClass
           : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
       const initialZeroMidi = Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
-      const reviewGrid = saintsReviewMode ? document.getElementById('review-grid-select') : document.getElementById('grid-resolution');
+      const reviewGrid = saintsReviewMode ? document.getElementById('review-grid-select') : saintsManualReviewMode ? document.getElementById('manual-review-grid') : document.getElementById('grid-resolution');
       const reviewController = saintsReviewMode ? Play12CompositionReview.create({
         baseDocument: baseScore,
         seedOverlay: seedReviewOverlay,
@@ -267,13 +276,14 @@
         gridSelect: reviewGrid
       }) : null;
       if (reviewController) score = reviewController.effective();
-      const reviewMeasureCount = saintsReviewMode ? score.score.parts[0].measures.length : 4;
+      const reviewMeasureCount = compositionReviewMode ? score.score.parts[0].measures.length : 4;
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
         onboardingLayout: true, noteSelectionEnabled: saintsReviewMode,
-        selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => reviewController?.select(eventId)
+        selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => reviewController?.select(eventId),
+        zeroNote: score.play12.zero_pitch_class
       });
-      const svg = render(saintsReviewMode ? reviewGrid.value : '1/16');
+      const svg = render(compositionReviewMode ? reviewGrid.value : '1/16');
       const pianoView = Play12PianoView.render({
         mount: document.getElementById('piano-view'),
         zeroMidi: initialZeroMidi,
@@ -327,6 +337,10 @@
         window.play12Playback.pauseImmediate();
         window.play12Playback.replaceSvg(render(reviewGrid.value));
         reviewController.syncSelection();
+      });
+      if (saintsManualReviewMode) reviewGrid.addEventListener('change', () => {
+        window.play12Playback.pauseImmediate();
+        window.play12Playback.replaceSvg(render(reviewGrid.value));
       });
       Object.assign(document.getElementById('playback-stage').dataset, {
         selectedPitchClass: String(restoredPitchClass), layoutZeroNote: String(initialZeroMidi), zeroMidi: String(initialZeroMidi)
