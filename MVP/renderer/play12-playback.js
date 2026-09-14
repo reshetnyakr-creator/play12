@@ -80,6 +80,8 @@
       this.master = context.createGain();
       this.master.gain.value = .18;
       this.master.connect(context.destination);
+      this.robotGain = context.createGain();
+      this.robotGain.connect(this.master);
       this.metronomeGain = context.createGain();
       this.metronomeGain.gain.value = METRONOME_GAIN[4];
       this.metronomeGain.connect(this.master);
@@ -88,14 +90,21 @@
       this.sources.add(source);
       source.addEventListener("ended", () => this.sources.delete(source), { once: true });
     }
-    stopAll(at = this.context.currentTime) {
-      for (const source of this.sources) { try { source.stop(at); } catch (_) {} }
-      this.sources.clear();
-      this.voices.clear();
+    stopAll(at = this.context.currentTime, preserveRobot = false) {
+      const retainedSources = new Set();
+      if (preserveRobot) for (const [key, voice] of this.voices) {
+        if (key.startsWith("robot:")) voice.oscillators.forEach(source => retainedSources.add(source));
+      }
+      for (const source of this.sources) {
+        if (retainedSources.has(source)) continue;
+        try { source.stop(at); } catch (_) {}
+        this.sources.delete(source);
+      }
+      for (const key of this.voices.keys()) if (!preserveRobot || !key.startsWith("robot:")) this.voices.delete(key);
       this.noteKeys.clear();
       this.beatKeys.clear();
       this.pendingBeatVisuals.length = 0;
-      this.stage.dataset.activeAudioSources = "0";
+      this.stage.dataset.activeAudioSources = String(this.sources.size);
     }
     scheduleStopAt(at) {
       for (const source of this.sources) { try { source.stop(at); } catch (_) {} }
@@ -112,14 +121,14 @@
       this.stage.dataset.lastScheduledNoteAudioTime = String(when);
       this.stage.dataset.activeAudioSources = String(this.sources.size);
     }
-    noteOn(key, midi, dynamic = "mf", when = this.context.currentTime, decayAt = null) {
+    noteOn(key, midi, dynamic = "mf", when = this.context.currentTime, decayAt = null, output = this.master) {
       if (this.voices.has(key)) this.noteOff(key, when);
       const gain = this.context.createGain();
       const level = DYNAMIC_GAIN[dynamic] || .8;
       gain.gain.setValueAtTime(.0001, when);
       gain.gain.exponentialRampToValueAtTime(.34 * level, when + .012);
       if (decayAt != null) gain.gain.exponentialRampToValueAtTime(.0001, decayAt);
-      gain.connect(this.master);
+      gain.connect(output);
       const oscillators = [];
       for (const [type, ratio, amount] of [["triangle", 1, 1], ["sine", 2, .16]]) {
         const oscillator = this.context.createOscillator();
@@ -212,6 +221,7 @@
       this.beatsPerMeasure = this.rounds[0].beats;
       this.measureQuarters = this.rounds[0].measureQuarters;
       this.lastPlaybackPosition = null;
+      this.robotEvents = new Map();
       this.practiceSettings = { practiceLeftHandEnabled: true, practiceRightHandEnabled: true, oneSkillMode: false, activeSkillId: null };
       this.practicePaused = true;
       this.practiceEvents = [];
@@ -297,6 +307,7 @@
     setRuntimeZeroNote(midiNote) {
       if (!Number.isInteger(midiNote)) throw new Error(`Invalid runtime zero MIDI note: ${midiNote}`);
       if (midiNote === this.runtimeZeroNote) return;
+      this.resetRobotNotes();
       this.runtimeZeroNote = midiNote;
       this.transposeDelta = this.runtimeZeroNote - this.referenceZeroNote;
       for (const event of this.events) {
@@ -330,6 +341,7 @@
       this.pianoView.setActiveMidis(midis, source);
     }
     replaceSvg(svg) {
+      this.resetRobotNotes();
       this.svg = svg;
       this.totalQuarters = Number(svg.dataset.totalQuarters) - this.timelineOffset;
       this.stepQuarters = Number(svg.dataset.stepQuarters);
@@ -420,6 +432,26 @@
     signatureAt(position) {
       return this.rounds.find(round => position >= round.start - EPSILON && position < round.end - EPSILON) || this.rounds[this.rounds.length - 1];
     }
+    resetRobotNotes() {
+      for (const [id, state] of this.robotEvents || []) {
+        if (state === "active") this.audio.noteOff(`robot:${id}`);
+      }
+      this.robotEvents?.clear();
+    }
+    syncRobotNotes(position) {
+      if (!this.practiceEnabled()) return;
+      for (const event of this.events) {
+        if (this.isUserPracticeEvent(event)) continue;
+        const state = this.robotEvents.get(event.id);
+        if (position >= event.start + event.duration - EPSILON) {
+          if (state === "active") this.audio.noteOff(`robot:${event.id}`);
+          this.robotEvents.set(event.id, "completed");
+        } else if (!state && position >= event.start - EPSILON && this.musicAudioInput.checked) {
+          this.audio.noteOn(`robot:${event.id}`, event.midi, event.dynamic, this.audioContext.currentTime, null, this.audio.robotGain);
+          this.robotEvents.set(event.id, "active");
+        }
+      }
+    }
     isUserPracticeEvent(event) {
       return event.hand === "L" ? this.practiceSettings.practiceLeftHandEnabled : this.practiceSettings.practiceRightHandEnabled;
     }
@@ -484,14 +516,9 @@
       if (!Number.isFinite(expected.expectedAudioTime)) expected.expectedAudioTime = this.clock.quarterToAudioTime(expected.start);
       this.clock.pause(expected.start);
       this.clock.setCeiling(expected.start);
-      this.audio.stopAll();
+      this.audio.stopAll(this.audioContext.currentTime, true);
       this.waitingForInput = expected;
-      // Robot notes at the same boundary must sound even while the user is waiting.
-      if (this.musicAudioInput.checked) for (const event of this.events) {
-        if (!this.isUserPracticeEvent(event) && event.start <= expected.start + EPSILON && event.start + event.duration > expected.start + EPSILON) {
-          this.audio.scheduleNote(event, this.audioContext.currentTime, event.start + event.duration - expected.start, this.clock.bpm);
-        }
-      }
+      this.syncRobotNotes(expected.start);
       this.paint(expected.start);
       this.stage.dataset.practiceState = "waiting_for_input";
       this.stage.dataset.waitingSinceAudioTime = String(this.audioContext.currentTime);
@@ -543,6 +570,7 @@
       return true;
     }
     changePracticeMode() {
+      this.resetRobotNotes();
       const position = this.clock.position;
       const wasActive = this.clock.running || !!this.waitingForInput;
       this.audio.stopAll();
@@ -605,7 +633,8 @@
         if (this.practiceEnabled()) this.preparePractice(0);
       }
       this.pauseTarget = null;
-      this.audio.stopAll();
+      this.audio.stopAll(this.audioContext.currentTime, this.practiceEnabled());
+      this.audio.robotGain.gain.setValueAtTime(1, this.audioContext.currentTime);
       const selected = this.clock.position;
       if (this.practiceEnabled()) {
         this.practicePaused = false;
@@ -671,7 +700,7 @@
       }
       const horizon = practiceScheduleEnd(Math.min(selected + .15 * this.clock.bpm / 60, loopLimit), practiceLimit);
       for (const event of this.events) {
-        if (this.practiceEnabled() && this.isUserPracticeEvent(event)) continue;
+        if (this.practiceEnabled()) continue;
         if (Number.isFinite(practiceLimit) && event.start >= practiceLimit - EPSILON) continue;
         if (event.start >= loopLimit - EPSILON) continue;
         if (event.start < selected - EPSILON || event.start > horizon + EPSILON) continue;
@@ -690,7 +719,8 @@
     requestPause() {
       if (this.practiceEnabled() && (this.clock.running || this.waitingForInput) && !this.countIn && !this.loopGap) {
         this.clock.pause();
-        this.audio.stopAll();
+        this.audio.stopAll(this.audioContext.currentTime, true);
+        this.audio.robotGain.gain.setValueAtTime(0, this.audioContext.currentTime);
         this.practicePaused = true;
         this.waitingForInput = null;
         this.pauseTarget = null;
@@ -732,6 +762,7 @@
       this.updateControls();
     }
     pauseImmediate(position = this.clock.position) {
+      this.resetRobotNotes();
       this.audio.stopAll();
       this.preRollPrep = null;
       this.countIn = null;
@@ -753,6 +784,7 @@
       this.updateControls();
     }
     restart() {
+      this.resetRobotNotes();
       this.audio.stopAll();
       this.preRollPrep = null;
       this.countIn = null;
@@ -842,6 +874,7 @@
       this.updateControls();
     }
     finishLoopCycle(loop) {
+      this.resetRobotNotes();
       this.audio.stopAll();
       this.loopGap = null;
       this.setLoopGapVisibility(false);
@@ -865,12 +898,13 @@
     scheduleAhead() {
       if (!this.clock.running) return;
       const nowQ = this.clock.position;
+      this.syncRobotNotes(nowQ);
       const loop = this.currentLoop();
       const practiceLimit = this.practiceEnabled() && this.expectedPracticeEvent ? this.expectedPracticeEvent.start : Infinity;
       const hardEnd = Math.min(loop ? loop.end : this.totalQuarters, this.pauseTarget == null ? Infinity : this.pauseTarget, practiceLimit);
       const horizon = practiceScheduleEnd(Math.min(hardEnd, nowQ + .15 * this.clock.bpm / 60), practiceLimit);
       for (const event of this.events) {
-        if (this.practiceEnabled() && this.isUserPracticeEvent(event)) continue;
+        if (this.practiceEnabled()) continue;
         if (Number.isFinite(practiceLimit) && event.start >= practiceLimit - EPSILON) continue;
         if (event.start + EPSILON < nowQ || event.start > horizon + EPSILON) continue;
         if (this.musicAudioInput.checked) this.audio.scheduleNote(event, this.clock.quarterToAudioTime(event.start), Math.min(event.duration, hardEnd - event.start), this.clock.bpm);

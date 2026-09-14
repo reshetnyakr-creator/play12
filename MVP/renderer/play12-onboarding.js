@@ -29,6 +29,7 @@
         onboardingStep: value.onboardingStep,
         onboardingCompleted: value.onboardingCompleted === true,
         lastSessionExists: true,
+        highestUnlockedStep: Math.max(1, Math.min(3, Number(value.highestUnlockedStep) || 1)),
         midiVerified: value.midiVerified === true,
         inputMode: value.inputMode === 'midi' || value.inputMode === 'demo' ? value.inputMode : null,
         midiUsbGuideSeen: value.midiUsbGuideSeen === true,
@@ -88,6 +89,10 @@
     const leftHandButton = root.querySelector('#practice-left-hand');
     const rightHandButton = root.querySelector('#practice-right-hand');
     let practiceGuidePending = false;
+    const reconnectCard = root.querySelector('#returning-midi');
+    const reconnectMessage = root.querySelector('#returning-midi-message');
+    let recoveringMidi = false;
+    let resumeRequested = false;
     const zeroCallout = root.querySelector('#onboarding-zero-callout');
     const progressItems = new Map([...root.querySelectorAll('[data-progress-step]')]
       .map(element => [Number(element.dataset.progressStep), element]));
@@ -221,13 +226,20 @@
       });
     };
 
+    const highestUnlocked = () => Math.max(state.highestUnlockedStep || 1,
+      state.chooseZeroCompleted || state.onboardingStep === 'TRY_IT_YOURSELF' ? 3 : state.listenFragmentCompleted ? 2 : 1);
+
     const syncProgress = () => {
+      state.highestUnlockedStep = highestUnlocked();
       const activeStep = state.onboardingStep === 'TRY_IT_YOURSELF' ? 3 : state.onboardingStep === 'CHOOSE_ZERO' ? 2 : 1;
       for (const [number, element] of progressItems) {
-        const completed = number < activeStep || (number === 2 && state.chooseZeroCompleted);
-        element.classList.toggle('is-active', number === activeStep && !completed);
+        const completed = (number === 1 && state.listenFragmentCompleted) || (number === 2 && state.chooseZeroCompleted);
+        element.setAttribute('role', 'button');
+        element.setAttribute('tabindex', number <= state.highestUnlockedStep ? '0' : '-1');
+        element.setAttribute('aria-disabled', String(number > state.highestUnlockedStep));
+        element.classList.toggle('is-active', number === activeStep);
         element.classList.toggle('is-complete', completed);
-        if (number === activeStep && !completed) element.setAttribute('aria-current', 'step');
+        if (number === activeStep) element.setAttribute('aria-current', 'step');
         else element.removeAttribute('aria-current');
       }
       if (onboardingChooseZero) onboardingChooseZero.hidden = !['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(state.onboardingStep);
@@ -380,6 +392,9 @@
       runtime?.playback?.restart();
       restorePracticeSettings();
       practiceGuidePending = false;
+      recoveringMidi = false;
+      resumeRequested = false;
+      reconnectCard.hidden = true;
       annotationResumeArmed = false;
       pianoAnnotationShown = false;
       clearTimeout(pianoAnnotationTimer);
@@ -397,20 +412,53 @@
       return { ...state };
     };
 
+    const recoverMidi = () => {
+      if (!runtime || !state.midiVerified || state.inputMode === 'demo') return;
+      recoveringMidi = true;
+      reconnectCard.hidden = false;
+      reconnectMessage.textContent = 'Connecting your MIDI piano…';
+      if (runtime.midiDiagnostic && runtime.midiDiagnostic.currentStatus?.status !== 'unavailable') runtime.midiDiagnostic.enable();
+      else reconnectMessage.textContent = 'MIDI is unavailable here — you can play with your mouse';
+    };
+
+    const navigateStep = number => {
+      if (number > highestUnlocked() || number < 1 || number > 3) return;
+      state.highestUnlockedStep = highestUnlocked();
+      runtime?.playback?.pauseImmediate();
+      if (number !== 2) global.dispatchEvent(new CustomEvent('play12:choose-zero-close'));
+      state.onboardingStep = ['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'][number - 1];
+      if (number === 3) {
+        clearTimeout(zeroAnnotationTimer);
+        practiceGuidePending = false;
+        zeroCallout.hidden = true;
+        restorePracticeSettings();
+      } else if (runtime) {
+        // Listen revisits use normal playback without overwriting saved Practice preferences.
+        runtime.playback.setPracticeSettings({ practiceModeEnabled: false });
+      }
+      if (number === 1) runtime?.playback?.restart();
+      saveState(storage, state);
+      showStep(state.onboardingStep);
+      if (number === 2) global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
+    };
+    for (const [number, element] of progressItems) {
+      element.addEventListener('click', () => navigateStep(number));
+      element.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); navigateStep(number); }
+      });
+    }
+    root.querySelector('#returning-midi-retry').addEventListener('click', recoverMidi);
+
     const continueSession = () => {
       const restored = readSavedState(storage);
       if (restored) state = restored;
       else state = { ...state, lastSessionExists: true };
-      saveState(storage, state);
-      if (state.onboardingStep === 'MIDI_CONNECT') showStep('MIDI_CONNECT');
-      else if (state.onboardingStep === 'LISTEN_AND_CONTROL') showStep('LISTEN_AND_CONTROL');
-      else if (state.onboardingStep === 'CHOOSE_ZERO') showStep('CHOOSE_ZERO');
-      else if (state.onboardingStep === 'TRY_IT_YOURSELF') {
-        restorePracticeSettings();
-        showStep('TRY_IT_YOURSELF');
-      }
-      else if (state.onboardingStep === 'WELCOME') showStep('WELCOME');
-      else showMvp();
+      resumeRequested = true;
+      if (highestUnlocked() >= 2) navigateStep(highestUnlocked());
+      else if (state.midiVerified || state.inputMode === 'demo') navigateStep(1);
+      else if (state.onboardingStep === 'MIDI_CONNECT') showStep('MIDI_CONNECT');
+      else showStep('WELCOME');
+      recoverMidi();
       return { ...state };
     };
 
@@ -460,6 +508,7 @@
 
     const handleZeroConfirmed = () => {
       if (state.onboardingStep !== 'CHOOSE_ZERO') return;
+      if (state.chooseZeroCompleted) { navigateStep(3); return; }
       const shouldShowHint = !state.zeroChangeHintShown;
       state = { ...state, chooseZeroCompleted: true, zeroChangeHintShown: true,
         onboardingStep: 'TRY_IT_YOURSELF', practiceModeEnabled: false,
@@ -542,6 +591,14 @@
             event.type === 'note-on' && event.source === 'midi' && event.velocity > 0) verifyMidi();
       }) || null;
       removeMidiStatusListener = runtime.midiDiagnostic?.addStatusListener?.(event => {
+        if (recoveringMidi) {
+          reconnectCard.hidden = event.status === 'connected';
+          reconnectCard.dataset.midiStatus = event.status;
+          reconnectMessage.textContent = event.status === 'requesting' ? 'Connecting your MIDI piano…'
+            : event.status === 'permission-denied' ? 'Allow MIDI access, then reconnect — or play with your mouse'
+            : 'Reconnect your MIDI piano, or play with your mouse';
+          return;
+        }
         if (state.onboardingStep !== 'MIDI_CONNECT') return;
         if (event.status === 'unavailable') showMidiState(event.detail?.safari ? 'unsupported-safari' : 'unsupported');
         else if (event.status === 'permission-denied') showMidiState('permission-denied');
@@ -592,6 +649,11 @@
         }
         syncListenCopy();
       }) || null;
+      if (resumeRequested) {
+        if (state.onboardingStep === 'TRY_IT_YOURSELF') restorePracticeSettings();
+        if (state.onboardingStep === 'CHOOSE_ZERO') global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
+        recoverMidi();
+      }
       if (state.onboardingStep === 'MIDI_CONNECT') movePianoToOnboarding();
       if (state.onboardingStep === 'LISTEN_AND_CONTROL' || state.onboardingStep === 'CHOOSE_ZERO' || state.onboardingStep === 'TRY_IT_YOURSELF') moveStageToOnboarding();
       if (state.onboardingStep === 'CHOOSE_ZERO' && new URLSearchParams(location.search).get('onboardingPreview') === 'choose-zero') {

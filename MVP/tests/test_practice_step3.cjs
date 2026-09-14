@@ -36,6 +36,11 @@ function make(events=[['R',72,0],['L',48,0],['L',50,1],['R',74,2]], zero=24) {
   const c=window.Play12Playback.start(options);
   const scheduled=[];
   c.audio.scheduleNote=(e,when,duration)=>scheduled.push({id:e.id,hand:e.hand,midi:e.midi,start:e.start,duration});
+  const originalNoteOn=c.audio.noteOn.bind(c.audio);
+  c.audio.noteOn=(key,midi,...args)=>{
+    if(key.startsWith('robot:')) { const e=c.events.find(e=>`robot:${e.id}`===key); scheduled.push({...e}); }
+    return originalNoteOn(key,midi,...args);
+  };
   return {c,window,sandbox,scheduled};
 }
 function configure(c,left=false,right=true){c.setPracticeSettings({practiceModeEnabled:true,practiceLeftHandEnabled:left,practiceRightHandEnabled:right});}
@@ -101,7 +106,7 @@ test('Approved manual RH has no simultaneous note set; source remains 9 rounds',
   const measures=doc.score.parts[0].measures;assert.equal(measures.length,9);
   for(const m of measures){const starts=m.events.filter(e=>e.kind==='note'&&e.hand==='R').map(e=>e.start_quarters);assert.equal(new Set(starts).size,starts.length);}
 });
-function onboarding(saved=null) {
+function onboarding(saved=null, midiDiagnostic=null) {
   const {c,window,sandbox}=make();const nodes=new Map();
   const node=id=>{if(!nodes.has(id)) {const e=new Element(); const classes=new Set();e.classList={add(...xs){xs.forEach(x=>classes.add(x));},remove(...xs){xs.forEach(x=>classes.delete(x));},toggle(x,on){on ? classes.add(x):classes.delete(x);},contains(x){return classes.has(x);}};e.removeAttribute=name=>delete e[name];e.animate=()=>{};e.appendChild=child=>child.parentElement=e;e.insertBefore=e.appendChild;nodes.set(id,e);}return nodes.get(id);};
   const root=node('root');root.querySelector=node;const progress=[1,2,3,4].map(n=>{const e=node(`progress${n}`);e.dataset.progressStep=String(n);return e;});
@@ -115,7 +120,7 @@ function onboarding(saved=null) {
   Object.assign(sandbox,{document:{body:node('body'),documentElement:node('html'),addEventListener(){},getElementById:node},URLSearchParams,location:{hostname:'127.0.0.1',search:''},Event:class{constructor(type){this.type=type;}},CustomEvent:class{constructor(type){this.type=type;}},clearTimeout:id=>timers.delete(id)});
   vm.runInContext(readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8'),sandbox);
   const controller=window.Play12Onboarding.create({root,startButton:node('start'),continueButton:node('continue'),storage});
-  c.stage.parentElement=node('home');controller.connectRuntime({playback:c,noteEvents:c,stage:c.stage});
+  c.stage.parentElement=node('home');controller.connectRuntime({playback:c,noteEvents:c,stage:c.stage,midiDiagnostic});
   return {controller,c,node,root,values,window,timers};
 }
 test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actual controls advance',async()=>{
@@ -154,4 +159,56 @@ test('Penultimate Y playback and Practice use orange Y for every runtime zero',a
     assert.equal(c.acceptPracticeInput(47+zero-24),true);
     assert(c.waitingForInput);c.acceptPracticeInput(55+zero-24);assert(c.clock.running);
   }
+});
+test('Long robot notes keep one attack across two gates and Pause/Resume, for either hand',async()=>{
+  for(const userHand of ['L','R']){
+    const robotHand=userHand==='L'?'R':'L';
+    const {c,scheduled}=make([[robotHand,72,0],[userHand,48,1],[userHand,50,2]]);
+    c.events[0].duration=4;configure(c,userHand==='L',userHand==='R');await c.play();
+    const voice=c.audio.voices.get('robot:0');assert(voice);assert.equal(scheduled.length,1);
+    c.audioContext.currentTime=1;c.tick();assert(c.waitingForInput);assert.equal(c.audio.voices.get('robot:0'),voice);
+    c.acceptPracticeInput(48);assert.equal(scheduled.length,1);
+    c.requestPause();assert.equal(c.audio.voices.get('robot:0'),voice);await c.play();assert.equal(c.audio.voices.get('robot:0'),voice);
+    c.audioContext.currentTime=2;c.tick();assert(c.waitingForInput);c.acceptPracticeInput(50);assert.equal(scheduled.length,1);
+    c.audioContext.currentTime=4;c.scheduleAhead();assert.equal(c.robotEvents.get('0'),'completed');assert.equal(c.audio.voices.has('robot:0'),false);
+    c.restart();assert.equal(c.robotEvents.size,0);await c.play();assert.equal(scheduled.length,2);
+  }
+});
+test('Unlocked steps navigate without progress loss; Continue chooses 3 after revisiting 1/2',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',chooseZeroCompleted:true,listenFragmentCompleted:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,practiceGuideStage:'playing',inputMode:'demo'});
+  h.values.set('play12.zero_note.midi','26');h.values.set('play12.zero_note.pitch_class','2');
+  h.controller.continueSession();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
+  assert.equal(h.node('progress4')['aria-disabled'],'true');h.node('progress4').handlers.click();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
+  h.node('progress1').handlers.click();assert.equal(h.root.dataset.onboardingStep,'LISTEN_AND_CONTROL');assert.equal(h.c.practiceEnabled(),false);assert(h.controller.getState().chooseZeroCompleted);
+  h.controller.continueSession();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);
+  h.node('progress2').handlers.click();assert.equal(h.root.dataset.onboardingStep,'CHOOSE_ZERO');h.node('progress3').handlers.click();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
+  assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.values.get('play12.zero_note.pitch_class'),'2');
+});
+test('Returning verified MIDI checks current availability and reconnects without tutorial',()=>{
+  let listener, calls=0;
+  const midi={currentStatus:{status:'no-input'},enable(){calls++;listener({status:'no-input'});},addStatusListener(fn){listener=fn;return ()=>{};}};
+  const h=onboarding({onboardingStep:'LISTEN_AND_CONTROL',chooseZeroCompleted:true,listenFragmentCompleted:true,midiVerified:true,inputMode:'midi',practiceGuideStage:'playing'},midi);
+  h.controller.continueSession();assert.equal(calls,1);assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert(h.controller.getState().midiVerified);assert.equal(h.node('#returning-midi').hidden,false);
+  listener({status:'connected'});assert.equal(h.node('#returning-midi').hidden,true);
+  listener({status:'no-input'});assert.equal(h.node('#returning-midi').hidden,false);h.node('#returning-midi-retry').handlers.click();assert.equal(calls,2);assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
+});
+test('Geometry extends inner clip to fixed Playback at top/middle/bottom scroll and resize',()=>{
+  const {c,sandbox}=make();
+  sandbox.document.body={classList:{contains:()=>true}};sandbox.getComputedStyle=()=>({borderLeftWidth:'1'});
+  const shell=new Element(), cell=new Element();cell.getAttribute=()=> '24';
+  c.svg.isConnected=true;c.svg.parentElement=new Element();c.svg.querySelector=()=>cell;c.svg.querySelectorAll=()=>[cell];
+  c.stage.closest=()=>true;c.stage.querySelector=()=>shell;
+  c.pianoView={mount:new Element(),setActiveMidis(){}};c.pianoView.mount.isConnected=true;
+  for(const top of [200,0,-450]) for(const boundary of [350,600]){
+    c.stage.getBoundingClientRect=()=>({top,left:0,right:300,width:300});
+    c.playline.getBoundingClientRect=()=>({top:boundary,left:0,right:300,width:300});
+    c.layoutCoreGeometry();
+    assert.equal(top+parseFloat(c.svg.parentElement.style.height),boundary+1);
+    assert.equal(shell.style.height,c.svg.parentElement.style.height);assert.equal(c.svg.parentElement.style.overflow,'hidden');
+  }
+});
+test('Returning MIDI unavailable browser stays in Practice without a failed API call',()=>{
+  const midi={currentStatus:{status:'unavailable'},enable(){throw Error('Unavailable API must not be called');},addStatusListener(){return ()=>{};}};
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',chooseZeroCompleted:true,midiVerified:true,inputMode:'midi'},midi);
+  h.controller.continueSession();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.node('#returning-midi').hidden,false);
 });

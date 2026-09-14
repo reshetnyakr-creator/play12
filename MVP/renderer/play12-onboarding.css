@@ -1078,3 +1078,14 @@
 .mvp-practice-board button.is-guided { outline: 2px solid #E96E40; outline-offset: 2px; }
 .mvp-listen-coach small { display: block; margin-top: 16px; font-size: .62em; }
 [data-event-id].is-practice-expected { filter: brightness(1.08); }
+
+/* The inner score/shell owns clipping at the fixed execution boundary.
+   Outer fixed-height containers must not cut it short after scrolling. */
+.play12-onboarding-listen .mvp-playback-host,
+.play12-onboarding-listen .mvp-playback-host .playback-stage { overflow: visible; }
+.mvp-onboarding-progress li[role="button"] { cursor: pointer; }
+.mvp-onboarding-progress li[aria-disabled="true"] { cursor: default; }
+.mvp-onboarding-progress li:focus-visible { outline: 2px solid #E96E40; outline-offset: 5px; }
+.mvp-midi-reconnect { position: fixed; z-index: 95; right: 24px; top: 90px; padding: 12px 16px; border-radius: 16px; background: #fff; box-shadow: 0 4px 18px #0002; font: 13px Inter,sans-serif; }
+.mvp-midi-reconnect[hidden] { display: none; }
+.mvp-midi-reconnect button { margin-left: 12px; padding: 7px 12px; border: 1px solid #E96E40; border-radius: 12px; background: #fff; cursor: pointer; }
