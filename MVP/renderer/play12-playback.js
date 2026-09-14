@@ -212,6 +212,8 @@
       this.beatsPerMeasure = this.rounds[0].beats;
       this.measureQuarters = this.rounds[0].measureQuarters;
       this.lastPlaybackPosition = null;
+      this.practiceSettings = { practiceLeftHandEnabled: true, practiceRightHandEnabled: true, oneSkillMode: false, activeSkillId: null };
+      this.practicePaused = true;
       this.practiceEvents = [];
       this.expectedPracticeEvent = null;
       this.waitingForInput = null;
@@ -306,6 +308,10 @@
         runtimeZeroNote: String(this.runtimeZeroNote),
         transposeDelta: String(this.transposeDelta)
       });
+      if (this.practiceEnabled()) {
+        for (const expected of this.practiceEvents) expected.matchedPitches.clear();
+        this.armPracticeGate(this.clock.position);
+      }
       this.paint(this.displayPosition ?? this.clock.position);
       if (this.clock.running) {
         this.audio.stopAll();
@@ -336,7 +342,7 @@
         group.dataset.effectiveMidi = String(midi);
         return {
           group, id: group.dataset.eventId, start: Number(group.dataset.globalStartQuarters) - this.timelineOffset,
-          duration: Number(group.dataset.durationQuarters), sourceMidi, midi, dynamic: group.dataset.dynamic
+          duration: Number(group.dataset.durationQuarters), hand: group.dataset.hand, sourceMidi, midi, dynamic: group.dataset.dynamic
         };
       });
       this.buildPracticeEvents();
@@ -414,9 +420,29 @@
     signatureAt(position) {
       return this.rounds.find(round => position >= round.start - EPSILON && position < round.end - EPSILON) || this.rounds[this.rounds.length - 1];
     }
+    isUserPracticeEvent(event) {
+      return event.hand === "L" ? this.practiceSettings.practiceLeftHandEnabled : this.practiceSettings.practiceRightHandEnabled;
+    }
+    getPracticeSettings() {
+      return { practiceModeEnabled: this.practiceEnabled(), ...this.practiceSettings };
+    }
+    setPracticeSettings(settings) {
+      const next = { ...this.practiceSettings, ...settings };
+      if (!next.practiceLeftHandEnabled && !next.practiceRightHandEnabled) return false;
+      this.practiceSettings = {
+        practiceLeftHandEnabled: next.practiceLeftHandEnabled,
+        practiceRightHandEnabled: next.practiceRightHandEnabled,
+        oneSkillMode: false, activeSkillId: null
+      };
+      if (typeof settings.practiceModeEnabled === "boolean") this.practiceModeInput.checked = settings.practiceModeEnabled;
+      this.buildPracticeEvents();
+      this.changePracticeMode();
+      return true;
+    }
     buildPracticeEvents() {
       const slices = new Map();
       for (const event of this.events) {
+        if (!this.isUserPracticeEvent(event)) continue;
         const key = event.start.toFixed(7);
         if (!slices.has(key)) slices.set(key, { start: event.start, events: [], completed: false, matchedPitches: new Set(), expectedAudioTime: null, timingDeltaMs: null, timingClass: null });
         slices.get(key).events.push(event);
@@ -460,6 +486,12 @@
       this.clock.setCeiling(expected.start);
       this.audio.stopAll();
       this.waitingForInput = expected;
+      // Robot notes at the same boundary must sound even while the user is waiting.
+      if (this.musicAudioInput.checked) for (const event of this.events) {
+        if (!this.isUserPracticeEvent(event) && event.start <= expected.start + EPSILON && event.start + event.duration > expected.start + EPSILON) {
+          this.audio.scheduleNote(event, this.audioContext.currentTime, event.start + event.duration - expected.start, this.clock.bpm);
+        }
+      }
       this.paint(expected.start);
       this.stage.dataset.practiceState = "waiting_for_input";
       this.stage.dataset.waitingSinceAudioTime = String(this.audioContext.currentTime);
@@ -467,7 +499,7 @@
     }
     acceptPracticeInput(midiNote) {
       const expected = this.waitingForInput || this.expectedPracticeEvent;
-      if (!this.practiceEnabled() || !expected) return false;
+      if (!this.practiceEnabled() || !expected || this.practicePaused) return false;
       const expectedPitches = new Set(expected.events.map(event => event.midi));
       if (!expectedPitches.has(midiNote)) {
         this.stage.dataset.lastPracticeInput = `wrong:${midiNote}`;
@@ -512,8 +544,12 @@
     }
     changePracticeMode() {
       const position = this.clock.position;
+      const wasActive = this.clock.running || !!this.waitingForInput;
+      this.audio.stopAll();
+      this.practicePaused = !wasActive;
       if (this.practiceEnabled()) {
         this.preparePractice(position);
+        if (wasActive) this.clock.start(position, this.audioContext.currentTime);
         if (this.clock.running) {
           this.audio.stopAll();
           this.stage.dataset.practiceState = "playing";
@@ -564,11 +600,17 @@
     async play() {
       if (this.clock.running || this.countIn || this.waitingForInput) return;
       await this.audioContext.resume();
-      if (this.clock.position >= this.totalQuarters - EPSILON) this.clock.pause(0);
+      if (this.clock.position >= this.totalQuarters - EPSILON) {
+        this.clock.pause(0);
+        if (this.practiceEnabled()) this.preparePractice(0);
+      }
       this.pauseTarget = null;
       this.audio.stopAll();
       const selected = this.clock.position;
-      if (this.practiceEnabled()) this.preparePractice(selected);
+      if (this.practiceEnabled()) {
+        this.practicePaused = false;
+        this.armPracticeGate(selected);
+      }
       if (this.countInInput.checked) {
         const signature = this.signatureAt(selected);
         const preparationSeconds = .22;
@@ -629,6 +671,7 @@
       }
       const horizon = practiceScheduleEnd(Math.min(selected + .15 * this.clock.bpm / 60, loopLimit), practiceLimit);
       for (const event of this.events) {
+        if (this.practiceEnabled() && this.isUserPracticeEvent(event)) continue;
         if (Number.isFinite(practiceLimit) && event.start >= practiceLimit - EPSILON) continue;
         if (event.start >= loopLimit - EPSILON) continue;
         if (event.start < selected - EPSILON || event.start > horizon + EPSILON) continue;
@@ -645,6 +688,17 @@
       }
     }
     requestPause() {
+      if (this.practiceEnabled() && (this.clock.running || this.waitingForInput) && !this.countIn && !this.loopGap) {
+        this.clock.pause();
+        this.audio.stopAll();
+        this.practicePaused = true;
+        this.waitingForInput = null;
+        this.pauseTarget = null;
+        this.stage.dataset.practiceState = "paused";
+        this.paint(this.clock.position);
+        this.updateControls();
+        return;
+      }
       if (this.loopGap) {
         this.pauseImmediate(this.clock.position);
         return;
@@ -688,6 +742,8 @@
       this.expectedPracticeEvent = null;
       this.clock.setCeiling(Infinity);
       this.clock.pause(clamp(position, 0, this.totalQuarters));
+      this.practicePaused = true;
+      if (this.practiceEnabled()) this.preparePractice(this.clock.position);
       this.displayPosition = this.clock.position;
       this.lastPlaybackPosition = null;
       this.stage.classList.remove("is-preroll-prep");
@@ -707,6 +763,8 @@
       this.expectedPracticeEvent = null;
       this.clock.setCeiling(Infinity);
       this.clock.pause(0);
+      this.practicePaused = true;
+      if (this.practiceEnabled()) this.preparePractice(0);
       this.displayPosition = 0;
       this.lastPulseIndex = null;
       this.lastPlaybackPosition = null;
@@ -812,9 +870,9 @@
       const hardEnd = Math.min(loop ? loop.end : this.totalQuarters, this.pauseTarget == null ? Infinity : this.pauseTarget, practiceLimit);
       const horizon = practiceScheduleEnd(Math.min(hardEnd, nowQ + .15 * this.clock.bpm / 60), practiceLimit);
       for (const event of this.events) {
+        if (this.practiceEnabled() && this.isUserPracticeEvent(event)) continue;
         if (Number.isFinite(practiceLimit) && event.start >= practiceLimit - EPSILON) continue;
         if (event.start + EPSILON < nowQ || event.start > horizon + EPSILON) continue;
-        if (this.practiceEnabled() && this.practiceEvents.some(expected => expected.completed && Math.abs(expected.start - event.start) < EPSILON)) continue;
         if (this.musicAudioInput.checked) this.audio.scheduleNote(event, this.clock.quarterToAudioTime(event.start), Math.min(event.duration, hardEnd - event.start), this.clock.bpm);
       }
       if (this.metronomeInput.checked) {
@@ -880,6 +938,7 @@
       const soundingMidis = [];
       for (const event of this.events) {
         let state = "upcoming", opacity = 1;
+        event.group.classList.toggle("is-practice-expected", !!this.waitingForInput?.events.includes(event));
         if (this.clock.running && !this.countIn && !this.preRollPrep && !this.loopGap && position >= event.start && position < event.start + event.duration) {
           state = "active";
           soundingMidis.push(event.midi);

@@ -142,6 +142,12 @@
         </div>
         <div id="onboarding-listen-piano-host" class="mvp-piano-host mvp-listen-piano-host" aria-label="Playable on-screen piano"></div>
         <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden>Choose Your 0</button>
+        <section id="practice-board" class="mvp-practice-board" aria-label="Practice Board" hidden>
+          <button id="practice-board-mode" type="button" aria-pressed="false">Practice Mode</button>
+          <button id="practice-left-hand" type="button" aria-pressed="true">Left Hand</button>
+          <button id="practice-right-hand" type="button" aria-pressed="true">Right Hand</button>
+          <button id="practice-one-skill" type="button" disabled title="Coming later">One Skill</button>
+        </section>
         <p id="onboarding-zero-callout" class="mvp-handwritten-note mvp-zero-callout" aria-hidden="true" hidden>You can change your 0 at any time <span>↙</span></p>
         <p id="onboarding-piano-callout" class="mvp-handwritten-note mvp-piano-callout" aria-hidden="true" hidden>Always visible. Play it with your mouse. <span>↓</span></p>
       </section>
@@ -423,6 +429,7 @@
         zeroConfirmation.hidden = false;
       };
       const beginZeroSelection = () => {
+        if (window.play12Playback.practiceEnabled()) window.play12Playback.requestPause();
         choosingZero = true;
         zeroChooser.dataset.choosingZero = 'true';
         zeroChooser.hidden = false;
