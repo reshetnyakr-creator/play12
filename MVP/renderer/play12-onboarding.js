@@ -42,7 +42,7 @@
         practiceLeftHandEnabled: value.practiceLeftHandEnabled !== false,
         practiceRightHandEnabled: value.practiceRightHandEnabled !== false,
         oneSkillMode: false, activeSkillId: null,
-        practiceGuideStage: ['enable', 'hand', 'ready', 'playing', 'complete'].includes(value.practiceGuideStage) ? value.practiceGuideStage : 'enable'
+        practiceGuideStage: ['enable', 'hand', 'ready', 'playing', 'complete', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : 'enable'
       };
     } catch (_) {
       return null;
@@ -79,6 +79,7 @@
     const listenPrompt = root.querySelector('#onboarding-listen-prompt');
     const listenCoach = root.querySelector('#onboarding-listen-coach');
     const pianoCallout = root.querySelector('#onboarding-piano-callout');
+    const notesCallout = root.querySelector('.mvp-notes-callout');
     const songTitleViewport = root.querySelector('#onboarding-song-title-viewport');
     const songTitle = root.querySelector('#onboarding-song-title');
     const songStep = root.querySelector('#onboarding-song-step');
@@ -124,9 +125,43 @@
     let listenPlaybackState = 'paused';
     let annotationResumeArmed = false;
     let pianoAnnotationShown = false;
-    let pianoAnnotationTimer = null;
-    let zeroAnnotationTimer = null;
+    const hintTimers = new Map();
+    const hintKeys = new Map();
+    const dismissedHints = new Set();
+    const hideHint = element => {
+      clearTimeout(hintTimers.get(element));
+      hintTimers.delete(element);
+      if (hintKeys.has(element)) dismissedHints.add(hintKeys.get(element));
+      hintKeys.delete(element);
+      element.hidden = true;
+      element.classList.remove('has-dismiss-timer', 'is-entering', 'is-visible');
+    };
+    const showHint = (element, key, afterDismiss = null) => {
+      if (hintKeys.get(element) === key) return;
+      hideHint(element);
+      if (dismissedHints.has(key)) { afterDismiss?.(); return; }
+      hintKeys.set(element, key);
+      element.hidden = false;
+      element.classList.add('has-dismiss-timer');
+      hintTimers.set(element, global.setTimeout(() => { hideHint(element); afterDismiss?.(); }, 12000));
+    };
+    const clearHints = () => {
+      for (const element of [listenCoach, pianoCallout, zeroCallout, notesCallout]) if (element) hideHint(element);
+      practiceGuidePending = false;
+    };
+    const showCoach = text => {
+      if (!text) { hideHint(listenCoach); return; }
+      const key = `${state.onboardingStep}:${text}`;
+      if (hintKeys.get(listenCoach) === key) return;
+      if (dismissedHints.has(key)) { hideHint(listenCoach); return; }
+      listenCoach.dataset.copy = text;
+      listenPrompt.innerHTML = text;
+      showHint(listenCoach, key);
+      void listenCoach.offsetWidth;
+      listenCoach.classList.add('is-entering');
+    };
     let playerClipFrame = 0;
+    let visibleStep = 'WELCOME';
 
     const syncSongTitleMarquee = () => {
       if (!songTitleViewport || !songTitle) return;
@@ -145,25 +180,17 @@
       pianoAnnotationShown = true;
       pianoCallout.hidden = false;
       pianoCallout.classList.add('is-visible');
-      pianoAnnotationTimer = global.setTimeout(() => {
-        pianoCallout.classList.remove('is-visible');
-        pianoCallout.hidden = true;
-      }, 7000);
+      showHint(pianoCallout, 'piano-annotation');
+      pianoCallout.classList.add('is-visible');
     };
 
     const showZeroAnnotation = () => {
       if (!zeroCallout) return;
-      zeroCallout.hidden = false;
-      zeroCallout.classList.remove('is-visible');
-      void zeroCallout.offsetWidth;
-      zeroCallout.classList.add('is-visible');
-      clearTimeout(zeroAnnotationTimer);
-      zeroAnnotationTimer = global.setTimeout(() => {
-        zeroCallout.classList.remove('is-visible');
-        zeroCallout.hidden = true;
+      showHint(zeroCallout, 'zero-annotation', () => {
         practiceGuidePending = false;
         syncPracticeGuide();
-      }, 7000);
+      });
+      zeroCallout.classList.add('is-visible');
     };
 
     const syncPlayerClip = () => {
@@ -298,21 +325,7 @@
     };
 
     const syncListenCopy = () => {
-      const showCoach = text => {
-        if (!listenCoach) return;
-        if (!listenCoach.hidden && listenCoach.dataset.copy === text) return;
-        listenCoach.dataset.copy = text;
-        listenPrompt.innerHTML = text;
-        listenCoach.hidden = false;
-        listenCoach.classList.remove('is-entering');
-        void listenCoach.offsetWidth;
-        listenCoach.classList.add('is-entering');
-      };
-      const hideCoach = () => {
-        if (!listenCoach) return;
-        listenCoach.classList.remove('is-entering');
-        listenCoach.hidden = true;
-      };
+      const hideCoach = () => hideHint(listenCoach);
       if (state.listenFragmentCompleted) {
         hideCoach();
         listenContinue.hidden = false;
@@ -337,6 +350,11 @@
     };
 
     const showStep = step => {
+      visibleStep = step;
+      const pendingZeroHint = practiceGuidePending;
+      clearHints();
+      if (step === 'TRY_IT_YOURSELF') practiceGuidePending = pendingZeroHint;
+      syncSkipAnchor();
       const visibleView = ['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(step) ? 'LISTEN_AND_CONTROL' : step;
       for (const [name, element] of views) element.hidden = name !== visibleView;
       document.body.classList.toggle('play12-onboarding-choose-zero', step === 'CHOOSE_ZERO');
@@ -354,7 +372,10 @@
         document.body.classList.remove('play12-onboarding-dismissed');
         moveStageToOnboarding();
         requestAnimationFrame(syncSongTitleMarquee);
-        if (step === 'LISTEN_AND_CONTROL') syncListenCopy();
+        if (step === 'LISTEN_AND_CONTROL') {
+          syncListenCopy();
+          if (notesCallout) showHint(notesCallout, 'notes-direction');
+        }
         else {
           if (listenCoach) listenCoach.hidden = true;
           if (listenContinue) listenContinue.hidden = true;
@@ -397,8 +418,8 @@
       reconnectCard.hidden = true;
       annotationResumeArmed = false;
       pianoAnnotationShown = false;
-      clearTimeout(pianoAnnotationTimer);
-      clearTimeout(zeroAnnotationTimer);
+      clearHints();
+      dismissedHints.clear();
       if (pianoCallout) {
         pianoCallout.hidden = true;
         pianoCallout.classList.remove('is-visible');
@@ -428,7 +449,7 @@
       if (number !== 2) global.dispatchEvent(new CustomEvent('play12:choose-zero-close'));
       state.onboardingStep = ['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'][number - 1];
       if (number === 3) {
-        clearTimeout(zeroAnnotationTimer);
+        hideHint(zeroCallout);
         practiceGuidePending = false;
         zeroCallout.hidden = true;
         restorePracticeSettings();
@@ -448,6 +469,33 @@
       });
     }
     root.querySelector('#returning-midi-retry').addEventListener('click', recoverMidi);
+
+    const syncSkipAnchor = () => {
+      const language = root.querySelector('.mvp-language-switch');
+      if (language) document.documentElement.style.setProperty('--mvp-skip-top', `${Math.max(12, language.getBoundingClientRect().bottom + 14)}px`);
+    };
+    global.addEventListener('resize', syncSkipAnchor);
+    root.querySelector('#onboarding-skip').addEventListener('click', () => {
+      clearHints();
+      global.dispatchEvent(new CustomEvent('play12:choose-zero-close'));
+      if (state.onboardingStep === 'WELCOME') { startNew(); return; }
+      if (state.onboardingStep === 'MIDI_CONNECT') {
+        if (!state.inputMode) state.inputMode = 'demo';
+        navigateStep(1);
+      } else if (state.onboardingStep === 'LISTEN_AND_CONTROL') {
+        state.highestUnlockedStep = Math.max(highestUnlocked(), 2);
+        navigateStep(2);
+      } else if (state.onboardingStep === 'CHOOSE_ZERO') {
+        state.highestUnlockedStep = 3;
+        state.practiceGuideStage ||= 'enable';
+        navigateStep(3);
+      } else if (state.onboardingStep === 'TRY_IT_YOURSELF') {
+        runtime?.playback?.pauseImmediate();
+        state.practiceGuideStage = 'free';
+        saveState(storage, state);
+        syncPracticeGuide();
+      }
+    });
 
     const continueSession = () => {
       const restored = readSavedState(storage);
@@ -523,8 +571,13 @@
       saveState(storage, state);
       syncProgress();
       exposeState();
-      if (shouldShowHint) showZeroAnnotation();
       showStep('TRY_IT_YOURSELF');
+      if (shouldShowHint) {
+        practiceGuidePending = true;
+        hideHint(listenCoach);
+        showZeroAnnotation();
+        syncPracticeGuide();
+      }
     };
 
     const restorePracticeSettings = () => {
@@ -537,7 +590,7 @@
     };
 
     const syncPracticeGuide = () => {
-      if (state.onboardingStep !== 'TRY_IT_YOURSELF' || !runtime) return;
+      if (state.onboardingStep !== 'TRY_IT_YOURSELF' || visibleStep !== 'TRY_IT_YOURSELF' || !runtime) return;
       const settings = runtime.playback.getPracticeSettings();
       practiceModeButton.setAttribute('aria-pressed', String(settings.practiceModeEnabled));
       leftHandButton.setAttribute('aria-pressed', String(settings.practiceLeftHandEnabled));
@@ -552,14 +605,7 @@
       }
       practiceModeButton.classList.toggle('is-guided', !practiceGuidePending && state.practiceGuideStage === 'enable');
       leftHandButton.classList.toggle('is-guided', !practiceGuidePending && state.practiceGuideStage === 'hand');
-      if (listenCoach.dataset.copy !== text) {
-        listenCoach.dataset.copy = text;
-        listenPrompt.innerHTML = text;
-        listenCoach.classList.remove('is-entering');
-        void listenCoach.offsetWidth;
-        if (text) listenCoach.classList.add('is-entering');
-      }
-      listenCoach.hidden = !text;
+      showCoach(text);
     };
 
     const changePracticeSetting = (key, button) => {
@@ -619,7 +665,7 @@
           syncPracticeGuide();
           return;
         }
-        if (state.onboardingStep !== 'LISTEN_AND_CONTROL') return;
+        if (state.onboardingStep !== 'LISTEN_AND_CONTROL' || visibleStep !== 'LISTEN_AND_CONTROL') return;
         const previousPlaybackState = listenPlaybackState;
         listenPosition = snapshot.position;
         listenPlaybackRunning = snapshot.running;

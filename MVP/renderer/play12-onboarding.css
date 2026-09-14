@@ -733,7 +733,7 @@
 }
 
 .mvp-zero-callout.is-visible {
-  animation: mvp-piano-callout-seven-seconds 7s ease both;
+  animation: mvp-piano-callout-seven-seconds 12s ease both;
 }
 
 .mvp-zero-callout span {
@@ -921,7 +921,7 @@
 }
 
 .mvp-piano-callout.is-visible {
-  animation: mvp-piano-callout-seven-seconds 7s ease both;
+  animation: mvp-piano-callout-seven-seconds 12s ease both;
 }
 
 .mvp-piano-callout span {
@@ -1089,3 +1089,20 @@
 .mvp-midi-reconnect { position: fixed; z-index: 95; right: 24px; top: 90px; padding: 12px 16px; border-radius: 16px; background: #fff; box-shadow: 0 4px 18px #0002; font: 13px Inter,sans-serif; }
 .mvp-midi-reconnect[hidden] { display: none; }
 .mvp-midi-reconnect button { margin-left: 12px; padding: 7px 12px; border: 1px solid #E96E40; border-radius: 12px; background: #fff; cursor: pointer; }
+
+.mvp-skip-control {
+  top: var(--mvp-skip-top, 78px);
+  bottom: auto;
+  left: auto;
+  right: var(--mvp-piano-right-inset, 12px);
+  min-width: 92px;
+}
+.mvp-listen-coach.has-dismiss-timer {
+  animation: mvp-coach-arrive 1050ms cubic-bezier(.2,.72,.22,1) both, mvp-hint-lifetime 12s linear forwards;
+}
+@keyframes mvp-hint-lifetime {
+  0%, 97.5% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.mvp-notes-callout.has-dismiss-timer { animation: mvp-hint-lifetime 12s linear forwards; }

@@ -17,7 +17,7 @@ class AudioContext {
   constructor(){this.currentTime=0;this.state='running';this.destination={};}
   resume(){return Promise.resolve();}
   createGain(){return {gain:{value:0,setValueAtTime(){},exponentialRampToValueAtTime(){},cancelScheduledValues(){}},connect(){return this;}};}
-  createOscillator(){return {frequency:{value:0},connect(){return this;},start(){},stop(){},addEventListener(){}};}
+  createOscillator(){const handlers=[];return {frequency:{value:0},connect(){return this;},start(at){this.startAt=at;},stop(at){this.stopAt=at;},addEventListener(event,fn){if(event==='ended')handlers.push(fn);},finish(){handlers.forEach(fn=>fn());}};}
 }
 function load(extra={}) {
   const window = {AudioContext, ...extra};
@@ -64,10 +64,10 @@ test('Cannot turn off the last active hand; no invented skill',()=>{
   const {c}=make();configure(c);assert.equal(c.setPracticeSettings({practiceRightHandEnabled:false}),false);
   assert.equal(c.getPracticeSettings().practiceRightHandEnabled,true);assert.equal(c.getPracticeSettings().activeSkillId,null);assert.equal(c.getPracticeSettings().oneSkillMode,false);
 });
-test('Pause preserves chord matches and expected event; input while paused does not resume',async()=>{
+test('Pause clears partial chord but preserves expected event; paused input cannot resume',async()=>{
   const {c}=make();configure(c,true,true);await c.play();const expected=c.waitingForInput;c.acceptPracticeInput(72);c.requestPause();
-  assert.equal(c.expectedPracticeEvent,expected);assert(expected.matchedPitches.has(72));assert.equal(c.acceptPracticeInput(48),false);assert.equal(c.clock.running,false);
-  await c.play();assert.equal(c.waitingForInput,expected);c.acceptPracticeInput(48);assert(c.clock.running);
+  assert.equal(c.expectedPracticeEvent,expected);assert.equal(expected.matchedPitches.size,0);assert.equal(c.acceptPracticeInput(48),false);assert.equal(c.clock.running,false);
+  await c.play();assert.equal(c.waitingForInput,expected);c.acceptPracticeInput(48);assert(c.waitingForInput);c.acceptPracticeInput(72);assert(c.clock.running);
 });
 test('Restart retains settings and resets expected event',async()=>{
   const {c}=make();configure(c);await c.play();c.acceptPracticeInput(72);c.restart();
@@ -170,7 +170,7 @@ test('Long robot notes keep one attack across two gates and Pause/Resume, for ei
     c.acceptPracticeInput(48);assert.equal(scheduled.length,1);
     c.requestPause();assert.equal(c.audio.voices.get('robot:0'),voice);await c.play();assert.equal(c.audio.voices.get('robot:0'),voice);
     c.audioContext.currentTime=2;c.tick();assert(c.waitingForInput);c.acceptPracticeInput(50);assert.equal(scheduled.length,1);
-    c.audioContext.currentTime=4;c.scheduleAhead();assert.equal(c.robotEvents.get('0'),'completed');assert.equal(c.audio.voices.has('robot:0'),false);
+    c.audioContext.currentTime=4;c.scheduleAhead();assert.equal(c.robotEvents.get('0').status,'completed');voice.oscillators[0].finish();assert.equal(c.audio.voices.has('robot:0'),false);
     c.restart();assert.equal(c.robotEvents.size,0);await c.play();assert.equal(scheduled.length,2);
   }
 });
@@ -211,4 +211,43 @@ test('Returning MIDI unavailable browser stays in Practice without a failed API 
   const midi={currentStatus:{status:'unavailable'},enable(){throw Error('Unavailable API must not be called');},addStatusListener(){return ()=>{};}};
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',chooseZeroCompleted:true,midiVerified:true,inputMode:'midi'},midi);
   h.controller.continueSession();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.node('#returning-midi').hidden,false);
+});
+test('Robot Note Off is scheduled on audio time and finishes during a long gate, without retrigger',async()=>{
+  const {c,scheduled}=make([['R',72,0],['L',48,.25],['L',50,2]]);configure(c,true,false);
+  let offs=0;const originalOff=c.audio.noteOff.bind(c.audio);c.audio.noteOff=(key,...args)=>{if(key==='robot:0')offs++;return originalOff(key,...args);};
+  await c.play();const voice=c.audio.voices.get('robot:0');
+  assert.equal(offs,1);assert.equal(voice.oscillators[0].stopAt,1.025);
+  c.audioContext.currentTime=.25;c.tick();assert(c.waitingForInput);
+  c.audioContext.currentTime=10;voice.oscillators.forEach(o=>o.finish());c.tick();
+  assert.equal(c.clock.position,.25);assert.equal(c.robotEvents.get('0').status,'completed');assert.equal(c.audio.voices.has('robot:0'),false);
+  c.acceptPracticeInput(48);assert(c.clock.running);assert.equal(offs,1);assert.equal(scheduled.filter(e=>e.id==='0').length,1);
+});
+test('Chord accepts up to 150 ms inclusive; expired partial set never carries forward',async()=>{
+  for(const span of [.11,.15,.151,.7]){
+    const {c}=make([['R',60,0],['R',64,0],['R',67,0]],26);configure(c);await c.play();
+    c.handleNoteOn(62,100,'midi',1);c.audioContext.currentTime=.055;c.handleNoteOn(66,100,'mouse',2);c.audioContext.currentTime=span;c.handleNoteOn(69,100,'midi',3);
+    assert.equal(c.clock.running,span<=.15);
+    if(span>.15){assert.equal(c.waitingForInput.matchedPitches.size,1);c.audioContext.currentTime=span+.05;c.acceptPracticeInput(62);c.audioContext.currentTime=span+.1;c.acceptPracticeInput(66);assert(c.clock.running);}
+  }
+});
+test('Chord expiry clears on tick; wrong note cannot extend window; Restart clears candidate',async()=>{
+  const {c}=make([['R',60,0],['R',64,0]]);configure(c);await c.play();c.acceptPracticeInput(60);
+  c.audioContext.currentTime=.1;c.acceptPracticeInput(70);c.audioContext.currentTime=.151;c.tick();assert.equal(c.waitingForInput.matchedPitches.size,0);assert.equal(c.waitingForInput.candidateStartedAt,null);
+  c.acceptPracticeInput(64);assert(c.waitingForInput);c.restart();assert.equal(c.expectedPracticeEvent.matchedPitches.size,0);assert.equal(c.expectedPracticeEvent.candidateStartedAt,null);
+});
+test('Skip advances implemented stages without zero/progress loss, then leaves free Practice',()=>{
+  const h=onboarding();h.values.set('play12.zero_note.midi','26');h.controller.startNew();
+  const skip=()=>h.node('#onboarding-skip').handlers.click();skip();assert.equal(h.root.dataset.onboardingStep,'LISTEN_AND_CONTROL');
+  skip();assert.equal(h.root.dataset.onboardingStep,'CHOOSE_ZERO');skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
+  h.node('#practice-board-mode').handlers.click();skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'free');assert(h.c.practiceEnabled());
+  assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);assert.equal(h.node('progress4')['aria-disabled'],'true');
+});
+test('Instruction timeout is 12s, one timer per hint, does not perform the action or reappear',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',chooseZeroCompleted:true,practiceGuideStage:'enable',inputMode:'demo'});h.controller.continueSession();
+  assert.equal(h.timers.size,1);assert.equal([...h.timers.values()][0].delay,12000);
+  [...h.timers.values()][0].fn();assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.c.practiceEnabled(),false);assert.equal(h.timers.size,0);
+  h.c.emitState();assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);
+  h.node('#practice-board-mode').handlers.click();assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Left Hand/);assert.equal(h.timers.size,1);
+  h.node('#practice-left-hand').handlers.click();assert.equal(h.timers.size,1);assert.match(h.node('#onboarding-listen-prompt').innerHTML,/music will wait/);
+  h.node('progress2').handlers.click();assert.equal(h.timers.size,0);
 });

@@ -6,6 +6,7 @@
   const METRONOME_GAIN = [0, .12, .25, .45, .75, 1.15, 1.65];
   const LOOP_EMPTY_ROUNDS = 2;
   const PRACTICE_TIMING = Object.freeze({ earlyToleranceMs:150, lateToleranceMs:200, perfectEarlyMs:-50, perfectLateMs:80 });
+  const CHORD_WINDOW_MS = 150;
   const EPSILON = 1e-7;
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const practiceScheduleEnd = (normalHorizon, expectedStart) =>
@@ -144,7 +145,7 @@
       this.voices.set(key, { gain, oscillators });
       this.stage.dataset.activeAudioSources = String(this.sources.size);
     }
-    noteOff(key, when = this.context.currentTime, preserveScheduledEnvelope = false) {
+    noteOff(key, when = this.context.currentTime, preserveScheduledEnvelope = false, retainUntilEnd = false) {
       const voice = this.voices.get(key);
       if (!voice) return;
       const releaseEnd = when + (preserveScheduledEnvelope ? .025 : .035);
@@ -154,7 +155,11 @@
         voice.gain.gain.exponentialRampToValueAtTime(.0001, releaseEnd);
       }
       for (const oscillator of voice.oscillators) { try { oscillator.stop(releaseEnd); } catch (_) {} }
-      this.voices.delete(key);
+      if (retainUntilEnd) {
+        voice.oscillators[0].addEventListener("ended", () => {
+          if (this.voices.get(key) === voice) this.voices.delete(key);
+        }, { once: true });
+      } else this.voices.delete(key);
     }
     scheduleClick(key, when, accent) {
       if (this.beatKeys.has(key)) return;
@@ -320,7 +325,7 @@
         transposeDelta: String(this.transposeDelta)
       });
       if (this.practiceEnabled()) {
-        for (const expected of this.practiceEvents) expected.matchedPitches.clear();
+        for (const expected of this.practiceEvents) { expected.matchedPitches.clear(); expected.candidateStartedAt = null; }
         this.armPracticeGate(this.clock.position);
       }
       this.paint(this.displayPosition ?? this.clock.position);
@@ -434,21 +439,28 @@
     }
     resetRobotNotes() {
       for (const [id, state] of this.robotEvents || []) {
-        if (state === "active") this.audio.noteOff(`robot:${id}`);
+        if (state.status === "active") this.audio.noteOff(`robot:${id}`);
       }
       this.robotEvents?.clear();
     }
+    expireRobotNotes() {
+      for (const state of this.robotEvents.values()) {
+        if (state.status === "active" && this.audioContext.currentTime >= state.endsAt) state.status = "completed";
+      }
+    }
     syncRobotNotes(position) {
+      this.expireRobotNotes();
       if (!this.practiceEnabled()) return;
       for (const event of this.events) {
-        if (this.isUserPracticeEvent(event)) continue;
-        const state = this.robotEvents.get(event.id);
+        if (this.isUserPracticeEvent(event) || this.robotEvents.has(event.id)) continue;
         if (position >= event.start + event.duration - EPSILON) {
-          if (state === "active") this.audio.noteOff(`robot:${event.id}`);
-          this.robotEvents.set(event.id, "completed");
-        } else if (!state && position >= event.start - EPSILON && this.musicAudioInput.checked) {
-          this.audio.noteOn(`robot:${event.id}`, event.midi, event.dynamic, this.audioContext.currentTime, null, this.audio.robotGain);
-          this.robotEvents.set(event.id, "active");
+          this.robotEvents.set(event.id, { status: "completed" });
+        } else if (position >= event.start - EPSILON && this.musicAudioInput.checked) {
+          const when = this.audioContext.currentTime;
+          const endsAt = when + event.duration * 60 / this.clock.bpm;
+          this.audio.noteOn(`robot:${event.id}`, event.midi, event.dynamic, when, endsAt, this.audio.robotGain);
+          this.audio.noteOff(`robot:${event.id}`, endsAt, true, true);
+          this.robotEvents.set(event.id, { status: "active", endsAt });
         }
       }
     }
@@ -476,7 +488,7 @@
       for (const event of this.events) {
         if (!this.isUserPracticeEvent(event)) continue;
         const key = event.start.toFixed(7);
-        if (!slices.has(key)) slices.set(key, { start: event.start, events: [], completed: false, matchedPitches: new Set(), expectedAudioTime: null, timingDeltaMs: null, timingClass: null });
+        if (!slices.has(key)) slices.set(key, { start: event.start, events: [], completed: false, matchedPitches: new Set(), candidateStartedAt: null, expectedAudioTime: null, timingDeltaMs: null, timingClass: null });
         slices.get(key).events.push(event);
       }
       this.practiceEvents = [...slices.values()].sort((a, b) => a.start - b.start);
@@ -488,6 +500,7 @@
       for (const expected of this.practiceEvents) {
         expected.completed = expected.start < position - EPSILON;
         expected.matchedPitches.clear();
+        expected.candidateStartedAt = null;
         expected.expectedAudioTime = null;
         expected.timingDeltaMs = null;
         expected.timingClass = null;
@@ -524,7 +537,16 @@
       this.stage.dataset.waitingSinceAudioTime = String(this.audioContext.currentTime);
       this.updateControls();
     }
+    clearPracticeCandidate() {
+      const expected = this.waitingForInput || this.expectedPracticeEvent;
+      if (expected) { expected.matchedPitches.clear(); expected.candidateStartedAt = null; }
+    }
+    expirePracticeCandidate() {
+      const expected = this.waitingForInput || this.expectedPracticeEvent;
+      if (expected?.candidateStartedAt != null && (this.audioContext.currentTime - expected.candidateStartedAt) * 1000 > CHORD_WINDOW_MS + EPSILON) this.clearPracticeCandidate();
+    }
     acceptPracticeInput(midiNote) {
+      this.expirePracticeCandidate();
       const expected = this.waitingForInput || this.expectedPracticeEvent;
       if (!this.practiceEnabled() || !expected || this.practicePaused) return false;
       const expectedPitches = new Set(expected.events.map(event => event.midi));
@@ -543,6 +565,7 @@
         this.stage.dataset.lastPracticeInput = `too_early:${midiNote}:${timingDeltaMs.toFixed(2)}`;
         return false;
       }
+      if (expectedPitches.size > 1 && expected.candidateStartedAt == null) expected.candidateStartedAt = this.audioContext.currentTime;
       expected.matchedPitches.add(midiNote);
       this.stage.dataset.lastPracticeInput = `correct:${midiNote}:${timingDeltaMs.toFixed(2)}`;
       if ([...expectedPitches].some(pitch => !expected.matchedPitches.has(pitch))) return true;
@@ -717,6 +740,7 @@
       }
     }
     requestPause() {
+      this.clearPracticeCandidate();
       if (this.practiceEnabled() && (this.clock.running || this.waitingForInput) && !this.countIn && !this.loopGap) {
         this.clock.pause();
         this.audio.stopAll(this.audioContext.currentTime, true);
@@ -1017,6 +1041,8 @@
       this.stage.dataset.lastBeatLampAudioTime = String(beat.when);
     }
     tick() {
+      this.expireRobotNotes();
+      this.expirePracticeCandidate();
       this.audio.flushBeatVisuals(this.audioContext.currentTime, beat => this.flashBeatLamp(beat));
       if (this.preRollPrep) {
         if (this.audioContext.currentTime >= this.preRollPrep.endsAt) {
