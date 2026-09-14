@@ -2305,8 +2305,8 @@
                 "pitch": {
                   "step": "B",
                   "alter": 0,
-                  "octave": 3,
-                  "midi": 59
+                  "octave": 2,
+                  "midi": 47
                 },
                 "play12_symbol": {
                   "value": "Y",

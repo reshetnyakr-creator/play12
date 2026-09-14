@@ -37,3 +37,9 @@ test('All rendered LH/RH notes agree with Piano View at all 12 runtime zero pitc
     }
   }
 });
+test('Penultimate Y uses orange B2, with LH finger 5 preserved',()=>{
+  const note=notes.find(e=>e.id==='manual.m7.e52');
+  assert.equal(note.pitch.midi,47);assert.equal(note.pitch.octave,2);
+  assert.equal(note.play12_symbol.value,'Y');assert.equal(note.method.finger,5);assert.equal(note.source_fingering,5);
+  assert.equal(color(note.id),'#FC7B00');
+});

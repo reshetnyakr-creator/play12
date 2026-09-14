@@ -143,3 +143,15 @@ test('Practice settings persist in existing key; Continue restores and Start re-
   assert.deepEqual([...h.values.keys()].sort(),['play12.onboarding.state.v1','play12.session.exists.v1']);
   h.controller.startNew();assert.equal(h.c.practiceEnabled(),false);assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,true);assert.equal(h.c.practiceSettings.practiceRightHandEnabled,true);
 });
+test('Penultimate Y playback and Practice use orange Y for every runtime zero',async()=>{
+  const doc=JSON.parse(readFileSync(path.join(__dirname,'../examples/when_the_saints_manual.play12.json')));
+  const note=doc.score.parts[0].measures[7].events.find(e=>e.id==='manual.m7.e52');
+  for(let zero=21;zero<=32;zero++){
+    const {c,scheduled}=make([['L',note.pitch.midi,0],['L',55,0]],zero);
+    await c.play();assert(scheduled.some(e=>e.midi===47+zero-24));
+    c.restart();configure(c,true,false);await c.play();
+    assert.equal(c.acceptPracticeInput(59+zero-24),false);
+    assert.equal(c.acceptPracticeInput(47+zero-24),true);
+    assert(c.waitingForInput);c.acceptPracticeInput(55+zero-24);assert(c.clock.running);
+  }
+});
