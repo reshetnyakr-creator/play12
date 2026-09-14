@@ -1,0 +1,77 @@
+{
+  "format": "play12-json",
+  "version": "0.1",
+  "source": {
+    "type": "synthetic_test"
+  },
+  "play12": {
+    "zero_pitch_class": "C",
+    "reference_zero_midi": 24,
+    "symbols": "0123456789XY",
+    "pitch_class_mapping": {
+      "0": "0",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "X",
+      "11": "Y"
+    }
+  },
+  "score": {
+    "title": "Validation fixture",
+    "creators": [],
+    "parts": [
+      {
+        "id": "P1",
+        "name": "Piano",
+        "measures": [
+          {
+            "index": 0,
+            "number": "1",
+            "implicit": false,
+            "attributes": {
+              "divisions": 4,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              }
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "test.note.1",
+                "kind": "note",
+                "hand": "R",
+                "start_divisions": -4,
+                "duration_divisions": 4,
+                "start_quarters": "-1",
+                "duration_quarters": "1",
+                "grace": false,
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "method": {
+                  "finger": 1
+                },
+                "play12_symbol": {
+                  "value": "0",
+                  "origin": "synthetic_test"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
