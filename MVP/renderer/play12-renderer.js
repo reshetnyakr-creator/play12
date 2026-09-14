@@ -37,9 +37,9 @@
     return (n / d) * 4;
   }
 
-  function colorForMidi(midi, colors) {
-    // A0 (MIDI 21) starts color cycle 0; each next A starts the next cycle.
-    const cycle = Math.floor((midi - 21) / 12);
+  function colorForMidi(midi, colors, referenceZeroMidi) {
+    // source MIDI - reference zero equals effective MIDI - runtime zero.
+    const cycle = Math.floor((midi - referenceZeroMidi) / 12);
     if (cycle < 0 || cycle >= colors.length) throw new Error(`No Play12 color cycle for MIDI ${midi}`);
     return colors[cycle];
   }
@@ -285,7 +285,7 @@
       block.setAttribute("width", width);
       block.setAttribute("height", noteDuration * height);
       block.setAttribute("rx", width * cfg.radiusRatio);
-      const officialColor = colorForMidi(note.pitch.midi, cfg.colors);
+      const officialColor = colorForMidi(note.pitch.midi, cfg.colors, document.play12.reference_zero_midi ?? 21);
       block.setAttribute("fill", mixWithWhite(officialColor, fillOpacity));
       block.setAttribute("fill-opacity", 1);
       block.setAttribute("stroke", "#111111");
