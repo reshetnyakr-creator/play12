@@ -18,13 +18,16 @@ function fixture(){
 }
 test('Spotlight ends at 5s, leaving card visible; padding follows actual resized targets',()=>{
   const h=fixture(),card=new Element('onboarding-listen-coach'),field=new Element(),piano=new Element();
-  card.hidden=false;h.coach.show(card,[field,piano],piano);
+  card.hidden=false;h.coach.show(card,[field,piano],piano,field);
   const overlay=h.root.children[0], mask=overlay.children[0].children[0],holes=mask.children[1];
-  assert.equal([...h.timers.values()][0].delay,5000);assert.equal(holes.children[0].attrs.x,93);assert.equal(holes.children[0].attrs.width,214);
+  assert.equal(mask.attrs.x,0);assert.equal(mask.attrs.y,0);assert.equal(mask.attrs.width,1280);assert.equal(mask.attrs.height,720);
+  assert.equal(overlay.attrs.preserveAspectRatio,'none');assert.equal(overlay.children[0].children[1].children[0].attrs.stdDeviation,16);
+  assert.equal(holes.children[0].attrs.filter,'url(#play12-coach-feather)');
+  assert.equal([...h.timers.values()][0].delay,5000);assert.equal(holes.children[0].attrs.x,84);assert.equal(holes.children[0].attrs.width,232);
   assert(piano.classes.has('is-coach-pulsing'));assert.equal(card.style['--mvp-coach-y'],'240px');
   field.rect={left:40,top:80,width:160,height:100};h.window.innerWidth=900;
   const [id,frame]=[...h.frames][0];h.frames.delete(id);frame();
-  assert.equal(overlay.attrs.viewBox,'0 0 900 720');assert.equal(holes.children[0].attrs.x,33);assert.equal(card.style['--mvp-coach-y'],'130px');
+  assert.equal(overlay.attrs.viewBox,'0 0 900 720');assert.equal(holes.children[0].attrs.x,24);assert.equal(card.style['--mvp-coach-y'],'130px');
   [...h.timers.values()][0].fn();assert.equal(overlay.style.display,'none');assert.equal(card.hidden,false);assert.equal(h.frames.size,0);assert.equal(h.timers.size,0);assert(!piano.classes.has('is-coach-pulsing'));
 });
 test('New instruction cancels old timers; unrelated card cleanup cannot close new spotlight',()=>{

@@ -642,7 +642,9 @@
       document.addEventListener("keydown", event => {
         const target = event.target;
         const interactive = target?.closest?.("button,input,select,textarea,[contenteditable]:not([contenteditable='false']),[role='button'],[role='checkbox'],[role='radio'],[role='slider'],[role='combobox'],[role='listbox'],[role='menu'],[role='menuitem'],[role='dialog'],[aria-modal='true']");
-        if (event.code === "Space" && !event.defaultPrevented && !interactive) {
+        const onboarding = document.getElementById?.('play12-onboarding');
+        const musicalScreen = !onboarding || onboarding.hidden || onboarding.dataset.playbackShortcutsEnabled === 'true';
+        if (musicalScreen && event.code === "Space" && !event.defaultPrevented && !interactive) {
           event.preventDefault();
           this.clock.running || this.countIn || this.waitingForInput ? this.requestPause() : this.play();
         }
@@ -1024,6 +1026,12 @@
       this.playButton.disabled = busy;
       this.pauseButton.disabled = !busy || this.pauseTarget != null;
       this.stage.dataset.state = this.preRollPrep ? "pre-roll-prep" : this.countIn ? "count-in" : this.loopGap ? "loop-gap" : this.waitingForInput ? "waiting_for_input" : this.pauseTarget != null ? "pause-queued" : this.clock.running ? "playing" : "paused";
+      const playing = this.clock.running && this.clock.position < this.totalQuarters - EPSILON;
+      const paused = this.stage.dataset.state === 'paused' && this.clock.position > EPSILON && this.clock.position < this.totalQuarters - EPSILON;
+      this.playButton.classList.toggle('is-transport-active', playing);
+      this.pauseButton.classList.toggle('is-transport-active', paused);
+      this.playButton.setAttribute('aria-pressed', String(playing));
+      this.pauseButton.setAttribute('aria-pressed', String(paused));
       if (this.preRollPrep) this.positionOutput.value = `Подготовка · позиция ${this.preRollPrep.selected.toFixed(2)} q`;
       else if (this.countIn) this.positionOutput.value = `Count-in · позиция ${this.countIn.selected.toFixed(2)} q`;
       else if (this.loopGap) this.positionOutput.value = "Loop · пустой такт";

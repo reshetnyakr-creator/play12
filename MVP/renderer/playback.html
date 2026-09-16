@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=guided-tutorial-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=tutorial-correction-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -125,7 +125,6 @@
                 <p id="onboarding-listen-prompt">Listen to how the melody sounds<br>Press Play or Space</p>
               </div>
             </div>
-            <p class="mvp-handwritten-note mvp-notes-callout" aria-hidden="true" hidden>Notes move down toward the piano <span>↓</span></p>
             <div class="mvp-actions mvp-listen-complete-action">
               <button id="onboarding-listen-continue" class="mvp-button mvp-button-primary" type="button" hidden>Continue</button>
             </div>
@@ -150,8 +149,6 @@
           <button id="practice-right-hand" type="button" aria-pressed="true">Right Hand</button>
           <button id="practice-one-skill" type="button" disabled title="Coming later">One Skill</button>
         </section>
-        <p id="onboarding-zero-callout" class="mvp-handwritten-note mvp-zero-callout" aria-hidden="true" hidden>You can change your 0 at any time <span>↙</span></p>
-        <p id="onboarding-piano-callout" class="mvp-handwritten-note mvp-piano-callout" aria-hidden="true" hidden>Always visible. Play it with your mouse. <span>↓</span></p>
       </section>
     </main>
   </section>
@@ -260,11 +257,11 @@
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=player-shell-01"></script>
-  <script src="play12-playback.js?v=guided-tutorial-01"></script>
+  <script src="play12-playback.js?v=tutorial-correction-01"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-coach.js?v=guided-tutorial-01"></script>
-  <script src="play12-onboarding.js?v=guided-tutorial-01"></script>
+  <script src="play12-coach.js?v=tutorial-correction-01"></script>
+  <script src="play12-onboarding.js?v=tutorial-correction-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -451,7 +448,7 @@
         zeroChooser.dataset.choosingZero = 'false';
         zeroChooser.hidden = true;
       });
-      chooseAnotherZero.addEventListener('click', waitForZero);
+      chooseAnotherZero.addEventListener('click', () => { waitForZero(); window.dispatchEvent(new CustomEvent('play12:zero-ui-open')); });
       useZero.addEventListener('click', () => {
         if (candidateZeroMidi == null) return;
         pianoView.setZeroMidi(candidateZeroMidi);

@@ -715,39 +715,6 @@
   outline: none;
 }
 
-.mvp-zero-callout {
-  position: fixed;
-  z-index: 63;
-  left: calc(var(--mvp-piano-left-x, 12px) + 218px);
-  bottom: calc(var(--mvp-fixed-piano-height, 220px) + 92px);
-  max-width: 250px;
-  margin: 0;
-  color: rgba(17, 17, 17, .58);
-  font-size: 17px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.mvp-zero-callout[hidden] {
-  display: none;
-}
-
-.mvp-zero-callout.is-visible {
-  animation: mvp-piano-callout-seven-seconds 12s ease both;
-}
-
-.mvp-zero-callout span {
-  position: absolute;
-  top: calc(100% - 2px);
-  left: -36px;
-  margin: 0;
-  color: rgba(17, 17, 17, .58);
-  font-family: "Bradley Hand", "Comic Sans MS", cursive;
-  font-size: 34px;
-  line-height: 1;
-  transform: rotate(-5deg);
-}
-
 .mvp-zero-chooser-card {
   position: fixed;
   z-index: 90;
@@ -837,7 +804,7 @@
   background: rgba(255, 255, 255, .82);
 }
 
-.play12-onboarding-listen #play {
+.play12-onboarding-listen .playback-zone-transport button.is-transport-active {
   border-color: #E96E40;
   background: #E96E40;
   color: #fff;
@@ -888,79 +855,12 @@
   margin-top: 24px;
 }
 
-.mvp-handwritten-note {
-  margin: 16px 0 0;
-  color: rgba(17, 17, 17, .44);
-  font-family: "Bradley Hand", "Comic Sans MS", cursive;
-  font-size: 15px;
-  line-height: 1.25;
-  transform: rotate(-2deg);
-}
-
-.mvp-handwritten-note span {
-  display: inline-block;
-  margin-left: 5px;
-  color: rgba(17, 17, 17, .58);
-  font-family: Inter, sans-serif;
-  font-size: 22px;
-}
-
-.mvp-piano-callout {
-  position: fixed;
-  z-index: 62;
-  right: 42px;
-  bottom: calc(var(--mvp-fixed-piano-height, 220px) + 76px);
-  margin: 0;
-  font-size: 17px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.mvp-piano-callout[hidden] {
-  display: none;
-}
-
-.mvp-piano-callout.is-visible {
-  animation: mvp-piano-callout-seven-seconds 12s ease both;
-}
-
-.mvp-piano-callout span {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 18px;
-  width: 0;
-  height: 56px;
-  margin: 0;
-  border-left: 1.5px solid rgba(17, 17, 17, .48);
-  color: transparent;
-  font-size: 0;
-}
-
-.mvp-piano-callout span::after {
-  content: '';
-  position: absolute;
-  right: -1px;
-  bottom: 0;
-  width: 8px;
-  height: 8px;
-  border-right: 1.5px solid rgba(17, 17, 17, .48);
-  border-bottom: 1.5px solid rgba(17, 17, 17, .48);
-  transform: translate(4px, 0) rotate(45deg);
-  transform-origin: center;
-}
-
 @keyframes mvp-coach-arrive {
   0% { opacity: 0; transform: translate(-50%, -48%) scale(.94); }
   35% { opacity: 1; transform: translate(-50%, -50%) scale(1.015); }
   62% { transform: translate(-50%, -50%) scale(.995); }
   82% { transform: translate(-50%, -50%) scale(1.006); }
   100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-
-@keyframes mvp-piano-callout-seven-seconds {
-  0% { opacity: 0; transform: translateY(7px) rotate(-2deg); }
-  9%, 88% { opacity: 1; transform: translateY(0) rotate(-2deg); }
-  100% { opacity: 0; transform: translateY(-3px) rotate(-2deg); }
 }
 
 @keyframes mvp-song-marquee {
@@ -994,10 +894,6 @@
     grid-row: 1 / span 2;
   }
 
-  .mvp-piano-callout,
-  .mvp-notes-callout {
-    display: none;
-  }
 }
 
 @media (max-width: 620px) {
@@ -1105,13 +1001,13 @@
   100% { opacity: 0; }
 }
 
-.mvp-notes-callout.has-dismiss-timer { animation: mvp-hint-lifetime 12s linear forwards; }
+
 
 /* Coach mask follows live viewport rectangles; it never intercepts input. */
-.mvp-coach-spotlight { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 70; pointer-events: none; }
+.mvp-coach-spotlight { position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; z-index: 70; pointer-events: none; }
 .mvp-coach-spotlight.is-active { animation: mvp-spotlight-life 5s linear both; }
 @keyframes mvp-spotlight-life { 0% { opacity: 0; } 5%, 94% { opacity: 1; } 100% { opacity: 0; } }
-.mvp-listen-coach, .mvp-piano-callout, .mvp-zero-callout { z-index: 91; }
+.mvp-listen-coach { z-index: 91; }
 .mvp-listen-coach a { display: inline-block; margin-top: 18px; font-size: 15px; pointer-events: auto; color: #285887; }
 .is-coach-pulsing .piano-card-strip { transform-box: fill-box; transform-origin: center; animation: mvp-card-strip-pulse 1.2s ease-in-out 2; }
 @keyframes mvp-card-strip-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
@@ -1131,3 +1027,14 @@
 .mvp-listen-coach p { font-size: clamp(21px, 1.8vw, 25px); }
 .mvp-zero-chooser-card { position: fixed; top: var(--mvp-coach-y, 35vh); }
 .mvp-zero-chooser-card.has-dismiss-timer { animation: mvp-hint-lifetime 12s linear forwards; }
+
+/* Transport emphasis reflects playback, never an unconditional Play default. */
+.play12-onboarding-listen .playback-zone-transport button:not(.is-transport-active) { color: #111; }
+.play12-onboarding-listen .playback-zone-transport button.is-transport-active:disabled { opacity: 1; }
+.mvp-zero-chooser-card .mvp-zero-actions .mvp-button-secondary { color: #111; }
+.mvp-zero-chooser-card .mvp-zero-actions .mvp-button-secondary:is(:hover, :focus-visible) {
+  color: #111; background: #fff2e9; border-color: #e96e40; box-shadow: 0 0 0 3px #e96e4026;
+}
+.mvp-onboarding-progress li.is-complete span { font-size: 0; }
+.mvp-onboarding-progress li.is-complete span::after { content: "✓"; font-size: 16px; }
+.mvp-skip-control { z-index: 92; }
