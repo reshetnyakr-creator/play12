@@ -285,13 +285,14 @@ test('Manual zero during card setup resumes instruction without a stale timeout 
   [...h.timers.values()][0].fn();assert.equal(h.controller.getState().practiceGuideStage,'enable');
 });
 
-test('Space is blocked on visible Welcome/Connect/guide even when saved state is Practice',async()=>{
+test('P is blocked on pre-player screens and text input, with no Space transport fallback',async()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',highestUnlockedStep:3,inputMode:'demo'});
-  const press=(interactive=false)=>h.keydown({code:'Space',target:{closest:()=>interactive?{}:null},preventDefault(){},defaultPrevented:false});
+  const press=(interactive=false)=>h.keydown({code:'KeyP',target:{closest:()=>interactive?{}:null},preventDefault(){},defaultPrevented:false});
   press();await Promise.resolve();assert.equal(h.c.clock.running,false);assert.equal(h.root.dataset.playbackShortcutsEnabled,'false');
   h.controller.startNew();press();await Promise.resolve();assert.equal(h.c.clock.running,false);
   h.node('#onboarding-midi-guide').handlers.click();press();await Promise.resolve();assert.equal(h.c.clock.running,false);
   h.node('#onboarding-demo').handlers.click();assert.equal(h.root.dataset.playbackShortcutsEnabled,'true');press(true);await Promise.resolve();assert.equal(h.c.clock.running,false);
+  h.keydown({code:'Space',target:{closest:()=>null},preventDefault(){},defaultPrevented:false});await Promise.resolve();assert.equal(h.c.clock.running,false);
   press();await new Promise(resolve=>setImmediate(resolve));assert.equal(h.c.clock.running,true);
 });
 test('Transport colors follow playing, paused, ready and ended instead of a fixed Play highlight',async()=>{
@@ -365,4 +366,55 @@ test('Ordinary playback keeps sounding note and rescales its remaining duration 
   Object.getPrototypeOf(c.audio).scheduleNote.call(c.audio,{id:'sustain',start:0,midi:60,dynamic:'mf'},0,4,60);
   const voice=c.audio.voices.get('sustain@0');c.audioContext.currentTime=1;c.bpmInput.value='120';c.changeBpm();
   assert.equal(c.audio.voices.get('sustain@0'),voice);assert.equal(voice.endsAt,2.5);assert.equal(voice.oscillators[0].stopAt,2.525);
+});
+test('Stage board mapping hides introduced BPM on earlier steps and restores settings',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'free',metronomeUnlocked:true,chooseZeroCompleted:true,highestUnlockedStep:3,inputMode:'demo'});
+  h.controller.continueSession();assert.equal(h.node('#metronome-board').hidden,false);
+  h.node('progress1').handlers.click();assert.equal(h.node('#metronome-board').hidden,true);assert.equal(h.node('#practice-board').hidden,true);
+  h.node('progress2').handlers.click();assert.equal(h.node('#metronome-board').hidden,true);assert.equal(h.node('#practice-board').hidden,true);assert.equal(h.node('#onboarding-choose-zero').hidden,false);
+  h.node('progress3').handlers.click();assert.equal(h.node('#metronome-board').hidden,false);assert.equal(h.controller.getState().metronomeUnlocked,true);
+});
+test('Metronome timing accepts exact -150/+200 boundaries and rejects outside; later beat retries',async()=>{
+  for(const [delta,accepted] of [[-.150,true],[.200,true],[-.151,false],[.201,false]]){
+    const {c}=make([['R',72,1]],24,true);configure(c);c.setMetronome(true);await c.play();
+    const due=c.expectedPracticeEvent.expectedAudioTime;c.audioContext.currentTime=due+delta;
+    assert.equal(c.acceptPracticeInput(72),accepted,`delta ${delta}`);
+  }
+  const {c}=make([['R',72,0],['R',74,2]],24,true);configure(c);c.setMetronome(true);await c.play();
+  const due=c.waitingForInput.expectedAudioTime;
+  c.audioContext.currentTime=due+.3;assert.equal(c.acceptPracticeInput(72),false);assert(c.waitingForInput);
+  c.scheduleMetronome();const phase=c.metronomePhaseTime,counter=c.metronomeBeatCounter;
+  c.audioContext.currentTime=due+2+.1;assert.equal(c.acceptPracticeInput(71),false);assert.equal(c.acceptPracticeInput(72),true);
+  assert.equal(c.clock.anchorAudioTime,due+2);assert.equal(c.metronomePhaseTime,phase);assert.equal(c.metronomeBeatCounter,counter);
+  assert.equal(c.expectedPracticeEvent.expectedAudioTime,due+4);
+});
+test('Rhythmic chords require same timing window and independent 150ms spread',async()=>{
+  const {c}=make([['R',72,0],['L',48,0]],24,true);configure(c,true,true);c.setMetronome(true);await c.play();
+  const due=c.waitingForInput.expectedAudioTime;
+  c.audioContext.currentTime=due-.1;assert.equal(c.acceptPracticeInput(72),true);
+  c.audioContext.currentTime=due+.1;assert.equal(c.acceptPracticeInput(48),true);assert(c.waitingForInput,'200ms spread must not complete');
+  c.audioContext.currentTime=due+.11;c.acceptPracticeInput(72);assert.equal(c.waitingForInput,null);
+  c.restart();await c.play();const next=c.waitingForInput.expectedAudioTime;
+  c.audioContext.currentTime=next+.19;c.acceptPracticeInput(72);
+  c.audioContext.currentTime=next+.21;assert.equal(c.acceptPracticeInput(48),false);assert.equal(c.waitingForInput.matchedPitches.size,0);
+  c.audioContext.currentTime=next+1;c.acceptPracticeInput(48);assert(c.waitingForInput);
+  c.audioContext.currentTime=next+1+.15;c.acceptPracticeInput(72);assert.equal(c.waitingForInput,null);
+});
+test('Restart drops stale rhythm window and partial chord; tempo preserves beat phase spacing',async()=>{
+  const {c}=make([['R',72,0],['L',48,0]],24,true);configure(c,true,true);c.setMetronome(true);await c.play();
+  const old=c.waitingForInput;c.audioContext.currentTime=old.expectedAudioTime;c.acceptPracticeInput(72);
+  c.audioContext.currentTime+=.3;c.restart();assert.equal(old.matchedPitches.size,0);assert.equal(old.expectedAudioTime,null);
+  await c.play();assert(c.waitingForInput.expectedAudioTime>c.audioContext.currentTime);
+  c.bpmInput.value='120';c.changeBpm();assert.equal(c.clock.bpm,120);
+  const due=c.waitingForInput.expectedAudioTime;c.audioContext.currentTime=due+.25;assert.equal(c.acceptPracticeInput(72),false);
+  c.audioContext.currentTime=due+.5;c.acceptPracticeInput(72);c.acceptPracticeInput(48);assert.equal(c.waitingForInput,null);
+});
+test('Ordinary playback and Practice OFF resume on existing metronome grid; click gain doubles only click',async()=>{
+  const {c}=make(undefined,24,true);c.setMetronome(true);c.audioContext.currentTime=.3;await c.play();
+  const phase=c.metronomePhaseTime;assert(Math.abs((c.clock.anchorAudioTime-phase)-Math.round(c.clock.anchorAudioTime-phase))<1e-8);
+  assert.equal(c.metronomeAudio.metronomeGain.gain.value,1.5);assert.equal(c.audio.master.gain.value,.18);
+  configure(c);c.audioContext.currentTime=c.expectedPracticeEvent.expectedAudioTime;c.enterPracticeWait();
+  c.audioContext.currentTime+=.3;c.setPracticeSettings({practiceModeEnabled:false});assert(c.clock.running);assert(Math.abs((c.clock.anchorAudioTime-phase)-Math.round(c.clock.anchorAudioTime-phase))<1e-8);
+  // Even the loudest accented click has ample digital headroom.
+  assert(.34*1.65*2*.18<1);
 });

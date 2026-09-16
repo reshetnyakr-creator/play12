@@ -257,6 +257,11 @@
     const highestUnlocked = () => Math.max(state.highestUnlockedStep || 1,
       state.chooseZeroCompleted || state.onboardingStep === 'TRY_IT_YOURSELF' ? 3 : state.listenFragmentCompleted ? 2 : 1);
 
+    const visibleBoardsForStep = step => ({
+      zero: ['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(step),
+      practice: step === 'TRY_IT_YOURSELF',
+      metronome: step === 'TRY_IT_YOURSELF' && state.metronomeUnlocked === true
+    });
     const syncProgress = () => {
       state.highestUnlockedStep = highestUnlocked();
       const activeStep = state.onboardingStep === 'TRY_IT_YOURSELF' ? 3 : state.onboardingStep === 'CHOOSE_ZERO' ? 2 : 1;
@@ -271,11 +276,12 @@
         if (number === activeStep) element.setAttribute('aria-current', 'step');
         else element.removeAttribute('aria-current');
       }
-      if (onboardingChooseZero) onboardingChooseZero.hidden = !['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(state.onboardingStep);
-      if (practiceBoard) practiceBoard.hidden = activeStep !== 3;
+      const boards = visibleBoardsForStep(state.onboardingStep);
+      if (onboardingChooseZero) onboardingChooseZero.hidden = !boards.zero;
+      if (practiceBoard) practiceBoard.hidden = !boards.practice;
       const metronomeBoard = document.getElementById('metronome-board');
-      if (metronomeBoard) metronomeBoard.hidden = !state.metronomeUnlocked;
-      root.classList.toggle('has-metronome-board', !!state.metronomeUnlocked);
+      if (metronomeBoard) metronomeBoard.hidden = !boards.metronome;
+      root.classList.toggle('has-metronome-board', boards.metronome);
       if (songStep) songStep.textContent = `Step ${activeStep} of 4`;
     };
 
@@ -341,7 +347,7 @@
       listenContinue.hidden = true;
       const stage = state.listenGuideStage || (state.pauseLearned ? 'continue' : state.playLearned ? 'pause' : 'initial');
       if (state.listenFragmentCompleted) { showCoach(''); listenContinue.hidden = false; }
-      else if (stage === 'initial') showCoach('Listen to how the melody sounds<br>Press Play or Space', 'play');
+      else if (stage === 'initial') showCoach('Listen to how the melody sounds<br>Press Play or P', 'play');
       else if (listenPlaybackState === 'pause-queued') showCoach('');
       else if (stage === 'pause' && (listenPosition >= 4.8 || state.listenGuideStage === 'pause')) showCoach('Try pausing it', 'pause');
       else if (stage === 'continue') showCoach('Continue', 'play');
