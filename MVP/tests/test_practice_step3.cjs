@@ -118,6 +118,7 @@ function onboarding(saved=null, midiDiagnostic=null) {
   window.addEventListener=(name,fn)=>(listeners[name] ||= []).push(fn);window.dispatchEvent=event=>(listeners[event.type]||[]).forEach(fn=>fn(event));
   window.setTimeout=(fn,delay)=>{timers.set(++timerId,{fn,delay});return timerId;};
   Object.assign(sandbox,{document:{body:node('body'),documentElement:node('html'),addEventListener(){},getElementById:node},URLSearchParams,location:{hostname:'127.0.0.1',search:''},Event:class{constructor(type){this.type=type;}},CustomEvent:class{constructor(type){this.type=type;}},clearTimeout:id=>timers.delete(id)});
+  window.Play12Coach={create:()=>({show(){},stop(){}})};
   vm.runInContext(readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8'),sandbox);
   const controller=window.Play12Onboarding.create({root,startButton:node('start'),continueButton:node('continue'),storage});
   c.stage.parentElement=node('home');controller.connectRuntime({playback:c,noteEvents:c,stage:c.stage,midiDiagnostic});
@@ -131,15 +132,16 @@ test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actua
   assert.equal(h.controller.getState().onboardingStep,'CHOOSE_ZERO');
   h.window.dispatchEvent({type:'play12:zero-confirmed'});
   assert.equal(h.controller.getState().onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.c.clock.running,false);assert.equal(h.c.practiceEnabled(),false);
-  assert.equal(h.node('#practice-board').hidden,false);assert.equal(h.node('#onboarding-listen-coach').hidden,true);
+  assert.equal(h.node('#practice-board').hidden,true);assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Set up your Play12 cards/);
+  h.node('#onboarding-skip').handlers.click();
   for(const timer of [...h.timers.values()]) timer.fn();
-  assert.match(h.node('#onboarding-listen-prompt').innerHTML,/turn on Practice Mode/);
+  assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Turn on Practice Mode/);
   h.node('#practice-board-mode').handlers.click();assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Turn off Left Hand/);
   h.node('#practice-left-hand').handlers.click();assert.match(h.node('#onboarding-listen-prompt').innerHTML,/music will wait/);assert.equal(h.c.clock.running,false);
   assert(h.node('progress1').classList.contains('is-complete'));assert(h.node('progress2').classList.contains('is-complete'));assert(h.node('progress3').classList.contains('is-active'));assert(!h.node('progress4').classList.contains('is-active'));
   await h.c.play();assert.equal(h.node('#onboarding-listen-coach').hidden,true);
   h.c.acceptPracticeInput(72);h.c.audioContext.currentTime=2;h.c.tick();h.c.acceptPracticeInput(74);h.c.audioContext.currentTime=10;h.c.tick();
-  assert.equal(h.controller.getState().onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'complete');
+  assert.equal(h.controller.getState().onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'free');
 });
 test('Practice settings persist in existing key; Continue restores and Start re-teaches',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,inputMode:'demo',chooseZeroCompleted:true});
@@ -238,8 +240,9 @@ test('Chord expiry clears on tick; wrong note cannot extend window; Restart clea
 test('Skip advances implemented stages without zero/progress loss, then leaves free Practice',()=>{
   const h=onboarding();h.values.set('play12.zero_note.midi','26');h.controller.startNew();
   const skip=()=>h.node('#onboarding-skip').handlers.click();skip();assert.equal(h.root.dataset.onboardingStep,'LISTEN_AND_CONTROL');
-  skip();assert.equal(h.root.dataset.onboardingStep,'CHOOSE_ZERO');skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
-  h.node('#practice-board-mode').handlers.click();skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'free');assert(h.c.practiceEnabled());
+  skip();assert.equal(h.controller.getState().listenGuideStage,'pause');skip();assert.equal(h.controller.getState().listenGuideStage,'continue');skip();assert.equal(h.root.dataset.onboardingStep,'CHOOSE_ZERO');skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
+  for (const stage of ['cards','zero-reminder','enable','hand','explain','ready']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
+  h.node('#practice-board-mode').handlers.click();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'free');assert(h.c.practiceEnabled());
   assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);assert.equal(h.node('progress4')['aria-disabled'],'true');
 });
 test('Instruction timeout is 12s, one timer per hint, does not perform the action or reappear',()=>{
@@ -250,4 +253,32 @@ test('Instruction timeout is 12s, one timer per hint, does not perform the actio
   h.node('#practice-board-mode').handlers.click();assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Left Hand/);assert.equal(h.timers.size,1);
   h.node('#practice-left-hand').handlers.click();assert.equal(h.timers.size,1);assert.match(h.node('#onboarding-listen-prompt').innerHTML,/music will wait/);
   h.node('progress2').handlers.click();assert.equal(h.timers.size,0);
+});
+test('Skip every instruction preserves real settings, learned actions and default zero',()=>{
+  const h=onboarding();h.controller.startNew();const skip=()=>h.node('#onboarding-skip').handlers.click();
+  skip();skip();skip();skip();assert.equal(h.controller.getState().playLearned,false);assert.equal(h.controller.getState().pauseLearned,false);
+  skip();assert.equal(h.controller.getState().chooseZeroCompleted,false);assert.equal(h.values.has('play12.zero_note.midi'),false);
+  for(const stage of ['cards','zero-reminder','enable','hand','explain','ready']){
+    assert.equal(h.controller.getState().practiceGuideStage,stage);const actual=JSON.stringify(h.c.getPracticeSettings());skip();assert.equal(JSON.stringify(h.c.getPracticeSettings()),actual);
+  }
+  assert.equal(h.controller.getState().practiceGuideStage,'free');assert.equal(h.timers.size,0);
+});
+test('Descriptive cards advance on timeout, action cards never perform their action',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'cards',highestUnlockedStep:3,inputMode:'demo'});h.controller.continueSession();
+  const expire=()=>{const entries=[...h.timers.values()];assert.equal(entries.length,1);entries[0].fn();};
+  expire();assert.equal(h.controller.getState().practiceGuideStage,'zero-reminder');expire();assert.equal(h.controller.getState().practiceGuideStage,'enable');
+  expire();assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.c.practiceEnabled(),false);
+  h.node('#practice-board-mode').handlers.click();expire();assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,true);assert.equal(h.controller.getState().practiceGuideStage,'hand');
+  h.node('#practice-left-hand').handlers.click();expire();assert.equal(h.controller.getState().practiceGuideStage,'ready');expire();assert.equal(h.c.clock.running,false);
+});
+test('Restart onboarding and stage revisits cancel card timers and start a fresh instruction',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'enable',highestUnlockedStep:3,inputMode:'demo'});h.controller.continueSession();
+  const old=[...h.timers.keys()];h.node('progress1').handlers.click();assert(old.every(id=>!h.timers.has(id)));h.node('progress3').handlers.click();assert.equal(h.node('#onboarding-listen-coach').hidden,false);
+  h.controller.startNew();assert.equal(h.timers.size,0);assert.equal(h.root.dataset.onboardingStep,'MIDI_CONNECT');
+});
+test('Manual zero during card setup resumes instruction without a stale timeout dead end',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'cards',highestUnlockedStep:3,inputMode:'demo'});h.controller.continueSession();
+  h.window.dispatchEvent({type:'play12:zero-ui-open'});h.window.dispatchEvent({type:'play12:zero-confirmed'});
+  assert.equal(h.controller.getState().practiceGuideStage,'cards');assert.equal(h.node('#onboarding-listen-coach').hidden,false);
+  [...h.timers.values()][0].fn();assert.equal(h.controller.getState().practiceGuideStage,'zero-reminder');
 });

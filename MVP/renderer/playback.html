@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=skip-hints-timing-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=guided-tutorial-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -49,7 +49,7 @@
           </div>
           <div data-midi-connect-state="guide" hidden>
             <h1 class="mvp-step-heading">How to connect</h1>
-            <img class="mvp-midi-guide-image" src="assets/midi-connection-guide.png" alt="Digital piano connected to a computer with a USB cable">
+            <svg class="mvp-midi-guide-image" viewBox="0 235 1774 370" role="img" aria-label="Digital piano connected to a computer with a USB cable"><image href="assets/midi-connection-guide.png" width="1774" height="887" /></svg>
             <ol class="mvp-midi-guide-steps">
               <li>Find the USB TO HOST or USB COMPUTER port on your piano.</li>
               <li>Connect your piano to the computer with a USB cable.</li>
@@ -260,10 +260,11 @@
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=player-shell-01"></script>
-  <script src="play12-playback.js?v=skip-hints-timing-01"></script>
+  <script src="play12-playback.js?v=guided-tutorial-01"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-onboarding.js?v=skip-hints-timing-01"></script>
+  <script src="play12-coach.js?v=guided-tutorial-01"></script>
+  <script src="play12-onboarding.js?v=guided-tutorial-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -429,6 +430,7 @@
         zeroCandidate.textContent = `Pitch class ${candidateZeroPitchClass} · layout MIDI ${candidateZeroMidi}`;
         zeroInstruction.hidden = true;
         zeroConfirmation.hidden = false;
+        window.dispatchEvent(new CustomEvent('play12:zero-ui-candidate'));
       };
       const beginZeroSelection = () => {
         if (window.play12Playback.practiceEnabled()) window.play12Playback.requestPause();
@@ -436,6 +438,7 @@
         zeroChooser.dataset.choosingZero = 'true';
         zeroChooser.hidden = false;
         waitForZero();
+        window.dispatchEvent(new CustomEvent('play12:zero-ui-open'));
       };
       window.play12Playback.addNoteListener(event => {
         if (event.type === 'note-on' && event.velocity > 0) previewZero(event.midiNote, event.source);

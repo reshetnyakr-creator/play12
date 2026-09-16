@@ -1106,3 +1106,28 @@
 }
 
 .mvp-notes-callout.has-dismiss-timer { animation: mvp-hint-lifetime 12s linear forwards; }
+
+/* Coach mask follows live viewport rectangles; it never intercepts input. */
+.mvp-coach-spotlight { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 70; pointer-events: none; }
+.mvp-coach-spotlight.is-active { animation: mvp-spotlight-life 5s linear both; }
+@keyframes mvp-spotlight-life { 0% { opacity: 0; } 5%, 94% { opacity: 1; } 100% { opacity: 0; } }
+.mvp-listen-coach, .mvp-piano-callout, .mvp-zero-callout { z-index: 91; }
+.mvp-listen-coach a { display: inline-block; margin-top: 18px; font-size: 15px; pointer-events: auto; color: #285887; }
+.is-coach-pulsing .piano-card-strip { transform-box: fill-box; transform-origin: center; animation: mvp-card-strip-pulse 1.2s ease-in-out 2; }
+@keyframes mvp-card-strip-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+.mvp-midi-guide-image { width: min(100%, 760px); margin-bottom: 18px; }
+[data-midi-connect-state="guide"] .mvp-step-heading { margin-bottom: 18px; }
+@media (prefers-reduced-motion: reduce) {
+  .is-coach-pulsing .piano-card-strip { animation: none; }
+  .mvp-coach-spotlight.is-active { animation: none; }
+}
+
+.mvp-page:has([data-midi-connect-state="guide"]:not([hidden])) { padding-top: 20px; align-items: start; }
+[data-midi-connect-state="guide"] .mvp-step-heading { font-size: 40px; margin-bottom: 12px; }
+[data-midi-connect-state="guide"] .mvp-midi-guide-image { width: min(100%, 640px); margin-bottom: 12px; }
+[data-midi-connect-state="guide"] .mvp-midi-guide-steps { font-size: 16px; line-height: 1.5; margin-bottom: 16px; }
+[data-midi-connect-state="guide"] .mvp-button { min-height: 52px; padding: 14px 24px; font-size: 18px; }
+.mvp-listen-coach { position: fixed; top: var(--mvp-coach-y, 35vh); padding: 22px 28px; }
+.mvp-listen-coach p { font-size: clamp(21px, 1.8vw, 25px); }
+.mvp-zero-chooser-card { position: fixed; top: var(--mvp-coach-y, 35vh); }
+.mvp-zero-chooser-card.has-dismiss-timer { animation: mvp-hint-lifetime 12s linear forwards; }

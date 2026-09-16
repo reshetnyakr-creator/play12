@@ -42,7 +42,8 @@
         practiceLeftHandEnabled: value.practiceLeftHandEnabled !== false,
         practiceRightHandEnabled: value.practiceRightHandEnabled !== false,
         oneSkillMode: false, activeSkillId: null,
-        practiceGuideStage: ['enable', 'hand', 'ready', 'playing', 'complete', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : 'enable'
+        listenGuideStage: ['initial', 'pause', 'continue', 'listening'].includes(value.listenGuideStage) ? value.listenGuideStage : null,
+        practiceGuideStage: ['cards', 'zero-reminder', 'enable', 'hand', 'explain', 'ready', 'playing', 'complete', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : 'enable'
       };
     } catch (_) {
       return null;
@@ -89,7 +90,6 @@
     const practiceModeButton = root.querySelector('#practice-board-mode');
     const leftHandButton = root.querySelector('#practice-left-hand');
     const rightHandButton = root.querySelector('#practice-right-hand');
-    let practiceGuidePending = false;
     const reconnectCard = root.querySelector('#returning-midi');
     const reconnectMessage = root.querySelector('#returning-midi-message');
     let recoveringMidi = false;
@@ -125,10 +125,18 @@
     let listenPlaybackState = 'paused';
     let annotationResumeArmed = false;
     let pianoAnnotationShown = false;
+    const spotlight = global.Play12Coach.create(root);
+    const musicalTargets = control => [document.getElementById('play12-score'), runtime?.pianoView?.mount,
+      control && document.getElementById(control)];
+    const spotlightHint = (element, control = null, pulse = false) => {
+      if (!element.hidden) spotlight.show(element, musicalTargets(control), pulse ? runtime?.pianoView?.mount : null);
+    };
+    let zeroHintSequence = 0;
     const hintTimers = new Map();
     const hintKeys = new Map();
     const dismissedHints = new Set();
     const hideHint = element => {
+      spotlight.stop(element);
       clearTimeout(hintTimers.get(element));
       hintTimers.delete(element);
       if (hintKeys.has(element)) dismissedHints.add(hintKeys.get(element));
@@ -146,17 +154,18 @@
       hintTimers.set(element, global.setTimeout(() => { hideHint(element); afterDismiss?.(); }, 12000));
     };
     const clearHints = () => {
-      for (const element of [listenCoach, pianoCallout, zeroCallout, notesCallout]) if (element) hideHint(element);
-      practiceGuidePending = false;
+      for (const element of [listenCoach, pianoCallout, zeroCallout, notesCallout, document.getElementById('zero-chooser')]) if (element) hideHint(element);
+      spotlight.stop();
     };
-    const showCoach = text => {
+    const showCoach = (text, control = null, pulse = false, afterDismiss = null) => {
       if (!text) { hideHint(listenCoach); return; }
       const key = `${state.onboardingStep}:${text}`;
       if (hintKeys.get(listenCoach) === key) return;
       if (dismissedHints.has(key)) { hideHint(listenCoach); return; }
       listenCoach.dataset.copy = text;
       listenPrompt.innerHTML = text;
-      showHint(listenCoach, key);
+      showHint(listenCoach, key, afterDismiss);
+      spotlightHint(listenCoach, control, pulse);
       void listenCoach.offsetWidth;
       listenCoach.classList.add('is-entering');
     };
@@ -181,15 +190,14 @@
       pianoCallout.hidden = false;
       pianoCallout.classList.add('is-visible');
       showHint(pianoCallout, 'piano-annotation');
+      spotlightHint(pianoCallout, null, true);
       pianoCallout.classList.add('is-visible');
     };
 
     const showZeroAnnotation = () => {
-      if (!zeroCallout) return;
-      showHint(zeroCallout, 'zero-annotation', () => {
-        practiceGuidePending = false;
-        syncPracticeGuide();
-      });
+      if (!zeroCallout || hintKeys.get(zeroCallout) === 'zero-annotation') return;
+      showHint(zeroCallout, 'zero-annotation', advancePracticeInstruction);
+      spotlightHint(zeroCallout, 'onboarding-choose-zero');
       zeroCallout.classList.add('is-visible');
     };
 
@@ -325,35 +333,21 @@
     };
 
     const syncListenCopy = () => {
-      const hideCoach = () => hideHint(listenCoach);
-      if (state.listenFragmentCompleted) {
-        hideCoach();
-        listenContinue.hidden = false;
-      } else if (state.pauseLearned) {
-        if (listenPlaybackRunning) hideCoach();
-        else showCoach('Continue');
-        listenContinue.hidden = true;
-      } else if (listenPlaybackState === 'pause-queued') {
-        hideCoach();
-        listenContinue.hidden = true;
-      } else if (state.playLearned && listenPosition >= 4.8) {
-        showCoach('Try pausing the music');
-        listenContinue.hidden = true;
-      } else if (state.playLearned) {
-        hideCoach();
-        listenContinue.hidden = true;
-      } else {
-        showCoach('Listen to how the melody sounds<br>Press Play or Space');
-        listenContinue.hidden = true;
-      }
+      listenContinue.hidden = true;
+      const stage = state.listenGuideStage || (state.pauseLearned ? 'continue' : state.playLearned ? 'pause' : 'initial');
+      if (state.listenFragmentCompleted) { showCoach(''); listenContinue.hidden = false; }
+      else if (stage === 'initial') showCoach('Listen to how the melody sounds<br>Press Play or Space', 'play');
+      else if (listenPlaybackState === 'pause-queued') showCoach('');
+      else if (stage === 'pause' && (listenPosition >= 4.8 || state.listenGuideStage === 'pause')) showCoach('Try pausing it', 'pause');
+      else if (stage === 'continue') showCoach('Continue', 'play');
+      else showCoach('');
       exposeState();
     };
 
     const showStep = step => {
       visibleStep = step;
-      const pendingZeroHint = practiceGuidePending;
       clearHints();
-      if (step === 'TRY_IT_YOURSELF') practiceGuidePending = pendingZeroHint;
+      dismissedHints.clear();
       syncSkipAnchor();
       const visibleView = ['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(step) ? 'LISTEN_AND_CONTROL' : step;
       for (const [name, element] of views) element.hidden = name !== visibleView;
@@ -412,7 +406,6 @@
       };
       runtime?.playback?.restart();
       restorePracticeSettings();
-      practiceGuidePending = false;
       recoveringMidi = false;
       resumeRequested = false;
       reconnectCard.hidden = true;
@@ -450,7 +443,6 @@
       state.onboardingStep = ['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'][number - 1];
       if (number === 3) {
         hideHint(zeroCallout);
-        practiceGuidePending = false;
         zeroCallout.hidden = true;
         restorePracticeSettings();
       } else if (runtime) {
@@ -483,17 +475,17 @@
         if (!state.inputMode) state.inputMode = 'demo';
         navigateStep(1);
       } else if (state.onboardingStep === 'LISTEN_AND_CONTROL') {
-        state.highestUnlockedStep = Math.max(highestUnlocked(), 2);
-        navigateStep(2);
+        const stage = state.listenGuideStage || (state.pauseLearned ? 'continue' : state.playLearned ? 'pause' : 'initial');
+        if (stage === 'initial' || stage === 'pause') {
+          state.listenGuideStage = stage === 'initial' ? 'pause' : 'continue';
+          saveState(storage, state); syncListenCopy();
+        } else {
+          state.highestUnlockedStep = Math.max(highestUnlocked(), 2); navigateStep(2);
+        }
       } else if (state.onboardingStep === 'CHOOSE_ZERO') {
-        state.highestUnlockedStep = 3;
-        state.practiceGuideStage ||= 'enable';
-        navigateStep(3);
+        enterCardsSetup(false);
       } else if (state.onboardingStep === 'TRY_IT_YOURSELF') {
-        runtime?.playback?.pauseImmediate();
-        state.practiceGuideStage = 'free';
-        saveState(storage, state);
-        syncPracticeGuide();
+        advancePracticeInstruction();
       }
     });
 
@@ -554,30 +546,30 @@
       showStep('CHOOSE_ZERO');
     };
 
-    const handleZeroConfirmed = () => {
-      if (state.onboardingStep !== 'CHOOSE_ZERO') return;
-      if (state.chooseZeroCompleted) { navigateStep(3); return; }
-      const shouldShowHint = !state.zeroChangeHintShown;
-      state = { ...state, chooseZeroCompleted: true, zeroChangeHintShown: true,
-        onboardingStep: 'TRY_IT_YOURSELF', practiceModeEnabled: false,
-        practiceLeftHandEnabled: true, practiceRightHandEnabled: true,
-        oneSkillMode: false, activeSkillId: null, practiceGuideStage: 'enable' };
-      practiceGuidePending = shouldShowHint;
-      runtime.playback.restart();
-      runtime.playback.metronomeInput.checked = false;
-      runtime.playback.countInInput.checked = false;
-      runtime.playback.loopInput.checked = false;
+    const enterCardsSetup = confirmed => {
+      if (state.chooseZeroCompleted || state.zeroChangeHintShown) { navigateStep(3); return; }
+      state = {...state, chooseZeroCompleted: confirmed, highestUnlockedStep: 3,
+        onboardingStep: 'TRY_IT_YOURSELF', practiceGuideStage: 'cards'};
+      runtime?.playback?.restart();
       restorePracticeSettings();
       saveState(storage, state);
-      syncProgress();
-      exposeState();
       showStep('TRY_IT_YOURSELF');
-      if (shouldShowHint) {
-        practiceGuidePending = true;
-        hideHint(listenCoach);
-        showZeroAnnotation();
-        syncPracticeGuide();
+    };
+    const handleZeroConfirmed = () => {
+      clearHints();
+      if (state.onboardingStep === 'CHOOSE_ZERO') enterCardsSetup(true);
+      else if (state.onboardingStep === 'TRY_IT_YOURSELF') {
+        if (state.practiceGuideStage === 'zero-reminder') advancePracticeInstruction();
+        else { dismissedHints.clear(); syncPracticeGuide(); }
       }
+    };
+    const advancePracticeInstruction = () => {
+      clearHints();
+      const next = {cards: state.zeroChangeHintShown ? 'enable' : 'zero-reminder', 'zero-reminder': 'enable',
+        enable: 'hand', hand: 'explain', explain: 'ready', ready: 'free'};
+      state.practiceGuideStage = next[state.practiceGuideStage] || 'free';
+      if (state.practiceGuideStage === 'zero-reminder') state.zeroChangeHintShown = true;
+      saveState(storage, state); syncPracticeGuide();
     };
 
     const restorePracticeSettings = () => {
@@ -596,16 +588,20 @@
       leftHandButton.setAttribute('aria-pressed', String(settings.practiceLeftHandEnabled));
       rightHandButton.setAttribute('aria-pressed', String(settings.practiceRightHandEnabled));
       practiceBoard.dataset.guideStage = state.practiceGuideStage;
-      let text = '';
-      if (!practiceGuidePending) {
-        if (state.practiceGuideStage === 'enable') text = 'Now try it yourself<br>First, turn on Practice Mode';
-        else if (state.practiceGuideStage === 'hand') text = 'Let’s start with your right hand<br>Turn off Left Hand';
-        else if (state.practiceGuideStage === 'ready') text = 'Watch the Note Field and play the keys it shows<br>The music will wait for the right key<br><small>Press Play when you’re ready</small>';
-        else if (state.practiceGuideStage === 'complete') text = 'You’ve played through the piece';
-      }
-      practiceModeButton.classList.toggle('is-guided', !practiceGuidePending && state.practiceGuideStage === 'enable');
-      leftHandButton.classList.toggle('is-guided', !practiceGuidePending && state.practiceGuideStage === 'hand');
-      showCoach(text);
+      const stage = state.practiceGuideStage;
+      practiceBoard.hidden = ['cards', 'zero-reminder'].includes(stage);
+      practiceModeButton.classList.toggle('is-guided', stage === 'enable');
+      leftHandButton.classList.toggle('is-guided', stage === 'hand');
+      if (stage === 'zero-reminder') { showCoach(''); showZeroAnnotation(); return; }
+      const ru = (document.documentElement.lang || 'en').startsWith('ru');
+      if (stage === 'cards') showCoach(ru
+        ? 'Разложите карточки Play12<br><small>Разместите карточки на пианино так же, как показано здесь</small><a href="/ru/manual.html#chapter2" target="_blank" rel="noopener">Как разместить карточки Play12</a>'
+        : 'Set up your Play12 cards<br><small>Place the cards on your piano to match the layout you see here</small><a href="/manual.html#chapter2" target="_blank" rel="noopener">How to place the Play12 cards</a>', null, true, advancePracticeInstruction);
+      else if (stage === 'enable') showCoach('Now try it yourself<br>Turn on Practice Mode', 'practice-board-mode');
+      else if (stage === 'hand') showCoach('Let’s start with your right hand<br>Turn off Left Hand', 'practice-left-hand');
+      else if (stage === 'explain') showCoach('Watch the Note Field and play the keys it shows you<br><small>The music will wait until you press the right key</small>', null, false, advancePracticeInstruction);
+      else if (stage === 'ready') showCoach("Press Play when you're ready", 'play');
+      else showCoach('');
     };
 
     const changePracticeSetting = (key, button) => {
@@ -616,9 +612,9 @@
         return;
       }
       Object.assign(state, runtime.playback.getPracticeSettings());
-      if (['enable', 'hand', 'ready'].includes(state.practiceGuideStage)) {
-        state.practiceGuideStage = !state.practiceModeEnabled ? 'enable'
-          : !state.practiceLeftHandEnabled && state.practiceRightHandEnabled ? 'ready' : 'hand';
+      if ((state.practiceGuideStage === 'enable' && state.practiceModeEnabled) ||
+          (state.practiceGuideStage === 'hand' && !state.practiceLeftHandEnabled)) {
+        advancePracticeInstruction();
       }
       saveState(storage, state);
       syncPracticeGuide();
@@ -654,12 +650,13 @@
       }) || null;
       removePlaybackStateListener = runtime.playback?.addStateListener?.(snapshot => {
         if (state.onboardingStep === 'TRY_IT_YOURSELF') {
-          if (['ready', 'complete'].includes(state.practiceGuideStage) && (snapshot.running || snapshot.state === 'waiting_for_input')) {
+          if (['enable', 'hand', 'explain', 'ready', 'complete'].includes(state.practiceGuideStage) && (snapshot.running || snapshot.state === 'waiting_for_input')) {
+            clearHints();
             state.practiceGuideStage = 'playing';
             saveState(storage, state);
           }
           if (state.practiceGuideStage === 'playing' && snapshot.ended && runtime.playback.practiceEnabled()) {
-            state.practiceGuideStage = 'complete';
+            state.practiceGuideStage = 'free';
             saveState(storage, state);
           }
           syncPracticeGuide();
@@ -674,19 +671,23 @@
         if (snapshot.state === 'paused' && previousPlaybackState !== 'paused' && snapshot.position > 0 && !snapshot.ended && !pianoAnnotationShown) {
           annotationResumeArmed = true;
         }
+        if (snapshot.running && state.listenGuideStage === 'initial') state.listenGuideStage = null;
+        if (snapshot.running && state.listenGuideStage === 'continue') state.listenGuideStage = 'listening';
         if (snapshot.running && !state.playLearned) {
           state = { ...state, playLearned: true };
           saveState(storage, state);
         }
         if (state.playLearned && !state.pauseLearned && snapshot.state === 'paused' && snapshot.position > 0 && !snapshot.ended) {
-          state = { ...state, pauseLearned: true };
+          state = { ...state, pauseLearned: true, listenGuideStage: 'continue' };
           saveState(storage, state);
         }
         if (snapshot.running && previousPlaybackState === 'paused' && annotationResumeArmed) {
           annotationResumeArmed = false;
+          state.listenGuideStage = 'listening';
+          hideHint(listenCoach);
           showPianoAnnotationOnce();
         }
-        if (state.pauseLearned && snapshot.ended && !state.listenFragmentCompleted) {
+        if (state.playLearned && snapshot.ended && !state.listenFragmentCompleted) {
           state = { ...state, listenFragmentCompleted: true, onboardingStep: 'CHOOSE_ZERO' };
           saveState(storage, state);
           showStep('CHOOSE_ZERO');
@@ -724,6 +725,22 @@
     root.querySelector('#onboarding-midi-continue').addEventListener('click', advanceToListen);
     listenContinue.addEventListener('click', advanceToChooseZero);
     global.addEventListener('play12:zero-confirmed', handleZeroConfirmed);
+    global.addEventListener('play12:zero-ui-open', () => {
+      clearHints();
+      const chooser = document.getElementById('zero-chooser');
+      if (chooser) { showHint(chooser, `zero-selection:${++zeroHintSequence}`); spotlightHint(chooser); }
+    });
+    global.addEventListener('play12:zero-ui-candidate', () => {
+      const chooser = document.getElementById('zero-chooser');
+      if (chooser) {
+        hideHint(chooser);
+        showHint(chooser, `zero-confirmation:${++zeroHintSequence}`);
+      }
+    });
+    global.addEventListener('play12:choose-zero-close', () => {
+      const chooser = document.getElementById('zero-chooser');
+      if (chooser) hideHint(chooser);
+    });
     showStep('WELCOME');
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('onboardingPreview') === 'listen') {
       state = {
