@@ -26,10 +26,13 @@
   // Retry the same unresolved musical moment on subsequent quarter-note beats.
   const practiceBeatWindow = (expectedTime, now, bpm) => {
     const interval = 60 / bpm;
-    const attempt = Math.max(0, Math.round((now - expectedTime) / interval));
-    const when = expectedTime + attempt * interval;
-    const deltaMs = (now - when) * 1000;
-    return {when, attempt, deltaMs, accepted: deltaMs >= -150 - EPSILON && deltaMs <= 200 + EPSILON};
+    const nearest = Math.max(0, Math.round((now - expectedTime) / interval));
+    const candidates = [nearest, nearest - 1, nearest + 1].filter(attempt => attempt >= 0).map(attempt => {
+      const when = expectedTime + attempt * interval;
+      const deltaMs = (now - when) * 1000;
+      return {when, attempt, deltaMs, accepted: deltaMs >= -PRACTICE_TIMING.earlyToleranceMs - EPSILON && deltaMs <= PRACTICE_TIMING.lateToleranceMs + EPSILON};
+    });
+    return candidates.find(window => window.accepted) || candidates[0];
   };
   const effectiveMidiPitch = (sourceMidiPitch, referenceZeroNote, runtimeZeroNote) =>
     sourceMidiPitch + runtimeZeroNote - referenceZeroNote;
@@ -586,7 +589,10 @@
       }
       if (this.metronomeAudio && this.metronomeInput.checked) {
         const base = expected.expectedAudioTime ?? this.clock.quarterToAudioTime(expected.start);
-        const window = practiceBeatWindow(base, this.audioContext.currentTime, this.clock.bpm);
+        const candidateDelta = (this.audioContext.currentTime - expected.candidateBeatTime) * 1000;
+        const window = expected.candidateBeatTime != null && candidateDelta >= -150 - EPSILON && candidateDelta <= 200 + EPSILON
+          ? {when: expected.candidateBeatTime, deltaMs: candidateDelta, attempt: Math.round((expected.candidateBeatTime - base) * this.clock.bpm / 60), accepted: true}
+          : practiceBeatWindow(base, this.audioContext.currentTime, this.clock.bpm);
         timingDeltaMs = window.deltaMs;
         this.stage.dataset.practiceBeatWindowAudioTime = String(window.when);
         this.stage.dataset.practiceBeatAttempt = String(window.attempt);

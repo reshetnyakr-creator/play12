@@ -418,3 +418,15 @@ test('Ordinary playback and Practice OFF resume on existing metronome grid; clic
   // Even the loudest accented click has ample digital headroom.
   assert(.34*1.65*2*.18<1);
 });
+
+test('Overlapping windows at fast BPM still accept a valid late contact',()=>{
+  const {window}=load();
+  const result=window.Play12Playback.practiceBeatWindow(0,.18,172);
+  assert.equal(result.accepted,true);assert.equal(result.when,0);assert.equal(result.deltaMs,180);
+});
+
+test('A fast-tempo chord retains its first valid overlapping window',async()=>{
+  const {c}=make([['R',72,0],['L',48,0]],24,true);configure(c,true,true);c.bpmInput.value='172';c.changeBpm();c.setMetronome(true);await c.play();
+  const due=c.waitingForInput.expectedAudioTime;c.audioContext.currentTime=due+.14;c.acceptPracticeInput(72);
+  c.audioContext.currentTime=due+.20;c.acceptPracticeInput(48);assert.equal(c.waitingForInput,null);
+});
