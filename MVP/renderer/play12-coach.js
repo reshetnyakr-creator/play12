@@ -43,7 +43,9 @@
         }
         holes.replaceChildren();
         const seen = new Set();
-        for (const element of targets.filter(Boolean)) {
+        // Zero changes rebuild Piano View asynchronously; follow the current elements.
+        const currentTargets = typeof targets === 'function' ? targets() : targets;
+        for (const element of currentTargets.filter(Boolean)) {
           const r = element.getBoundingClientRect();
           if (r.width <= 0 || r.height <= 0) continue;
           const bounds = `${r.left},${r.top},${r.width},${r.height}`;

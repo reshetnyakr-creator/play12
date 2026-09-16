@@ -132,7 +132,7 @@
       return instruction ? [element(instruction)] : [];
     };
     const spotlightHint = (element, instruction, pulse = false) => {
-      if (!element.hidden) spotlight.show(element, targetsFor(instruction), pulse ? runtime?.pianoView?.mount : null,
+      if (!element.hidden) spotlight.show(element, () => targetsFor(instruction), pulse ? runtime?.pianoView?.mount : null,
         document.getElementById('play12-score'));
     };
     let returnAfterZero = null;

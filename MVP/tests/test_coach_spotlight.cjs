@@ -35,3 +35,11 @@ test('New instruction cancels old timers; unrelated card cleanup cannot close ne
   h.coach.show(b,[b]);assert(!h.timers.has(old));assert.equal(h.timers.size,1);assert.equal(h.frames.size,1);
   h.coach.stop(a);assert.equal(h.root.children[0].style.display,'block');h.coach.stop(b);assert.equal(h.timers.size,0);assert.equal(h.frames.size,0);
 });
+test('Spotlight follows card nodes rebuilt asynchronously after a runtime zero change',()=>{
+  const h=fixture(),card=new Element(),newStrip=new Element();let strips=[];
+  h.coach.show(card,()=>strips);
+  const holes=h.root.children[0].children[0].children[0].children[1];assert.equal(holes.children.length,0);
+  strips=[newStrip,newStrip];const [id,frame]=[...h.frames][0];h.frames.delete(id);frame();
+  assert.equal(holes.children.length,1);assert.equal(holes.children[0].attrs.x,84);
+  h.coach.stop();assert.equal(h.frames.size,0);assert.equal(h.timers.size,0);
+});
