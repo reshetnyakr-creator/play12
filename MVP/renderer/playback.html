@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=metronome-practice-sync-02">
+  <link rel="stylesheet" href="play12-onboarding.css?v=round-loop-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -196,6 +196,18 @@
         <label>Volume <select id="metronome-volume"><option>0</option><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
       </section>
       <div id="unified-playback-block" class="unified-playback-block">
+        <section id="round-loop-board" class="mvp-round-loop-board" aria-label="Round controls" hidden>
+          <div id="round-timeline" class="round-timeline" aria-label="Composition rounds"><div id="round-loop-frame" class="round-loop-frame" hidden></div><span id="round-playhead" class="round-playhead" aria-hidden="true"></span></div>
+          <div class="round-controls">
+            <div id="round-navigation" class="round-navigation"><button id="round-previous" aria-label="Previous round" type="button">▼</button><output id="current-round" aria-label="Current round">1</output><button id="round-next" aria-label="Next round" type="button">▲</button></div>
+            <button id="round-loop-toggle" type="button" aria-pressed="false">Loop</button>
+            <div id="round-range-controls" class="round-range-controls">
+              <div class="round-stepper"><span>From</span><button id="round-from-minus" type="button" aria-label="Decrease From round">−</button><output id="round-from">1</output><button id="round-from-plus" type="button" aria-label="Increase From round">+</button></div>
+              <div class="round-stepper"><span>To</span><button id="round-to-minus" type="button" aria-label="Decrease To round">−</button><output id="round-to">1</output><button id="round-to-plus" type="button" aria-label="Increase To round">+</button></div>
+            </div>
+            <button id="round-precount-toggle" type="button" aria-pressed="false">Pre-count</button>
+          </div>
+        </section>
         <div id="playline" class="playback-zone" aria-label="Playback Zone">
           <span id="timecode" class="playback-timecode">00:00 / 00:00</span>
           <div class="playback-zone-transport" aria-label="Playback controls">
@@ -268,11 +280,12 @@
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=player-shell-01"></script>
-  <script src="play12-playback.js?v=metronome-practice-sync-02"></script>
+  <script src="play12-round-board.js?v=round-loop-01"></script>
+  <script src="play12-playback.js?v=round-loop-01"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-coach.js?v=metronome-practice-sync-02"></script>
-  <script src="play12-onboarding.js?v=metronome-practice-sync-02"></script>
+  <script src="play12-coach.js?v=round-loop-01"></script>
+  <script src="play12-onboarding.js?v=round-loop-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -378,6 +391,8 @@
         const length = time.beats * 4 / time.beat_type;
         rounds.push({
           index: measure.index,
+          implicit: measure.implicit === true,
+          measureStart: globalMeasureStart - timelineOffset,
           start: Math.max(0, globalMeasureStart - timelineOffset),
           end: globalMeasureStart + length - timelineOffset,
           beats: time.beats,
@@ -411,6 +426,7 @@
         referenceZeroNote, runtimeZeroNote: initialZeroMidi,
         beatLamp: document.getElementById('metronome-beat-lamp')
       });
+      window.play12Playback.roundBoard = Play12RoundBoard.create({root: document.getElementById('round-loop-board'), playback: window.play12Playback, repetitions: repetitionSegments, title: baseScore.score.title});
       reviewController?.connect(effectiveScore => {
         score = effectiveScore;
         window.play12Playback.pauseImmediate();

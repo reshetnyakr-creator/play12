@@ -41,12 +41,13 @@
           (value.cardsSetupCompleted === undefined && value.onboardingStep === 'TRY_IT_YOURSELF' && value.practiceGuideStage !== 'cards'),
         zeroSetupStage: value.zeroSetupStage === 'cards' || value.practiceGuideStage === 'cards' ? 'cards' : null,
         metronomeUnlocked: value.metronomeUnlocked === true,
+        roundUnlocked: value.roundUnlocked === true,
         practiceModeEnabled: value.practiceModeEnabled === true,
         practiceLeftHandEnabled: value.practiceLeftHandEnabled !== false,
         practiceRightHandEnabled: value.practiceRightHandEnabled !== false,
         oneSkillMode: false, activeSkillId: null,
         listenGuideStage: ['initial', 'pause', 'continue', 'listening'].includes(value.listenGuideStage) ? value.listenGuideStage : null,
-        practiceGuideStage: ['enable', 'hand', 'explain', 'ready', 'playing', 'metronome-on', 'metronome-tempo', 'metronome-play', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : value.practiceGuideStage === 'complete' ? 'free' : 'enable'
+        practiceGuideStage: ['enable', 'hand', 'explain', 'ready', 'playing', 'metronome-on', 'metronome-tempo', 'metronome-play', 'metronome-playing', 'round-nav', 'round-loop', 'round-range', 'round-precount', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : value.practiceGuideStage === 'complete' ? 'free' : 'enable'
       };
     } catch (_) {
       return null;
@@ -130,6 +131,7 @@
       const piano = runtime?.pianoView?.mount;
       if (instruction === 'choose-zero') return [element('onboarding-choose-zero'), piano];
       if (instruction === 'cards') return [...(piano?.querySelectorAll('.piano-card-strip') || [])];
+      if (instruction === 'round-range') return [element('round-range-controls'), element('round-timeline')];
       if (instruction === 'explain') return [element('play12-score'), piano];
       return instruction ? [element(instruction)] : [];
     };
@@ -260,7 +262,8 @@
     const visibleBoardsForStep = step => ({
       zero: ['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(step),
       practice: step === 'TRY_IT_YOURSELF',
-      metronome: step === 'TRY_IT_YOURSELF' && state.metronomeUnlocked === true
+      metronome: step === 'TRY_IT_YOURSELF' && state.metronomeUnlocked === true,
+      rounds: step === 'TRY_IT_YOURSELF' && state.roundUnlocked === true
     });
     const syncProgress = () => {
       state.highestUnlockedStep = highestUnlocked();
@@ -282,6 +285,8 @@
       const metronomeBoard = document.getElementById('metronome-board');
       if (metronomeBoard) metronomeBoard.hidden = !boards.metronome;
       root.classList.toggle('has-metronome-board', boards.metronome);
+      const roundBoard = document.getElementById('round-loop-board');
+      if (roundBoard) roundBoard.hidden = !boards.rounds;
       if (songStep) songStep.textContent = `Step ${activeStep} of 4`;
     };
 
@@ -318,6 +323,8 @@
       if (transport && row) {
         transportHome ||= transport.parentElement;
         row.appendChild(transport);
+        const roundBoard = document.getElementById('round-loop-board');
+        if (roundBoard) row.appendChild(roundBoard);
       }
       if (runtime?.pianoView?.mount && listenPianoHost) {
         const mount = runtime.pianoView.mount;
@@ -446,12 +453,14 @@
       state.onboardingStep = ['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'][number - 1];
       state.zeroSetupStage = null;
       if (number === 3) {
+        if (state.metronomeUnlocked && !state.roundUnlocked && state.practiceGuideStage === 'free') { state.roundUnlocked = true; state.practiceGuideStage = 'round-nav'; }
         state.practiceGuideStage ||= 'enable';
         restorePracticeSettings();
       } else if (runtime) {
         // Listen revisits use normal playback without overwriting saved Practice preferences.
         runtime.playback.setPracticeSettings({ practiceModeEnabled: false });
       }
+      syncProgress();
       if (number === 1) runtime?.playback?.restart();
       saveState(storage, state);
       showStep(state.onboardingStep);
@@ -587,8 +596,10 @@
     const handleZeroConfirmed = () => finishZero(true);
     const advancePracticeInstruction = () => {
       clearHints();
-      const next = {enable: 'hand', hand: 'explain', explain: 'ready', ready: 'free', 'metronome-on': 'metronome-tempo', 'metronome-tempo': 'metronome-play', 'metronome-play': 'free'};
+      const next = {enable: 'hand', hand: 'explain', explain: 'ready', ready: 'free', 'metronome-on': 'metronome-tempo', 'metronome-tempo': 'metronome-play', 'metronome-play': 'round-nav', 'round-nav': 'round-loop', 'round-loop': 'round-range', 'round-range': 'round-precount', 'round-precount': 'free'};
       state.practiceGuideStage = next[state.practiceGuideStage] || 'free';
+      if (state.practiceGuideStage.startsWith('round-')) state.roundUnlocked = true;
+      syncProgress();
       saveState(storage, state); syncPracticeGuide();
     };
 
@@ -623,6 +634,10 @@
       else if (stage === 'metronome-on') showCoach(isRu() ? 'Добавим ровный пульс<br>Включите метроном' : 'Let’s add a steady beat<br>Turn on the metronome', 'metronome-toggle');
       else if (stage === 'metronome-tempo') showCoach(isRu() ? 'Можно играть медленнее или быстрее<br><small>Введите BPM или меняйте темп кнопками − / + с шагом 10</small>' : 'Slow down or speed up the piece<br><small>Type a BPM, or use − / + to change it by 10</small>', 'metronome-tempo-controls', false, advancePracticeInstruction);
       else if (stage === 'metronome-play') showCoach(isRu() ? 'Сыграйте ещё раз под ровный пульс<br>Нажмите Play' : 'Play it again with a steady beat<br>Press Play', 'play');
+      else if (stage === 'round-nav') showCoach(isRu() ? 'Перемещайтесь по произведению раундами' : 'Move through the piece by rounds', 'round-navigation', false, advancePracticeInstruction);
+      else if (stage === 'round-loop') showCoach(isRu() ? 'Повторяйте участок, который хотите потренировать' : 'Loop a section you want to practise', 'round-loop-toggle', false, advancePracticeInstruction);
+      else if (stage === 'round-range') showCoach(isRu() ? 'Выберите раунды, которые хотите повторять' : 'Choose the rounds you want to repeat', 'round-range', false, advancePracticeInstruction);
+      else if (stage === 'round-precount') showCoach(isRu() ? 'Нужен момент перед попыткой?<br>Включите Pre-count' : 'Need a moment before each try?<br>Turn on Pre-count', 'round-precount-toggle', false, advancePracticeInstruction);
       else showCoach('');
     };
     const isRu = () => document.documentElement.lang === 'ru';
@@ -631,6 +646,12 @@
     });
     global.addEventListener('play12:tempo-change', () => {
       if (state.onboardingStep === 'TRY_IT_YOURSELF' && state.practiceGuideStage === 'metronome-tempo') advancePracticeInstruction();
+    });
+
+    global.addEventListener('play12:round-control', event => {
+      if (state.onboardingStep !== 'TRY_IT_YOURSELF' || returnAfterZero) return;
+      const required = {'round-nav':'navigate', 'round-loop':'loop-on', 'round-range':'range', 'round-precount':'precount'};
+      if (required[state.practiceGuideStage] === event.detail.action) advancePracticeInstruction();
     });
 
     const changePracticeSetting = (key, button) => {
@@ -686,13 +707,18 @@
             saveState(storage, state);
           }
           if (state.practiceGuideStage === 'playing' && snapshot.ended && runtime.playback.practiceEnabled()) {
-            state.practiceGuideStage = state.metronomeUnlocked ? 'free' : 'metronome-on';
+            state.practiceGuideStage = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-nav') : 'metronome-on';
+            if (state.practiceGuideStage === 'round-nav') state.roundUnlocked = true;
             state.metronomeUnlocked = true;
             syncProgress();
             saveState(storage, state);
           }
           if (state.practiceGuideStage === 'metronome-play' && (snapshot.running || snapshot.state === 'waiting_for_input')) {
-            clearHints(); state.practiceGuideStage = 'free'; saveState(storage, state);
+            clearHints(); state.practiceGuideStage = 'metronome-playing'; saveState(storage, state);
+          }
+          if (state.practiceGuideStage === 'metronome-playing' && snapshot.ended) {
+            state.practiceGuideStage = 'round-nav'; state.roundUnlocked = true;
+            syncProgress(); saveState(storage, state);
           }
           syncPracticeGuide();
           return;

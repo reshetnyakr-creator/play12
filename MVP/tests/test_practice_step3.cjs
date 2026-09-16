@@ -346,7 +346,7 @@ test('Metronome tutorial Skip changes no settings; tempo timeout advances withou
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');assert.equal(h.c.metronomeInput.checked,false);
   const timer=[...h.timers.values()].find(x=>x.delay===12000);timer.fn();
   assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');assert.equal(h.c.clock.bpm,60);
-  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'free');
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-nav');
 });
 test('Metronome and tempo interactions advance the instructions immediately',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',metronomeUnlocked:true,inputMode:'demo'});
@@ -429,4 +429,48 @@ test('A fast-tempo chord retains its first valid overlapping window',async()=>{
   const {c}=make([['R',72,0],['L',48,0]],24,true);configure(c,true,true);c.bpmInput.value='172';c.changeBpm();c.setMetronome(true);await c.play();
   const due=c.waitingForInput.expectedAudioTime;c.audioContext.currentTime=due+.14;c.acceptPracticeInput(72);
   c.audioContext.currentTime=due+.20;c.acceptPracticeInput(48);assert.equal(c.waitingForInput,null);
+});
+test('Pre-count follows measure signature, strong start, pickup and partial measure entry',()=>{
+  const {window}=load(),plan=window.Play12Playback.preCountPlan;
+  const round={start:0,measureStart:0,measureQuarters:3,beatQuarters:1,implicit:false};
+  assert.equal(plan(round,0).quarters,6);assert.equal(plan(round,0).beats,6);
+  assert.equal(plan({...round,implicit:true},0).quarters,3);
+  assert.equal(plan({...round,measureStart:-2,implicit:true},0).quarters,5);
+  assert.equal(plan(round,1).quarters,4);
+  assert.equal(plan({...round,measureQuarters:3,beatQuarters:.5},0).beats,12);
+});
+function twoRounds(c){c.rounds=[{start:0,end:4,beats:4,beatQuarters:1,measureQuarters:4,measureStart:0},{start:4,end:8,beats:4,beatQuarters:1,measureQuarters:4,measureStart:4}];c.loopStartInput.value='0';c.loopEndInput.value='0';c.loopInput.checked=true;}
+test('Loop with Pre-count repeats preparation at exact boundary; OFF is continuous',async()=>{
+  const {c,scheduled}=make([['R',72,0],['R',74,4]],24,true);twoRounds(c);c.setMetronome(true);c.countInInput.checked=true;await c.play();
+  assert.equal(c.countIn.plan.measures,2);const first=c.countIn.endsAt;c.audioContext.currentTime=first;c.tick();assert(c.clock.running);
+  assert(!scheduled.some(e=>e.start===4),'outside To never scheduled');
+  c.audioContext.currentTime=first+4.02;c.tick();assert(c.countIn);assert.equal(c.countIn.startedAt,first+4);assert.equal(c.loopWrapCount,1);
+  assert.equal(c.countIn.endsAt,first+12);assert(c.metronomeInput.checked);
+  c.countInInput.checked=false;c.pauseImmediate(0);await c.play();const boundary=c.clock.quarterToAudioTime(4);c.audioContext.currentTime=boundary+.02;c.tick();assert.equal(c.countIn,null);assert.equal(c.clock.anchorQuarter,0);assert.equal(c.clock.anchorAudioTime,boundary);
+});
+test('Practice loop excludes outside robot notes and prepares fresh unresolved events each repeat',async()=>{
+  const {c,scheduled}=make([['R',72,0],['L',48,0],['L',50,4]],24,true);twoRounds(c);configure(c);c.setMetronome(true);await c.play();
+  c.audioContext.currentTime=c.waitingForInput.expectedAudioTime;c.acceptPracticeInput(72);c.audioContext.currentTime=c.clock.quarterToAudioTime(4);c.tick();
+  assert.equal(c.expectedPracticeEvent.start,0);assert.equal(c.expectedPracticeEvent.completed,false);assert(!scheduled.some(e=>e.midi===50));
+  assert.equal(c.expectedPracticeEvent.matchedPitches.size,0);
+});
+test('Restart returns to From and begins clean pre-count while retaining tempo/settings',async()=>{
+  const {c}=make([['R',72,4]],24,true);twoRounds(c);c.loopStartInput.value='1';c.loopEndInput.value='1';configure(c);c.setMetronome(true);c.countInInput.checked=true;c.restart();await new Promise(r=>setImmediate(r));
+  assert.equal(c.countIn.selected,4);assert.equal(c.countIn.plan.measures,2);assert.equal(c.clock.bpm,60);assert(c.metronomeInput.checked);assert.equal(c.expectedPracticeEvent.start,4);
+});
+test('Round tutorial actions advance immediately; Skip changes no loop/pre-count values',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-nav',roundUnlocked:true,metronomeUnlocked:true,highestUnlockedStep:3,inputMode:'demo'});h.controller.continueSession();
+  assert.equal(h.node('#round-loop-board').hidden,false);
+  h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate'}});assert.equal(h.controller.getState().practiceGuideStage,'round-loop');
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-range');assert.equal(h.c.loopInput.checked,false);
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-precount');assert.equal(h.c.countInInput.checked,false);
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'free');
+  h.node('progress1').handlers.click();assert.equal(h.node('#round-loop-board').hidden,true);h.node('progress3').handlers.click();assert.equal(h.node('#round-loop-board').hidden,false);
+});
+test('Miniature uses the same per-hand repetition detector colors as notation',()=>{
+  const {window,sandbox}=load();
+  for(const file of ['play12-repetitions.js','play12-round-board.js'])vm.runInContext(readFileSync(path.join(renderer,file),'utf8'),sandbox);
+  const score=JSON.parse(readFileSync(path.join(__dirname,'../examples/when_the_saints_manual.play12.json'))),repetitions=window.Play12Repetitions.detect(score);
+  assert.equal(score.score.parts[0].measures.length,9);
+  for(const segment of repetitions.segments)for(const o of segment.occurrences)for(let n=o.measure_start;n<=o.measure_end;n++)assert.equal(window.Play12RoundBoard.ribbonFor(repetitions,segment.hand,n),segment.display_color);
 });
