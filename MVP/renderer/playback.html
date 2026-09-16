@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=metronome-tutorial-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=compact-controls-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -144,15 +144,14 @@
         <div id="onboarding-control-row" class="mvp-control-row">
         <div class="mvp-control-column">
         <section id="metronome-board" class="mvp-metronome-board" aria-label="Metronome Board" hidden>
-          <span>Metronome</span><button id="metronome-toggle" type="button" aria-pressed="false" aria-label="Metronome">OFF</button>
-          <span id="metronome-beat-lamp" class="metronome-beat-lamp" aria-hidden="true"></span>
+          <button id="metronome-toggle" type="button" aria-pressed="false" aria-label="Metronome"><span id="metronome-beat-lamp" class="metronome-beat-lamp" aria-hidden="true"></span><span>BPM</span></button>
           <div id="metronome-tempo-controls" class="mvp-tempo-controls" role="group" aria-label="Tempo">
             <button id="bpm-minus" type="button" aria-label="Decrease tempo by 10 BPM">−</button>
             <input id="bpm" type="text" inputmode="numeric" pattern="[0-9]*" aria-label="BPM" autocomplete="off">
             <button id="bpm-plus" type="button" aria-label="Increase tempo by 10 BPM">+</button>
           </div>
         </section>
-        <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden>Choose Your 0</button>
+        <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden aria-label="Choose Your 0">0</button>
         </div>
         <aside id="returning-midi" class="mvp-midi-reconnect" hidden><span id="returning-midi-message">Reconnect your MIDI piano, or play with your mouse</span><button id="returning-midi-retry" type="button">Reconnect MIDI</button></aside>
         <section id="practice-board" class="mvp-practice-board" aria-label="Practice Board" hidden>
@@ -198,13 +197,14 @@
       </section>
       <div id="unified-playback-block" class="unified-playback-block">
         <div id="playline" class="playback-zone" aria-label="Playback Zone">
+          <span id="timecode" class="playback-timecode">00:00 / 00:00</span>
           <div class="playback-zone-transport" aria-label="Playback controls">
             <button id="play" type="button">Play</button>
             <button id="pause" type="button">Pause</button>
             <button id="restart" type="button">Restart</button>
           </div>
           <span id="progress-head" class="playback-progress-head" aria-hidden="true"></span>
-          <span id="timecode" class="playback-timecode">00:00 / 00:00</span>
+          <button id="playback-grid" class="playback-grid-control" type="button" aria-label="Change display grid">×4</button>
         </div>
         <div id="grid-pulse" class="playback-grid-pulse" aria-hidden="true"></div>
         <div id="play12-score" class="play12-render-root playback-score"></div>
@@ -268,11 +268,11 @@
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=player-shell-01"></script>
-  <script src="play12-playback.js?v=metronome-tutorial-01"></script>
+  <script src="play12-playback.js?v=compact-controls-01"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-coach.js?v=metronome-tutorial-01"></script>
-  <script src="play12-onboarding.js?v=metronome-tutorial-01"></script>
+  <script src="play12-coach.js?v=compact-controls-01"></script>
+  <script src="play12-onboarding.js?v=compact-controls-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -347,7 +347,18 @@
         countWords: saintsReviewMode ? Play12Renderer.defaults.countWords : { 1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR' },
         countAnd: saintsReviewMode ? Play12Renderer.defaults.countAnd : 'AND'
       });
-      const svg = render(compositionReviewMode ? reviewGrid.value : '1/4');
+      const gridOptions = ['1/4', '1/8', '1/16', '1/32', '1/64'];
+      const gridMetadata = score.play12.recommended_grid || score.play12.default_grid;
+      // Without per-composition metadata retain the established configured display default.
+      const recommendedGrid = gridOptions.includes(gridMetadata) ? gridMetadata : reviewGrid.value;
+      if (!compositionReviewMode) reviewGrid.value = recommendedGrid;
+      const gridButton = document.getElementById('playback-grid');
+      const syncGridButton = () => {
+        gridButton.textContent = `×${reviewGrid.value.split('/')[1]}`;
+        gridButton.setAttribute('aria-label', `Display grid ${reviewGrid.value}; click to subdivide`);
+      };
+      syncGridButton();
+      const svg = render(reviewGrid.value);
       const pianoView = Play12PianoView.render({
         mount: document.getElementById('piano-view'),
         zeroMidi: initialZeroMidi,
@@ -502,7 +513,13 @@
       if (!compositionReviewMode) reviewGrid.addEventListener('change', event => {
         window.play12Playback.pauseImmediate();
         window.play12Playback.replaceSvg(render(event.target.value));
+        syncGridButton();
       });
+      gridButton.addEventListener('click', () => {
+        reviewGrid.value = Play12Playback.nextGridResolution(reviewGrid.value, recommendedGrid);
+        reviewGrid.dispatchEvent(new Event('change'));
+      });
+      window.play12Playback.stage.dataset.recommendedGrid = recommendedGrid;
       if (playbackParams.has('at')) window.play12Playback.seek(Number(playbackParams.get('at')));
       localStorage.removeItem('play12.ui-module-position.play-mode');
       window.play12DraggableModules = Play12DraggableModules.init({

@@ -398,7 +398,9 @@
       this.svg.parentElement.style.left = `${scoreLeft}px`;
       if (compactPlayer) {
         const scoreRect = this.svg.getBoundingClientRect();
-        this.playline.style.setProperty("--mvp-note-field-center-x", `${(scoreRect.left + scoreRect.right) / 2}px`);
+        const center = `${(scoreRect.left + scoreRect.right) / 2}px`;
+        this.playline.style.setProperty("--mvp-note-field-center-x", center);
+        document.documentElement?.style.setProperty("--mvp-note-field-center-x", center);
       }
       const executionHeight = Math.max(0, this.executionY());
       // Extend the clipped score one physical pixel under the opaque zone.
@@ -865,7 +867,7 @@
     }
     syncTempoControls() {
       this.bpmInput.value = String(this.clock.bpm);
-      this.bpmInput.classList.toggle('is-original-tempo', this.clock.bpm === this.originalTempo);
+      this.bpmInput.classList.remove('is-original-tempo');
       this.stage.dataset.bpm = String(this.clock.bpm);
       this.stage.dataset.originalTempo = String(this.originalTempo ?? this.clock.bpm);
     }
@@ -876,7 +878,7 @@
     setMetronome(enabled, interaction = true) {
       this.metronomeInput.checked = enabled;
       this.metronomeButton.setAttribute('aria-pressed', String(enabled));
-      this.metronomeButton.textContent = enabled ? 'ON' : 'OFF';
+      // The BPM label and lamp remain fixed inside the toggle; only its active state changes.
       clearInterval(this.metronomeTimer);
       this.metronomeAudio.stopAll();
       this.beatLamp?.classList.remove('is-beat', 'is-accent');
@@ -1208,5 +1210,12 @@
     }
   }
 
-  global.Play12Playback = { start: options => new Controller(options), effectiveMidiPitch, practiceScheduleEnd, findPracticeEvent, classifyPracticeTiming, PRACTICE_TIMING, LOOP_EMPTY_ROUNDS, PlaybackClock };
+  const nextGridResolution = (current, recommended) => {
+    const options = ['1/4', '1/8', '1/16', '1/32', '1/64'];
+    const minimum = options.includes(recommended) ? recommended : options[0];
+    const next = options[options.indexOf(current) + 1];
+    return next && options.indexOf(next) >= options.indexOf(minimum) ? next : minimum;
+  };
+
+  global.Play12Playback = { nextGridResolution, start: options => new Controller(options), effectiveMidiPitch, practiceScheduleEnd, findPracticeEvent, classifyPracticeTiming, PRACTICE_TIMING, LOOP_EMPTY_ROUNDS, PlaybackClock };
 })(window);

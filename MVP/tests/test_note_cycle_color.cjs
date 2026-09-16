@@ -43,3 +43,11 @@ test('Penultimate Y uses orange B2, with LH finger 5 preserved',()=>{
   assert.equal(note.play12_symbol.value,'Y');assert.equal(note.method.finger,5);assert.equal(note.source_fingering,5);
   assert.equal(color(note.id),'#FC7B00');
 });
+test('Display grid cycles subdivisions and returns to composition minimum',()=>{
+  const next=window.Play12Playback.nextGridResolution;
+  let grid='1/4';
+  for(const expected of ['1/8','1/16','1/32','1/64','1/4']){grid=next(grid,'1/4');assert.equal(grid,expected);}
+  assert.equal(next('1/64','1/8'),'1/8');
+  assert.equal(next('1/64','1/16'),'1/16');
+  assert.equal(next('1/64','invalid'),'1/4');
+});

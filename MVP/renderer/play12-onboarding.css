@@ -1039,49 +1039,88 @@
 .mvp-onboarding-progress li.is-complete span::after { content: "✓"; font-size: 16px; }
 .mvp-skip-control { z-index: 92; }
 
-/* Shared lower control row. The left column gains its second tier after Practice. */
+/* Compact instrument controls: transport is anchored to the Note Field, not row distribution. */
 .mvp-control-row {
-  position: fixed; z-index: 62;
-  left: max(12px, var(--mvp-piano-left-x, 12px)); right: max(12px, var(--mvp-piano-right-inset, 12px));
+  --compact-playback-width: 350px; --compact-practice-width: 320px;
+  --compact-zero-size: 42px; --compact-gap: 10px;
+  position: fixed; z-index: 62; left: 0; right: 0;
   bottom: calc(var(--mvp-fixed-piano-height, 220px) + 24px);
-  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  height: var(--mvp-playback-board-height);
 }
-.mvp-control-column { position: relative; flex: 0 0 280px; }
-.mvp-control-column #onboarding-choose-zero { position: static; width: 100%; min-width: 0; }
-.mvp-control-row .mvp-practice-board { position: static; flex: 0 0 auto; }
+.mvp-control-column {
+  position: absolute; width: var(--compact-zero-size); height: 100%;
+  left: calc(var(--mvp-note-field-center-x, 50%) - var(--compact-playback-width) / 2 - var(--compact-practice-width) - var(--compact-zero-size) - var(--compact-gap) * 2);
+}
+.mvp-control-column #onboarding-choose-zero {
+  position: static; width: var(--compact-zero-size); min-width: 0; height: var(--compact-zero-size);
+  padding: 0; border-radius: 50%; border: 1px solid #bfd681; background: #e8f5bc;
+  color: #3d541b; font: 700 23px/1 Inter,sans-serif; box-shadow: 0 2px 7px #1111110a;
+}
+.mvp-control-column #onboarding-choose-zero:is(:hover,:focus-visible) {
+  border-color: #e96e40; background: #e0f1ab; box-shadow: 0 2px 8px #11111118;
+}
+.mvp-control-row .mvp-practice-board {
+  position: absolute; right: auto;
+  left: calc(var(--mvp-note-field-center-x, 50%) - var(--compact-playback-width) / 2 - var(--compact-practice-width) - var(--compact-gap));
+  bottom: 0; width: var(--compact-practice-width); gap: 1px; padding: 4px;
+  box-shadow: 0 2px 7px #1111110a; background: #fafaf8;
+}
+.mvp-control-row .mvp-practice-board button { font: 600 11px/1 Inter,sans-serif; padding: 0 6px; flex: 1 0 auto; color: #333; }
+.mvp-control-row .mvp-practice-board button[aria-pressed="true"] { color: #fff; }
 .play12-onboarding-listen .mvp-control-row .playback-zone {
-  position: relative; top: auto !important; left: auto !important; right: auto !important; bottom: auto;
-  width: 300px !important; height: var(--mvp-playback-board-height) !important;
-  transform: none; flex: 0 0 300px; border-radius: 21px;
-  border: 1px solid rgba(17,17,17,.18);
-  background: linear-gradient(180deg,rgba(255,255,255,.97),rgba(238,238,233,.96));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.95),0 10px 24px rgba(17,24,39,.17);
+  position: absolute; top: auto !important; right: auto !important; bottom: 0;
+  left: var(--mvp-note-field-center-x, 50%) !important;
+  width: var(--compact-playback-width) !important; height: var(--mvp-playback-board-height) !important;
+  transform: translateX(-50%); border-radius: 24px; border: 1px solid #d1d3ce;
+  background: #fafaf8; box-shadow: 0 2px 7px #1111110a;
+  display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  align-items: center; gap: 5px; padding: 4px 8px;
+}
+.play12-onboarding-listen .mvp-control-row .playback-zone-transport {
+  position: static; transform: none; display: flex; gap: 2px; align-items: center;
+}
+.play12-onboarding-listen .mvp-control-row .playback-zone-transport button {
+  height: 30px; padding: 0 7px; min-width: 0; border-radius: 18px;
+  font: 600 11px/1 Inter,sans-serif; background: transparent; border: 1px solid transparent;
+}
+.play12-onboarding-listen .mvp-control-row .playback-zone-transport button.is-transport-active { background: #e96e40; color: #fff; }
+.play12-onboarding-listen .mvp-control-row .playback-timecode {
+  position: static; transform: none; justify-self: start; margin: 0; padding: 0;
+  font: 500 10px/1 Inter,sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; color: #666;
+}
+.playback-grid-control { display: none; }
+.play12-onboarding-listen .mvp-control-row .playback-grid-control {
+  display: block; justify-self: end; width: 42px; height: 28px; padding: 0 4px;
+  border: 0; border-left: 1px solid #d1d3ce; border-radius: 0 14px 14px 0;
+  background: transparent; color: #333; font: 600 12px/1 Inter,sans-serif; cursor: pointer;
 }
 .mvp-metronome-board {
-  position: absolute; bottom: calc(100% + 12px); left: 0; width: 100%;
+  position: absolute; bottom: calc(100% + 12px); left: 0; width: 180px;
   height: var(--mvp-playback-board-height); box-sizing: border-box;
-  display: flex; align-items: center; justify-content: center; gap: 5px; padding: 5px;
-  border: 1px solid rgba(17,17,17,.18); border-radius: 21px;
-  background: linear-gradient(180deg,rgba(255,255,255,.97),rgba(238,238,233,.96));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.95),0 10px 24px rgba(17,24,39,.17);
+  display: flex; align-items: center; gap: 4px; padding: 4px;
+  border: 1px solid #d1d3ce; border-radius: 24px; background: #fafaf8; box-shadow: 0 2px 7px #1111110a;
   font: 600 12px/1 Inter,sans-serif;
 }
 .mvp-metronome-board[hidden] { display: none; }
-.mvp-metronome-board button { height: 28px; padding: 0 6px; border: 0; border-radius: 15px; background: transparent; color: #111; cursor: pointer; }
-.mvp-metronome-board button[aria-pressed="true"] { background: #E96E40; color: white; }
+.mvp-metronome-board button { height: 32px; padding: 0 6px; border: 0; border-radius: 18px; background: transparent; color: #333; cursor: pointer; }
+.mvp-metronome-board button[aria-pressed="true"] { background: #e96e40; color: #fff; }
+#metronome-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; width: 76px; flex: 0 0 76px; font: 700 14px/1 Inter,sans-serif; }
 .mvp-tempo-controls { display: flex; align-items: center; }
-.mvp-tempo-controls input { width: 38px; padding: 3px 0; border: 0; border-radius: 5px; background: transparent; text-align: center; font: 700 14px Inter,sans-serif; color: #E96E40; }
-.mvp-tempo-controls input.is-original-tempo { color: #24874b; }
-.mvp-metronome-board .metronome-beat-lamp { background: #c4cac5; border-color: #a5afa7; opacity: 1; box-shadow: none; }
+.mvp-tempo-controls input { width: 36px; padding: 3px 0; border: 0; border-radius: 5px; background: transparent; text-align: center; font: 700 15px Inter,sans-serif; color: #e96e40; font-variant-numeric: tabular-nums; }
+.mvp-metronome-board .metronome-beat-lamp { width: 9px; height: 9px; background: #c4cac5; border-color: #a5afa7; opacity: 1; box-shadow: none; }
 .mvp-metronome-board .metronome-beat-lamp.is-beat { animation: mvp-green-beat 140ms ease-out; }
 @keyframes mvp-green-beat { 0%,35% { background: #39b86b; box-shadow: 0 0 5px #39b86b66; } 100% { background: #c4cac5; box-shadow: none; } }
-@media (max-width: 1050px) {
-  .mvp-control-row { gap: 8px; }
-  .mvp-control-column { flex-basis: 260px; }
-  .mvp-control-row .mvp-practice-board button { padding: 0 5px; font-size: 10px; }
-  .play12-onboarding-listen .mvp-control-row .playback-zone { width: 260px !important; flex-basis: 260px; }
+@media (max-width: 1100px) {
+  .mvp-control-row { --compact-playback-width: 290px; --compact-practice-width: 230px; --compact-zero-size: 38px; --compact-gap: 8px; }
+  .mvp-control-row .mvp-practice-board button { padding: 0 3px; font-size: 9px; }
+  .play12-onboarding-listen .mvp-control-row .playback-zone-transport button { padding: 0 4px; font-size: 10px; }
+  .play12-onboarding-listen .mvp-control-row .playback-timecode { font-size: 9px; }
 }
-
+@media (max-width: 850px) {
+  .mvp-control-column { left: 12px; }
+  .mvp-control-row .mvp-practice-board { left: 12px; bottom: calc(100% + 12px); }
+  .mvp-metronome-board { bottom: calc(200% + 24px); }
+}
 @media (min-width: 621px) and (max-height: 800px) {
   .has-metronome-board .mvp-onboarding-progress { padding-top: 0; }
   .has-metronome-board .mvp-onboarding-progress ol { gap: 8px; }
