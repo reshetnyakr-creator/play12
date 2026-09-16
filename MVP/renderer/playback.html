@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=tutorial-correction-02">
+  <link rel="stylesheet" href="play12-onboarding.css?v=metronome-tutorial-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -141,7 +141,19 @@
           </aside>
         </div>
         <div id="onboarding-listen-piano-host" class="mvp-piano-host mvp-listen-piano-host" aria-label="Playable on-screen piano"></div>
+        <div id="onboarding-control-row" class="mvp-control-row">
+        <div class="mvp-control-column">
+        <section id="metronome-board" class="mvp-metronome-board" aria-label="Metronome Board" hidden>
+          <span>Metronome</span><button id="metronome-toggle" type="button" aria-pressed="false" aria-label="Metronome">OFF</button>
+          <span id="metronome-beat-lamp" class="metronome-beat-lamp" aria-hidden="true"></span>
+          <div id="metronome-tempo-controls" class="mvp-tempo-controls" role="group" aria-label="Tempo">
+            <button id="bpm-minus" type="button" aria-label="Decrease tempo by 10 BPM">−</button>
+            <input id="bpm" type="text" inputmode="numeric" pattern="[0-9]*" aria-label="BPM" autocomplete="off">
+            <button id="bpm-plus" type="button" aria-label="Increase tempo by 10 BPM">+</button>
+          </div>
+        </section>
         <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden>Choose Your 0</button>
+        </div>
         <aside id="returning-midi" class="mvp-midi-reconnect" hidden><span id="returning-midi-message">Reconnect your MIDI piano, or play with your mouse</span><button id="returning-midi-retry" type="button">Reconnect MIDI</button></aside>
         <section id="practice-board" class="mvp-practice-board" aria-label="Practice Board" hidden>
           <button id="practice-board-mode" type="button" aria-pressed="false">Practice Mode</button>
@@ -149,6 +161,7 @@
           <button id="practice-right-hand" type="button" aria-pressed="true">Right Hand</button>
           <button id="practice-one-skill" type="button" disabled title="Coming later">One Skill</button>
         </section>
+        </div>
       </section>
     </main>
   </section>
@@ -180,9 +193,7 @@
           </div>
         </section>
       <section id="metronome-module" class="metronome-mode" aria-label="Metronome Mode">
-        <span id="metronome-beat-lamp" class="metronome-beat-lamp" aria-hidden="true"></span>
         <label class="module-toggle"><input id="metronome" type="checkbox" checked> Metronome</label>
-        <label>BPM <input id="bpm" type="number" min="20" max="300" step="1" value="72"></label>
         <label>Volume <select id="metronome-volume"><option>0</option><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
       </section>
       <div id="unified-playback-block" class="unified-playback-block">
@@ -257,11 +268,11 @@
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=player-shell-01"></script>
-  <script src="play12-playback.js?v=tutorial-correction-02"></script>
+  <script src="play12-playback.js?v=metronome-tutorial-01"></script>
   <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-coach.js?v=tutorial-correction-02"></script>
-  <script src="play12-onboarding.js?v=tutorial-correction-02"></script>
+  <script src="play12-coach.js?v=metronome-tutorial-01"></script>
+  <script src="play12-onboarding.js?v=metronome-tutorial-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -285,9 +296,14 @@
       saintsReviewMode ? fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json()) : Promise.resolve(null)
     ]).then(([baseScore, cardTheme, seedReviewOverlay]) => {
       let score = baseScore;
-      const onboardingBpm = 96;
+      const originalTempo = Number(baseScore.score.parts.flatMap(part => part.measures)
+        .flatMap(measure => measure.tempo_marks || []).find(mark => Number(mark.bpm) > 0)?.bpm) || 120;
+      const tempoStorageKey = `play12.tempo.v1:${baseScore.score.title}:${originalTempo}`;
+      let savedTempo = {};
+      try { savedTempo = JSON.parse(localStorage.getItem(tempoStorageKey)) || {}; } catch (_) {}
+      const onboardingBpm = Number.isFinite(savedTempo.bpm) && savedTempo.bpm >= 30 && savedTempo.bpm <= 240 ? savedTempo.bpm : originalTempo;
       document.getElementById('bpm').value = String(onboardingBpm);
-      document.getElementById('metronome').checked = false;
+      document.getElementById('metronome').checked = savedTempo.enabled === true;
       document.getElementById('count-in').checked = false;
       document.getElementById('music-audio').checked = true;
       document.getElementById('practice-mode').checked = false;
@@ -371,7 +387,9 @@
         svg, stage: document.getElementById('playback-stage'), playline: document.getElementById('playline'),
         playButton: document.getElementById('play'), pauseButton: document.getElementById('pause'),
         restartButton: document.getElementById('restart'), bpmInput: document.getElementById('bpm'),
-        positionOutput: document.getElementById('position'), initialBpm: onboardingBpm,
+        positionOutput: document.getElementById('position'), initialBpm: onboardingBpm, originalTempo, tempoStorageKey,
+        metronomeButton: document.getElementById('metronome-toggle'),
+        bpmMinus: document.getElementById('bpm-minus'), bpmPlus: document.getElementById('bpm-plus'),
         metronomeInput: document.getElementById('metronome'), countInInput: document.getElementById('count-in'),
         musicAudioInput: document.getElementById('music-audio'), practiceModeInput: document.getElementById('practice-mode'), timelineOffset, rounds,
         previousRoundButton: document.getElementById('previous-round'), nextRoundButton: document.getElementById('next-round'),

@@ -40,12 +40,13 @@
         cardsSetupCompleted: value.cardsSetupCompleted === true || value.zeroChangeHintShown === true ||
           (value.cardsSetupCompleted === undefined && value.onboardingStep === 'TRY_IT_YOURSELF' && value.practiceGuideStage !== 'cards'),
         zeroSetupStage: value.zeroSetupStage === 'cards' || value.practiceGuideStage === 'cards' ? 'cards' : null,
+        metronomeUnlocked: value.metronomeUnlocked === true,
         practiceModeEnabled: value.practiceModeEnabled === true,
         practiceLeftHandEnabled: value.practiceLeftHandEnabled !== false,
         practiceRightHandEnabled: value.practiceRightHandEnabled !== false,
         oneSkillMode: false, activeSkillId: null,
         listenGuideStage: ['initial', 'pause', 'continue', 'listening'].includes(value.listenGuideStage) ? value.listenGuideStage : null,
-        practiceGuideStage: ['enable', 'hand', 'explain', 'ready', 'playing', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : value.practiceGuideStage === 'complete' ? 'free' : 'enable'
+        practiceGuideStage: ['enable', 'hand', 'explain', 'ready', 'playing', 'metronome-on', 'metronome-tempo', 'metronome-play', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : value.practiceGuideStage === 'complete' ? 'free' : 'enable'
       };
     } catch (_) {
       return null;
@@ -115,6 +116,7 @@
     let runtime = null;
     let pianoHome = null;
     let stageHome = null;
+    let transportHome = null;
     let removeNoteListener = null;
     let removeMidiStatusListener = null;
     let removePlaybackStateListener = null;
@@ -271,6 +273,9 @@
       }
       if (onboardingChooseZero) onboardingChooseZero.hidden = !['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(state.onboardingStep);
       if (practiceBoard) practiceBoard.hidden = activeStep !== 3;
+      const metronomeBoard = document.getElementById('metronome-board');
+      if (metronomeBoard) metronomeBoard.hidden = !state.metronomeUnlocked;
+      root.classList.toggle('has-metronome-board', !!state.metronomeUnlocked);
       if (songStep) songStep.textContent = `Step ${activeStep} of 4`;
     };
 
@@ -302,6 +307,12 @@
       if (!stage || !playbackHost) return;
       if (!stageHome) stageHome = { parent: stage.parentElement, nextSibling: stage.nextSibling };
       if (stage.parentElement !== playbackHost) playbackHost.appendChild(stage);
+      const transport = document.getElementById('playline');
+      const row = document.getElementById('onboarding-control-row');
+      if (transport && row) {
+        transportHome ||= transport.parentElement;
+        row.appendChild(transport);
+      }
       if (runtime?.pianoView?.mount && listenPianoHost) {
         const mount = runtime.pianoView.mount;
         if (!pianoHome) pianoHome = { parent: mount.parentElement, nextSibling: mount.nextSibling };
@@ -317,6 +328,8 @@
     const restoreStage = () => {
       const stage = runtime?.stage;
       if (!stage || !stageHome) return;
+      const transport = document.getElementById('playline');
+      if (transportHome && transport) transportHome.prepend(transport);
       if (stageHome.nextSibling?.parentElement === stageHome.parent) stageHome.parent.insertBefore(stage, stageHome.nextSibling);
       else stageHome.parent.appendChild(stage);
       document.body.classList.remove('play12-onboarding-listen');
@@ -568,7 +581,7 @@
     const handleZeroConfirmed = () => finishZero(true);
     const advancePracticeInstruction = () => {
       clearHints();
-      const next = {enable: 'hand', hand: 'explain', explain: 'ready', ready: 'free'};
+      const next = {enable: 'hand', hand: 'explain', explain: 'ready', ready: 'free', 'metronome-on': 'metronome-tempo', 'metronome-tempo': 'metronome-play', 'metronome-play': 'free'};
       state.practiceGuideStage = next[state.practiceGuideStage] || 'free';
       saveState(storage, state); syncPracticeGuide();
     };
@@ -589,8 +602,11 @@
       leftHandButton.setAttribute('aria-pressed', String(settings.practiceLeftHandEnabled));
       rightHandButton.setAttribute('aria-pressed', String(settings.practiceRightHandEnabled));
       state.practiceGuideStage ||= 'enable';
-      practiceBoard.dataset.guideStage = state.practiceGuideStage;
+      if (state.practiceGuideStage === 'metronome-on' && runtime.playback.metronomeInput.checked) {
+        state.practiceGuideStage = 'metronome-tempo'; saveState(storage, state);
+      }
       const stage = state.practiceGuideStage;
+      practiceBoard.dataset.guideStage = stage;
       practiceBoard.hidden = false;
       practiceModeButton.classList.toggle('is-guided', stage === 'enable');
       leftHandButton.classList.toggle('is-guided', stage === 'hand');
@@ -598,8 +614,18 @@
       else if (stage === 'hand') showCoach('Let’s start with your right hand<br>Turn off Left Hand', 'practice-left-hand');
       else if (stage === 'explain') showCoach('Watch the Note Field and play the keys it shows you<br><small>The music will wait until you press the right key</small>', 'explain', false, advancePracticeInstruction);
       else if (stage === 'ready') showCoach("Press Play when you're ready", 'play');
+      else if (stage === 'metronome-on') showCoach(isRu() ? 'Добавим ровный пульс<br>Включите метроном' : 'Let’s add a steady beat<br>Turn on the metronome', 'metronome-toggle');
+      else if (stage === 'metronome-tempo') showCoach(isRu() ? 'Можно играть медленнее или быстрее<br><small>Введите BPM или меняйте темп кнопками − / + с шагом 10</small>' : 'Slow down or speed up the piece<br><small>Type a BPM, or use − / + to change it by 10</small>', 'metronome-tempo-controls', false, advancePracticeInstruction);
+      else if (stage === 'metronome-play') showCoach(isRu() ? 'Сыграйте ещё раз под ровный пульс<br>Нажмите Play' : 'Play it again with a steady beat<br>Press Play', 'play');
       else showCoach('');
     };
+    const isRu = () => document.documentElement.lang === 'ru';
+    global.addEventListener('play12:metronome-change', event => {
+      if (state.onboardingStep === 'TRY_IT_YOURSELF' && state.practiceGuideStage === 'metronome-on' && event.detail.enabled) advancePracticeInstruction();
+    });
+    global.addEventListener('play12:tempo-change', () => {
+      if (state.onboardingStep === 'TRY_IT_YOURSELF' && state.practiceGuideStage === 'metronome-tempo') advancePracticeInstruction();
+    });
 
     const changePracticeSetting = (key, button) => {
       if (!runtime) return;
@@ -648,14 +674,19 @@
       removePlaybackStateListener = runtime.playback?.addStateListener?.(snapshot => {
         if (state.onboardingStep === 'TRY_IT_YOURSELF') {
           if (returnAfterZero) return;
-          if (['enable', 'hand', 'explain', 'ready'].includes(state.practiceGuideStage) && (snapshot.running || snapshot.state === 'waiting_for_input')) {
+          if ((['enable', 'hand', 'explain', 'ready'].includes(state.practiceGuideStage) || (state.practiceGuideStage === 'free' && !state.metronomeUnlocked)) && (snapshot.running || snapshot.state === 'waiting_for_input')) {
             clearHints();
             state.practiceGuideStage = 'playing';
             saveState(storage, state);
           }
           if (state.practiceGuideStage === 'playing' && snapshot.ended && runtime.playback.practiceEnabled()) {
-            state.practiceGuideStage = 'free';
+            state.practiceGuideStage = state.metronomeUnlocked ? 'free' : 'metronome-on';
+            state.metronomeUnlocked = true;
+            syncProgress();
             saveState(storage, state);
+          }
+          if (state.practiceGuideStage === 'metronome-play' && (snapshot.running || snapshot.state === 'waiting_for_input')) {
+            clearHints(); state.practiceGuideStage = 'free'; saveState(storage, state);
           }
           syncPracticeGuide();
           return;

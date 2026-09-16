@@ -20,19 +20,20 @@ class AudioContext {
   createOscillator(){const handlers=[];return {frequency:{value:0},connect(){return this;},start(at){this.startAt=at;},stop(at){this.stopAt=at;},addEventListener(event,fn){if(event==='ended')handlers.push(fn);},finish(){handlers.forEach(fn=>fn());}};}
 }
 function load(extra={}) {
-  const window = {AudioContext, ...extra};
-  const sandbox = {window, document:{handlers:{},addEventListener(name,fn){this.handlers[name]=fn;}}, ResizeObserver: class {observe(){}}, requestAnimationFrame(){return 1;},cancelAnimationFrame(){},setTimeout(){},console};
+  const window = {AudioContext, dispatchEvent(){}, ...extra};
+  const sandbox = {window, document:{handlers:{},addEventListener(name,fn){this.handlers[name]=fn;}}, ResizeObserver: class {observe(){}}, requestAnimationFrame(){return 1;},cancelAnimationFrame(){},setTimeout(){},setInterval(){return 1;},clearInterval(){},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options?.detail;}},console};
   vm.createContext(sandbox);
   vm.runInContext(readFileSync(path.join(renderer,'play12-playback.js'),'utf8'),sandbox);
   return {window,sandbox};
 }
-function make(events=[['R',72,0],['L',48,0],['L',50,1],['R',74,2]], zero=24) {
+function make(events=[['R',72,0],['L',48,0],['L',50,1],['R',74,2]], zero=24, metronome=false) {
   const {window,sandbox}=load();
   const groups=events.map(([hand,midi,start],i)=>new Element({hand,midi:String(midi),eventId:String(i),globalStartQuarters:String(start),durationQuarters:'1',dynamic:'mf'}));
   const svg=new Element({totalQuarters:'8',stepQuarters:'1',cellHeight:'42',timelineOriginY:'0'}); svg.querySelectorAll=()=>groups;
   const options={svg,initialBpm:60,referenceZeroNote:24,runtimeZeroNote:zero,timelineOffset:0,rounds:[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4}]};
   for(const name of ['stage','playline','playButton','pauseButton','restartButton','bpmInput','positionOutput','metronomeInput','countInInput','musicAudioInput','practiceModeInput','previousRoundButton','nextRoundButton','loopInput','loopGapInput','loopStartInput','loopEndInput','metronomeVolumeInput','pulse','progressHead','timecode']) options[name]=new Element();
   options.musicAudioInput.checked=true;
+  if(metronome) Object.assign(options,{metronomeButton:new Element(),bpmMinus:new Element(),bpmPlus:new Element(),beatLamp:new Element(),originalTempo:60});
   const c=window.Play12Playback.start(options);
   const scheduled=[];
   c.audio.scheduleNote=(e,when,duration)=>scheduled.push({id:e.id,hand:e.hand,midi:e.midi,start:e.start,duration});
@@ -108,7 +109,7 @@ test('Approved manual RH has no simultaneous note set; source remains 9 rounds',
 });
 function onboarding(saved=null, midiDiagnostic=null) {
   const {c,window,sandbox}=make();const keydown=sandbox.document.handlers.keydown;const nodes=new Map();
-  const node=id=>{if(!nodes.has(id)) {const e=new Element(); const classes=new Set();e.classList={add(...xs){xs.forEach(x=>classes.add(x));},remove(...xs){xs.forEach(x=>classes.delete(x));},toggle(x,on){on ? classes.add(x):classes.delete(x);},contains(x){return classes.has(x);}};e.removeAttribute=name=>delete e[name];e.animate=()=>{};e.appendChild=child=>child.parentElement=e;e.insertBefore=e.appendChild;nodes.set(id,e);}return nodes.get(id);};
+  const node=id=>{if(!nodes.has(id)) {const e=new Element(); const classes=new Set();e.classList={add(...xs){xs.forEach(x=>classes.add(x));},remove(...xs){xs.forEach(x=>classes.delete(x));},toggle(x,on){on ? classes.add(x):classes.delete(x);},contains(x){return classes.has(x);}};e.removeAttribute=name=>delete e[name];e.animate=()=>{};e.appendChild=child=>child.parentElement=e;e.insertBefore=e.appendChild;e.prepend=e.appendChild;nodes.set(id,e);}return nodes.get(id);};
   const root=node('root');root.querySelector=node;const progress=[1,2,3,4].map(n=>{const e=node(`progress${n}`);e.dataset.progressStep=String(n);return e;});
   const views=['WELCOME','MIDI_CONNECT','LISTEN_AND_CONTROL'].map(n=>{const e=node(n);e.dataset.onboardingView=n;return e;});
   root.querySelectorAll=q=>q==='[data-progress-step]'?progress:q==='[data-onboarding-view]'?views:[];
@@ -141,7 +142,7 @@ test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actua
   assert(h.node('progress1').classList.contains('is-complete'));assert(h.node('progress2').classList.contains('is-complete'));assert(h.node('progress3').classList.contains('is-active'));assert(!h.node('progress4').classList.contains('is-active'));
   await h.c.play();assert.equal(h.node('#onboarding-listen-coach').hidden,true);
   h.c.acceptPracticeInput(72);h.c.audioContext.currentTime=2;h.c.tick();h.c.acceptPracticeInput(74);h.c.audioContext.currentTime=10;h.c.tick();
-  assert.equal(h.controller.getState().onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'free');
+  assert.equal(h.controller.getState().onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'metronome-on');
 });
 test('Practice settings persist in existing key; Continue restores and Start re-teaches',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,inputMode:'demo',chooseZeroCompleted:true});
@@ -316,4 +317,52 @@ test('Direct Step 3 and Continue initialize board; skipped Step 2 is completed w
   for(const n of [1,2,3]) h.node('progress'+n).handlers.click();
   assert.equal(h.node('progress1').dataset.progressState,'completed');assert.equal(h.node('progress2').dataset.progressState,'completed');assert.equal(h.node('progress3').dataset.progressState,'active');assert.equal(h.node('progress4').dataset.progressState,'locked');
   assert.equal(h.controller.getState().chooseZeroCompleted,false);assert(!h.values.has('play12.zero_note.midi'));
+});
+
+test('Metronome advances during Practice wait, survives gate release, Pause and Restart',async()=>{
+  const {c}=make(undefined,24,true);configure(c);c.setMetronome(true);await c.play();
+  assert(c.waitingForInput);const before=c.metronomeBeatCounter;
+  c.audioContext.currentTime=3;c.scheduleMetronome();c.tick();
+  assert(c.waitingForInput);assert(c.metronomeBeatCounter>before);
+  const after=c.metronomeBeatCounter;c.acceptPracticeInput(72);assert.equal(c.metronomeBeatCounter,after);
+  c.requestPause();c.restart();assert(c.metronomeInput.checked);assert.equal(c.clock.bpm,60);
+  c.audioContext.currentTime=4;c.scheduleMetronome();assert(c.metronomeBeatCounter>after);
+  c.setMetronome(false);const stopped=c.metronomeBeatCounter;c.audioContext.currentTime=6;c.scheduleMetronome();assert.equal(c.metronomeBeatCounter,stopped);
+});
+test('BPM clamps, +/- 10, invalid restores; shared tempo scales clock and next metronome beat',async()=>{
+  const {c}=make(undefined,24,true);c.setMetronome(true);
+  c.bpmPlus.handlers.click();assert.equal(c.clock.bpm,70);c.bpmMinus.handlers.click();assert.equal(c.clock.bpm,60);
+  for(const [raw,expected] of [['2',30],['999',240],['',240],['bad',240],['96',96]]){c.bpmInput.value=raw;c.changeBpm();assert.equal(c.clock.bpm,expected);assert.equal(c.bpmInput.value,String(expected));}
+  c.bpmInput.value='60';c.changeBpm();c.clock.start(0);c.audioContext.currentTime=1;assert.equal(c.clock.position,1);
+  c.bpmInput.value='120';c.changeBpm();c.audioContext.currentTime=2;assert.equal(c.clock.position,3);
+  const beatTime=c.nextMetronomeBeat;c.audioContext.currentTime=beatTime-.05;c.scheduleMetronome();assert.equal(c.nextMetronomeBeat,beatTime+.5);
+  assert.equal(c.metronomeAudio.pendingBeatVisuals.at(-1).when,beatTime);
+  assert.equal(c.metronomeAudio.pendingBeatVisuals.at(-1).accent,false);
+});
+test('Metronome tutorial Skip changes no settings; tempo timeout advances without forcing BPM',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',metronomeUnlocked:true,inputMode:'demo'});
+  h.controller.continueSession();assert.equal(h.node('#metronome-board').hidden,false);
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');assert.equal(h.c.metronomeInput.checked,false);
+  const timer=[...h.timers.values()].find(x=>x.delay===12000);timer.fn();
+  assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');assert.equal(h.c.clock.bpm,60);
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'free');
+});
+test('Metronome and tempo interactions advance the instructions immediately',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',metronomeUnlocked:true,inputMode:'demo'});
+  h.controller.continueSession();h.window.dispatchEvent({type:'play12:metronome-change',detail:{enabled:true}});
+  assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');
+  h.window.dispatchEvent({type:'play12:tempo-change'});assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');
+});
+test('Tempo change retimes remaining robot Note Off without a second attack or gate duration stretch',async()=>{
+  const {c,scheduled}=make([['L',48,0],['R',72,0]],24,true);configure(c);await c.play();
+  const initial=c.robotEvents.get('0').endsAt;assert.equal(initial,1);
+  c.audioContext.currentTime=.25;c.bpmInput.value='120';c.changeBpm();
+  assert.equal(c.robotEvents.get('0').endsAt,.625);assert.equal(scheduled.filter(x=>x.id==='0').length,1);
+  c.audioContext.currentTime=2;c.tick();assert(c.waitingForInput);assert.equal(c.robotEvents.get('0').status,'completed');
+});
+test('Ordinary playback keeps sounding note and rescales its remaining duration on tempo change',()=>{
+  const {c}=make(undefined,24,true);
+  Object.getPrototypeOf(c.audio).scheduleNote.call(c.audio,{id:'sustain',start:0,midi:60,dynamic:'mf'},0,4,60);
+  const voice=c.audio.voices.get('sustain@0');c.audioContext.currentTime=1;c.bpmInput.value='120';c.changeBpm();
+  assert.equal(c.audio.voices.get('sustain@0'),voice);assert.equal(voice.endsAt,2.5);assert.equal(voice.oscillators[0].stopAt,2.525);
 });
