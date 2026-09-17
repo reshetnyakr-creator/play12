@@ -23,7 +23,16 @@
       strip.insertBefore(block,frame);
     });
     const pc=document.createElement('span');pc.className='round-mini-block round-mini-pc';pc.textContent='PC';pc.setAttribute('aria-label','Pre-count');
+    const syncGeometry=()=>{
+      const bpm=document.getElementById('metronome-board'),practice=document.getElementById('practice-board'),control=document.getElementById('metronome-toggle');
+      if(root.hidden || !bpm || bpm.hidden || !practice || practice.hidden)return;
+      const b=bpm.getBoundingClientRect(),p=practice.getBoundingClientRect(),row=root.parentElement.getBoundingClientRect(),h=control.getBoundingClientRect().height;
+      if(h>0)root.style.setProperty('--round-mini-height',`${h}px`);
+      const height=`${p.bottom-b.top}px`,bottom=`${row.bottom-p.bottom}px`;
+      if(root.style.height!==height)root.style.height=height;if(root.style.bottom!==bottom)root.style.bottom=bottom;
+    };
     const update=position=>{
+      syncGeometry();
       const musicalPosition=c.countIn?.selected ?? position;
       const index=musicalPosition>=c.rounds[total-1].end?total-1:roundIndex(c.rounds,Math.max(0,musicalPosition));
       element('current-round').textContent=String(index+1);root.dataset.currentRound=String(index+1);previous.disabled=index===0;next.disabled=index===total-1;
@@ -33,11 +42,11 @@
       const count=c.countIn;
       let pcUnits=0,pcIndex=-1,stripPosition=index+fraction;
       if(count){
-        pcIndex=roundIndex(c.rounds,count.selected);pcUnits=count.plan.quarters/count.signature.measureQuarters;
+        pcIndex=roundIndex(c.rounds,count.selected);pcUnits=1;
         pc.style.width=`${pcUnits*width}px`;pc.style.flexBasis=`${pcUnits*width}px`;
         const target=strip.querySelector(`[data-round="${pcIndex+1}"]`);if(pc.nextSibling!==target)strip.insertBefore(pc,target);
         const elapsed=clamp(c.audioContext.currentTime-count.startedAt,0,count.endsAt-count.startedAt);
-        stripPosition=pcIndex+elapsed*c.clock.bpm/60/count.signature.measureQuarters;
+        stripPosition=pcIndex+elapsed/(count.endsAt-count.startedAt);
         root.dataset.precountVisible='true';
       }else{pc.remove();root.dataset.precountVisible='false';}
       strip.style.transform=`translateX(${-stripPosition*width}px)`;

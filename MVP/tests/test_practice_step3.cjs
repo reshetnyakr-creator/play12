@@ -487,11 +487,19 @@ test('Skip during unfinished Metronome pass unlocks Round guidance',async()=>{
   assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-nav');assert.equal(h.node('#round-loop-board').hidden,false);assert.equal(h.c.clock.running,false);
 });
 
-test('Runtime PC draws empty preparatory measures without changing musical events and cleans up',()=>{
+test('Runtime PC clones the actual Round grid and Count without musical events, then cleans up',()=>{
   const {window,sandbox}=load();
-  class Node{constructor(tag){this.tag=tag;this.attrs={};this.children=[];}setAttribute(k,v){this.attrs[k]=v;}appendChild(n){this.children.push(n);n.parent=this;}remove(){this.parent.children=this.parent.children.filter(n=>n!==this);}}
+  class Node{constructor(tag){this.tag=tag;this.attrs={};this.children=[];}setAttribute(k,v){this.attrs[k]=v;}getAttribute(k){return this.attrs[k]??null;}appendChild(n){this.children.push(n);n.parent=this;}remove(){this.parent.children=this.parent.children.filter(n=>n!==this);}cloneNode(){const n=new Node(this.tag);n.attrs={...this.attrs};n.textContent=this.textContent;return n;}}
   sandbox.document.createElementNS=(_,tag)=>new Node(tag);vm.runInContext(readFileSync(path.join(renderer,'play12-precount-view.js'),'utf8'),sandbox);
-  const svg=new Node('svg');svg.style={overflow:'hidden'};svg.viewBox={baseVal:{x:0,width:350}};const note=new Node('g');note.setAttribute('data-event-id','original');svg.appendChild(note);
-  const view=window.Play12PreCountView.create({svg,selected:8,plan:{quarters:8},signature:{measureQuarters:4,beatQuarters:1},stepQuarters:1,cellHeight:32,originY:1100,timelineOffset:0});
-  const layer=svg.children[1],rects=layer.children.filter(n=>n.tag==='rect');assert.equal(rects.length,2);assert.deepEqual(rects.map(n=>n.attrs.height),['128','128']);assert(layer.children.filter(n=>n.tag==='text').every(n=>n.textContent==='PC'));assert(layer.children.every(n=>!n.attrs['data-event-id']));assert.equal(svg.children[0],note);assert.equal(svg.style.overflow,'visible');view.clear();assert.equal(svg.children.length,1);assert.equal(svg.style.overflow,'hidden');
+  const svg=new Node('svg');svg.style={overflow:'hidden'};svg.viewBox={baseVal:{x:-13.25,y:-1.25,width:258.5}};const note=new Node('g');note.setAttribute('data-event-id','original');svg.appendChild(note);
+  const grid=[];for(let beat=0;beat<4;beat++){
+    for(let lane=0;lane<11;lane++){const n=new Node('rect');Object.assign(n.attrs,{x:String(lane*20),y:String(716+beat*32),width:'20',height:'32',class:lane===5?'play12-count-space':'play12-cell',fill:'#CEF932'});grid.push(n);}
+    const n=new Node('text');Object.assign(n.attrs,{x:'116',y:String(736+beat*32),class:'play12-count play12-count-beat'});n.textContent=['FOUR','THREE','TWO','ONE'][beat];grid.push(n);
+  }
+  for(const x of [0,132]){const n=new Node('rect');Object.assign(n.attrs,{x:String(x),y:'716',width:'100',height:'128',fill:'none',stroke:'#6B7280'});grid.push(n);}
+  for(const n of grid)svg.appendChild(n);svg.querySelectorAll=()=>grid;const original=JSON.stringify(svg.children.map(n=>n.attrs));
+  const view=window.Play12PreCountView.create({svg,selected:8,plan:{quarters:8},signature:{measureStart:8,measureQuarters:4,beatQuarters:1},stepQuarters:1,cellHeight:32,originY:1101.25,timelineOffset:0});
+  const layer=svg.children.at(-1);assert.equal(layer.children.length,2);
+  for(const round of layer.children){assert.equal(round.attrs.height,'128');const clones=round.children.slice(1,-1);assert.equal(clones.length,grid.length);for(let i=0;i<clones.length;i++){const actual={...clones[i].attrs},expected={...grid[i].attrs};delete actual.y;delete expected.y;assert.deepEqual(actual,expected);assert.equal(clones[i].textContent,grid[i].textContent);assert(!clones[i].attrs['data-event-id']);}}
+  assert.equal(svg.style.overflow,'visible');view.clear();assert.equal(JSON.stringify(svg.children.map(n=>n.attrs)),original);assert.equal(svg.style.overflow,'hidden');
 });

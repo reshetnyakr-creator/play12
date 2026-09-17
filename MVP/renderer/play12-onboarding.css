@@ -1165,8 +1165,18 @@
 .mvp-round-loop-board button{height:28px;padding:0 5px;font-size:11px;}
 .round-stepper button,.round-navigation button{width:18px;padding:0;}
 .round-stepper output,.round-navigation output{min-width:12px;}
-@keyframes mvp-green-beat{0%,35%{background:#009640;box-shadow:0 0 5px #00964066;}100%{background:#c4cac5;box-shadow:none;}}
+@keyframes mvp-green-beat{0%,35%{background:#CEF932;box-shadow:0 0 5px #CEF93266;}100%{background:#c4cac5;box-shadow:none;}}
 @media(max-width:1100px){.mvp-round-loop-board{padding:7px 6px;--mini-round-width:54px;}.mvp-round-loop-board button,.round-controls{font-size:10px;}.round-stepper button,.round-navigation button{width:14px;}.round-controls,.round-navigation,.round-range-controls,.round-stepper{gap:1px;}.mvp-round-loop-board button{padding:0 3px;}.round-stepper button,.round-navigation button{padding:0;}}
 @media(max-width:950px){.mvp-round-loop-board button,.round-controls{font-size:9px;}.round-stepper output,.round-navigation output{min-width:10px;}.round-stepper button,.round-navigation button{width:12px;}}
 
 @media (max-width:850px){.mvp-round-loop-board{bottom:calc(100% + 12px);}}
+
+/* Final controls follow rendered BPM dimensions; score is centered inside its border. */
+.mvp-playback-host .playback-score{left:50% !important;transform:translateX(-50%);}
+.round-timeline{flex:0 0 var(--round-mini-height,32px);height:var(--round-mini-height,32px);min-height:0;margin-top:auto;margin-bottom:auto;}
+.round-strip{top:0;bottom:0;}
+.round-mini-block{background:#FAFAF8;}
+.mvp-control-row{--mvp-control-font-size:11px;}
+.mvp-round-loop-board button,.round-controls,.round-controls output,.mvp-control-row .mvp-practice-board button,.play12-onboarding-listen .mvp-control-row .playback-zone-transport button{font-size:var(--mvp-control-font-size) !important;font-weight:600;}
+@media(max-width:1100px){.mvp-control-row{--mvp-control-font-size:9px;}}
+@media(max-width:950px){.mvp-control-row{--mvp-control-font-size:8px;}}
