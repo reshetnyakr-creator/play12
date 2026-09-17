@@ -371,6 +371,8 @@
       this.pianoView.setActiveMidis(midis, source);
     }
     replaceSvg(svg) {
+      this.preCountView?.clear();
+      this.preCountView = null;
       this.resetRobotNotes();
       this.svg = svg;
       this.totalQuarters = Number(svg.dataset.totalQuarters) - this.timelineOffset;
@@ -766,12 +768,14 @@
       this.stage.dataset.countInMeasures = String(plan.measures);
       this.stage.dataset.countInMusicScheduled = 'false';
       this.setPreRollVisibility(selected, true);
-      this.paint(selected);
+      this.preCountView = global.Play12PreCountView?.create({svg:this.svg,selected,plan,signature,stepQuarters:this.stepQuarters,cellHeight:this.cellHeight,originY:this.originY,timelineOffset:this.timelineOffset});
+      this.paint(selected-plan.quarters);
       this.scheduleCountIn();
       this.schedulePlaybackAnchor(selected, this.countIn.endsAt);
       this.updateControls();
     }
     setPreRollVisibility(selected, active) {
+      if (!active) { this.preCountView?.clear(); this.preCountView = null; }
       for (const event of this.events) {
         event.group.style.visibility = active && event.start < selected - EPSILON ? "hidden" : "";
       }
@@ -894,6 +898,7 @@
       this.clock.pause(restartPosition);
       this.practicePaused = true;
       if (this.practiceEnabled()) this.preparePractice(restartPosition);
+      this.setPreRollVisibility(restartPosition, false);
       this.displayPosition = restartPosition;
       this.lastPulseIndex = null;
       this.lastPlaybackPosition = null;
@@ -1238,7 +1243,7 @@
         }
       } else if (this.countIn) {
         const progress = clamp((this.audioContext.currentTime - this.countIn.startedAt) / (this.countIn.endsAt - this.countIn.startedAt), 0, 1);
-        const visual = this.countIn.selected - this.countIn.signature.measureQuarters * (1 - progress);
+        const visual = this.countIn.selected - this.countIn.plan.quarters * (1 - progress);
         this.paint(visual);
         this.pulseAt(visual);
         if (progress >= 1) {

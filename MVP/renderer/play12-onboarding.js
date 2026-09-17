@@ -422,6 +422,7 @@
         chooseZeroCompleted: false,
         cardsSetupCompleted: false, zeroSetupStage: null
       };
+      syncProgress();
       runtime?.playback?.restart();
       restorePracticeSettings();
       recoveringMidi = false;
@@ -480,10 +481,11 @@
     };
     global.addEventListener('resize', syncSkipAnchor);
     root.querySelector('#onboarding-skip').addEventListener('click', () => {
-      if (returnAfterZero) { finishZero(false); return; }
       clearHints();
+      runtime?.playback?.pauseImmediate?.();
+      if (returnAfterZero) { finishZero(false); return; }
       global.dispatchEvent(new CustomEvent('play12:choose-zero-close'));
-      if (state.onboardingStep === 'WELCOME') { startNew(); return; }
+      if (state.onboardingStep === 'WELCOME') { state.onboardingStarted = true; state.onboardingStep = 'MIDI_CONNECT'; saveState(storage, state); showStep('MIDI_CONNECT'); return; }
       if (state.onboardingStep === 'MIDI_CONNECT') {
         if (!state.inputMode) state.inputMode = 'demo';
         navigateStep(1);
@@ -499,7 +501,7 @@
         if (state.zeroSetupStage === 'cards') finishCardsSetup();
         else finishZero(false);
       } else if (state.onboardingStep === 'TRY_IT_YOURSELF') {
-        advancePracticeInstruction();
+        advancePracticeInstruction(true);
       }
     });
 
@@ -594,10 +596,12 @@
       }
     };
     const handleZeroConfirmed = () => finishZero(true);
-    const advancePracticeInstruction = () => {
+    const advancePracticeInstruction = (skipped = false) => {
       clearHints();
-      const next = {enable: 'hand', hand: 'explain', explain: 'ready', ready: 'free', 'metronome-on': 'metronome-tempo', 'metronome-tempo': 'metronome-play', 'metronome-play': 'round-nav', 'round-nav': 'round-loop', 'round-loop': 'round-range', 'round-range': 'round-precount', 'round-precount': 'free'};
-      state.practiceGuideStage = next[state.practiceGuideStage] || 'free';
+      const next = {enable: 'hand', hand: 'explain', explain: 'ready', ready: 'playing', playing: 'metronome-on', 'metronome-playing': 'round-nav', 'metronome-on': 'metronome-tempo', 'metronome-tempo': 'metronome-play', 'metronome-play': 'round-nav', 'round-nav': 'round-loop', 'round-loop': 'round-range', 'round-range': 'round-precount', 'round-precount': 'free'};
+      const freeNext = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-nav') : 'metronome-on';
+      state.practiceGuideStage = next[state.practiceGuideStage] || (skipped && state.practiceGuideStage === 'free' ? freeNext : 'free');
+      if (state.practiceGuideStage.startsWith('metronome-') || state.practiceGuideStage.startsWith('round-')) state.metronomeUnlocked = true;
       if (state.practiceGuideStage.startsWith('round-')) state.roundUnlocked = true;
       syncProgress();
       saveState(storage, state); syncPracticeGuide();

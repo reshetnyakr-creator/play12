@@ -1151,3 +1151,22 @@
 @media(max-width:950px){.mvp-round-loop-board{width:calc(50vw - var(--compact-playback-width)/2 - var(--compact-gap) - 18px);min-width:285px;}.mvp-control-row{--compact-playback-width:260px;--compact-practice-width:215px;--compact-zero-size:36px;--compact-gap:6px;}}
 @media(max-width:950px){.play12-onboarding-listen .mvp-control-row .playback-zone-transport button{font-size:8px;padding:0 4px;}.play12-onboarding-listen .mvp-control-row .playback-timecode{font-size:8px;}}
 @media(max-width:950px){.mvp-round-loop-board button,.round-controls{font-size:8px;}.mvp-round-loop-board button{padding:0 3px;}.round-stepper button,.round-navigation button{width:14px;padding:0;}.round-stepper output,.round-navigation output{min-width:10px;}.round-controls,.round-navigation,.round-range-controls,.round-stepper{gap:1px;}}
+
+/* Symmetric instrument board: BPM top to Practice bottom. */
+.mvp-round-loop-board{height:calc(var(--mvp-playback-board-height)*2 + 12px);padding:7px 10px;gap:7px;--mini-round-width:62px;}
+.round-timeline{display:block;flex:1;height:auto;min-height:32px;overflow:hidden;margin:0 3px;border-radius:5px;}
+.round-strip{position:absolute;left:10px;top:2px;bottom:2px;display:flex;width:max-content;will-change:transform;}
+.round-mini-block{flex:0 0 var(--mini-round-width);width:var(--mini-round-width);height:100%;font:600 13px/1 Inter,sans-serif;display:flex;align-items:center;justify-content:center;border:1px solid #FAFAF8;}
+.round-mini-ribbon{height:25%;}.round-mini-ribbon.is-top{top:0;}.round-mini-ribbon.is-bottom{bottom:0;}
+.round-mini-pc{background:#fff;color:#666;}
+.round-loop-frame{top:0;bottom:0;border-width:2px;}
+.round-playhead{left:10px;top:0;bottom:0;transform:none;}
+.round-controls{min-height:28px;font-size:11px;gap:2px;}
+.mvp-round-loop-board button{height:28px;padding:0 5px;font-size:11px;}
+.round-stepper button,.round-navigation button{width:18px;padding:0;}
+.round-stepper output,.round-navigation output{min-width:12px;}
+@keyframes mvp-green-beat{0%,35%{background:#009640;box-shadow:0 0 5px #00964066;}100%{background:#c4cac5;box-shadow:none;}}
+@media(max-width:1100px){.mvp-round-loop-board{padding:7px 6px;--mini-round-width:54px;}.mvp-round-loop-board button,.round-controls{font-size:10px;}.round-stepper button,.round-navigation button{width:14px;}.round-controls,.round-navigation,.round-range-controls,.round-stepper{gap:1px;}.mvp-round-loop-board button{padding:0 3px;}.round-stepper button,.round-navigation button{padding:0;}}
+@media(max-width:950px){.mvp-round-loop-board button,.round-controls{font-size:9px;}.round-stepper output,.round-navigation output{min-width:10px;}.round-stepper button,.round-navigation button{width:12px;}}
+
+@media (max-width:850px){.mvp-round-loop-board{bottom:calc(100% + 12px);}}

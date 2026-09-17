@@ -238,11 +238,12 @@ test('Chord expiry clears on tick; wrong note cannot extend window; Restart clea
   c.audioContext.currentTime=.1;c.acceptPracticeInput(70);c.audioContext.currentTime=.151;c.tick();assert.equal(c.waitingForInput.matchedPitches.size,0);assert.equal(c.waitingForInput.candidateStartedAt,null);
   c.acceptPracticeInput(64);assert(c.waitingForInput);c.restart();assert.equal(c.expectedPracticeEvent.matchedPitches.size,0);assert.equal(c.expectedPracticeEvent.candidateStartedAt,null);
 });
-test('Skip advances implemented stages without zero/progress loss, then leaves free Practice',()=>{
+test('Skip advances implemented stages without zero/progress loss',()=>{
   const h=onboarding();h.values.set('play12.zero_note.midi','26');h.controller.startNew();
   const skip=()=>h.node('#onboarding-skip').handlers.click();skip();assert.equal(h.root.dataset.onboardingStep,'LISTEN_AND_CONTROL');
   skip();assert.equal(h.controller.getState().listenGuideStage,'pause');skip();assert.equal(h.controller.getState().listenGuideStage,'continue');skip();assert.equal(h.root.dataset.onboardingStep,'CHOOSE_ZERO');skip();assert.equal(h.controller.getState().zeroSetupStage,'cards');skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
   for (const stage of ['enable','hand','explain','ready']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
+  for(const stage of ['playing','metronome-on','metronome-tempo','metronome-play','round-nav','round-loop','round-range','round-precount']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
   h.node('#practice-board-mode').handlers.click();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'free');assert(h.c.practiceEnabled());
   assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);assert.equal(h.node('progress4')['aria-disabled'],'true');
 });
@@ -263,7 +264,7 @@ test('Skip every instruction preserves real settings, learned actions and defaul
   for(const stage of ['enable','hand','explain','ready']){
     assert.equal(h.controller.getState().practiceGuideStage,stage);const actual=JSON.stringify(h.c.getPracticeSettings());skip();assert.equal(JSON.stringify(h.c.getPracticeSettings()),actual);
   }
-  assert.equal(h.controller.getState().practiceGuideStage,'free');assert.equal(h.timers.size,0);
+  assert.equal(h.controller.getState().practiceGuideStage,'playing');assert.equal(h.timers.size,0);
 });
 test('Descriptive cards advance on timeout, action cards never perform their action',()=>{
   const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();h.window.dispatchEvent({type:'play12:zero-confirmed'});
@@ -473,4 +474,24 @@ test('Miniature uses the same per-hand repetition detector colors as notation',(
   const score=JSON.parse(readFileSync(path.join(__dirname,'../examples/when_the_saints_manual.play12.json'))),repetitions=window.Play12Repetitions.detect(score);
   assert.equal(score.score.parts[0].measures.length,9);
   for(const segment of repetitions.segments)for(const o of segment.occurrences)for(let n=o.measure_start;n<=o.measure_end;n++)assert.equal(window.Play12RoundBoard.ribbonFor(repetitions,segment.hand,n),segment.display_color);
+});
+
+test('Skip during unfinished Practice pass immediately unlocks Metronome and clears waits without changing controls',async()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'ready',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,inputMode:'demo',highestUnlockedStep:3});h.controller.continueSession();
+  await h.c.play();assert.equal(h.controller.getState().practiceGuideStage,'playing');assert(h.c.waitingForInput);
+  const settings=JSON.stringify(h.c.getPracticeSettings()),bpm=h.c.clock.bpm;h.node('#onboarding-skip').handlers.click();
+  assert.equal(h.controller.getState().practiceGuideStage,'metronome-on');assert.equal(h.node('#metronome-board').hidden,false);assert.equal(h.c.waitingForInput,null);assert.equal(h.c.clock.running,false);assert.equal(JSON.stringify(h.c.getPracticeSettings()),settings);assert.equal(h.c.clock.bpm,bpm);
+});
+test('Skip during unfinished Metronome pass unlocks Round guidance',async()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:3});h.controller.continueSession();await h.c.play();
+  assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-nav');assert.equal(h.node('#round-loop-board').hidden,false);assert.equal(h.c.clock.running,false);
+});
+
+test('Runtime PC draws empty preparatory measures without changing musical events and cleans up',()=>{
+  const {window,sandbox}=load();
+  class Node{constructor(tag){this.tag=tag;this.attrs={};this.children=[];}setAttribute(k,v){this.attrs[k]=v;}appendChild(n){this.children.push(n);n.parent=this;}remove(){this.parent.children=this.parent.children.filter(n=>n!==this);}}
+  sandbox.document.createElementNS=(_,tag)=>new Node(tag);vm.runInContext(readFileSync(path.join(renderer,'play12-precount-view.js'),'utf8'),sandbox);
+  const svg=new Node('svg');svg.style={overflow:'hidden'};svg.viewBox={baseVal:{x:0,width:350}};const note=new Node('g');note.setAttribute('data-event-id','original');svg.appendChild(note);
+  const view=window.Play12PreCountView.create({svg,selected:8,plan:{quarters:8},signature:{measureQuarters:4,beatQuarters:1},stepQuarters:1,cellHeight:32,originY:1100,timelineOffset:0});
+  const layer=svg.children[1],rects=layer.children.filter(n=>n.tag==='rect');assert.equal(rects.length,2);assert.deepEqual(rects.map(n=>n.attrs.height),['128','128']);assert(layer.children.filter(n=>n.tag==='text').every(n=>n.textContent==='PC'));assert(layer.children.every(n=>!n.attrs['data-event-id']));assert.equal(svg.children[0],note);assert.equal(svg.style.overflow,'visible');view.clear();assert.equal(svg.children.length,1);assert.equal(svg.style.overflow,'hidden');
 });

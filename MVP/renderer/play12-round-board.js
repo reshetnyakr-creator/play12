@@ -6,7 +6,7 @@
   const ribbonFor=(repetitions,hand,number)=>repetitions.segments.find(segment=>segment.hand===hand&&segment.occurrences.some(o=>number>=o.measure_start&&number<=o.measure_end))?.display_color;
   function create({root,playback:c,repetitions,title}){
     const element=id=>root.querySelector('#'+id), total=c.rounds.length;
-    const timeline=element('round-timeline'),head=element('round-playhead'),frame=element('round-loop-frame');
+    const timeline=element('round-timeline'),strip=element('round-strip'),head=element('round-playhead'),frame=element('round-loop-frame');
     const previous=element('round-previous'),next=element('round-next'),loop=element('round-loop-toggle'),precount=element('round-precount-toggle');
     const key=`play12.round-loop.v1:${title}`;
     c.loopGapInput.value='direct';
@@ -20,18 +20,32 @@
     c.rounds.forEach((round,index)=>{
       const block=document.createElement('span');block.className='round-mini-block';block.textContent=String(index+1);block.dataset.round=String(index+1);
       for(const [hand,edge] of [['L','top'],['R','bottom']]){const color=ribbonFor(repetitions,hand,index+1);if(color){const ribbon=document.createElement('i');ribbon.className='round-mini-ribbon is-'+edge;ribbon.style.backgroundColor=color;ribbon.dataset.hand=hand;block.appendChild(ribbon);}}
-      timeline.insertBefore(block,frame);
+      strip.insertBefore(block,frame);
     });
+    const pc=document.createElement('span');pc.className='round-mini-block round-mini-pc';pc.textContent='PC';pc.setAttribute('aria-label','Pre-count');
     const update=position=>{
-      const index=position>=c.rounds[total-1].end?total-1:roundIndex(c.rounds,Math.max(0,position));
+      const musicalPosition=c.countIn?.selected ?? position;
+      const index=musicalPosition>=c.rounds[total-1].end?total-1:roundIndex(c.rounds,Math.max(0,musicalPosition));
       element('current-round').textContent=String(index+1);root.dataset.currentRound=String(index+1);previous.disabled=index===0;next.disabled=index===total-1;
       // Equal-width blocks require interpolation inside the actual current measure.
       const round=c.rounds[index],fraction=clamp((position-round.start)/(round.end-round.start),0,1);
-      head.style.left=`${(index+fraction)/total*100}%`;
+      const width=Number.parseFloat(getComputedStyle(root).getPropertyValue('--mini-round-width')) || 62;
+      const count=c.countIn;
+      let pcUnits=0,pcIndex=-1,stripPosition=index+fraction;
+      if(count){
+        pcIndex=roundIndex(c.rounds,count.selected);pcUnits=count.plan.quarters/count.signature.measureQuarters;
+        pc.style.width=`${pcUnits*width}px`;pc.style.flexBasis=`${pcUnits*width}px`;
+        const target=strip.querySelector(`[data-round="${pcIndex+1}"]`);if(pc.nextSibling!==target)strip.insertBefore(pc,target);
+        const elapsed=clamp(c.audioContext.currentTime-count.startedAt,0,count.endsAt-count.startedAt);
+        stripPosition=pcIndex+elapsed*c.clock.bpm/60/count.signature.measureQuarters;
+        root.dataset.precountVisible='true';
+      }else{pc.remove();root.dataset.precountVisible='false';}
+      strip.style.transform=`translateX(${-stripPosition*width}px)`;
+      root.dataset.stripPosition=String(stripPosition);
       const from=Number(c.loopStartInput.value),to=Number(c.loopEndInput.value);
       element('round-from').textContent=String(from+1);element('round-to').textContent=String(to+1);
       loop.setAttribute('aria-pressed',String(c.loopInput.checked));precount.setAttribute('aria-pressed',String(c.countInInput.checked));
-      frame.hidden=!c.loopInput.checked;frame.style.left=`${from/total*100}%`;frame.style.width=`${(to-from+1)/total*100}%`;
+      frame.hidden=!c.loopInput.checked;frame.style.left=`${(from+(pcIndex>=0&&pcIndex<=from?pcUnits:0))*width}px`;frame.style.width=`${(to-from+1+(pcIndex>from&&pcIndex<=to?pcUnits:0))*width}px`;
       for(const id of ['round-from-minus','round-from-plus','round-to-minus','round-to-plus'])element(id).disabled=!c.loopInput.checked;
       element('round-range-controls').classList.toggle('is-disabled',!c.loopInput.checked);
     };
