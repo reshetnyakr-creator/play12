@@ -73,6 +73,50 @@
               <button id="onboarding-midi-continue" class="mvp-button mvp-button-primary" type="button">Continue</button>
             </div>
           </div>
+          <div data-midi-connect-state="calibrate-left" hidden>
+            <h1 class="mvp-step-heading">Keyboard calibration</h1>
+            <p class="mvp-step-message">Press the leftmost key on your keyboard</p>
+          </div>
+          <div data-midi-connect-state="calibrate-right" hidden>
+            <h1 class="mvp-step-heading">Keyboard calibration</h1>
+            <p class="mvp-step-message">Now press the rightmost key</p>
+          </div>
+          <div data-midi-connect-state="calibrate-invalid" hidden>
+            <h1 class="mvp-step-heading">Try again</h1>
+            <p class="mvp-step-message">The right key must be above the left key and on the same MIDI keyboard.</p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibrate-invalid-retry" class="mvp-button mvp-button-primary" type="button">Try again</button></div>
+          </div>
+          <div data-midi-connect-state="calibrate-unusual" hidden>
+            <h1 class="mvp-step-heading">This keyboard range looks unusual.</h1>
+            <p class="mvp-step-message">Make sure you pressed the leftmost and rightmost keys.</p>
+            <p id="onboarding-midi-unusual-range" class="mvp-step-message"></p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibrate-unusual-retry" class="mvp-button mvp-button-secondary" type="button">Try again</button><button id="onboarding-midi-use-range" class="mvp-button mvp-button-primary" type="button">Use this range</button></div>
+          </div>
+          <div data-midi-connect-state="calibrate-confirm" hidden>
+            <h1 class="mvp-step-heading">Keyboard detected</h1>
+            <p id="onboarding-midi-key-count" class="mvp-step-message"></p>
+            <p id="onboarding-midi-range" class="mvp-step-message"></p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibrate-confirm" class="mvp-button mvp-button-primary" type="button">Confirm</button><button id="onboarding-midi-calibrate-retry" class="mvp-button mvp-button-secondary" type="button">Try again</button></div>
+          </div>
+          <div data-midi-connect-state="function-verify" hidden>
+            <h1 class="mvp-step-heading">Function key</h1>
+            <p class="mvp-step-message">Press the rightmost key again</p>
+          </div>
+          <div data-midi-connect-state="function-retry" hidden>
+            <h1 class="mvp-step-heading">That was not the rightmost key</h1>
+            <p class="mvp-step-message">Press the rightmost key again, or recalibrate the keyboard.</p>
+            <div class="mvp-actions"><button id="onboarding-midi-function-retry" class="mvp-button mvp-button-primary" type="button">Try again</button><button id="onboarding-midi-function-recalibrate" class="mvp-button mvp-button-secondary" type="button">Recalibrate</button></div>
+          </div>
+          <div data-midi-connect-state="calibration-complete" hidden>
+            <h1 class="mvp-step-heading">Function is ready</h1>
+            <p class="mvp-step-message mvp-step-success">Hold the rightmost key to use piano controls ✓</p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibration-continue" class="mvp-button mvp-button-primary" type="button">Continue</button></div>
+          </div>
+          <div data-midi-connect-state="recalibrate" hidden>
+            <h1 class="mvp-step-heading">MIDI keyboard range has changed.</h1>
+            <p class="mvp-step-message">Recalibrate?</p>
+            <div class="mvp-actions"><button id="onboarding-midi-recalibrate" class="mvp-button mvp-button-primary" type="button">Recalibrate</button><button id="onboarding-midi-keep-range" class="mvp-button mvp-button-secondary" type="button">Keep current range</button></div>
+          </div>
           <div data-midi-connect-state="permission-help" hidden>
             <h1 class="mvp-step-heading">Allow browser access to MIDI</h1>
             <p class="mvp-step-message">When you connect for the first time, your browser may ask for permission to use MIDI devices. Choose Allow.</p>
@@ -279,14 +323,14 @@
   <script src="play12-renderer.js?v=reference-zero-color-01"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
-  <script src="piano-view.js?v=player-shell-01"></script>
+  <script src="piano-view.js?v=function-midi-01"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
   <script src="play12-round-board.js?v=round-final-01"></script>
   <script src="play12-playback.js?v=round-final-01"></script>
-  <script src="web-midi-diagnostic.js?v=midi-recovery-01"></script>
+  <script src="web-midi-diagnostic.js?v=function-midi-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
-  <script src="play12-onboarding.js?v=round-final-01"></script>
+  <script src="play12-onboarding.js?v=function-midi-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -511,15 +555,32 @@
           selectedPitchClass: candidateZeroPitchClass, layoutZeroNote: candidateZeroMidi
         }}));
       });
-      if (playbackParams.get('midi') === '1') {
-        document.getElementById('midi-diagnostic').hidden = false;
-        window.play12MidiDiagnostic = Play12MidiDiagnostic.create({
-          root: document.getElementById('midi-diagnostic'),
-          enableButton: document.getElementById('enable-midi'),
-          pianoView,
-          noteEvents: window.play12Playback
-        });
-      }
+      if (playbackParams.get('midi') === '1') document.getElementById('midi-diagnostic').hidden = false;
+      const onboardingRoot = document.getElementById('play12-onboarding');
+      const commandAvailability = action => {
+        const playbackAllowed = onboardingRoot.hidden || onboardingRoot.dataset.playbackShortcutsEnabled === 'true';
+        if (['play','pause','restart'].includes(action)) return playbackAllowed;
+        if (['metronome','bpm-down','bpm-up'].includes(action)) return !document.getElementById('metronome-board').hidden;
+        if (['previous-round','next-round'].includes(action)) return !document.getElementById('round-loop-board').hidden;
+        return false;
+      };
+      window.play12MidiDiagnostic = Play12MidiDiagnostic.create({
+        root: document.getElementById('midi-diagnostic'), enableButton: document.getElementById('enable-midi'), pianoView,
+        noteEvents: window.play12Playback,
+        commandActions: {
+          available: commandAvailability,
+          run: action => {
+            if (action === 'metronome') window.play12Playback.setMetronome(!document.getElementById('metronome').checked);
+            else if (action === 'previous-round') window.play12Playback.moveRound(-1);
+            else if (action === 'bpm-down') window.play12Playback.adjustBpm(-10);
+            else if (action === 'next-round') window.play12Playback.moveRound(1);
+            else if (action === 'bpm-up') window.play12Playback.adjustBpm(10);
+            else if (action === 'play') window.play12Playback.play();
+            else if (action === 'pause') window.play12Playback.requestPause();
+            else if (action === 'restart') window.play12Playback.restart();
+          }
+        }
+      });
       window.play12Onboarding?.connectRuntime({
         pianoView,
         noteEvents: window.play12Playback,

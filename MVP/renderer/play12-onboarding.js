@@ -120,6 +120,7 @@
     let transportHome = null;
     let removeNoteListener = null;
     let removeMidiStatusListener = null;
+    let removeCalibrationListener = null;
     let removePlaybackStateListener = null;
     let midiConnectState = 'choice';
     let listenPosition = 0;
@@ -555,6 +556,22 @@
       showStep('LISTEN_AND_CONTROL');
     };
 
+    const beginMidiCalibration = () => {
+      if (!state.midiVerified || !runtime?.midiDiagnostic) return;
+      runtime.midiDiagnostic.beginCalibration();
+    };
+
+    const syncCalibrationRange = range => {
+      if (!range) return;
+      const pitch = global.Play12MidiDiagnostic.pitchForMidi;
+      const count = root.querySelector('#onboarding-midi-key-count');
+      const detail = root.querySelector('#onboarding-midi-range');
+      const unusual = root.querySelector('#onboarding-midi-unusual-range');
+      if (count) count.textContent = `${range.keyCount} keys`;
+      if (detail) detail.textContent = `Left: ${pitch(range.leftMidi)} · Right: ${pitch(range.rightMidi)}`;
+      if (unusual) unusual.textContent = `${range.keyCount} keys · ${pitch(range.leftMidi)} → ${pitch(range.rightMidi)}`;
+    };
+
     const advanceToChooseZero = () => {
       if (!state.listenFragmentCompleted) return;
       state = { ...state, onboardingStep: 'CHOOSE_ZERO' };
@@ -681,6 +698,7 @@
       runtime = nextRuntime;
       removeNoteListener?.();
       removeMidiStatusListener?.();
+      removeCalibrationListener?.();
       removePlaybackStateListener?.();
       removeNoteListener = runtime.noteEvents?.addNoteListener?.(event => {
         if (state.onboardingStep === 'MIDI_CONNECT' && midiConnectState === 'test' &&
@@ -699,8 +717,21 @@
         if (event.status === 'unavailable') showMidiState(event.detail?.safari ? 'unsupported-safari' : 'unsupported');
         else if (event.status === 'permission-denied') showMidiState('permission-denied');
         else if (event.status === 'no-input') showMidiState('device-not-found');
-        else if (event.status === 'connected' && midiConnectState !== 'success') showMidiState('test');
+        else if (event.status === 'connected' && !state.midiVerified) showMidiState('test');
         else if (event.status === 'error') showMidiState('permission-help');
+      }) || null;
+      removeCalibrationListener = runtime.midiDiagnostic?.addCalibrationListener?.(event => {
+        if (event.type === 'capture-left') showMidiState('calibrate-left');
+        else if (event.type === 'capture-right') showMidiState('calibrate-right');
+        else if (event.type === 'invalid') showMidiState('calibrate-invalid');
+        else if (event.type === 'unusual') { syncCalibrationRange(event.range); showMidiState('calibrate-unusual'); }
+        else if (event.type === 'confirm') { syncCalibrationRange(event.range); showMidiState('calibrate-confirm'); }
+        else if (event.type === 'verify-function') showMidiState('function-verify');
+        else if (event.type === 'verify-retry') showMidiState('function-retry');
+        else if (event.type === 'complete') showMidiState('calibration-complete');
+        else if (['range-changed','device-changed'].includes(event.type)) {
+          if (state.inputMode === 'midi') { state.onboardingStep = 'MIDI_CONNECT'; saveState(storage, state); showStep('MIDI_CONNECT'); showMidiState('recalibrate'); }
+        }
       }) || null;
       removePlaybackStateListener = runtime.playback?.addStateListener?.(snapshot => {
         if (state.onboardingStep === 'TRY_IT_YOURSELF') {
@@ -775,7 +806,17 @@
     root.querySelector('#onboarding-midi-retry').addEventListener('click', beginMidiTest);
     root.querySelector('#onboarding-midi-show-guide').addEventListener('click', showUsbGuide);
     root.querySelector('#onboarding-midi-refresh').addEventListener('click', beginMidiTest);
-    root.querySelector('#onboarding-midi-continue').addEventListener('click', advanceToListen);
+    root.querySelector('#onboarding-midi-continue').addEventListener('click', beginMidiCalibration);
+    root.querySelector('#onboarding-midi-calibrate-invalid-retry').addEventListener('click', () => runtime?.midiDiagnostic?.retryCalibration());
+    root.querySelector('#onboarding-midi-calibrate-unusual-retry').addEventListener('click', () => runtime?.midiDiagnostic?.retryCalibration());
+    root.querySelector('#onboarding-midi-use-range').addEventListener('click', () => runtime?.midiDiagnostic?.useUnusualRange());
+    root.querySelector('#onboarding-midi-calibrate-confirm').addEventListener('click', () => runtime?.midiDiagnostic?.confirmRange());
+    root.querySelector('#onboarding-midi-calibrate-retry').addEventListener('click', () => runtime?.midiDiagnostic?.retryCalibration());
+    root.querySelector('#onboarding-midi-function-retry').addEventListener('click', () => runtime?.midiDiagnostic?.retryFunctionVerification());
+    root.querySelector('#onboarding-midi-function-recalibrate').addEventListener('click', () => runtime?.midiDiagnostic?.retryCalibration());
+    root.querySelector('#onboarding-midi-calibration-continue').addEventListener('click', advanceToListen);
+    root.querySelector('#onboarding-midi-recalibrate').addEventListener('click', () => runtime?.midiDiagnostic?.retryCalibration());
+    root.querySelector('#onboarding-midi-keep-range').addEventListener('click', () => { runtime?.midiDiagnostic?.keepCurrentRange(); advanceToListen(); });
     listenContinue.addEventListener('click', advanceToChooseZero);
     global.addEventListener('play12:zero-confirmed', handleZeroConfirmed);
     global.addEventListener('play12:zero-ui-open', () => {

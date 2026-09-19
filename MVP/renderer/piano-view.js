@@ -91,7 +91,7 @@
         const mapping=mappingForMidi(midi,this.zeroMidi,this.colors);
         Object.assign(wrapper.dataset,{play12Symbol:mapping.symbol,play12Color:mapping.color,cycleIndex:String(mapping.cycle)});
         wrapper.style.setProperty("--play12-key-color",mapping.color);
-        keyAnchors.set(midi,{left:bounds.left,right:bounds.right,top:bounds.top,type});
+        keyAnchors.set(midi,{...bounds,type});
       });
       this.mount.dataset.keyCount=String(this.keys.size);
       const penultimateKeyAnchor=keyAnchors.get(this.maxMidi-1);
@@ -100,6 +100,9 @@
       this.mount.dataset.cardClipRight=String(penultimateKeyAnchor.right);
       this.mount.dataset.cardClipLastVisibleMidi=String(this.maxMidi-1);
       this.renderStrips(keyAnchors);
+      this.keyAnchors=keyAnchors;
+      this.commandOverlay=element("g",{"class":"piano-command-overlay","aria-hidden":"true"});
+      this.svg.appendChild(this.commandOverlay);
       for (const [source, midis] of this.activeBySource) this.setActiveMidis(midis,source);
     }
 
@@ -143,6 +146,37 @@
         strip.setAttribute("href",url); strip.setAttributeNS(XLINK,"xlink:href",url);
         strip.classList.add("piano-card-strip"); this.svg.appendChild(strip);
       }
+    }
+
+    showFunctionOverlay(commandLabels, functionMidi) {
+      if(!this.commandOverlay||!this.keyAnchors)return false;
+      const entries=[...commandLabels.entries(),[functionMidi,"Function"]];
+      if(entries.some(([midi])=>!this.keys.has(midi)||!this.keyAnchors.has(midi))){
+        this.hideFunctionOverlay();
+        return false;
+      }
+      this.commandOverlay.replaceChildren();
+      for(const [midi,label] of entries){
+        const bounds=this.keyAnchors.get(midi),key=this.keys.get(midi);
+        const width=Math.max(15,bounds.right-bounds.left);
+        const badge=element("g",{"class":"piano-command-badge","data-midi":midi,"data-command":label});
+        badge.classList.add(bounds.type==="black"?"is-black-key":"is-white-key");
+        const rect=element("rect",{x:bounds.left+1,y:bounds.top+1,width:Math.max(4,width-2),height:Math.max(20,bounds.height-2),rx:4});
+        const text=element("text",{x:bounds.left+width/2,y:bounds.bottom-12,"text-anchor":"start","dominant-baseline":"middle",transform:`rotate(-90 ${bounds.left+width/2} ${bounds.bottom-12})`});
+        text.textContent=label;
+        badge.append(rect,text); this.commandOverlay.appendChild(badge);
+        key.classList.add("is-function-command");
+      }
+      this.mount.dataset.functionMode="true";
+      return true;
+    }
+    setFunctionCommandPressed(midi,pressed){
+      this.commandOverlay?.querySelector(`[data-midi="${midi}"]`)?.classList.toggle("is-pressed",pressed);
+    }
+    hideFunctionOverlay(){
+      this.commandOverlay?.replaceChildren();
+      for(const key of this.keys.values())key.classList.remove("is-function-command");
+      delete this.mount.dataset.functionMode;
     }
 
     measureOctaveSpan(anchors) {

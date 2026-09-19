@@ -1037,6 +1037,10 @@
       this.saveTempoSettings();
       global.dispatchEvent(new CustomEvent('play12:tempo-change'));
     }
+    adjustBpm(delta) {
+      this.bpmInput.value = String(this.clock.bpm + Number(delta || 0));
+      this.changeBpm(true);
+    }
     setLoopGapVisibility(active) {
       this.stage.classList.toggle("is-loop-gap", active);
     }
