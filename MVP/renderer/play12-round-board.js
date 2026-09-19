@@ -75,8 +75,13 @@
     });
     precount.addEventListener('click',()=>{c.countInInput.checked=!c.countInInput.checked;if(!c.countInInput.checked&&c.countIn)c.pauseImmediate(c.countIn.selected);update(c.clock.position);publish('precount');});
     const pulse=()=>{if(root.hidden||!c.metronomeInput.checked)return;head.classList.remove('is-beat');void head.offsetWidth;head.classList.add('is-beat');};
+    const reset=()=>{
+      c.loopInput.checked=false;c.countInInput.checked=false;c.loopStartInput.value='0';c.loopEndInput.value='0';
+      try{localStorage.removeItem(key);}catch(_){}
+      c.pauseImmediate(0);update(0);
+    };
     update(c.clock.position);
-    return {root,update,pulse};
+    return {root,update,pulse,reset};
   }
   global.Play12RoundBoard={create,roundIndex,ribbonFor};
 })(window);

@@ -71,6 +71,10 @@
         this.fields.message.textContent = "Web MIDI API недоступен в этом браузере.";
         this.setStatus("unavailable", { safari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent) });
       }
+      this.pianoView.setCommandRouter?.({
+        noteOn: (note, pointerId) => this.handleVirtualCommand(note, pointerId, true),
+        noteOff: (note, pointerId) => this.handleVirtualCommand(note, pointerId, false)
+      });
     }
 
     setStatus(status, detail = null) {
@@ -96,6 +100,13 @@
     }
 
     getCalibration() { return this.calibration ? { ...this.calibration } : null; }
+    clearCalibration() {
+      this.clearFunctionState();
+      this.calibration = null;
+      this.calibrationDraft = null;
+      this.calibrationMode = null;
+      this.storage.removeItem(CALIBRATION_KEY);
+    }
     beginCalibration() { this.clearFunctionState(); this.calibrationDraft = null; this.calibrationMode = "left"; this.emitCalibration("capture-left"); }
     retryCalibration() { this.beginCalibration(); }
     useUnusualRange() {
@@ -118,12 +129,12 @@
     sameInput(range, input, message) { return range && range.inputId === input.id && range.channel === message.channel; }
 
     commandMapFor(range) {
-      if (!this.pianoView.keys.has(range.functionMidi)) return null;
+      if (range.functionMidi < 21 || range.functionMidi > 108) return null;
       const firstC = range.leftMidi + modulo(12 - modulo(range.leftMidi, 12), 12);
       const map = new Map();
       for (const [offset, action, label] of COMMANDS) {
         const midi = firstC + offset;
-        if (midi > range.rightMidi || !this.pianoView.keys.has(midi)) return null;
+        if (midi > range.rightMidi || midi < 21 || midi > 108 || (range.verified && !this.pianoView.keys.has(midi))) return null;
         map.set(midi, { action, label });
       }
       return map;
@@ -292,6 +303,13 @@
         return true;
       }
       return false;
+    }
+
+    handleVirtualCommand(note, pointerId, noteOn) {
+      const range = this.calibration;
+      if (!range?.verified) return false;
+      return this.routeCommand({ note, noteOn, velocity: noteOn ? 100 : 0, channel: range.channel },
+        { id: range.inputId }, `mouse:${pointerId}:${note}`);
     }
 
     handleMessage(event, input) {

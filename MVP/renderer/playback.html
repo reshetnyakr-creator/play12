@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-playback.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=round-final-01">
+  <link rel="stylesheet" href="play12-playback.css?v=dynamic-piano-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=dynamic-piano-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -198,6 +198,7 @@
         <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden aria-label="Choose Your 0">0</button>
         </div>
         <aside id="returning-midi" class="mvp-midi-reconnect" hidden><span id="returning-midi-message">Reconnect your MIDI piano, or play with your mouse</span><button id="returning-midi-retry" type="button">Reconnect MIDI</button></aside>
+        <aside id="keyboard-range-warning" class="mvp-midi-reconnect" hidden><span>This piece uses notes outside your keyboard range.</span></aside>
         <section id="practice-board" class="mvp-practice-board" aria-label="Practice Board" hidden>
           <button id="practice-board-mode" type="button" aria-pressed="false">Practice Mode</button>
           <button id="practice-left-hand" type="button" aria-pressed="true">Left Hand</button>
@@ -278,7 +279,7 @@
         </div>
       </section>
       <aside id="midi-diagnostic" class="midi-diagnostic" hidden data-ui-module="midi-diagnostic" aria-label="Web MIDI Diagnostic">
-        <div class="midi-diagnostic-heading"><strong>Web MIDI Diagnostic v0.1</strong><button id="enable-midi" type="button">Enable MIDI</button></div>
+        <div class="midi-diagnostic-heading"><strong>Web MIDI Diagnostic v0.1</strong><button id="midi-recalibrate" type="button">Recalibrate keyboard</button><button id="enable-midi" type="button">Enable MIDI</button></div>
         <dl>
           <div><dt>MIDI status</dt><dd id="midi-status">Not connected</dd></div>
           <div><dt>Input</dt><dd id="midi-input-name">—</dd></div>
@@ -323,14 +324,14 @@
   <script src="play12-renderer.js?v=reference-zero-color-01"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
-  <script src="piano-view.js?v=function-midi-01"></script>
+  <script src="piano-view.js?v=dynamic-piano-01"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
-  <script src="play12-round-board.js?v=round-final-01"></script>
+  <script src="play12-round-board.js?v=dynamic-piano-01"></script>
   <script src="play12-playback.js?v=round-final-01"></script>
-  <script src="web-midi-diagnostic.js?v=function-midi-01"></script>
+  <script src="web-midi-diagnostic.js?v=dynamic-piano-01"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
-  <script src="play12-onboarding.js?v=function-midi-01"></script>
+  <script src="play12-onboarding.js?v=dynamic-piano-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -361,7 +362,8 @@
       try { savedTempo = JSON.parse(localStorage.getItem(tempoStorageKey)) || {}; } catch (_) {}
       const onboardingBpm = Number.isFinite(savedTempo.bpm) && savedTempo.bpm >= 30 && savedTempo.bpm <= 240 ? savedTempo.bpm : originalTempo;
       document.getElementById('bpm').value = String(onboardingBpm);
-      document.getElementById('metronome').checked = savedTempo.enabled === true;
+      // BPM persists, but every page/session starts with the metronome explicitly OFF.
+      document.getElementById('metronome').checked = false;
       document.getElementById('count-in').checked = false;
       document.getElementById('music-audio').checked = true;
       document.getElementById('practice-mode').checked = false;
@@ -386,6 +388,7 @@
           ? savedPitchClass
           : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
       const initialZeroMidi = Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
+      const defaultZeroMidi = Play12PianoView.layoutZeroForMidi(referenceZeroNote, 21);
       const reviewGrid = saintsReviewMode ? document.getElementById('review-grid-select') : saintsManualReviewMode ? document.getElementById('manual-review-grid') : document.getElementById('grid-resolution');
       const reviewController = saintsReviewMode ? Play12CompositionReview.create({
         baseDocument: baseScore,
@@ -581,12 +584,42 @@
           }
         }
       });
+      const rangeWarning = document.getElementById('keyboard-range-warning');
+      const applyPianoRange = calibration => {
+        if (!calibration?.verified) return false;
+        pianoView.setRange(calibration.leftMidi, calibration.rightMidi);
+        const outside = window.play12Playback.events.some(event => event.midi < calibration.leftMidi || event.midi > calibration.rightMidi);
+        rangeWarning.hidden = !outside;
+        return true;
+      };
+      applyPianoRange(window.play12MidiDiagnostic.getCalibration());
+      window.play12MidiDiagnostic.addCalibrationListener(event => {
+        if (event.type === 'complete') applyPianoRange(event.calibration);
+      });
+      window.addEventListener('play12:zero-confirmed', () => applyPianoRange(window.play12MidiDiagnostic.getCalibration()));
+      document.getElementById('midi-recalibrate').addEventListener('click', () => {
+        window.dispatchEvent(new CustomEvent('play12:manual-recalibrate'));
+      });
+      const roundStorageKey = `play12.round-loop.v1:${baseScore.score.title}`;
+      const resetLearningSetup = () => {
+        for (const key of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.zero_note.pitch_class',
+          tempoStorageKey,roundStorageKey,'play12.loop-gap','play12.metronome-volume']) localStorage.removeItem(key);
+        window.play12MidiDiagnostic.clearCalibration?.();
+        pianoView.setRange(21,108);pianoView.setZeroMidi(defaultZeroMidi);
+        window.play12Playback.setRuntimeZeroNote(defaultZeroMidi);
+        window.play12Playback.bpmInput.value=String(originalTempo);window.play12Playback.changeBpm();
+        window.play12Playback.setMetronome(false,false);
+        window.play12Playback.setPracticeSettings({practiceModeEnabled:false,practiceLeftHandEnabled:true,practiceRightHandEnabled:true});
+        window.play12Playback.roundBoard?.reset?.();
+        window.play12Playback.pauseImmediate(0);rangeWarning.hidden=true;
+      };
       window.play12Onboarding?.connectRuntime({
         pianoView,
         noteEvents: window.play12Playback,
         midiDiagnostic: window.play12MidiDiagnostic || null,
         playback: window.play12Playback,
-        stage: document.getElementById('playback-stage')
+        stage: document.getElementById('playback-stage'),
+        resetLearningSetup
       });
       if (!compositionReviewMode) reviewGrid.addEventListener('change', event => {
         window.play12Playback.pauseImmediate();

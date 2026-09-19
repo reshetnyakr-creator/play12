@@ -101,7 +101,8 @@ html, body { margin: 0; min-height: 100%; background: #f7f7f5; }
 .zero-chooser button { min-height: 28px; padding: 0 10px; border: 1px solid #b9bec5; border-radius: 6px; background: #fff; font: 500 11px Inter, Arial, sans-serif; }
 .zero-chooser button:disabled { opacity: .42; }
 .midi-diagnostic { position: absolute; z-index: 30; right: 12px; top: 12px; width: 260px; box-sizing: border-box; padding: 12px; border: var(--playback-shell-border); border-radius: var(--playback-shell-radius); background: var(--playback-shell-fill); box-shadow: 0 5px 18px rgba(17,24,39,.12); font: 400 11px/1.35 Inter, Arial, sans-serif; }
-.midi-diagnostic-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.midi-diagnostic-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+#midi-recalibrate { flex-basis: 100%; order: 3; }
 .midi-diagnostic button { min-height: 28px; padding: 0 9px; border: 1px solid #b9bec5; border-radius: 6px; background: #fff; color: #111; font: 500 11px Inter, Arial, sans-serif; cursor: pointer; }
 .midi-diagnostic button:disabled { opacity: .5; cursor: default; }
 .midi-diagnostic dl { display: grid; gap: 3px; margin: 0; }

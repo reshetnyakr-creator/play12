@@ -8,7 +8,7 @@ function setup(){
   const fields=new Map(),events=[],actions=[],overlay={visible:false,pressed:new Map()};
   const field=()=>({textContent:'',disabled:false,addEventListener(){},classList:{add(){},remove(){},toggle(){}}});
   const root={dataset:{},classList:{toggle(){}},querySelector(selector){if(!fields.has(selector))fields.set(selector,field());return fields.get(selector);}};
-  const button=field(),pianoView={keys:new Map(Array.from({length:88},(_,i)=>[i+21,{}])),showFunctionOverlay(){overlay.visible=true;return true;},hideFunctionOverlay(){overlay.visible=false;},setFunctionCommandPressed(midi,on){overlay.pressed.set(midi,on);}};
+  const button=field(),pianoView={keys:new Map(Array.from({length:88},(_,i)=>[i+21,{}])),setCommandRouter(router){this.commandRouter=router;},showFunctionOverlay(){overlay.visible=true;return true;},hideFunctionOverlay(){overlay.visible=false;},setFunctionCommandPressed(midi,on){overlay.pressed.set(midi,on);}};
   const noteEvents={handleNoteOn(...args){events.push(['on',...args]);},handleNoteOff(...args){events.push(['off',...args]);},unlockAudio(){}};
   const store=new Map(),storage={getItem:key=>store.get(key)||null,setItem:(key,value)=>store.set(key,value)};
   const window={localStorage:storage,dispatchEvent(){},CustomEvent:class{constructor(type,init){this.type=type;this.detail=init?.detail;}}};
@@ -57,4 +57,12 @@ test('velocity-zero NoteOn releases Function and commands symmetrically',()=>{
 test('command NoteOff stays consumed when Function is released first',()=>{
   const f=setup();calibrate(f);f.send(f.inputA,108);f.send(f.inputA,48);f.send(f.inputA,108,0);f.send(f.inputA,48,0);
   assert.deepEqual(f.actions,['metronome']);assert.equal(f.events.length,0);
+});
+
+test('mouse and MIDI share one Function state in both directions',()=>{
+  const f=setup();calibrate(f);
+  f.overlay.visible=false;assert.equal(f.diagnostic.pianoView.commandRouter.noteOn(108,1),true);f.send(f.inputA,49);assert.deepEqual(f.actions,['previous-round']);f.send(f.inputA,49,0);f.diagnostic.pianoView.commandRouter.noteOff(108,1);
+  f.send(f.inputA,108);assert.equal(f.diagnostic.pianoView.commandRouter.noteOn(54,2),true);assert.deepEqual(f.actions,['previous-round','play']);f.diagnostic.pianoView.commandRouter.noteOff(54,2);f.send(f.inputA,108,0);
+  f.diagnostic.pianoView.commandRouter.noteOn(108,3);f.diagnostic.pianoView.commandRouter.noteOn(58,4);f.diagnostic.pianoView.commandRouter.noteOff(58,4);f.diagnostic.pianoView.commandRouter.noteOff(108,3);
+  assert.deepEqual(f.actions,['previous-round','play','restart']);assert.equal(f.events.length,0);
 });

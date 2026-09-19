@@ -205,6 +205,8 @@
       if (!mount?.classList.contains('is-fixed-piano-view')) return;
       runtime.pianoView.syncContainer?.();
       requestAnimationFrame(() => {
+        const fieldRect = playbackHost?.getBoundingClientRect();
+        mount.style.left = fieldRect?.width > 0 ? `${fieldRect.left + fieldRect.width / 2}px` : '50%';
         const pianoRect = mount.getBoundingClientRect();
         const height = Math.ceil(pianoRect.height);
         const playbackHeight = document.body.classList.contains('play12-onboarding-listen') ? 50 : 0;
@@ -294,6 +296,8 @@
     const showMidiState = value => {
       midiConnectState = value;
       for (const [name, element] of midiStates) element.hidden = name !== value;
+      const mount = runtime?.pianoView?.mount;
+      if (mount) mount.classList.toggle('is-calibration-hidden', value !== 'calibration-complete' && state.inputMode !== 'demo');
       exposeState();
     };
 
@@ -384,6 +388,7 @@
         document.body.classList.add('play12-onboarding-active');
         document.body.classList.remove('play12-onboarding-dismissed');
         moveStageToOnboarding();
+        if (state.inputMode === 'demo' || runtime?.midiDiagnostic?.getCalibration?.()?.verified) runtime?.pianoView?.mount?.classList.remove('is-calibration-hidden');
         requestAnimationFrame(syncSongTitleMarquee);
         if (step === 'LISTEN_AND_CONTROL') {
           syncListenCopy();
@@ -409,6 +414,7 @@
     };
 
     const startNew = () => {
+      runtime?.resetLearningSetup?.();
       state = {
         onboardingStarted: true,
         onboardingStep: 'MIDI_CONNECT',
@@ -488,7 +494,9 @@
       global.dispatchEvent(new CustomEvent('play12:choose-zero-close'));
       if (state.onboardingStep === 'WELCOME') { state.onboardingStarted = true; state.onboardingStep = 'MIDI_CONNECT'; saveState(storage, state); showStep('MIDI_CONNECT'); return; }
       if (state.onboardingStep === 'MIDI_CONNECT') {
-        if (!state.inputMode) state.inputMode = 'demo';
+        if (!state.inputMode || !runtime?.midiDiagnostic?.getCalibration?.()?.verified) {
+          state.inputMode = 'demo'; runtime?.pianoView?.setRange?.(21,108);
+        }
         navigateStep(1);
       } else if (state.onboardingStep === 'LISTEN_AND_CONTROL') {
         const stage = state.listenGuideStage || (state.pauseLearned ? 'continue' : state.playLearned ? 'pause' : 'initial');
@@ -511,6 +519,8 @@
       if (restored) state = restored;
       else state = { ...state, lastSessionExists: true };
       resumeRequested = true;
+      if (runtime?.playback?.metronomeButton) runtime.playback.setMetronome(false, false);
+      else if (runtime?.playback?.metronomeInput) runtime.playback.metronomeInput.checked = false;
       if (highestUnlocked() >= 2) navigateStep(highestUnlocked());
       else if (state.midiVerified || state.inputMode === 'demo') navigateStep(1);
       else if (state.onboardingStep === 'MIDI_CONNECT') showStep('MIDI_CONNECT');
@@ -544,6 +554,8 @@
     };
 
     const enterDemoMode = () => {
+      runtime?.pianoView?.setRange?.(21, 108);
+      runtime?.pianoView?.mount?.classList.remove('is-calibration-hidden');
       state = { ...state, inputMode: 'demo', midiVerified: false, onboardingStep: 'LISTEN_AND_CONTROL' };
       saveState(storage, state);
       showStep('LISTEN_AND_CONTROL');
@@ -716,7 +728,7 @@
         if (state.onboardingStep !== 'MIDI_CONNECT') return;
         if (event.status === 'unavailable') showMidiState(event.detail?.safari ? 'unsupported-safari' : 'unsupported');
         else if (event.status === 'permission-denied') showMidiState('permission-denied');
-        else if (event.status === 'no-input') showMidiState('device-not-found');
+        else if (event.status === 'no-input' && midiConnectState !== 'recalibrate') showMidiState('device-not-found');
         else if (event.status === 'connected' && !state.midiVerified) showMidiState('test');
         else if (event.status === 'error') showMidiState('permission-help');
       }) || null;
@@ -795,6 +807,7 @@
     document.body.classList.remove('play12-onboarding-boot');
     document.body.classList.add('play12-onboarding-active');
     continueButton.hidden = !returning;
+    if (returning) { startButton.textContent = 'Start fresh'; continueButton.textContent = 'Continue with saved setup'; }
     startButton.addEventListener('click', startNew);
     continueButton.addEventListener('click', continueSession);
     root.querySelector('#onboarding-midi-ready').addEventListener('click', beginMidiTest);
@@ -817,6 +830,10 @@
     root.querySelector('#onboarding-midi-calibration-continue').addEventListener('click', advanceToListen);
     root.querySelector('#onboarding-midi-recalibrate').addEventListener('click', () => runtime?.midiDiagnostic?.retryCalibration());
     root.querySelector('#onboarding-midi-keep-range').addEventListener('click', () => { runtime?.midiDiagnostic?.keepCurrentRange(); advanceToListen(); });
+    global.addEventListener('play12:manual-recalibrate', () => {
+      state.onboardingStep = 'MIDI_CONNECT'; state.inputMode = 'midi'; saveState(storage, state);
+      showStep('MIDI_CONNECT'); runtime?.midiDiagnostic?.beginCalibration();
+    });
     listenContinue.addEventListener('click', advanceToChooseZero);
     global.addEventListener('play12:zero-confirmed', handleZeroConfirmed);
     global.addEventListener('play12:zero-ui-open', () => {

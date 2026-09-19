@@ -1180,3 +1180,4 @@
 .mvp-round-loop-board button,.round-controls,.round-controls output,.mvp-control-row .mvp-practice-board button,.play12-onboarding-listen .mvp-control-row .playback-zone-transport button{font-size:var(--mvp-control-font-size) !important;font-weight:600;}
 @media(max-width:1100px){.mvp-control-row{--mvp-control-font-size:9px;}}
 @media(max-width:950px){.mvp-control-row{--mvp-control-font-size:8px;}}
+.play12-piano-view.is-calibration-hidden { visibility: hidden; pointer-events: none; }
