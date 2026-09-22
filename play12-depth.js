@@ -23,7 +23,9 @@
 
   function clear() {
     for (const element of surfaces) {
-      element.style.setProperty('--light-shadow-opacity', '0');
+      if (element.style.getPropertyValue('--light-shadow-opacity') !== '0') {
+        element.style.setProperty('--light-shadow-opacity', '0');
+      }
     }
   }
 
@@ -72,7 +74,9 @@
       const dy = y - pointer.y;
       const distance = Math.hypot(dx, dy);
       if (!visible || distance >= radius) {
-        element.style.setProperty('--light-shadow-opacity', '0');
+        if (element.style.getPropertyValue('--light-shadow-opacity') !== '0') {
+          element.style.setProperty('--light-shadow-opacity', '0');
+        }
         continue;
       }
       const proximity = 1 - distance / radius;
