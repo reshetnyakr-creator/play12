@@ -179,6 +179,12 @@
                 <p id="onboarding-listen-prompt">Listen to how the melody sounds<br>Press Play or P</p>
                 <button id="cards-ready" class="mvp-button mvp-button-primary" type="button" hidden>Ready</button>
               </div>
+              <aside id="onboarding-completion" class="mvp-completion-card" role="status" aria-live="polite" hidden>
+                <h2 id="onboarding-completion-title">Congratulations!</h2>
+                <p id="onboarding-completion-message">You've completed the Play12 controls tutorial.<br><br>Now you can practise on your own and work on your favourite melodies.</p>
+              </aside>
+              <div id="onboarding-confetti" class="mvp-confetti" aria-hidden="true"></div>
+              <aside id="returning-midi" class="mvp-midi-reconnect" role="status" aria-live="polite" hidden><span id="returning-midi-message">MIDI keyboard connection lost.<br>Reconnect your instrument or continue playing with your mouse.</span><button id="returning-midi-retry" type="button">Reconnect MIDI</button></aside>
             </div>
             <div class="mvp-actions mvp-listen-complete-action">
               <button id="onboarding-listen-continue" class="mvp-button mvp-button-primary" type="button" hidden>Continue</button>
@@ -198,8 +204,7 @@
         </section>
         <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden aria-label="Choose Your 0">0</button>
         </div>
-        <aside id="returning-midi" class="mvp-midi-reconnect" hidden><span id="returning-midi-message">Reconnect your MIDI piano, or play with your mouse</span><button id="returning-midi-retry" type="button">Reconnect MIDI</button></aside>
-        <aside id="keyboard-range-warning" class="mvp-midi-reconnect" hidden><span>This piece uses notes outside your keyboard range.</span></aside>
+        <aside id="keyboard-range-warning" class="mvp-range-warning" hidden><span>This piece uses notes outside your keyboard range.</span></aside>
         <section id="practice-board" class="mvp-practice-board" aria-label="Practice Board" hidden>
           <button id="practice-board-mode" type="button" aria-pressed="false">Practice Mode</button>
           <button id="practice-left-hand" type="button" aria-pressed="true">Left Hand</button>

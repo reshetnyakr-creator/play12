@@ -118,7 +118,7 @@ function onboarding(saved=null, midiDiagnostic=null) {
   const listeners={};const timers=new Map();let timerId=0;
   window.addEventListener=(name,fn)=>(listeners[name] ||= []).push(fn);window.dispatchEvent=event=>(listeners[event.type]||[]).forEach(fn=>fn(event));
   window.setTimeout=(fn,delay)=>{timers.set(++timerId,{fn,delay});return timerId;};
-  Object.assign(sandbox,{document:{body:node('body'),documentElement:node('html'),addEventListener(){},getElementById:id=>id==='play12-onboarding'?root:node('#'+id)},URLSearchParams,location:{hostname:'127.0.0.1',search:''},Event:class{constructor(type){this.type=type;}},CustomEvent:class{constructor(type){this.type=type;}},clearTimeout:id=>timers.delete(id)});
+  Object.assign(sandbox,{document:{body:node('body'),documentElement:node('html'),addEventListener(){},createElement:()=>new Element(),getElementById:id=>id==='play12-onboarding'?root:node('#'+id)},URLSearchParams,location:{hostname:'127.0.0.1',search:''},Event:class{constructor(type){this.type=type;}},CustomEvent:class{constructor(type){this.type=type;}},clearTimeout:id=>timers.delete(id)});
   window.Play12Coach={create:()=>({show(){},stop(){}})};
   vm.runInContext(readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8'),sandbox);
   const controller=window.Play12Onboarding.create({root,startButton:node('start'),continueButton:node('continue'),storage});
@@ -193,7 +193,7 @@ test('Returning verified MIDI checks current availability and reconnects without
   const h=onboarding({onboardingStep:'LISTEN_AND_CONTROL',chooseZeroCompleted:true,listenFragmentCompleted:true,midiVerified:true,inputMode:'midi',practiceGuideStage:'playing'},midi);
   h.controller.continueSession();assert.equal(calls,1);assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert(h.controller.getState().midiVerified);assert.equal(h.node('#returning-midi').hidden,false);
   listener({status:'connected'});assert.equal(h.node('#returning-midi').hidden,true);
-  listener({status:'no-input'});assert.equal(h.node('#returning-midi').hidden,false);h.node('#returning-midi-retry').handlers.click();assert.equal(calls,2);assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
+  listener({status:'no-input'});assert.equal(h.node('#returning-midi').hidden,false);assert.match(h.node('#returning-midi-message').innerHTML,/MIDI keyboard connection lost/);h.node('#returning-midi-retry').handlers.click();assert.equal(calls,2);assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
 });
 test('Geometry extends inner clip to fixed Playback at top/middle/bottom scroll and resize',()=>{
   const {c,sandbox}=make();
@@ -244,7 +244,8 @@ test('Skip advances implemented stages without zero/progress loss',()=>{
   skip();assert.equal(h.controller.getState().listenGuideStage,'pause');skip();assert.equal(h.controller.getState().listenGuideStage,'continue');skip();assert.equal(h.root.dataset.onboardingStep,'CHOOSE_ZERO');skip();assert.equal(h.controller.getState().zeroSetupStage,'cards');skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
   for (const stage of ['enable','hand','explain','ready']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
   for(const stage of ['playing','metronome-on','metronome-tempo','metronome-play','round-nav','round-loop','round-range','round-precount']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
-  h.node('#practice-board-mode').handlers.click();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'free');assert(h.c.practiceEnabled());
+  assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');skip();
+  assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'final-practice');assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);assert.equal(h.c.practiceSettings.practiceRightHandEnabled,true);
   assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);assert.equal(h.node('progress4')['aria-disabled'],'true');
 });
 test('Instruction timeout is 12s, one timer per hint, does not perform the action or reappear',()=>{
@@ -469,7 +470,8 @@ test('Round tutorial actions advance immediately; Skip changes no loop/pre-count
   h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate'}});assert.equal(h.controller.getState().practiceGuideStage,'round-loop');
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-range');assert.equal(h.c.loopInput.checked,false);
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-precount');assert.equal(h.c.countInInput.checked,false);
-  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'free');
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'final-practice');assert.equal(h.controller.getState().onboardingCompleted,false);
   h.node('progress1').handlers.click();assert.equal(h.node('#round-loop-board').hidden,true);h.node('progress3').handlers.click();assert.equal(h.node('#round-loop-board').hidden,false);
 });
 test('Miniature uses the same per-hand repetition detector colors as notation',()=>{
@@ -489,6 +491,55 @@ test('Skip during unfinished Practice pass immediately unlocks Metronome and cle
 test('Skip during unfinished Metronome pass unlocks Round guidance',async()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:3});h.controller.continueSession();await h.c.play();
   assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-nav');assert.equal(h.node('#round-loop-board').hidden,false);assert.equal(h.c.clock.running,false);
+});
+
+test('Final Right Hand Practice completes only after one uninterrupted full run',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:3,inputMode:'demo'});
+  h.controller.continueSession();
+  const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
+  emit({state:'waiting_for_input',position:0,running:false,ended:false});
+  emit({state:'paused',position:2,running:false,ended:false});
+  emit({state:'paused',position:8,running:false,ended:true});
+  assert.equal(h.controller.getState().onboardingCompleted,false,'interrupted run cannot complete');
+  emit({state:'waiting_for_input',position:0,running:false,ended:false});
+  emit({state:'playing',position:4,running:true,ended:false});
+  emit({state:'paused',position:8,running:false,ended:true});
+  assert.equal(h.controller.getState().onboardingStep,'ONBOARDING_COMPLETE');
+  assert.equal(h.controller.getState().onboardingCompleted,true);
+  assert.equal(h.controller.getState().highestUnlockedStep,4);
+  assert(h.node('progress4').classList.contains('is-complete'));
+  assert.equal(h.node('#onboarding-completion').hidden,false);
+  const timersAfterCompletion=h.timers.size;emit({state:'paused',position:8,running:false,ended:true});assert.equal(h.timers.size,timersAfterCompletion,'celebration fires once');
+});
+
+test('Robot playback end and Skip never fake final completion',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-instruction',practiceModeEnabled:false,practiceLeftHandEnabled:true,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:3,inputMode:'demo'});
+  h.controller.continueSession();
+  h.node('#onboarding-skip').handlers.click();
+  assert.equal(h.controller.getState().practiceGuideStage,'final-practice');
+  assert.equal(h.controller.getState().onboardingCompleted,false);
+  h.c.setPracticeSettings({practiceModeEnabled:false});
+  for(const listener of h.c.stateListeners) listener({state:'playing',position:0,running:true,ended:false});
+  for(const listener of h.c.stateListeners) listener({state:'paused',position:8,running:false,ended:true});
+  assert.equal(h.controller.getState().onboardingCompleted,false);
+});
+
+test('Completed tutorial persists without replaying celebration on Continue',()=>{
+  const saved={onboardingStarted:true,onboardingStep:'ONBOARDING_COMPLETE',onboardingCompleted:true,practiceGuideStage:'completed',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:4,inputMode:'demo'};
+  const h=onboarding(saved);h.controller.continueSession();
+  assert.equal(h.root.dataset.onboardingStep,'ONBOARDING_COMPLETE');
+  assert.equal(h.controller.getState().onboardingCompleted,true);
+  assert.equal(h.node('#onboarding-completion').hidden,true);
+  assert(h.node('progress4').classList.contains('is-complete'));
+});
+
+test('Approved reconnect, final instruction and completion copy are present in RU and EN',()=>{
+  const js=readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8');
+  const html=readFileSync(path.join(renderer,'playback.html'),'utf8');
+  const css=readFileSync(path.join(renderer,'play12-onboarding.css'),'utf8');
+  for(const text of ['Соединение с MIDI-клавиатурой потеряно.','Подключи инструмент снова или продолжи играть мышкой.','Подключить MIDI','А теперь попробуй сыграть всю мелодию правой рукой от начала до конца.','Не спеши. Если собьёшься — попробуй ещё раз.','Поздравляем!','Ты прошёл обучение управлению Play12.','Теперь ты можешь самостоятельно заниматься и тренировать любимые мелодии.']) assert(js.includes(text));
+  assert(html.includes('MIDI keyboard connection lost.'));assert(html.includes('Reconnect your instrument or continue playing with your mouse.'));
+  assert(css.includes('left: var(--mvp-note-field-center-x'));assert(css.includes('background: #fff'));
 });
 
 test('Runtime PC clones the actual Round grid and Count without musical events, then cleans up',()=>{
