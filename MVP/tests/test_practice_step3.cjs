@@ -266,10 +266,12 @@ test('Skip every instruction preserves real settings, learned actions and defaul
   }
   assert.equal(h.controller.getState().practiceGuideStage,'playing');assert.equal(h.timers.size,0);
 });
-test('Descriptive cards advance on timeout, action cards never perform their action',()=>{
+test('Card placement waits for Ready; other descriptive/action cards retain timeout behavior',()=>{
   const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();h.window.dispatchEvent({type:'play12:zero-confirmed'});
   const expire=()=>{const entries=[...h.timers.values()];assert.equal(entries.length,1);entries[0].fn();};
-  expire();assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.node('#practice-board').hidden,false);
+  assert.equal(h.timers.size,0);assert.equal(h.controller.getState().zeroSetupStage,'cards');
+  h.node('#cards-ready').handlers.click();assert.equal(h.controller.getState().zeroSetupStage,'verify-yellow');
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.node('#practice-board').hidden,false);
   expire();assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.c.practiceEnabled(),false);
   h.node('#practice-board-mode').handlers.click();expire();assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,true);assert.equal(h.controller.getState().practiceGuideStage,'hand');
   h.node('#practice-left-hand').handlers.click();expire();assert.equal(h.controller.getState().practiceGuideStage,'ready');expire();assert.equal(h.c.clock.running,false);
@@ -283,7 +285,9 @@ test('Manual zero during card setup resumes instruction without a stale timeout 
   const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();h.window.dispatchEvent({type:'play12:zero-confirmed'});
   h.window.dispatchEvent({type:'play12:zero-ui-open'});h.window.dispatchEvent({type:'play12:zero-confirmed'});
   assert.equal(h.controller.getState().zeroSetupStage,'cards');assert.equal(h.node('#onboarding-listen-coach').hidden,false);
-  [...h.timers.values()][0].fn();assert.equal(h.controller.getState().practiceGuideStage,'enable');
+  assert.equal(h.timers.size,0);assert.equal(h.controller.getState().zeroSetupStage,'cards');
+  h.node('#cards-ready').handlers.click();assert.equal(h.controller.getState().zeroSetupStage,'verify-yellow');
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'enable');
 });
 
 test('P is blocked on pre-player screens and text input, with no Space transport fallback',async()=>{

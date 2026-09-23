@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=dynamic-piano-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=dynamic-piano-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=tutorial-ux-06">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -154,6 +154,16 @@
         <h1 id="listen-title" class="mvp-visually-hidden">Listen to When the Saints Go Marching In</h1>
         <div class="mvp-player-layout">
           <aside class="mvp-onboarding-progress" aria-label="Onboarding progress">
+            <aside class="mvp-song-card">
+              <div class="mvp-song-copy">
+                <span>Now playing</span>
+                <div id="onboarding-song-title-viewport" class="mvp-song-title-viewport">
+                  <strong id="onboarding-song-title" class="mvp-song-title-track">When the Saints Go Marching In</strong>
+                </div>
+                <p>Play12 Learning Version</p>
+              </div>
+              <small id="onboarding-song-step">Step 1 of 4</small>
+            </aside>
             <ol>
               <li data-progress-step="1" class="is-active" aria-current="step"><span>1</span><strong>Listen</strong></li>
               <li data-progress-step="2"><span>2</span><strong>Choose your 0</strong></li>
@@ -167,22 +177,13 @@
               <div id="onboarding-playback-host" class="mvp-playback-host"></div>
               <div id="onboarding-listen-coach" class="mvp-listen-coach" role="status" aria-live="polite">
                 <p id="onboarding-listen-prompt">Listen to how the melody sounds<br>Press Play or P</p>
+                <button id="cards-ready" class="mvp-button mvp-button-primary" type="button" hidden>Ready</button>
               </div>
             </div>
             <div class="mvp-actions mvp-listen-complete-action">
               <button id="onboarding-listen-continue" class="mvp-button mvp-button-primary" type="button" hidden>Continue</button>
             </div>
           </div>
-          <aside class="mvp-song-card">
-            <div class="mvp-song-copy">
-              <span>Now playing</span>
-              <div id="onboarding-song-title-viewport" class="mvp-song-title-viewport">
-                <strong id="onboarding-song-title" class="mvp-song-title-track">When the Saints Go Marching In</strong>
-              </div>
-              <p>Play12 Learning Version</p>
-            </div>
-            <small id="onboarding-song-step">Step 1 of 4</small>
-          </aside>
         </div>
         <div id="onboarding-listen-piano-host" class="mvp-piano-host mvp-listen-piano-host" aria-label="Playable on-screen piano"></div>
         <div id="onboarding-control-row" class="mvp-control-row">
@@ -324,14 +325,14 @@
   <script src="play12-renderer.js?v=reference-zero-color-01"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
-  <script src="piano-view.js?v=dynamic-piano-01"></script>
+  <script src="piano-view.js?v=tutorial-ux-06"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
   <script src="play12-round-board.js?v=dynamic-piano-01"></script>
   <script src="play12-playback.js?v=round-final-01"></script>
-  <script src="web-midi-diagnostic.js?v=dynamic-piano-01"></script>
+  <script src="web-midi-diagnostic.js?v=tutorial-ux-06"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
-  <script src="play12-onboarding.js?v=dynamic-piano-01"></script>
+  <script src="play12-onboarding.js?v=tutorial-ux-06"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);

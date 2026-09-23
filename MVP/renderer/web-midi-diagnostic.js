@@ -49,6 +49,7 @@
       this.activeMidiNotes = new Set();
       this.activeMidiTokens = new Map();
       this.inputHandlers = new Map();
+      this.inputInterceptors = new Set();
       this.statusListeners = new Set();
       this.calibrationListeners = new Set();
       this.calibration = readCalibration(storage);
@@ -59,6 +60,7 @@
       this.rangeWarningDismissed = false;
       this.currentStatus = null;
       this.enablePromise = null;
+      this.handleStateChange = () => this.refreshInputs();
       this.fields = Object.fromEntries([
         "status", "input-name", "manufacturer", "event-type", "note", "pitch", "velocity", "channel", "active-notes", "message"
       ].map(name => [name, root.querySelector(`#midi-${name}`)]));
@@ -91,6 +93,19 @@
     addCalibrationListener(listener) {
       this.calibrationListeners.add(listener);
       return () => this.calibrationListeners.delete(listener);
+    }
+
+    addInputInterceptor(listener) {
+      this.inputInterceptors.add(listener);
+      return () => this.inputInterceptors.delete(listener);
+    }
+
+    interceptInput(message, source, token) {
+      for (const listener of this.inputInterceptors) {
+        if (listener({ type: message.noteOn ? "note-on" : "note-off", midiNote: message.note,
+          velocity: message.velocity, source, token }) === true) return true;
+      }
+      return false;
     }
 
     emitCalibration(type, detail = {}) {
@@ -147,7 +162,26 @@
       delete this.root.dataset.functionMode;
     }
 
-    async enable() {
+    clearTransientInputState() {
+      for (const [token, note] of this.activeMidiTokens) this.noteEvents?.handleNoteOff(note, "midi", token);
+      this.activeMidiTokens.clear();
+      this.activeMidiNotes.clear();
+      this.clearFunctionState();
+      this.syncDiagnostic();
+    }
+
+    detachInputs() {
+      for (const input of this.inputHandlers.values()) input.onmidimessage = null;
+      this.inputHandlers.clear();
+    }
+
+    async enable({ reacquire = false } = {}) {
+      if (reacquire) {
+        this.detachInputs();
+        this.clearTransientInputState();
+        this.access?.removeEventListener?.("statechange", this.handleStateChange);
+        this.access = null;
+      }
       if (this.access) {
         this.refreshInputs();
         return this.access;
@@ -159,7 +193,7 @@
       this.enablePromise = navigator.requestMIDIAccess({ sysex: false, software: false })
         .then(access => {
           this.access = access;
-          this.access.addEventListener("statechange", () => this.refreshInputs());
+          this.access.addEventListener("statechange", this.handleStateChange);
           this.refreshInputs();
           this.fields.message.textContent = "MIDI input включён. Нажмите клавишу на подключённом MIDI-устройстве.";
           return access;
@@ -187,10 +221,6 @@
             this.activeMidiTokens.delete(token);
             this.noteEvents?.handleNoteOff(note, "midi", token);
           }
-          if (this.calibration?.inputId === id) {
-            this.clearFunctionState();
-            this.emitCalibration("device-changed", { calibration: this.getCalibration() });
-          }
           if (this.calibrationDraft?.inputId === id) {
             this.calibrationMode = "invalid";
             this.emitCalibration("invalid", { reason: "device-disconnected" });
@@ -199,6 +229,8 @@
       }
       this.activeMidiNotes = new Set(this.activeMidiTokens.values());
       for (const input of connected) {
+        const previous = this.inputHandlers.get(input.id);
+        if (previous && previous !== input) { previous.onmidimessage = null; this.inputHandlers.delete(input.id); }
         if (!this.inputHandlers.has(input.id)) {
           input.onmidimessage = event => this.handleMessage(event, input);
           this.inputHandlers.set(input.id, input);
@@ -210,11 +242,9 @@
       this.fields["input-name"].textContent = connected.map(input => input.name || "Unnamed MIDI input").join(", ") || "—";
       this.fields.manufacturer.textContent = connected.map(input => input.manufacturer).filter(Boolean).join(", ") || "—";
       if (!connected.length) {
-        for (const [token, note] of this.activeMidiTokens) this.noteEvents?.handleNoteOff(note, "midi", token);
-        this.activeMidiTokens.clear();
-        this.activeMidiNotes.clear();
-        this.clearFunctionState();
-        this.syncDiagnostic();
+        this.clearTransientInputState();
+      } else if (this.calibration?.verified && !connectedIds.has(this.calibration.inputId)) {
+        this.emitCalibration("device-changed", { calibration: this.getCalibration() });
       }
     }
 
@@ -308,8 +338,9 @@
     handleVirtualCommand(note, pointerId, noteOn) {
       const range = this.calibration;
       if (!range?.verified) return false;
-      return this.routeCommand({ note, noteOn, velocity: noteOn ? 100 : 0, channel: range.channel },
-        { id: range.inputId }, `mouse:${pointerId}:${note}`);
+      const message = { note, noteOn, velocity: noteOn ? 100 : 0, channel: range.channel };
+      const token = `mouse:${pointerId}:${note}`;
+      return this.interceptInput(message, "mouse", token) || this.routeCommand(message, { id: range.inputId }, token);
     }
 
     handleMessage(event, input) {
@@ -318,7 +349,7 @@
       const token = `${input.id}:${message.channel}:${message.note}`;
       const consumed = this.calibrationMode !== null
         ? this.captureCalibration(message, input)
-        : this.routeCommand(message, input, token);
+        : this.interceptInput(message, "midi", token) || this.routeCommand(message, input, token);
       if (!consumed && message.noteOn) {
         this.activeMidiTokens.set(token, message.note);
         this.activeMidiNotes.add(message.note);

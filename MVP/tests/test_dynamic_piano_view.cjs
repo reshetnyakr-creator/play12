@@ -33,6 +33,8 @@ for(const [name,left,right] of [['88-key',21,108],['61-key',36,96],['49-key',36,
   assert.equal(Number(mount.dataset.minMidi),left);assert.equal(Number(mount.dataset.maxMidi),right);
   const visualWidth=parseFloat(mount.style.width),perKey=visualWidth/(right-left+1);assert(Math.abs(perKey-visualWidth/piano.keys.size)<1e-9);
   assert.equal(piano.svg.attrs.viewBox.split(' ')[0],mount.dataset.cropLeft);
+  assert.equal(Number(piano.cardRegion.attrs.x),Number(mount.dataset.cropLeft));
+  assert.equal(Number(piano.cardRegion.attrs.width),Number(piano.cardClipRect.attrs.width));
 });
 
 test('range changes retain global MIDI card mapping and exact mouse targets',()=>{
@@ -49,4 +51,14 @@ test('shorter instruments keep the full-piano key scale and a shorter centred mo
 
 test('zero remains global and valid at either cropped edge',()=>{
   const {piano}=setup();piano.setRange(36,84);piano.setZeroMidi(36);assert.equal(piano.zeroMidi,36);piano.setZeroMidi(84);assert.equal(piano.zeroMidi,84);assert.equal(piano.keys.size,49);
+});
+
+test('card verification targets come from rendered symbol and cycle color for every zero',()=>{
+  const {piano}=setup();piano.setRange(21,108);
+  for(let zero=21;zero<=32;zero++){
+    piano.setZeroMidi(zero);
+    const yellow=piano.midiForCard('1',2),green=piano.midiForCard('2',3);
+    assert.equal(piano.keys.get(yellow).dataset.play12Symbol,'1');assert.equal(piano.keys.get(yellow).dataset.play12Color,'#ff0');
+    assert.equal(piano.keys.get(green).dataset.play12Symbol,'2');assert.equal(piano.keys.get(green).dataset.play12Color,'#0f0');
+  }
 });

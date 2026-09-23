@@ -111,6 +111,10 @@
       this.mount.dataset.cardClipRight=String(penultimateKeyAnchor.right);
       this.mount.dataset.cardClipLastVisibleMidi=String(this.maxMidi-1);
       this.renderStrips(allAnchors);
+      this.cardRegion=element("rect",{x:this.cropLeft,y:0,
+        width:Math.max(0,Math.min(this.cropRight,penultimateKeyAnchor.right)-this.cropLeft),height:CARD_HEIGHT,
+        fill:"transparent","pointer-events":"none","aria-hidden":"true"});
+      this.cardRegion.classList.add("piano-visible-card-region"); this.svg.appendChild(this.cardRegion);
       this.keyAnchors=keyAnchors;
       this.commandOverlay=element("g",{"class":"piano-command-overlay","aria-hidden":"true"});
       this.svg.appendChild(this.commandOverlay);
@@ -234,6 +238,12 @@
     }
     setZeroMidi(zeroMidi){if(zeroMidi!==this.zeroMidi)this.render(zeroMidi);}
     setZeroNote(zeroNote){this.setZeroMidi(this.zeroMidiFor(zeroNote));}
+    midiForCard(symbol,colorIndex){
+      const color=this.colors[colorIndex];
+      if(!color)return null;
+      const matches=[...this.keys].filter(([,key])=>key.dataset.play12Symbol===symbol&&key.dataset.play12Color===color);
+      return matches.length===1?matches[0][0]:null;
+    }
     bindPointerControls(){
       this.mount.addEventListener("pointerdown",event=>{
         const key=event.target.closest?.(".piano-key");

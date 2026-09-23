@@ -1181,3 +1181,40 @@
 @media(max-width:1100px){.mvp-control-row{--mvp-control-font-size:9px;}}
 @media(max-width:950px){.mvp-control-row{--mvp-control-font-size:8px;}}
 .play12-piano-view.is-calibration-hidden { visibility: hidden; pointer-events: none; }
+
+/* Song identity stays with the tutorial column; Skip shares the control-row right edge. */
+.play12-onboarding {
+  --mvp-upper-board-top: calc(var(--play12-site-header-height) + 28px);
+  --mvp-layout-playback-width: 350px;
+  --mvp-layout-control-gap: 10px;
+  --mvp-layout-round-width: 430px;
+}
+@media (min-width: 851px) {
+  .mvp-onboarding-progress { align-self: stretch; padding-top: 0; }
+  .mvp-onboarding-progress ol { margin-top: 112px; }
+  .mvp-onboarding-progress .mvp-song-card {
+    position: fixed;
+    z-index: 64;
+    top: var(--mvp-upper-board-top);
+    left: var(--play12-site-page-gutter);
+    width: 340px;
+    margin: 0 0 28px;
+    justify-self: start;
+  }
+  .mvp-skip-control {
+    top: var(--mvp-upper-board-top);
+    right: calc(100vw - var(--mvp-note-field-center-x, 50vw) - var(--mvp-layout-playback-width) / 2 - var(--mvp-layout-control-gap) - var(--mvp-layout-round-width));
+  }
+}
+@media (min-width: 951px) and (max-width: 1100px) {
+  .play12-onboarding { --mvp-layout-playback-width: 290px; --mvp-layout-control-gap: 8px; --mvp-layout-round-width: 350px; }
+}
+@media (min-width: 851px) and (max-width: 950px) {
+  .play12-onboarding {
+    --mvp-layout-playback-width: 260px;
+    --mvp-layout-control-gap: 6px;
+    --mvp-layout-round-width: max(285px, calc(50vw - var(--mvp-layout-playback-width) / 2 - var(--mvp-layout-control-gap) - 18px));
+  }
+}
+#cards-ready { min-width: 112px; min-height: 38px; margin-top: 14px; padding: 9px 18px; font-size: 14px; pointer-events: auto; }
+.piano-visible-card-region { pointer-events: none; }

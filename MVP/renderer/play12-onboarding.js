@@ -39,7 +39,8 @@
         chooseZeroCompleted: value.chooseZeroCompleted === true,
         cardsSetupCompleted: value.cardsSetupCompleted === true || value.zeroChangeHintShown === true ||
           (value.cardsSetupCompleted === undefined && value.onboardingStep === 'TRY_IT_YOURSELF' && value.practiceGuideStage !== 'cards'),
-        zeroSetupStage: value.zeroSetupStage === 'cards' || value.practiceGuideStage === 'cards' ? 'cards' : null,
+        zeroSetupStage: ['cards', 'verify-yellow', 'verify-green'].includes(value.zeroSetupStage) ? value.zeroSetupStage
+          : value.practiceGuideStage === 'cards' ? 'cards' : null,
         metronomeUnlocked: value.metronomeUnlocked === true,
         roundUnlocked: value.roundUnlocked === true,
         practiceModeEnabled: value.practiceModeEnabled === true,
@@ -83,6 +84,7 @@
     const listenPianoHost = root.querySelector('#onboarding-listen-piano-host');
     const listenPrompt = root.querySelector('#onboarding-listen-prompt');
     const listenCoach = root.querySelector('#onboarding-listen-coach');
+    const cardsReady = root.querySelector('#cards-ready');
     const songTitleViewport = root.querySelector('#onboarding-song-title-viewport');
     const songTitle = root.querySelector('#onboarding-song-title');
     const songStep = root.querySelector('#onboarding-song-step');
@@ -120,6 +122,7 @@
     let transportHome = null;
     let removeNoteListener = null;
     let removeMidiStatusListener = null;
+    let removeMidiInputInterceptor = null;
     let removeCalibrationListener = null;
     let removePlaybackStateListener = null;
     let midiConnectState = 'choice';
@@ -131,7 +134,7 @@
       const element = id => document.getElementById(id);
       const piano = runtime?.pianoView?.mount;
       if (instruction === 'choose-zero') return [element('onboarding-choose-zero'), piano];
-      if (instruction === 'cards') return [...(piano?.querySelectorAll('.piano-card-strip') || [])];
+      if (instruction === 'cards') return [piano?.querySelector('.piano-visible-card-region')];
       if (instruction === 'round-range') return [element('round-range-controls'), element('round-timeline')];
       if (instruction === 'explain') return [element('play12-score'), piano];
       return instruction ? [element(instruction)] : [];
@@ -178,6 +181,11 @@
       spotlightHint(listenCoach, control, pulse);
       void listenCoach.offsetWidth;
       listenCoach.classList.add('is-entering');
+    };
+    const keepCoachUntilAction = () => {
+      clearTimeout(hintTimers.get(listenCoach));
+      hintTimers.delete(listenCoach);
+      listenCoach.classList.remove('has-dismiss-timer');
     };
     let playerClipFrame = 0;
     let visibleStep = 'WELCOME';
@@ -370,8 +378,8 @@
     const showStep = step => {
       visibleStep = step;
       clearHints();
+      cardsReady.hidden = true;
       dismissedHints.clear();
-      syncSkipAnchor();
       const visibleView = ['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(step) ? 'LISTEN_AND_CONTROL' : step;
       for (const [name, element] of views) element.hidden = name !== visibleView;
       document.body.classList.toggle('play12-onboarding-choose-zero', step === 'CHOOSE_ZERO');
@@ -400,6 +408,7 @@
       }
       syncProgress();
       if (step === 'CHOOSE_ZERO' && state.zeroSetupStage === 'cards') showCardsSetup();
+      if (step === 'CHOOSE_ZERO' && state.zeroSetupStage?.startsWith('verify-')) showCardVerificationPrompt();
       if (step === 'TRY_IT_YOURSELF') syncPracticeGuide();
       exposeState();
     };
@@ -449,7 +458,7 @@
       recoveringMidi = true;
       reconnectCard.hidden = false;
       reconnectMessage.textContent = 'Connecting your MIDI piano…';
-      if (runtime.midiDiagnostic && runtime.midiDiagnostic.currentStatus?.status !== 'unavailable') runtime.midiDiagnostic.enable();
+      if (runtime.midiDiagnostic && runtime.midiDiagnostic.currentStatus?.status !== 'unavailable') runtime.midiDiagnostic.enable({ reacquire: true });
       else reconnectMessage.textContent = 'MIDI is unavailable here — you can play with your mouse';
     };
 
@@ -482,11 +491,6 @@
     }
     root.querySelector('#returning-midi-retry').addEventListener('click', recoverMidi);
 
-    const syncSkipAnchor = () => {
-      const language = root.querySelector('.mvp-language-switch');
-      if (language) document.documentElement.style.setProperty('--mvp-skip-top', `${Math.max(12, language.getBoundingClientRect().bottom + 14)}px`);
-    };
-    global.addEventListener('resize', syncSkipAnchor);
     root.querySelector('#onboarding-skip').addEventListener('click', () => {
       clearHints();
       runtime?.playback?.pauseImmediate?.();
@@ -507,7 +511,7 @@
           state.highestUnlockedStep = Math.max(highestUnlocked(), 2); navigateStep(2);
         }
       } else if (state.onboardingStep === 'CHOOSE_ZERO') {
-        if (state.zeroSetupStage === 'cards') finishCardsSetup();
+        if (state.zeroSetupStage === 'cards' || state.zeroSetupStage?.startsWith('verify-')) finishCardsSetup();
         else finishZero(false);
       } else if (state.onboardingStep === 'TRY_IT_YOURSELF') {
         advancePracticeInstruction(true);
@@ -595,7 +599,44 @@
       const ru = (document.documentElement.lang || 'en').startsWith('ru');
       showCoach(ru
         ? 'Разложите карточки Play12<br><small>Разместите карточки на пианино так же, как показано здесь</small><a href="/ru/manual.html#chapter2" target="_blank" rel="noopener">Как разместить карточки Play12</a>'
-        : 'Set up your Play12 cards<br><small>Place the cards on your piano to match the layout you see here</small><a href="/manual.html#chapter2" target="_blank" rel="noopener">How to place the Play12 cards</a>', 'cards', true, finishCardsSetup);
+        : 'Set up your Play12 cards<br><small>Place the cards on your piano to match the layout you see here</small><a href="/manual.html#chapter2" target="_blank" rel="noopener">How to place the Play12 cards</a>', 'cards', true);
+      keepCoachUntilAction();
+      cardsReady.textContent = ru ? 'Готово' : 'Ready';
+      cardsReady.hidden = false;
+    };
+    const visibleCardMidi = (symbol, colorIndex) => {
+      const piano = runtime?.pianoView;
+      return piano?.midiForCard?.(symbol, colorIndex) ?? null;
+    };
+    const expectedCardMidi = () => state.zeroSetupStage === 'verify-yellow'
+      ? visibleCardMidi('1', 2) : state.zeroSetupStage === 'verify-green' ? visibleCardMidi('2', 3) : null;
+    const showCardVerificationPrompt = (retry = false) => {
+      const yellow = state.zeroSetupStage === 'verify-yellow';
+      const target = expectedCardMidi();
+      const retryCopy = retry ? 'Check that the cards are placed correctly and try again.<br>' : '';
+      showCoach(target == null
+        ? `The ${yellow ? 'yellow 1' : 'green 2'} card is not visible on this keyboard range.`
+        : `${retryCopy}Press the key under the <strong>${yellow ? 'yellow 1' : 'green 2'}</strong> card`, 'cards', true);
+      keepCoachUntilAction();
+    };
+    const startCardVerification = () => {
+      cardsReady.hidden = true;
+      state.zeroSetupStage = 'verify-yellow';
+      saveState(storage, state);
+      showCardVerificationPrompt();
+    };
+    cardsReady.addEventListener('click', startCardVerification);
+    const acceptCardVerificationInput = event => {
+      if (!state.zeroSetupStage?.startsWith('verify-')) return false;
+      if (event.type !== 'note-on') return true;
+      if (event.midiNote !== expectedCardMidi()) { showCardVerificationPrompt(true); return true; }
+      if (state.zeroSetupStage === 'verify-yellow') {
+        state.zeroSetupStage = 'verify-green'; saveState(storage, state); showCardVerificationPrompt();
+      } else {
+        showCoach('Cards are ready ✓');
+        global.setTimeout(finishCardsSetup, 650);
+      }
+      return true;
     };
     const finishCardsSetup = () => {
       state.cardsSetupCompleted = true;
@@ -710,19 +751,33 @@
       runtime = nextRuntime;
       removeNoteListener?.();
       removeMidiStatusListener?.();
+      removeMidiInputInterceptor?.();
       removeCalibrationListener?.();
       removePlaybackStateListener?.();
       removeNoteListener = runtime.noteEvents?.addNoteListener?.(event => {
+        if (state.zeroSetupStage?.startsWith('verify-') && event.source === 'mouse') {
+          acceptCardVerificationInput(event);
+          return;
+        }
         if (state.onboardingStep === 'MIDI_CONNECT' && midiConnectState === 'test' &&
             event.type === 'note-on' && event.source === 'midi' && event.velocity > 0) verifyMidi();
       }) || null;
+      removeMidiInputInterceptor = runtime.midiDiagnostic?.addInputInterceptor?.(acceptCardVerificationInput) || null;
       removeMidiStatusListener = runtime.midiDiagnostic?.addStatusListener?.(event => {
+        if (state.inputMode === 'midi' && state.onboardingStep !== 'MIDI_CONNECT' && event.status === 'no-input') {
+          recoveringMidi = true;
+          reconnectCard.hidden = false;
+          reconnectCard.dataset.midiStatus = event.status;
+          reconnectMessage.textContent = 'Reconnect your MIDI piano, or play with your mouse';
+          return;
+        }
         if (recoveringMidi) {
           reconnectCard.hidden = event.status === 'connected';
           reconnectCard.dataset.midiStatus = event.status;
           reconnectMessage.textContent = event.status === 'requesting' ? 'Connecting your MIDI piano…'
             : event.status === 'permission-denied' ? 'Allow MIDI access, then reconnect — or play with your mouse'
             : 'Reconnect your MIDI piano, or play with your mouse';
+          if (event.status === 'connected') recoveringMidi = false;
           return;
         }
         if (state.onboardingStep !== 'MIDI_CONNECT') return;

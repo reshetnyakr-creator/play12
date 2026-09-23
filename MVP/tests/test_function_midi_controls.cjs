@@ -12,12 +12,13 @@ function setup(){
   const noteEvents={handleNoteOn(...args){events.push(['on',...args]);},handleNoteOff(...args){events.push(['off',...args]);},unlockAudio(){}};
   const store=new Map(),storage={getItem:key=>store.get(key)||null,setItem:(key,value)=>store.set(key,value)};
   const window={localStorage:storage,dispatchEvent(){},CustomEvent:class{constructor(type,init){this.type=type;this.detail=init?.detail;}}};
-  const sandbox={window,navigator:{requestMIDIAccess(){}},CustomEvent:window.CustomEvent,console};vm.createContext(sandbox);
+  let requestedAccess=null,requestCount=0;
+  const sandbox={window,navigator:{requestMIDIAccess(){requestCount++;return Promise.resolve(requestedAccess);}},CustomEvent:window.CustomEvent,console};vm.createContext(sandbox);
   vm.runInContext(readFileSync(path.join(__dirname,'../renderer/web-midi-diagnostic.js'),'utf8'),sandbox);
   const diagnostic=window.Play12MidiDiagnostic.create({root,enableButton:button,pianoView,noteEvents,storage,commandActions:{available:()=>true,run:a=>actions.push(a)}});
   const inputA={id:'A',name:'Keys',manufacturer:'Test'},inputB={id:'B',name:'Other',manufacturer:'Test'};
   const send=(input,note,velocity=100,channel=0,off=false)=>diagnostic.handleMessage({data:[(off?0x80:0x90)|channel,note,velocity]},input);
-  return{diagnostic,events,actions,overlay,inputA,inputB,send,storage};
+  return{diagnostic,events,actions,overlay,inputA,inputB,send,storage,setRequestedAccess(value){requestedAccess=value;},requestCount:()=>requestCount};
 }
 
 function calibrate(f){
@@ -65,4 +66,26 @@ test('mouse and MIDI share one Function state in both directions',()=>{
   f.send(f.inputA,108);assert.equal(f.diagnostic.pianoView.commandRouter.noteOn(54,2),true);assert.deepEqual(f.actions,['previous-round','play']);f.diagnostic.pianoView.commandRouter.noteOff(54,2);f.send(f.inputA,108,0);
   f.diagnostic.pianoView.commandRouter.noteOn(108,3);f.diagnostic.pianoView.commandRouter.noteOn(58,4);f.diagnostic.pianoView.commandRouter.noteOff(58,4);f.diagnostic.pianoView.commandRouter.noteOff(108,3);
   assert.deepEqual(f.actions,['previous-round','play','restart']);assert.equal(f.events.length,0);
+});
+
+test('input interceptor consumes verification notes before Function and musical routing',()=>{
+  const f=setup();calibrate(f);const seen=[];
+  f.diagnostic.addInputInterceptor(event=>{seen.push([event.type,event.midiNote,event.source]);return true;});
+  f.send(f.inputA,60);f.send(f.inputA,60,0);f.diagnostic.pianoView.commandRouter.noteOn(61,7);f.diagnostic.pianoView.commandRouter.noteOff(61,7);
+  assert.deepEqual(seen,[['note-on',60,'midi'],['note-off',60,'midi'],['note-on',61,'mouse'],['note-off',61,'mouse']]);
+  assert.equal(f.events.length,0);assert.equal(f.actions.length,0);
+});
+
+test('reacquire detaches stale inputs and binds exactly once across repeated reconnects',async()=>{
+  const f=setup();
+  const access=input=>({inputs:new Map([[input.id,input]]),addEventListener(){},removeEventListener(){}});
+  const first={...f.inputA,state:'connected'};f.setRequestedAccess(access(first));await f.diagnostic.enable();
+  assert.equal(typeof first.onmidimessage,'function');
+  first.state='disconnected';f.diagnostic.refreshInputs();assert.equal(first.onmidimessage,null);
+  const second={...f.inputA,state:'connected'};f.setRequestedAccess(access(second));await f.diagnostic.enable({reacquire:true});
+  second.onmidimessage({data:[0x90,60,100]});assert.equal(f.events.filter(event=>event[0]==='on').length,1);
+  second.state='disconnected';f.diagnostic.refreshInputs();
+  const third={...f.inputA,state:'connected'};f.setRequestedAccess(access(third));await f.diagnostic.enable({reacquire:true});
+  third.onmidimessage({data:[0x90,61,100]});assert.equal(f.events.filter(event=>event[0]==='on').length,2);
+  assert.equal(f.requestCount(),3);assert.equal(f.diagnostic.inputHandlers.size,1);
 });
