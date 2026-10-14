@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=dynamic-piano-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=tutorial-ux-06">
+  <link rel="stylesheet" href="play12-onboarding.css?v=final-polish-01">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -171,7 +171,6 @@
               <li data-progress-step="5"><span>5</span><strong>Round &amp; Loop</strong></li>
               <li data-progress-step="6"><span>6</span><strong>You can do it!</strong></li>
             </ol>
-            <p class="mvp-motivation">Music can be simple.<br><strong>You’ve got this.</strong></p>
           </aside>
           <div class="mvp-player-column">
             <div class="mvp-player-stage-wrap">
@@ -281,7 +280,6 @@
         </div>
         <div id="zero-confirmation" hidden>
           <strong>Confirm your 0</strong>
-          <p id="zero-candidate"></p>
           <div class="mvp-zero-actions"><button id="use-zero" class="mvp-button mvp-button-primary" type="button">Yes</button><button id="choose-another-zero" class="mvp-button mvp-button-secondary" type="button">Choose another 0</button></div>
         </div>
       </section>
@@ -333,12 +331,12 @@
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=tutorial-ux-06"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
-  <script src="play12-round-board.js?v=dynamic-piano-01"></script>
+  <script src="play12-round-board.js?v=final-polish-01"></script>
   <script src="play12-playback.js?v=round-final-01"></script>
   <script src="web-midi-diagnostic.js?v=tutorial-ux-06"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
-  <script src="play12-onboarding.js?v=tutorial-ux-06"></script>
+  <script src="play12-onboarding.js?v=final-polish-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -463,7 +461,7 @@
         loopStart.add(new Option(`Round ${index + 1}`, index));
         loopEnd.add(new Option(`Round ${index + 1}`, index));
       });
-      loopEnd.value = '0';
+      loopEnd.value = rounds.length > 1 ? '1' : '0';
       window.play12Playback = Play12Playback.start({
         svg, stage: document.getElementById('playback-stage'), playline: document.getElementById('playline'),
         playButton: document.getElementById('play'), pauseButton: document.getElementById('pause'),
@@ -499,7 +497,6 @@
       const zeroPrompt = document.getElementById('zero-prompt');
       const zeroInstruction = document.getElementById('zero-instruction');
       const zeroConfirmation = document.getElementById('zero-confirmation');
-      const zeroCandidate = document.getElementById('zero-candidate');
       const chooseZero = document.getElementById('choose-zero');
       const onboardingChooseZero = document.getElementById('onboarding-choose-zero');
       const useZero = document.getElementById('use-zero');
@@ -524,7 +521,6 @@
         Object.assign(zeroChooser.dataset, {
           candidateZeroPitchClass: String(candidateZeroPitchClass), candidateLayoutZeroNote: String(candidateZeroMidi)
         });
-        zeroCandidate.textContent = `Pitch class ${candidateZeroPitchClass} · layout MIDI ${candidateZeroMidi}`;
         zeroInstruction.hidden = true;
         zeroConfirmation.hidden = false;
         window.dispatchEvent(new CustomEvent('play12:zero-ui-candidate'));

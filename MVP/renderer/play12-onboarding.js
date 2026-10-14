@@ -301,10 +301,10 @@
       syncOverlayGeometry();
       if (isRu()) {
         completionTitle.textContent = 'Поздравляем!';
-        completionMessage.innerHTML = 'Ты прошёл обучение управлению Play12.<br><br>Теперь ты можешь самостоятельно заниматься и тренировать любимые мелодии.';
+        completionMessage.innerHTML = 'Ты прошёл обучение Play12.<br><br>Теперь ты можешь тренировать свои навыки и разучивать любимые мелодии самостоятельно.';
       } else {
         completionTitle.textContent = 'Congratulations!';
-        completionMessage.innerHTML = "You've completed the Play12 controls tutorial.<br><br>Now you can practise on your own and work on your favourite melodies.";
+        completionMessage.innerHTML = "You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.";
       }
       completionCard.hidden = false;
       clearTimeout(completionCardTimer);
@@ -908,6 +908,10 @@
 
     global.addEventListener('play12:round-control', event => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || returnAfterZero) return;
+      if (state.practiceGuideStage === 'final-practice' && event.detail.action === 'navigate') {
+        finalAttempt = { active: false, valid: false };
+        return;
+      }
       const required = {'round-nav':'navigate', 'round-loop':'loop-on', 'round-range':'range', 'round-precount':'precount'};
       if (required[state.practiceGuideStage] === event.detail.action) advancePracticeInstruction();
     });

@@ -508,6 +508,20 @@ test('Miniature uses the same per-hand repetition detector colors as notation',(
   assert.equal(score.score.parts[0].measures.length,9);
   for(const segment of repetitions.segments)for(const o of segment.occurrences)for(let n=o.measure_start;n<=o.measure_end;n++)assert.equal(window.Play12RoundBoard.ribbonFor(repetitions,segment.hand,n),segment.display_color);
 });
+test('Loop range keeps From strictly before To for every edit',()=>{
+  const {window,sandbox}=load();vm.runInContext(readFileSync(path.join(renderer,'play12-round-board.js'),'utf8'),sandbox);
+  const {normalizeRange,editRange}=window.Play12RoundBoard;
+  const same=(actual,expected)=>assert.equal(JSON.stringify(actual),JSON.stringify(expected));
+  same(normalizeRange(8,0,0),{from:0,to:1});
+  same(editRange(8,0,1,'from',1),{from:1,to:2});
+  same(editRange(8,1,2,'from',1),{from:2,to:3});
+  same(editRange(8,1,5,'from',1),{from:2,to:5});
+  same(editRange(8,2,5,'from',2),{from:4,to:5});
+  same(editRange(8,4,5,'from',1),{from:5,to:6});
+  same(editRange(8,6,7,'from',1),{from:6,to:7});
+  same(editRange(8,5,6,'to',-1),{from:5,to:6});
+  same(editRange(8,5,6,'to',1),{from:5,to:7});
+});
 
 test('Skip during unfinished Practice pass immediately unlocks Metronome and clears waits without changing controls',async()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'ready',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,inputMode:'demo',highestUnlockedStep:3});h.controller.continueSession();
@@ -528,6 +542,10 @@ test('Final Right Hand Practice completes only after one uninterrupted full run'
   emit({state:'paused',position:2,running:false,ended:false});
   emit({state:'paused',position:8,running:false,ended:true});
   assert.equal(h.controller.getState().onboardingCompleted,false,'interrupted run cannot complete');
+  emit({state:'waiting_for_input',position:0,running:false,ended:false});
+  h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate'}});
+  emit({state:'paused',position:8,running:false,ended:true});
+  assert.equal(h.controller.getState().onboardingCompleted,false,'round jump cannot complete');
   emit({state:'waiting_for_input',position:0,running:false,ended:false});
   emit({state:'playing',position:4,running:true,ended:false});
   emit({state:'paused',position:8,running:false,ended:true});
@@ -564,8 +582,10 @@ test('Approved reconnect, final instruction and completion copy are present in R
   const js=readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8');
   const html=readFileSync(path.join(renderer,'playback.html'),'utf8');
   const css=readFileSync(path.join(renderer,'play12-onboarding.css'),'utf8');
-  for(const text of ['Соединение с MIDI-клавиатурой потеряно.','Подключи инструмент снова или продолжи играть мышкой.','Подключить MIDI','А теперь попробуй сыграть всю мелодию правой рукой от начала до конца.','Не спеши. Если собьёшься — попробуй ещё раз.','Поздравляем!','Ты прошёл обучение управлению Play12.','Теперь ты можешь самостоятельно заниматься и тренировать любимые мелодии.']) assert(js.includes(text));
+  for(const text of ['Соединение с MIDI-клавиатурой потеряно.','Подключи инструмент снова или продолжи играть мышкой.','Подключить MIDI','А теперь попробуй сыграть всю мелодию правой рукой от начала до конца.','Не спеши. Если собьёшься — попробуй ещё раз.','Поздравляем!','Ты прошёл обучение Play12.','Теперь ты можешь тренировать свои навыки и разучивать любимые мелодии самостоятельно.']) assert(js.includes(text));
   assert(html.includes('MIDI keyboard connection lost.'));assert(html.includes('Reconnect your instrument or continue playing with your mouse.'));
+  assert(!html.includes('Music can be simple.'));assert(!html.includes('Pitch class ${candidateZeroPitchClass}'));assert(!html.includes('layout MIDI'));
+  assert(js.includes("You've completed the Play12 tutorial."));assert(js.includes('Now you can practise your skills and learn your favourite melodies on your own.'));
   assert(css.includes('left: var(--mvp-note-field-center-x'));assert(css.includes('background: #fff'));
 });
 
