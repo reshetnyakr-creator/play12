@@ -568,10 +568,10 @@
       this.audio.stopAll(this.audioContext.currentTime, true);
       this.waitingForInput = expected;
       this.syncRobotNotes(expected.start);
-      this.paint(expected.start);
       this.stage.dataset.practiceState = "waiting_for_input";
       this.stage.dataset.waitingSinceAudioTime = String(this.audioContext.currentTime);
       this.updateControls();
+      this.paint(expected.start);
     }
     clearPracticeCandidate() {
       const expected = this.waitingForInput || this.expectedPracticeEvent;
@@ -825,8 +825,8 @@
         this.waitingForInput = null;
         this.pauseTarget = null;
         this.stage.dataset.practiceState = "paused";
-        this.paint(this.clock.position);
         this.updateControls();
+        this.paint(this.clock.position);
         return;
       }
       if (this.loopGap) {
@@ -880,8 +880,8 @@
       this.stage.classList.remove("is-preroll-prep");
       this.setPreRollVisibility(this.clock.position, false);
       this.clearNoteOnEffects();
-      this.paint(this.displayPosition);
       this.updateControls();
+      this.paint(this.displayPosition);
     }
     restart() {
       this.resetRobotNotes();
@@ -908,8 +908,8 @@
       delete this.stage.dataset.lastContactQuarter;
       for (const effect of this.stage.querySelectorAll(".playback-note-contact")) effect.remove();
       this.clearNoteOnEffects();
-      this.paint(this.displayPosition);
       this.updateControls();
+      this.paint(this.displayPosition);
       if (this.preCountEnabled()) this.play();
     }
     seek(position) {
@@ -1082,7 +1082,13 @@
       if (this.practiceEnabled()) this.preparePractice(loop.start);
       this.loopWrapCount += 1;
       this.stage.dataset.loopWrapCount = String(this.loopWrapCount);
-      if (this.preCountEnabled()) { this.beginPreCount(loop.start, cycleAt); return; }
+      const publishCompletedLoop = () => global.dispatchEvent(new CustomEvent('play12:practice-loop-complete', {detail: {
+        practice: this.practiceEnabled(),
+        from: Number(this.loopStartInput.value),
+        to: Number(this.loopEndInput.value),
+        wrapCount: this.loopWrapCount
+      }}));
+      if (this.preCountEnabled()) { this.beginPreCount(loop.start, cycleAt); publishCompletedLoop(); return; }
       this.schedulePlaybackAnchor(loop.start, cycleAt);
       this.clock.start(loop.start, cycleAt);
       this.armPracticeGate(loop.start);
@@ -1091,6 +1097,7 @@
       this.paint(loop.start);
       this.pulseAt(loop.start);
       this.scheduleAhead();
+      publishCompletedLoop();
     }
     currentLoop() {
       if (!this.loopInput.checked || this.roundBoard?.root.hidden) return null;
@@ -1195,7 +1202,7 @@
         event.group.classList.toggle("is-faded", state === "faded");
         event.group.style.opacity = String(opacity);
       }
-      if (this.pianoView) this.pianoView.setActiveMidis(soundingMidis);
+      if (this.pianoView) this.pianoView.setActiveMidis(this.practiceEnabled() ? [] : soundingMidis, "playback");
       this.updateProgress(this.clock.position);
       this.positionOutput.value = `${position < 0 ? "Подводка" : "Позиция"}: ${position.toFixed(2)} q`;
       this.emitState();

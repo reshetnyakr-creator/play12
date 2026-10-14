@@ -82,6 +82,16 @@ test('Practice OFF from wait resumes ordinary playback, then ON rearms',async()=
 test('Practice OFF while manually paused remains paused',async()=>{
   const {c}=make();configure(c);await c.play();c.requestPause();c.setPracticeSettings({practiceModeEnabled:false});assert.equal(c.clock.running,false);
 });
+test('Practice Piano View paints only held user input, never expected or robot playback',async()=>{
+  const {c}=make();const active={playback:[],mouse:[],midi:[]};
+  c.pianoView={setActiveMidis(midis,source='playback'){active[source]=[...midis];}};
+  configure(c);await c.play();
+  assert.deepEqual(active.playback,[]);
+  c.handleNoteOn(71,100,'mouse',1);assert.deepEqual(active.mouse,[71]);assert.deepEqual(active.playback,[]);
+  c.handleNoteOff(71,'mouse',1);assert.deepEqual(active.mouse,[]);
+  c.handleNoteOn(70,100,'midi',2);assert.deepEqual(active.midi,[70]);
+  c.handleNoteOff(70,'midi',2);assert.deepEqual(active.midi,[]);
+});
 test('Runtime zero uses effective pitch, including changing zero while waiting',async()=>{
   const {c}=make(undefined,26);configure(c);await c.play();assert.equal(c.acceptPracticeInput(72),false);assert.equal(c.acceptPracticeInput(74),true);
   c.restart();await c.play();c.setRuntimeZeroNote(25);assert.equal(c.acceptPracticeInput(74),false);assert.equal(c.acceptPracticeInput(73),true);
@@ -126,6 +136,11 @@ function onboarding(saved=null, midiDiagnostic=null) {
   c.stage.parentElement=node('home');controller.connectRuntime({playback:c,noteEvents:c,stage:c.stage,midiDiagnostic,pianoView});
   return {controller,c,node,root,values,window,timers,keydown,pianoView};
 }
+test('Saved tutorial state cannot expose Skip on the initial Continue screen',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',inputMode:'demo'});
+  assert.equal(h.root.dataset.visibleStep,'WELCOME');assert.equal(h.node('#onboarding-skip').hidden,true);
+  h.controller.continueSession();assert.equal(h.root.dataset.visibleStep,'TRY_IT_YOURSELF');assert.equal(h.node('#onboarding-skip').hidden,false);
+});
 test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actual controls advance',async()=>{
   const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();
   assert.equal(h.controller.getState().midiVerified,false);
@@ -270,7 +285,7 @@ test('Skip advances implemented stages without zero/progress loss',()=>{
   const skip=()=>h.node('#onboarding-skip').handlers.click();skip();assert.equal(h.root.dataset.onboardingStep,'LISTEN_AND_CONTROL');
   skip();assert.equal(h.controller.getState().listenGuideStage,'pause');skip();assert.equal(h.controller.getState().listenGuideStage,'continue');skip();assert.equal(h.root.dataset.onboardingStep,'CHOOSE_ZERO');skip();assert.equal(h.controller.getState().zeroSetupStage,'cards');skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
   for (const stage of ['enable','hand','explain','ready']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
-  for(const stage of ['playing','metronome-on','metronome-tempo','metronome-play','round-nav','round-loop','round-range','round-precount']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
+  for(const stage of ['playing','metronome-on','metronome-tempo','metronome-play','round-nav','round-loop','round-range','round-precount','round-practice']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
   assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');skip();
   assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'final-practice');assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);assert.equal(h.c.practiceSettings.practiceRightHandEnabled,true);
   assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);assert.equal(h.node('progress6')['aria-disabled'],'false');
@@ -497,9 +512,25 @@ test('Round tutorial actions advance immediately; Skip changes no loop/pre-count
   h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate'}});assert.equal(h.controller.getState().practiceGuideStage,'round-loop');
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-range');assert.equal(h.c.loopInput.checked,false);
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-precount');assert.equal(h.c.countInInput.checked,false);
+  h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'final-practice');assert.equal(h.controller.getState().onboardingCompleted,false);
   h.node('progress1').handlers.click();assert.equal(h.node('#round-loop-board').hidden,true);h.node('progress3').handlers.click();assert.equal(h.node('#round-loop-board').hidden,false);
+});
+test('Round tutorial completes only from one uninterrupted Practice loop pass',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'demo'});
+  h.c.loopInput.checked=true;h.c.loopStartInput.value='0';h.c.loopEndInput.value='0';h.controller.continueSession();
+  const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
+  emit({state:'waiting_for_input',position:0,running:false,ended:false});
+  h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate'}});
+  h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:0,to:0}});
+  assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
+  emit({state:'waiting_for_input',position:0,running:false,ended:false});
+  h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:false,from:0,to:0}});
+  assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
+  h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:0,to:0}});
+  assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');
+  assert(h.node('progress5').classList.contains('is-complete'));assert(h.node('progress6').classList.contains('is-active'));
 });
 test('Miniature uses the same per-hand repetition detector colors as notation',()=>{
   const {window,sandbox}=load();
@@ -555,6 +586,11 @@ test('Final Right Hand Practice completes only after one uninterrupted full run'
   assert(h.node('progress6').classList.contains('is-complete'));
   assert.equal(h.node('#onboarding-completion').hidden,false);
   const timersAfterCompletion=h.timers.size;emit({state:'paused',position:8,running:false,ended:true});assert.equal(h.timers.size,timersAfterCompletion,'celebration fires once');
+});
+test('Real Practice controller natural end triggers the completion celebration',async()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:6,inputMode:'demo'});
+  h.controller.continueSession();await h.c.play();h.c.acceptPracticeInput(72);h.c.audioContext.currentTime=2;h.c.tick();h.c.acceptPracticeInput(74);h.c.audioContext.currentTime=10;h.c.tick();
+  assert.equal(h.controller.getState().onboardingCompleted,true);assert.equal(h.node('#onboarding-completion').hidden,false);
 });
 
 test('Robot playback end and Skip never fake final completion',()=>{

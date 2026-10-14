@@ -41,12 +41,10 @@
     });
     const pc=document.createElement('span');pc.className='round-mini-block round-mini-pc';pc.textContent='PC';pc.setAttribute('aria-label','Pre-count');
     const syncGeometry=()=>{
-      const bpm=document.getElementById('metronome-board'),practice=document.getElementById('practice-board'),control=document.getElementById('metronome-toggle');
-      if(root.hidden || !bpm || bpm.hidden || !practice || practice.hidden)return;
-      const b=bpm.getBoundingClientRect(),p=practice.getBoundingClientRect(),row=root.parentElement.getBoundingClientRect(),h=control.getBoundingClientRect().height;
+      const control=document.getElementById('metronome-toggle');
+      if(root.hidden || !control)return;
+      const h=control.getBoundingClientRect().height;
       if(h>0)root.style.setProperty('--round-mini-height',`${h}px`);
-      const height=`${p.bottom-b.top}px`,bottom=`${row.bottom-p.bottom}px`;
-      if(root.style.height!==height)root.style.height=height;if(root.style.bottom!==bottom)root.style.bottom=bottom;
     };
     const update=position=>{
       syncGeometry();
@@ -111,7 +109,7 @@
       c.pauseImmediate(0);update(0);
     };
     update(c.clock.position);
-    return {root,update,pulse,reset};
+    return {root,update,pulse,reset,syncGeometry};
   }
   global.Play12RoundBoard={create,roundIndex,ribbonFor,normalizeRange,editRange};
 })(window);
