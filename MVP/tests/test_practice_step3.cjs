@@ -110,7 +110,7 @@ test('Approved manual RH has no simultaneous note set; source remains 9 rounds',
 function onboarding(saved=null, midiDiagnostic=null) {
   const {c,window,sandbox}=make();const keydown=sandbox.document.handlers.keydown;const nodes=new Map();
   const node=id=>{if(!nodes.has(id)) {const e=new Element(); const classes=new Set();e.classList={add(...xs){xs.forEach(x=>classes.add(x));},remove(...xs){xs.forEach(x=>classes.delete(x));},toggle(x,on){on ? classes.add(x):classes.delete(x);},contains(x){return classes.has(x);}};e.removeAttribute=name=>delete e[name];e.animate=()=>{};e.appendChild=child=>child.parentElement=e;e.insertBefore=e.appendChild;e.prepend=e.appendChild;nodes.set(id,e);}return nodes.get(id);};
-  const root=node('root');root.querySelector=node;const progress=[1,2,3,4].map(n=>{const e=node(`progress${n}`);e.dataset.progressStep=String(n);return e;});
+  const root=node('root');root.querySelector=node;const progress=[1,2,3,4,5,6].map(n=>{const e=node(`progress${n}`);e.dataset.progressStep=String(n);return e;});
   const views=['WELCOME','MIDI_CONNECT','LISTEN_AND_CONTROL'].map(n=>{const e=node(n);e.dataset.onboardingView=n;return e;});
   root.querySelectorAll=q=>q==='[data-progress-step]'?progress:q==='[data-onboarding-view]'?views:[];
   const values=new Map(saved?[['play12.onboarding.state.v1',JSON.stringify(saved)]]:[]);
@@ -122,8 +122,9 @@ function onboarding(saved=null, midiDiagnostic=null) {
   window.Play12Coach={create:()=>({show(){},stop(){}})};
   vm.runInContext(readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8'),sandbox);
   const controller=window.Play12Onboarding.create({root,startButton:node('start'),continueButton:node('continue'),storage});
-  c.stage.parentElement=node('home');controller.connectRuntime({playback:c,noteEvents:c,stage:c.stage,midiDiagnostic});
-  return {controller,c,node,root,values,window,timers,keydown};
+  const pianoView={mount:null,ranges:[],setRange(left,right){this.ranges.push([left,right]);},syncContainer(){}};
+  c.stage.parentElement=node('home');controller.connectRuntime({playback:c,noteEvents:c,stage:c.stage,midiDiagnostic,pianoView});
+  return {controller,c,node,root,values,window,timers,keydown,pianoView};
 }
 test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actual controls advance',async()=>{
   const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();
@@ -195,6 +196,32 @@ test('Returning verified MIDI checks current availability and reconnects without
   listener({status:'connected'});assert.equal(h.node('#returning-midi').hidden,true);
   listener({status:'no-input'});assert.equal(h.node('#returning-midi').hidden,false);assert.match(h.node('#returning-midi-message').innerHTML,/MIDI keyboard connection lost/);h.node('#returning-midi-retry').handlers.click();assert.equal(calls,2);assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
 });
+test('Skip stays hidden through MIDI calibration; exact ranges render without note names',()=>{
+  let calibrationListener,statusListener;let retries=0,accepted=0;
+  const midi={currentStatus:{status:'connected'},getCalibration:()=>null,enable(){statusListener({status:'connected'});},beginCalibration(){calibrationListener({type:'capture-left'});},retryCalibration(){retries++;},confirmRange(){accepted++;},useUnusualRange(){accepted++;},
+    addStatusListener(fn){statusListener=fn;return ()=>{};},addCalibrationListener(fn){calibrationListener=fn;return ()=>{};}};
+  const h=onboarding(null,midi);h.controller.startNew();h.node('#onboarding-midi-ready').handlers.click();
+  for(const listener of h.c.noteListeners) listener({type:'note-on',source:'midi',velocity:100,midiNote:60});
+  h.node('#onboarding-midi-continue').handlers.click();
+  assert.equal(h.node('#onboarding-skip').hidden,true);
+  for(const type of ['capture-left','capture-right']){calibrationListener({type});assert.equal(h.node('#onboarding-skip').hidden,true);}
+  for(const sample of [
+    {type:'confirm',range:{leftMidi:36,rightMidi:84,keyCount:49}},
+    {type:'confirm',range:{leftMidi:29,rightMidi:89,keyCount:61}},
+    {type:'confirm',range:{leftMidi:21,rightMidi:108,keyCount:88}},
+    {type:'unusual',range:{leftMidi:34,rightMidi:84,keyCount:51}}
+  ]){
+    calibrationListener(sample);assert.deepEqual(h.pianoView.ranges.at(-1),[sample.range.leftMidi,sample.range.rightMidi]);
+    const target=sample.type==='unusual'?'#onboarding-midi-unusual-count':'#onboarding-midi-key-count';
+    assert.equal(h.node(target).textContent,`We detected ${sample.range.keyCount} keys.`);
+    assert(!/[A-G][#b]?\d|MIDI|→/.test(h.node(target).textContent));assert.equal(h.node('#onboarding-skip').hidden,true);
+  }
+  h.node('#onboarding-midi-calibrate-unusual-retry').handlers.click();assert.equal(retries,1);
+  h.node('#onboarding-midi-use-range').handlers.click();assert.equal(accepted,1);
+  calibrationListener({type:'verify-function'});assert.equal(h.node('#onboarding-skip').hidden,true);
+  calibrationListener({type:'complete'});assert.equal(h.node('#onboarding-skip').hidden,true);
+  h.node('#onboarding-midi-calibration-continue').handlers.click();assert.equal(h.node('#onboarding-skip').hidden,false);
+});
 test('Geometry extends inner clip to fixed Playback at top/middle/bottom scroll and resize',()=>{
   const {c,sandbox}=make();
   sandbox.document.body={classList:{contains:()=>true}};sandbox.getComputedStyle=()=>({borderLeftWidth:'1'});
@@ -246,15 +273,15 @@ test('Skip advances implemented stages without zero/progress loss',()=>{
   for(const stage of ['playing','metronome-on','metronome-tempo','metronome-play','round-nav','round-loop','round-range','round-precount']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
   assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');skip();
   assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'final-practice');assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);assert.equal(h.c.practiceSettings.practiceRightHandEnabled,true);
-  assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);assert.equal(h.node('progress4')['aria-disabled'],'true');
+  assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);assert.equal(h.node('progress6')['aria-disabled'],'false');
 });
-test('Instruction timeout is 12s, one timer per hint, does not perform the action or reappear',()=>{
+test('Action cards persist; Info cards share a 6s timeout and advance cleanly',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',chooseZeroCompleted:true,practiceGuideStage:'enable',inputMode:'demo'});h.controller.continueSession();
-  assert.equal(h.timers.size,1);assert.equal([...h.timers.values()][0].delay,12000);
-  [...h.timers.values()][0].fn();assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.c.practiceEnabled(),false);assert.equal(h.timers.size,0);
-  h.c.emitState();assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);
-  h.node('#practice-board-mode').handlers.click();assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Left Hand/);assert.equal(h.timers.size,1);
+  assert.equal(h.timers.size,0);assert.equal(h.node('#onboarding-listen-coach').hidden,false);
+  h.c.emitState();assert.equal(h.node('#onboarding-listen-coach').hidden,false);assert.equal(h.timers.size,0);
+  h.node('#practice-board-mode').handlers.click();assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Left Hand/);assert.equal(h.timers.size,0);
   h.node('#practice-left-hand').handlers.click();assert.equal(h.timers.size,1);assert.match(h.node('#onboarding-listen-prompt').innerHTML,/music will wait/);
+  assert.equal([...h.timers.values()][0].delay,6000);[...h.timers.values()][0].fn();assert.equal(h.controller.getState().practiceGuideStage,'ready');
   h.node('progress2').handlers.click();assert.equal(h.timers.size,0);
 });
 test('Skip every instruction preserves real settings, learned actions and default zero',()=>{
@@ -267,15 +294,15 @@ test('Skip every instruction preserves real settings, learned actions and defaul
   }
   assert.equal(h.controller.getState().practiceGuideStage,'playing');assert.equal(h.timers.size,0);
 });
-test('Card placement waits for Ready; other descriptive/action cards retain timeout behavior',()=>{
+test('Card placement and actions persist; explanatory cards use the shared timeout',()=>{
   const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();h.window.dispatchEvent({type:'play12:zero-confirmed'});
   const expire=()=>{const entries=[...h.timers.values()];assert.equal(entries.length,1);entries[0].fn();};
   assert.equal(h.timers.size,0);assert.equal(h.controller.getState().zeroSetupStage,'cards');
   h.node('#cards-ready').handlers.click();assert.equal(h.controller.getState().zeroSetupStage,'verify-yellow');
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.node('#practice-board').hidden,false);
-  expire();assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.c.practiceEnabled(),false);
-  h.node('#practice-board-mode').handlers.click();expire();assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,true);assert.equal(h.controller.getState().practiceGuideStage,'hand');
-  h.node('#practice-left-hand').handlers.click();expire();assert.equal(h.controller.getState().practiceGuideStage,'ready');expire();assert.equal(h.c.clock.running,false);
+  assert.equal(h.timers.size,0);assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.c.practiceEnabled(),false);
+  h.node('#practice-board-mode').handlers.click();assert.equal(h.timers.size,0);assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,true);assert.equal(h.controller.getState().practiceGuideStage,'hand');
+  h.node('#practice-left-hand').handlers.click();expire();assert.equal(h.controller.getState().practiceGuideStage,'ready');assert.equal(h.timers.size,0);assert.equal(h.c.clock.running,false);
 });
 test('Restart onboarding and stage revisits cancel card timers and start a fresh instruction',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'enable',highestUnlockedStep:3,inputMode:'demo'});h.controller.continueSession();
@@ -346,12 +373,12 @@ test('BPM clamps, +/- 10, invalid restores; shared tempo scales clock and next m
   assert.equal(c.metronomeAudio.pendingBeatVisuals.at(-1).when,beatTime);
   assert.equal(c.metronomeAudio.pendingBeatVisuals.at(-1).accent,false);
 });
-test('Metronome tutorial Skip changes no settings; tempo timeout advances without forcing BPM',()=>{
+test('Metronome tutorial actions persist and advance only on action or Skip',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',metronomeUnlocked:true,inputMode:'demo'});
   h.controller.continueSession();assert.equal(h.node('#metronome-board').hidden,false);
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');assert.equal(h.c.metronomeInput.checked,false);
-  const timer=[...h.timers.values()].find(x=>x.delay===12000);timer.fn();
-  assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');assert.equal(h.c.clock.bpm,60);
+  assert.equal(h.timers.size,0);assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');
+  h.window.dispatchEvent({type:'play12:tempo-change'});assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');assert.equal(h.c.clock.bpm,60);
   h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-nav');
 });
 test('Metronome and tempo interactions advance the instructions immediately',()=>{
@@ -506,8 +533,8 @@ test('Final Right Hand Practice completes only after one uninterrupted full run'
   emit({state:'paused',position:8,running:false,ended:true});
   assert.equal(h.controller.getState().onboardingStep,'ONBOARDING_COMPLETE');
   assert.equal(h.controller.getState().onboardingCompleted,true);
-  assert.equal(h.controller.getState().highestUnlockedStep,4);
-  assert(h.node('progress4').classList.contains('is-complete'));
+  assert.equal(h.controller.getState().highestUnlockedStep,6);
+  assert(h.node('progress6').classList.contains('is-complete'));
   assert.equal(h.node('#onboarding-completion').hidden,false);
   const timersAfterCompletion=h.timers.size;emit({state:'paused',position:8,running:false,ended:true});assert.equal(h.timers.size,timersAfterCompletion,'celebration fires once');
 });

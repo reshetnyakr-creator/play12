@@ -12,6 +12,7 @@
     state: 'play12.onboarding.state.v1',
     sessionExists: 'play12.session.exists.v1'
   });
+  const INFO_CARD_DURATION_MS = 6000;
 
   const EXISTING_SESSION_KEYS = Object.freeze([
     'play12.zero_note.midi', 'play12.zero_note.pitch_class',
@@ -29,7 +30,7 @@
         onboardingStep: value.practiceGuideStage === 'cards' ? 'CHOOSE_ZERO' : value.onboardingStep,
         onboardingCompleted: value.onboardingCompleted === true,
         lastSessionExists: true,
-        highestUnlockedStep: Math.max(1, Math.min(4, Number(value.highestUnlockedStep) || 1)),
+        highestUnlockedStep: Math.max(1, Math.min(6, Number(value.highestUnlockedStep) || 1)),
         midiVerified: value.midiVerified === true,
         inputMode: value.inputMode === 'midi' || value.inputMode === 'demo' ? value.inputMode : null,
         midiUsbGuideSeen: value.midiUsbGuideSeen === true,
@@ -95,6 +96,7 @@
     const leftHandButton = root.querySelector('#practice-left-hand');
     const rightHandButton = root.querySelector('#practice-right-hand');
     const reconnectCard = root.querySelector('#returning-midi');
+    const skipButton = root.querySelector('#onboarding-skip');
     const reconnectMessage = root.querySelector('#returning-midi-message');
     const reconnectButton = root.querySelector('#returning-midi-retry');
     const completionCard = root.querySelector('#onboarding-completion');
@@ -172,7 +174,7 @@
       hintKeys.set(element, key);
       element.hidden = false;
       element.classList.add('has-dismiss-timer');
-      hintTimers.set(element, global.setTimeout(() => { hideHint(element); afterDismiss?.(); }, 12000));
+      hintTimers.set(element, global.setTimeout(() => { hideHint(element); afterDismiss?.(); }, INFO_CARD_DURATION_MS));
     };
     const clearHints = () => {
       for (const element of [listenCoach, document.getElementById('zero-chooser')]) if (element) hideHint(element);
@@ -194,6 +196,10 @@
       clearTimeout(hintTimers.get(listenCoach));
       hintTimers.delete(listenCoach);
       listenCoach.classList.remove('has-dismiss-timer');
+    };
+    const showActionCoach = (text, control = null, pulse = false) => {
+      showCoach(text, control, pulse);
+      keepCoachUntilAction();
     };
     let playerClipFrame = 0;
     let visibleStep = 'WELCOME';
@@ -368,8 +374,20 @@
       });
     };
 
-    const highestUnlocked = () => Math.max(state.onboardingCompleted ? 4 : state.highestUnlockedStep || 1,
-      state.chooseZeroCompleted || state.onboardingStep === 'TRY_IT_YOURSELF' ? 3 : state.listenFragmentCompleted ? 2 : 1);
+    const guideStageNumber = () => {
+      const guide = state.practiceGuideStage || 'enable';
+      if (guide === 'completed' || state.onboardingCompleted) return 6;
+      if (guide === 'final-instruction' || guide === 'final-practice') return 6;
+      if (guide.startsWith('round-')) return 5;
+      if (guide.startsWith('metronome-')) return 4;
+      return 3;
+    };
+    const activeProgressStep = () => state.onboardingStep === 'ONBOARDING_COMPLETE' ? 6
+      : state.onboardingStep === 'TRY_IT_YOURSELF' ? guideStageNumber()
+      : state.onboardingStep === 'CHOOSE_ZERO' ? 2 : 1;
+    const highestUnlocked = () => Math.max(state.onboardingCompleted ? 6 : state.highestUnlockedStep || 1,
+      state.onboardingStep === 'TRY_IT_YOURSELF' ? guideStageNumber()
+        : state.chooseZeroCompleted ? 3 : state.listenFragmentCompleted ? 2 : 1);
 
     const visibleBoardsForStep = step => ({
       zero: ['CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(step),
@@ -379,9 +397,9 @@
     });
     const syncProgress = () => {
       state.highestUnlockedStep = highestUnlocked();
-      const activeStep = state.onboardingStep === 'ONBOARDING_COMPLETE' ? 4 : state.onboardingStep === 'TRY_IT_YOURSELF' ? 3 : state.onboardingStep === 'CHOOSE_ZERO' ? 2 : 1;
+      const activeStep = activeProgressStep();
       for (const [number, element] of progressItems) {
-        const completed = state.onboardingCompleted ? number <= 4 : number < state.highestUnlockedStep && number !== activeStep;
+        const completed = state.onboardingCompleted ? number <= 6 : number < state.highestUnlockedStep && number !== activeStep;
         element.setAttribute('role', 'button');
         element.setAttribute('tabindex', number <= state.highestUnlockedStep ? '0' : '-1');
         element.setAttribute('aria-disabled', String(number > state.highestUnlockedStep));
@@ -399,14 +417,15 @@
       root.classList.toggle('has-metronome-board', boards.metronome);
       const roundBoard = document.getElementById('round-loop-board');
       if (roundBoard) roundBoard.hidden = !boards.rounds;
-      if (songStep) songStep.textContent = `Step ${activeStep} of 4`;
+      if (songStep) songStep.textContent = `Step ${activeStep} of 6`;
+      if (skipButton) skipButton.hidden = !['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(state.onboardingStep);
     };
 
     const showMidiState = value => {
       midiConnectState = value;
       for (const [name, element] of midiStates) element.hidden = name !== value;
       const mount = runtime?.pianoView?.mount;
-      if (mount) mount.classList.toggle('is-calibration-hidden', value !== 'calibration-complete' && state.inputMode !== 'demo');
+      if (mount) mount.classList.toggle('is-calibration-hidden', !['calibrate-unusual', 'calibrate-confirm', 'calibration-complete'].includes(value) && state.inputMode !== 'demo');
       exposeState();
     };
 
@@ -468,10 +487,10 @@
       listenContinue.hidden = true;
       const stage = state.listenGuideStage || (state.pauseLearned ? 'continue' : state.playLearned ? 'pause' : 'initial');
       if (state.listenFragmentCompleted) { showCoach(''); listenContinue.hidden = false; }
-      else if (stage === 'initial') showCoach('Listen to how the melody sounds<br>Press Play or P', 'play');
+      else if (stage === 'initial') showActionCoach('Listen to how the melody sounds<br>Press Play or P', 'play');
       else if (listenPlaybackState === 'pause-queued') showCoach('');
-      else if (stage === 'pause' && (listenPosition >= 4.8 || state.listenGuideStage === 'pause')) showCoach('Try pausing it', 'pause');
-      else if (stage === 'continue') showCoach('Continue', 'play');
+      else if (stage === 'pause' && (listenPosition >= 4.8 || state.listenGuideStage === 'pause')) showActionCoach('Try pausing it', 'pause');
+      else if (stage === 'continue') showActionCoach('Continue', 'play');
       else showCoach('');
       exposeState();
     };
@@ -571,15 +590,16 @@
     };
 
     const navigateStep = number => {
-      if (number > highestUnlocked() || number < 1 || number > 4 || (number === 4 && !state.onboardingCompleted)) return;
+      if (number > highestUnlocked() || number < 1 || number > 6) return;
       state.highestUnlockedStep = highestUnlocked();
       runtime?.playback?.pauseImmediate();
       if (number !== 2) global.dispatchEvent(new CustomEvent('play12:choose-zero-close'));
-      state.onboardingStep = ['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF', 'ONBOARDING_COMPLETE'][number - 1];
+      state.onboardingStep = number === 1 ? 'LISTEN_AND_CONTROL' : number === 2 ? 'CHOOSE_ZERO' : 'TRY_IT_YOURSELF';
       state.zeroSetupStage = null;
-      if (number === 3 || number === 4) {
-        if (state.metronomeUnlocked && !state.roundUnlocked && state.practiceGuideStage === 'free') { state.roundUnlocked = true; state.practiceGuideStage = 'round-nav'; }
-        state.practiceGuideStage ||= 'enable';
+      if (number >= 3) {
+        state.practiceGuideStage = ({3:'enable', 4:'metronome-on', 5:'round-nav', 6:'final-instruction'})[number];
+        if (number >= 4) state.metronomeUnlocked = true;
+        if (number >= 5) state.roundUnlocked = true;
         restorePracticeSettings();
       } else if (runtime) {
         // Listen revisits use normal playback without overwriting saved Practice preferences.
@@ -633,8 +653,13 @@
       resumeRequested = true;
       if (runtime?.playback?.metronomeButton) runtime.playback.setMetronome(false, false);
       else if (runtime?.playback?.metronomeInput) runtime.playback.metronomeInput.checked = false;
-      if (state.onboardingCompleted) navigateStep(4);
-      else if (highestUnlocked() >= 2) navigateStep(highestUnlocked());
+      if (state.onboardingCompleted) { state.onboardingStep = 'ONBOARDING_COMPLETE'; showStep('ONBOARDING_COMPLETE'); }
+      else if (highestUnlocked() > activeProgressStep()) navigateStep(highestUnlocked());
+      else if (['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(state.onboardingStep)) {
+        if (state.onboardingStep === 'TRY_IT_YOURSELF') restorePracticeSettings();
+        showStep(state.onboardingStep);
+        if (state.onboardingStep === 'CHOOSE_ZERO' && state.zeroSetupStage !== 'cards') global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
+      }
       else if (state.midiVerified || state.inputMode === 'demo') navigateStep(1);
       else if (state.onboardingStep === 'MIDI_CONNECT') showStep('MIDI_CONNECT');
       else showStep('WELCOME');
@@ -688,13 +713,14 @@
 
     const syncCalibrationRange = range => {
       if (!range) return;
-      const pitch = global.Play12MidiDiagnostic.pitchForMidi;
       const count = root.querySelector('#onboarding-midi-key-count');
-      const detail = root.querySelector('#onboarding-midi-range');
-      const unusual = root.querySelector('#onboarding-midi-unusual-range');
-      if (count) count.textContent = `${range.keyCount} keys`;
-      if (detail) detail.textContent = `Left: ${pitch(range.leftMidi)} · Right: ${pitch(range.rightMidi)}`;
-      if (unusual) unusual.textContent = `${range.keyCount} keys · ${pitch(range.leftMidi)} → ${pitch(range.rightMidi)}`;
+      const unusual = root.querySelector('#onboarding-midi-unusual-count');
+      const copy = `We detected ${range.keyCount} keys.`;
+      if (count) count.textContent = copy;
+      if (unusual) unusual.textContent = copy;
+      runtime?.pianoView?.setRange?.(range.leftMidi, range.rightMidi);
+      runtime?.pianoView?.mount?.classList.remove('is-calibration-hidden');
+      runtime?.pianoView?.syncContainer?.();
     };
 
     const advanceToChooseZero = () => {
@@ -764,7 +790,10 @@
       state.highestUnlockedStep = 3;
       if (context.destination === 'practice') {
         state.practiceGuideStage = context.practiceGuideStage || 'free';
-        navigateStep(3);
+        state.onboardingStep = 'TRY_IT_YOURSELF';
+        restorePracticeSettings();
+        saveState(storage, state);
+        showStep('TRY_IT_YOURSELF');
       } else if (state.cardsSetupCompleted) navigateStep(3);
       else {
         state.onboardingStep = 'CHOOSE_ZERO';
@@ -809,7 +838,7 @@
       state.onboardingStep = 'ONBOARDING_COMPLETE';
       state.onboardingCompleted = true;
       state.practiceGuideStage = 'completed';
-      state.highestUnlockedStep = 4;
+      state.highestUnlockedStep = 6;
       finalAttempt = { active: false, valid: false };
       saveState(storage, state);
       showStep('ONBOARDING_COMPLETE');
@@ -824,6 +853,7 @@
       state.practiceGuideStage = next[state.practiceGuideStage] || (skipped && state.practiceGuideStage === 'free' ? freeNext : 'free');
       if (state.practiceGuideStage.startsWith('metronome-') || state.practiceGuideStage.startsWith('round-')) state.metronomeUnlocked = true;
       if (state.practiceGuideStage.startsWith('round-')) state.roundUnlocked = true;
+      state.highestUnlockedStep = Math.max(state.highestUnlockedStep || 1, guideStageNumber());
       syncProgress();
       saveState(storage, state); syncPracticeGuide();
     };
@@ -852,17 +882,17 @@
       practiceBoard.hidden = false;
       practiceModeButton.classList.toggle('is-guided', stage === 'enable');
       leftHandButton.classList.toggle('is-guided', stage === 'hand');
-      if (stage === 'enable') showCoach('Now try it yourself<br>Turn on Practice Mode', 'practice-board-mode');
-      else if (stage === 'hand') showCoach('Let’s start with your right hand<br>Turn off Left Hand', 'practice-left-hand');
+      if (stage === 'enable') showActionCoach('Now try it yourself<br>Turn on Practice Mode', 'practice-board-mode');
+      else if (stage === 'hand') showActionCoach('Let’s start with your right hand<br>Turn off Left Hand', 'practice-left-hand');
       else if (stage === 'explain') showCoach('Watch the Note Field and play the keys it shows you<br><small>The music will wait until you press the right key</small>', 'explain', false, advancePracticeInstruction);
-      else if (stage === 'ready') showCoach("Press Play when you're ready", 'play');
-      else if (stage === 'metronome-on') showCoach(isRu() ? 'Добавим ровный пульс<br>Включите метроном' : 'Let’s add a steady beat<br>Turn on the metronome', 'metronome-toggle');
-      else if (stage === 'metronome-tempo') showCoach(isRu() ? 'Можно играть медленнее или быстрее<br><small>Введите BPM или меняйте темп кнопками − / + с шагом 10</small>' : 'Slow down or speed up the piece<br><small>Type a BPM, or use − / + to change it by 10</small>', 'metronome-tempo-controls', false, advancePracticeInstruction);
-      else if (stage === 'metronome-play') showCoach(isRu() ? 'Сыграйте ещё раз под ровный пульс<br>Нажмите Play' : 'Play it again with a steady beat<br>Press Play', 'play');
-      else if (stage === 'round-nav') showCoach(isRu() ? 'Перемещайтесь по произведению раундами' : 'Move through the piece by rounds', 'round-navigation', false, advancePracticeInstruction);
-      else if (stage === 'round-loop') showCoach(isRu() ? 'Повторяйте участок, который хотите потренировать' : 'Loop a section you want to practise', 'round-loop-toggle', false, advancePracticeInstruction);
-      else if (stage === 'round-range') showCoach(isRu() ? 'Выберите раунды, которые хотите повторять' : 'Choose the rounds you want to repeat', 'round-range', false, advancePracticeInstruction);
-      else if (stage === 'round-precount') showCoach(isRu() ? 'Нужен момент перед попыткой?<br>Включите Pre-count' : 'Need a moment before each try?<br>Turn on Pre-count', 'round-precount-toggle', false, advancePracticeInstruction);
+      else if (stage === 'ready') showActionCoach("Press Play when you're ready", 'play');
+      else if (stage === 'metronome-on') showActionCoach(isRu() ? 'Добавим ровный пульс<br>Включите метроном' : 'Let’s add a steady beat<br>Turn on the metronome', 'metronome-toggle');
+      else if (stage === 'metronome-tempo') showActionCoach(isRu() ? 'Можно играть медленнее или быстрее<br><small>Введите BPM или меняйте темп кнопками − / + с шагом 10</small>' : 'Slow down or speed up the piece<br><small>Type a BPM, or use − / + to change it by 10</small>', 'metronome-tempo-controls');
+      else if (stage === 'metronome-play') showActionCoach(isRu() ? 'Сыграйте ещё раз под ровный пульс<br>Нажмите Play' : 'Play it again with a steady beat<br>Press Play', 'play');
+      else if (stage === 'round-nav') showActionCoach(isRu() ? 'Перемещайтесь по произведению раундами' : 'Move through the piece by rounds', 'round-navigation');
+      else if (stage === 'round-loop') showActionCoach(isRu() ? 'Повторяйте участок, который хотите потренировать' : 'Loop a section you want to practise', 'round-loop-toggle');
+      else if (stage === 'round-range') showActionCoach(isRu() ? 'Выберите раунды, которые хотите повторять' : 'Choose the rounds you want to repeat', 'round-range');
+      else if (stage === 'round-precount') showActionCoach(isRu() ? 'Нужен момент перед попыткой?<br>Включите Pre-count' : 'Need a moment before each try?<br>Turn on Pre-count', 'round-precount-toggle');
       else if (stage === 'final-instruction') showCoach(isRu()
         ? 'А теперь попробуй сыграть всю мелодию правой рукой от начала до конца.<br><br>Не спеши. Если собьёшься — попробуй ещё раз.'
         : 'Now try to play the whole melody with your right hand from beginning to end.<br><br>Take your time. If you lose your place, try again.', 'explain', false, beginFinalPractice);
@@ -1059,13 +1089,18 @@
       clearHints();
       exposeState();
       const chooser = document.getElementById('zero-chooser');
-      if (chooser) { showHint(chooser, `zero-selection:${++zeroHintSequence}`); spotlightHint(chooser, 'choose-zero'); }
+      if (chooser) {
+        showHint(chooser, `zero-selection:${++zeroHintSequence}`);
+        clearTimeout(hintTimers.get(chooser)); hintTimers.delete(chooser); chooser.classList.remove('has-dismiss-timer');
+        spotlightHint(chooser, 'choose-zero');
+      }
     });
     global.addEventListener('play12:zero-ui-candidate', () => {
       const chooser = document.getElementById('zero-chooser');
       if (chooser) {
         hideHint(chooser);
         showHint(chooser, `zero-confirmation:${++zeroHintSequence}`);
+        clearTimeout(hintTimers.get(chooser)); hintTimers.delete(chooser); chooser.classList.remove('has-dismiss-timer');
       }
     });
     global.addEventListener('play12:choose-zero-close', () => {

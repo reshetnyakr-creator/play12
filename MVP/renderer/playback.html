@@ -13,7 +13,7 @@
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
-    <button id="onboarding-skip" class="mvp-choose-zero-control mvp-skip-control" type="button">Skip</button>
+    <button id="onboarding-skip" class="mvp-choose-zero-control mvp-skip-control" type="button" hidden>Skip</button>
     <header class="mvp-site-header">
       <a class="mvp-logo-link" href="/" aria-label="Play12 homepage">
         <img class="mvp-site-logo" src="../../P12%20logo.png" alt="Play12 logo">
@@ -87,16 +87,15 @@
             <div class="mvp-actions"><button id="onboarding-midi-calibrate-invalid-retry" class="mvp-button mvp-button-primary" type="button">Try again</button></div>
           </div>
           <div data-midi-connect-state="calibrate-unusual" hidden>
-            <h1 class="mvp-step-heading">This keyboard range looks unusual.</h1>
+            <h1 id="onboarding-midi-unusual-count" class="mvp-step-heading">We detected your keyboard.</h1>
+            <p class="mvp-step-message">Does this match your keyboard?</p>
             <p class="mvp-step-message">Make sure you pressed the leftmost and rightmost keys.</p>
-            <p id="onboarding-midi-unusual-range" class="mvp-step-message"></p>
-            <div class="mvp-actions"><button id="onboarding-midi-calibrate-unusual-retry" class="mvp-button mvp-button-secondary" type="button">Try again</button><button id="onboarding-midi-use-range" class="mvp-button mvp-button-primary" type="button">Use this range</button></div>
+            <div class="mvp-actions"><button id="onboarding-midi-calibrate-unusual-retry" class="mvp-button mvp-button-secondary" type="button">Try again</button><button id="onboarding-midi-use-range" class="mvp-button mvp-button-primary" type="button">Use this keyboard</button></div>
           </div>
           <div data-midi-connect-state="calibrate-confirm" hidden>
-            <h1 class="mvp-step-heading">Keyboard detected</h1>
-            <p id="onboarding-midi-key-count" class="mvp-step-message"></p>
-            <p id="onboarding-midi-range" class="mvp-step-message"></p>
-            <div class="mvp-actions"><button id="onboarding-midi-calibrate-confirm" class="mvp-button mvp-button-primary" type="button">Confirm</button><button id="onboarding-midi-calibrate-retry" class="mvp-button mvp-button-secondary" type="button">Try again</button></div>
+            <h1 id="onboarding-midi-key-count" class="mvp-step-heading">We detected your keyboard.</h1>
+            <p class="mvp-step-message">Does this match your keyboard?</p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibrate-retry" class="mvp-button mvp-button-secondary" type="button">Try again</button><button id="onboarding-midi-calibrate-confirm" class="mvp-button mvp-button-primary" type="button">Use this keyboard</button></div>
           </div>
           <div data-midi-connect-state="function-verify" hidden>
             <h1 class="mvp-step-heading">Function key</h1>
@@ -162,13 +161,15 @@
                 </div>
                 <p>Play12 Learning Version</p>
               </div>
-              <small id="onboarding-song-step">Step 1 of 4</small>
+                <small id="onboarding-song-step">Step 1 of 6</small>
             </aside>
             <ol>
               <li data-progress-step="1" class="is-active" aria-current="step"><span>1</span><strong>Listen</strong></li>
               <li data-progress-step="2"><span>2</span><strong>Choose your 0</strong></li>
-              <li data-progress-step="3"><span>3</span><strong>Try it yourself</strong></li>
-              <li data-progress-step="4"><span>4</span><strong>You can do it!</strong></li>
+              <li data-progress-step="3"><span>3</span><strong>Play</strong></li>
+              <li data-progress-step="4"><span>4</span><strong>Metronome</strong></li>
+              <li data-progress-step="5"><span>5</span><strong>Round &amp; Loop</strong></li>
+              <li data-progress-step="6"><span>6</span><strong>You can do it!</strong></li>
             </ol>
             <p class="mvp-motivation">Music can be simple.<br><strong>You’ve got this.</strong></p>
           </aside>
