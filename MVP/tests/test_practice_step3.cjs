@@ -36,7 +36,7 @@ function make(events=[['R',72,0],['L',48,0],['L',50,1],['R',74,2]], zero=24, met
   if(metronome) Object.assign(options,{metronomeButton:new Element(),bpmMinus:new Element(),bpmPlus:new Element(),beatLamp:new Element(),originalTempo:60});
   const c=window.Play12Playback.start(options);
   const scheduled=[];
-  c.audio.scheduleNote=(e,when,duration)=>scheduled.push({id:e.id,hand:e.hand,midi:e.midi,start:e.start,duration});
+  c.audio.scheduleNote=(e,when,duration)=>scheduled.push({id:e.id,hand:e.hand,midi:e.midi,start:e.start,when,duration});
   const originalNoteOn=c.audio.noteOn.bind(c.audio);
   c.audio.noteOn=(key,midi,...args)=>{
     if(key.startsWith('robot:')) { const e=c.events.find(e=>`robot:${e.id}`===key); scheduled.push({...e}); }
@@ -454,6 +454,27 @@ test('Onboarding clean mode accepts correct pitch independently of BPM and metro
     assert.equal(c.acceptPracticeInput(72),true,`correct pitch remains accepted at ${bpm} BPM`);
   }
 });
+test('Lenient accepted timing preserves canonical transport and robot grid across BPM, metronome and Pre-count',async()=>{
+  for(const bpm of [60,120])for(const metronome of [false,true])for(const precount of [false,true]){
+    const {c,scheduled}=make([['R',72,0],['L',48,1],['R',74,2],['L',50,3],['R',76,4],['L',52,5]],24,true);
+    configure(c);c.setPracticeTimingStrict(false);c.bpmInput.value=String(bpm);c.changeBpm();c.setMetronome(metronome);c.countInInput.checked=precount;
+    await c.play();
+    if(precount){c.audioContext.currentTime=c.countIn.endsAt;c.tick();}
+    const beat=60/bpm,origin=c.expectedPracticeEvent.expectedAudioTime;
+    const phase=c.metronomePhaseTime;
+    for(const [pitch,start,offset] of [[72,0,.3],[74,2,.8],[76,4,-.35]]){
+      const expected=c.expectedPracticeEvent,due=origin+start*beat;
+      assert.equal(expected.start,start);assert(Math.abs(expected.expectedAudioTime-due)<1e-8);
+      c.audioContext.currentTime=due+offset;
+      if(offset<0)c.enterPracticeWait(expected);else c.tick();
+      assert.equal(c.acceptPracticeInput(pitch),true);
+      assert(Math.abs(c.clock.quarterToAudioTime(start)-due)<1e-8,`${bpm}/${metronome}/${precount} offset ${offset}`);
+      assert(Math.abs(c.clock.quarterToAudioTime(start+1)-(due+beat))<1e-8);
+      if(metronome)assert.equal(c.metronomePhaseTime,phase);
+    }
+    for(const robot of scheduled.filter(event=>event.hand==='L'&&Number.isFinite(event.when)))assert(Math.abs(robot.when-(origin+robot.start*beat))<1e-8,`robot ${robot.start} stays on canonical grid`);
+  }
+});
 test('A learner-empty Round completes only when its end is traversed',()=>{
   const {c,window}=make([['L',48,0]],24,true);c.rounds=[{start:0,end:4,beatQuarters:1,beats:4,measureQuarters:4}];configure(c,false,true);
   const events=[];window.dispatchEvent=event=>{if(event.type==='play12:practice-event-complete')events.push(event.detail);};
@@ -551,25 +572,39 @@ test('Loop, range and Pre-count steps accept an already-correct state',()=>{
   finish();assert.equal(h.controller.getState().practiceGuideStage,'round-precount-info');
   h.node('#onboarding-skip').handlers.click();finish();assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
 });
-test('Round training accepts one visible clean 2–4 chain and invalidates wrong input',()=>{
+test('Round training ignores Count-in, starts at music, and invalidates wrong input',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'demo'});
   h.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));h.controller.continueSession();
   const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
   const event=round=>h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
   const finishOk=()=>{const timer=[...h.timers.values()].find(value=>value.delay===950);assert(timer);timer.fn();};
   assert.equal(h.node('#onboarding-listen-coach').hidden,false);
-  emit({state:'count-in',position:1,running:false,ended:false});assert.equal(h.node('#onboarding-listen-coach').hidden,true);
+  emit({state:'count-in',position:1,running:false,ended:false});assert.equal(h.node('#onboarding-listen-coach').hidden,false);
   h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:2,roundComplete:true,source:'robot'}});assert.deepEqual([...h.c.roundBoard.successes],[]);
-  event(2);assert.deepEqual([...h.c.roundBoard.successes],[2]);
+  event(2);assert.deepEqual([...h.c.roundBoard.successes],[],'Count-in is not Round progress');
+  emit({state:'waiting_for_input',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[2]);
   emit({state:'waiting_for_input',position:2,running:false,ended:false});assert.deepEqual([...h.c.roundBoard.successes],[2],'hesitation does not reset success');
   event(3);h.window.dispatchEvent({type:'play12:practice-wrong-input',detail:{source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[]);
   event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[],'a broken pass cannot rebuild mid-loop');
   h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
-  emit({state:'count-in',position:1,running:false,ended:false});event(2);event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[2,3,4]);
+  emit({state:'count-in',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[]);
+  emit({state:'playing',position:1,running:true,ended:false});event(2);event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[2,3,4]);
   const okTimers=[...h.timers.values()].filter(value=>value.delay===950);assert.equal(okTimers.length,1,'the visible full chain creates OK12 without waiting for a hidden loop event');
   h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1,'loop boundary cannot duplicate OK12');
   finishOk();
   assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');assert(h.node('progress6').classList.contains('is-active'));
+});
+test('Clean Round 2–4 acceptance is identical for Pre-count and Metronome ON/OFF',()=>{
+  for(const metronome of [false,true])for(const precount of [false,true]){
+    const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'demo'});
+    h.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));h.c.metronomeInput.checked=metronome;h.c.countInInput.checked=precount;h.controller.continueSession();
+    const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
+    const event=round=>h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
+    if(precount){emit({state:'count-in',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[]);}
+    emit({state:'waiting_for_input',position:1,running:false,ended:false});event(2);event(3);event(4);
+    assert.deepEqual([...h.c.roundBoard.successes],[2,3,4],`metronome=${metronome} precount=${precount}`);
+    assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1);
+  }
 });
 test('Miniature uses the same per-hand repetition detector colors as notation',()=>{
   const {window,sandbox}=load();

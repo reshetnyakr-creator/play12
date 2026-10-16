@@ -677,7 +677,8 @@
       if (this.waitingForInput) {
         this.waitingForInput = null;
         this.clock.setCeiling(Infinity);
-        this.clock.start(frozenTime, acceptedBeatTime ?? this.audioContext.currentTime);
+        const canonicalAudioTime = acceptedBeatTime ?? expected.expectedAudioTime;
+        this.clock.start(frozenTime, Number.isFinite(canonicalAudioTime) ? canonicalAudioTime : this.audioContext.currentTime);
         this.armPracticeGate(frozenTime + EPSILON * 2);
         this.lastPlaybackPosition = frozenTime;
         this.stage.dataset.practiceState = "playing";

@@ -1149,17 +1149,21 @@
             return;
           }
           if (state.practiceGuideStage === 'round-practice') {
-            const active = snapshot.running || snapshot.state === 'waiting_for_input' || snapshot.state === 'count-in';
+            const musicalActive = snapshot.running || snapshot.state === 'waiting_for_input';
             const loop = runtime.playback.currentLoop?.();
             const from = Number(runtime.playback.loopStartInput?.value);
             const to = Number(runtime.playback.loopEndInput?.value);
             const settings = runtime.playback.getPracticeSettings?.();
             const exactSetup = loop && from === 1 && to === 3 && runtime.playback.loopInput?.checked === true && settings?.practiceModeEnabled === true &&
               settings.practiceLeftHandEnabled === false && settings.practiceRightHandEnabled === true;
-            if (!roundTraining.started && !roundTraining.feedbackPending && active && exactSetup && snapshot.position <= loop.start + 1e-4) {
+            if (snapshot.state === 'count-in') {
+              syncPracticeGuide();
+              return;
+            }
+            if (!roundTraining.started && !roundTraining.feedbackPending && musicalActive && exactSetup && snapshot.position <= loop.start + 1e-4) {
               roundTraining.started = true; roundTraining.valid = true; roundTraining.successfulRounds.clear();
               runtime?.playback?.roundBoard?.clearTrainingSuccess?.(); clearHints();
-            } else if (roundTraining.started && (!active || !exactSetup)) {
+            } else if (roundTraining.started && (!musicalActive || !exactSetup)) {
               invalidateRoundTraining();
             }
             syncPracticeGuide();
