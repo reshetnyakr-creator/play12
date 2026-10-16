@@ -51,3 +51,10 @@ test('Display grid cycles subdivisions and returns to composition minimum',()=>{
   assert.equal(next('1/64','1/16'),'1/16');
   assert.equal(next('1/64','invalid'),'1/4');
 });
+test('Renderer adds one right-side Round marker per runtime Round and includes it in combined width',()=>{
+  const svg=render(),markers=svg.children.filter(e=>e.attrs['data-round-marker']);
+  assert.equal(markers.length,9);assert.deepEqual(markers.map(e=>e.attrs['data-round-marker']),['1','2','3','4','5','6','7','8','9']);
+  assert(markers.every(marker=>marker.children[0].tag==='circle'));
+  assert.equal(Number(svg.dataset.roundMarkerDiameter),22);assert.equal(Number(svg.dataset.roundMarkerGap),10);
+  assert.equal(Number(svg.style.width.replace('px','')),Number(svg.dataset.noteFieldWidth)+32);
+});

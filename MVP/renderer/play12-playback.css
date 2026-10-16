@@ -116,6 +116,15 @@ html, body { margin: 0; min-height: 100%; background: #f7f7f5; }
 .playback-score g.is-active > rect:first-of-type { filter: drop-shadow(0 0 3.5px rgba(252,123,0,.58)) drop-shadow(0 1px 1.25px rgba(17,24,39,.24)); }
 .playback-score g.is-note-on-event > rect:first-of-type { animation: play12-note-on-burst 230ms ease-out; }
 .playback-score .play12-active-glow { opacity: 0; }
+.playback-score .play12-round-marker{pointer-events:none;transform-box:fill-box;transform-origin:center;}
+.playback-score .play12-round-marker-circle{fill:#fff;stroke:#b9bcb6;stroke-width:1;filter:drop-shadow(0 1px 1.5px rgba(17,24,39,.18));transition:fill 220ms ease,stroke 220ms ease;}
+.playback-score :is(.play12-round-marker-number,.play12-round-marker-check){dominant-baseline:central;text-anchor:middle;font:700 10px/1 Inter,sans-serif;fill:#333;}
+.playback-score .play12-round-marker-check{display:none;font-size:11px;}
+.playback-score .play12-round-marker.is-round-success .play12-round-marker-circle{fill:#CEF932;stroke:#98bf00;}
+.playback-score .play12-round-marker.is-round-success .play12-round-marker-number{display:none;}
+.playback-score .play12-round-marker.is-round-success .play12-round-marker-check{display:block;}
+.playback-score .play12-round-marker.is-round-success-pulse{animation:play12-round-marker-success 420ms ease-out;}
+@keyframes play12-round-marker-success{0%{transform:scale(.94)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
 .playback-score g.is-active .play12-active-glow { animation: play12-active-note-breath 900ms ease-in-out infinite; }
 .playback-score g.is-played { opacity: .72; }
 @keyframes play12-zone-note-on {
@@ -136,3 +145,4 @@ html, body { margin: 0; min-height: 100%; background: #f7f7f5; }
 }
 @media (max-width: 850px) { .settings-control { top: 58px; left: 12px; } .metronome-mode { top: 12px; right: 12px; left: auto; transform: none; } }
 @media (max-width: 620px) { .playback-page { padding: 12px; } .playback-stage { min-height: 420px; } .playback-position { width: 100%; text-align: left; } }
+@media(prefers-reduced-motion:reduce){.playback-score .play12-round-marker.is-round-success-pulse{animation:none}}

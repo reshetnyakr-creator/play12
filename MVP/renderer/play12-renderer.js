@@ -18,6 +18,8 @@
     candidateDebug: false,
     segmentRibbonWidth: 7,
     segmentRibbonGap: 5,
+    roundMarkerDiameter: 22,
+    roundMarkerGap: 10,
     zeroNote: "A",
     colors: ["#FF0C31", "#FC7B00", "#FBD12C", "#009640", "#0381ED", "#AE78D2", "#FF9FF3"],
     dynamicsOpacity: { pp: 0.5, p: 0.6, mp: 0.7, mf: 0.8, f: 0.9, ff: 1 },
@@ -144,7 +146,10 @@
     const hasRightRibbons = segmentList.some((segment) => segment.hand === "R");
     const leftRibbonSpace = hasLeftRibbons ? ribbonWidth + ribbonGap : 0;
     const rightRibbonSpace = hasRightRibbons ? ribbonWidth + ribbonGap : 0;
-    const renderedWidth = totalWidth + edgePadding * 2 + leftRibbonSpace + rightRibbonSpace;
+    const markerDiameter = cfg.roundMarkerDiameter * cfg.zoom;
+    const markerGap = cfg.roundMarkerGap * cfg.zoom;
+    const noteFieldWidth = totalWidth + edgePadding * 2 + leftRibbonSpace + rightRibbonSpace;
+    const renderedWidth = noteFieldWidth + markerGap + markerDiameter;
     svg.setAttribute("viewBox", `${-edgePadding - leftRibbonSpace} ${-edgePadding} ${renderedWidth} ${steps * height + edgePadding * 2}`);
     // Expanding the viewBox for ribbons must not scale down the established grid geometry.
     svg.style.width = `${renderedWidth}px`;
@@ -155,6 +160,9 @@
     svg.dataset.stepQuarters = String(stepQ);
     svg.dataset.cellHeight = String(height);
     svg.dataset.timelineOriginY = String(steps * height + edgePadding);
+    svg.dataset.noteFieldWidth = String(noteFieldWidth);
+    svg.dataset.roundMarkerGap = String(markerGap);
+    svg.dataset.roundMarkerDiameter = String(markerDiameter);
 
     const make = (tag, attrs = {}, text = null) => {
       const el = global.document.createElementNS(svgNS, tag);
@@ -188,6 +196,26 @@
         }
       }
     }
+
+    let roundStart = 0;
+    selection.selectedMeasures.forEach((measure, index) => {
+      const time = measure.attributes.time;
+      const length = time.beats * 4 / time.beat_type;
+      const centerY = (steps - (roundStart + length / 2 - startQ) / stepQ) * height;
+      const centerX = totalWidth + rightRibbonSpace + markerGap + markerDiameter / 2;
+      const marker = global.document.createElementNS(svgNS, "g");
+      marker.setAttribute("class", "play12-round-marker");
+      marker.setAttribute("data-round-marker", String(index + 1));
+      marker.setAttribute("transform", `translate(${centerX} ${centerY})`);
+      const circle = global.document.createElementNS(svgNS, "circle");
+      circle.setAttribute("r", String(markerDiameter / 2)); circle.setAttribute("class", "play12-round-marker-circle");
+      const number = global.document.createElementNS(svgNS, "text");
+      number.setAttribute("class", "play12-round-marker-number"); number.textContent = String(index + 1);
+      const check = global.document.createElementNS(svgNS, "text");
+      check.setAttribute("class", "play12-round-marker-check"); check.textContent = "✓";
+      marker.appendChild(circle); marker.appendChild(number); marker.appendChild(check); svg.appendChild(marker);
+      roundStart += length;
+    });
 
     const time = selection.selectedMeasures[0].attributes.time;
     const meter = `${time.beats}/${time.beat_type}`;

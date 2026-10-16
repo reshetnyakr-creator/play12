@@ -17,11 +17,12 @@
     return normalizeRange(total,current.from,clamp(current.to+direction,current.from+1,Math.max(0,total-1)));
   };
   const roundIndex=(rounds,position)=>Math.max(0,rounds.findIndex(round=>position>=round.start-1e-7&&position<round.end-1e-7));
+  const stripOffset=(timelineWidth,positionUnits,blockWidth)=>timelineWidth*.5-positionUnits*blockWidth;
   const ribbonFor=(repetitions,hand,number)=>repetitions.segments.find(segment=>segment.hand===hand&&segment.occurrences.some(o=>number>=o.measure_start&&number<=o.measure_end))?.display_color;
   function create({root,playback:c,repetitions,title}){
     const element=id=>root.querySelector('#'+id), total=c.rounds.length;
     const timeline=element('round-timeline'),strip=element('round-strip'),head=element('round-playhead'),frame=element('round-loop-frame');
-    const trainingProgress=element('round-training-progress'),trainingCount=element('round-training-count');
+    const trainingProgress=element('round-training-progress'),trainingLabel=element('round-training-label'),trainingCount=element('round-training-count'),trainingTotal=element('round-training-total'),trainingCounter=element('round-training-counter'),successTrack=element('round-success-track');
     const previous=element('round-previous'),next=element('round-next'),loop=element('round-loop-toggle'),precount=element('round-precount-toggle');
     const key=`play12.round-loop.v1:${title}`;
     c.loopGapInput.value='direct';
@@ -66,8 +67,7 @@
         stripPosition=pcIndex+elapsed/(count.endsAt-count.startedAt);
         root.dataset.precountVisible='true';
       }else{pc.remove();root.dataset.precountVisible='false';}
-      const anchor=root.classList.contains('is-training')?timeline.clientWidth*.58:0;
-      strip.style.transform=`translateX(${anchor-stripPosition*width}px)`;
+      strip.style.transform=`translateX(${stripOffset(timeline.clientWidth,stripPosition,width)}px)`;
       root.dataset.stripPosition=String(stripPosition);
       const from=Number(c.loopStartInput.value),to=Number(c.loopEndInput.value);
       element('round-from').textContent=String(from+1);element('round-to').textContent=String(to+1);
@@ -112,12 +112,31 @@
       c.pauseImmediate(0);update(0);
     };
     const blocks=()=>[...strip.querySelectorAll('.round-mini-block[data-round]')];
-    const clearTrainingSuccess=()=>{for(const block of blocks())block.classList.remove('is-round-success','is-round-success-pulse','is-chain-complete');};
-    const setRoundSuccess=(number,success=true)=>{const block=strip.querySelector(`[data-round="${number}"]`);if(!block)return;block.classList.toggle('is-round-success',success);if(success){block.classList.remove('is-round-success-pulse');void block.offsetWidth;block.classList.add('is-round-success-pulse');}};
-    const pulseCompleteChain=()=>{for(const block of blocks().filter(block=>block.classList.contains('is-round-success')))block.classList.add('is-chain-complete');global.setTimeout(()=>{for(const block of blocks())block.classList.remove('is-chain-complete');},600);};
-    const setTraining=(active,passes=0)=>{root.classList.toggle('is-training',active);trainingProgress.hidden=!active;trainingCount.textContent=String(passes);root.dataset.trainingPasses=String(passes);if(!active)clearTrainingSuccess();update(c.clock.position);};
+    let taskRounds=[],successfulRounds=new Set();
+    const marker=number=>c.svg?.querySelector?.(`[data-round-marker="${number}"]`);
+    const trackDot=number=>successTrack?.querySelector?.(`[data-round="${number}"]`);
+    const applySuccess=(number,success,pulse=false)=>{
+      const targets=[strip.querySelector(`[data-round="${number}"]`),marker(number),trackDot(number)].filter(Boolean);
+      for(const target of targets){target.classList.toggle('is-round-success',success);target.classList.remove('is-round-success-pulse');if(success&&pulse){void target.offsetWidth;target.classList.add('is-round-success-pulse');}}
+    };
+    const renderTrack=()=>{
+      if(!successTrack)return;successTrack.replaceChildren();
+      for(const number of taskRounds){const dot=document.createElement('span');dot.className='round-success-dot';dot.dataset.round=String(number);dot.textContent=String(number);dot.setAttribute('aria-label',`Round ${number}`);successTrack.appendChild(dot);}
+      for(const number of successfulRounds)applySuccess(number,true,false);
+    };
+    const clearTrainingSuccess=()=>{successfulRounds.clear();for(const number of taskRounds)applySuccess(number,false,false);for(const block of blocks())block.classList.remove('is-chain-complete');successTrack?.classList.remove('is-chain-complete');};
+    const setRoundSuccess=(number,success=true)=>{if(success)successfulRounds.add(number);else successfulRounds.delete(number);applySuccess(number,success,success);};
+    const pulseCompleteChain=()=>{for(const block of blocks().filter(block=>block.classList.contains('is-round-success')))block.classList.add('is-chain-complete');successTrack?.classList.add('is-chain-complete');global.setTimeout(()=>{for(const block of blocks())block.classList.remove('is-chain-complete');successTrack?.classList.remove('is-chain-complete');},600);};
+    const setTraining=(active,passes=0,options={})=>{
+      root.classList.toggle('is-training',active);trainingProgress.hidden=!active;trainingCount.textContent=String(passes);root.dataset.trainingPasses=String(passes);
+      if(active){taskRounds=options.rounds||Array.from({length:Number(c.loopEndInput.value)-Number(c.loopStartInput.value)+1},(_,index)=>Number(c.loopStartInput.value)+index+1);trainingLabel.textContent=options.label||'Loop practice';const showCounter=options.totalPasses!==null,totalPasses=options.totalPasses??2;trainingTotal.textContent=String(totalPasses);trainingCounter.hidden=!showCounter;successfulRounds=new Set();renderTrack();}
+      else{clearTrainingSuccess();taskRounds=[];successTrack?.replaceChildren();}
+      update(c.clock.position);
+    };
+    const setPasses=passes=>{trainingCount.textContent=String(passes);root.dataset.trainingPasses=String(passes);};
+    const syncSuccess=()=>{for(const number of successfulRounds)applySuccess(number,true,false);};
     update(c.clock.position);
-    return {root,update,pulse,reset,syncGeometry,setTraining,setRoundSuccess,clearTrainingSuccess,pulseCompleteChain,controlState};
+    return {root,update(position){update(position);syncSuccess();},pulse,reset,syncGeometry,setTraining,setPasses,setRoundSuccess,clearTrainingSuccess,pulseCompleteChain,controlState,taskRounds:()=>[...taskRounds],successfulRounds:()=>[...successfulRounds]};
   }
-  global.Play12RoundBoard={create,roundIndex,ribbonFor,normalizeRange,editRange};
+  global.Play12RoundBoard={create,roundIndex,stripOffset,ribbonFor,normalizeRange,editRange};
 })(window);

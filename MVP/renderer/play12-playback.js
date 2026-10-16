@@ -403,12 +403,13 @@
       if (!this.svg?.isConnected || !this.pianoView?.mount?.isConnected) return;
       const lineOverhang = Number(this.svg.querySelector(".play12-cell").getAttribute("width"));
       const scoreWidth = this.svg.getBoundingClientRect().width;
+      const noteFieldWidth = Number(this.svg.dataset.noteFieldWidth) || scoreWidth;
       const compactPlayer = this.stage.closest(".mvp-playback-host");
       const shellPadding = 7;
       if (compactPlayer) {
         this.stage.style.width = `${scoreWidth + shellPadding * 2}px`;
         this.stage.dataset.playerShellPadding = String(shellPadding);
-        this.playline.style.setProperty("--mvp-note-field-width", `${scoreWidth}px`);
+        this.playline.style.setProperty("--mvp-note-field-width", `${noteFieldWidth}px`);
       }
       const stageRect = this.stage.getBoundingClientRect();
       const pianoRect = this.pianoView.mount.getBoundingClientRect();
@@ -435,11 +436,11 @@
         this.playline.style.left = `${compactPlayer ? 0 : scoreLeft - lineOverhang}px`;
         this.playline.style.right = "auto";
       }
-      this.playline.style.width = `${compactPlayer ? scoreWidth + shellPadding * 2 : scoreWidth + lineOverhang * 2}px`;
+      this.playline.style.width = `${compactPlayer ? noteFieldWidth + shellPadding * 2 : noteFieldWidth + lineOverhang * 2}px`;
       this.playline.style.height = `${this.cellHeight}px`;
       this.pulse.style.left = `${compactPlayer ? 0 : scoreLeft - lineOverhang}px`;
       this.pulse.style.right = "auto";
-      this.pulse.style.width = `${compactPlayer ? scoreWidth + shellPadding * 2 : scoreWidth + lineOverhang * 2}px`;
+      this.pulse.style.width = `${compactPlayer ? noteFieldWidth + shellPadding * 2 : noteFieldWidth + lineOverhang * 2}px`;
       const zoneRect = this.playline.getBoundingClientRect();
       const zoneBorder = parseFloat(getComputedStyle(this.playline).borderLeftWidth) || 0;
       const cellRects = [...this.svg.querySelectorAll(".play12-cell")].map(cell => cell.getBoundingClientRect());
@@ -449,6 +450,8 @@
         this.progressStartX = 16; this.progressEndX = zoneRect.width - 16;
       }
       this.stage.dataset.playlineOverhang = String(lineOverhang);
+      this.stage.dataset.noteFieldWidth = String(noteFieldWidth);
+      this.stage.dataset.musicContentWidth = String(scoreWidth);
       this.stage.dataset.progressStartX = String(this.progressStartX);
       this.stage.dataset.progressEndX = String(this.progressEndX);
       this.paint(this.displayPosition ?? this.clock.position);

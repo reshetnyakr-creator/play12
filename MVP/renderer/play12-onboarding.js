@@ -108,7 +108,7 @@
     let resumeRequested = false;
     let completionCardTimer = null;
     let celebrationFired = false;
-    let finalAttempt = { active: false, valid: false };
+    let finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
     let roundTraining = { active: false, started: false, valid: false, passes: 0, successfulRounds: new Set(), feedbackPending: false };
     let ok12Timer = null;
     const progressItems = new Map([...root.querySelectorAll('[data-progress-step]')]
@@ -580,7 +580,7 @@
       setReconnectVisible(false);
       completionCard.hidden = true;
       celebrationFired = false;
-      finalAttempt = { active: false, valid: false };
+      finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
       returnAfterZero = null;
       global.dispatchEvent(new CustomEvent('play12:choose-zero-close'));
       clearHints();
@@ -893,7 +893,7 @@
       state.practiceModeEnabled = true;
       state.practiceLeftHandEnabled = false;
       state.practiceRightHandEnabled = true;
-      finalAttempt = { active: false, valid: false };
+      finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
       runtime.playback.loopInput.checked = false;
       runtime.playback.loopInput.dispatchEvent?.(new Event('change'));
       runtime.playback.setPracticeSettings({
@@ -902,6 +902,7 @@
         practiceRightHandEnabled: true
       });
       runtime.playback.pauseImmediate(0);
+      runtime.playback.roundBoard?.setTraining?.(true, 0, {label:isRu()?'Вся мелодия':'Whole song',rounds:runtime.playback.rounds.map((_,index)=>index+1),totalPasses:null});
       syncProgress();
       saveState(storage, state);
       syncPracticeGuide();
@@ -914,7 +915,8 @@
       state.onboardingCompleted = true;
       state.practiceGuideStage = 'completed';
       state.highestUnlockedStep = 6;
-      finalAttempt = { active: false, valid: false };
+      finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
+      runtime?.playback?.roundBoard?.setTraining?.(false, 0);
       saveState(storage, state);
       showStep('ONBOARDING_COMPLETE');
       showCompletionCelebration();
@@ -946,6 +948,7 @@
     const syncPracticeGuide = () => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || visibleStep !== 'TRY_IT_YOURSELF' || !runtime || returnAfterZero) return;
       if (state.practiceGuideStage === 'round-practice' && !roundTraining.active) { prepareRoundPractice(); return; }
+      if (state.practiceGuideStage === 'final-practice' && !runtime.playback.roundBoard?.root?.classList.contains('is-training')) runtime.playback.roundBoard?.setTraining?.(true, 0, {label:isRu()?'Вся мелодия':'Whole song',rounds:runtime.playback.rounds.map((_,index)=>index+1),totalPasses:null});
       const settings = runtime.playback.getPracticeSettings();
       practiceModeButton.setAttribute('aria-pressed', String(settings.practiceModeEnabled));
       leftHandButton.setAttribute('aria-pressed', String(settings.practiceLeftHandEnabled));
@@ -998,7 +1001,8 @@
         return;
       }
       if (state.practiceGuideStage === 'final-practice' && event.detail.action === 'navigate') {
-        finalAttempt = { active: false, valid: false };
+        finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
+        runtime?.playback?.roundBoard?.clearTrainingSuccess?.();
         return;
       }
       if (state.practiceGuideStage === 'round-go4' && detail.currentRound === 4) completeRoundControlTask('round-loop-info');
@@ -1008,14 +1012,27 @@
     });
     global.addEventListener('play12:practice-event-complete', event => {
       const detail = event.detail || {};
-      if (state.practiceGuideStage !== 'round-practice' || !roundTraining.started || !roundTraining.valid || detail.source !== 'user') return;
-      if (detail.round < 2 || detail.round > 4 || detail.roundComplete !== true || roundTraining.successfulRounds.has(detail.round)) return;
-      roundTraining.successfulRounds.add(detail.round);
-      runtime?.playback?.roundBoard?.setRoundSuccess?.(detail.round, true);
-      playRoundFeedback('round');
+      if (detail.source !== 'user' || detail.roundComplete !== true) return;
+      if (state.practiceGuideStage === 'round-practice' && roundTraining.started && roundTraining.valid) {
+        if (detail.round < 2 || detail.round > 4 || roundTraining.successfulRounds.has(detail.round)) return;
+        roundTraining.successfulRounds.add(detail.round);
+        runtime?.playback?.roundBoard?.setRoundSuccess?.(detail.round, true);
+        playRoundFeedback('round');
+      } else if (state.practiceGuideStage === 'final-practice' && finalAttempt.active && finalAttempt.valid) {
+        if (detail.round < 1 || detail.round > runtime.playback.rounds.length || finalAttempt.successfulRounds.has(detail.round)) return;
+        finalAttempt.successfulRounds.add(detail.round);
+        runtime?.playback?.roundBoard?.setRoundSuccess?.(detail.round, true);
+        playRoundFeedback('round');
+      }
     });
-    global.addEventListener('play12:practice-wrong-input', invalidateRoundTraining);
-    global.addEventListener('play12:practice-interruption', invalidateRoundTraining);
+    global.addEventListener('play12:practice-wrong-input', () => {
+      if (state.practiceGuideStage === 'round-practice') invalidateRoundTraining();
+      else if (state.practiceGuideStage === 'final-practice' && finalAttempt.active) { finalAttempt.valid=false;finalAttempt.successfulRounds.clear();runtime?.playback?.roundBoard?.clearTrainingSuccess?.(); }
+    });
+    global.addEventListener('play12:practice-interruption', () => {
+      if (state.practiceGuideStage === 'round-practice') invalidateRoundTraining();
+      else if (state.practiceGuideStage === 'final-practice') { finalAttempt={active:false,valid:false,successfulRounds:new Set()};runtime?.playback?.roundBoard?.clearTrainingSuccess?.(); }
+    });
     global.addEventListener('play12:practice-loop-complete', event => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || state.practiceGuideStage !== 'round-practice') return;
       const detail = event.detail || {};
@@ -1024,7 +1041,7 @@
       if (!clean) { invalidateRoundTraining(); return; }
       roundTraining.started = false; roundTraining.valid = false; roundTraining.passes += 1;
       runtime?.playback?.roundBoard?.pulseCompleteChain?.();
-      runtime?.playback?.roundBoard?.setTraining?.(true, roundTraining.passes);
+      runtime?.playback?.roundBoard?.setPasses?.(roundTraining.passes);
       showOk12(() => {
         if (roundTraining.passes >= 2) {
           clearRoundTraining();
@@ -1077,7 +1094,7 @@
       removeMidiStatusListener = runtime.midiDiagnostic?.addStatusListener?.(event => {
         if (state.inputMode === 'midi' && state.onboardingStep !== 'MIDI_CONNECT' && event.status === 'no-input') {
           recoveringMidi = true;
-          if (state.practiceGuideStage === 'final-practice' && finalAttempt.active) finalAttempt = { active: false, valid: false };
+          if (state.practiceGuideStage === 'final-practice' && finalAttempt.active) { finalAttempt = { active: false, valid: false, successfulRounds: new Set() };runtime?.playback?.roundBoard?.clearTrainingSuccess?.(); }
           setReconnectVisible(true, event.status);
           return;
         }
@@ -1112,12 +1129,17 @@
           if (state.practiceGuideStage === 'final-practice') {
             const active = snapshot.running || snapshot.state === 'waiting_for_input';
             if (!finalAttempt.active && active && snapshot.position <= 1e-4 && finalPracticeSettingsReady()) {
-              finalAttempt = { active: true, valid: true };
+              finalAttempt = { active: true, valid: true, successfulRounds: new Set() };
+              runtime.playback.roundBoard?.clearTrainingSuccess?.();
             } else if (finalAttempt.active && snapshot.ended) {
-              if (finalAttempt.valid && finalPracticeSettingsReady()) completeTutorial();
-              else finalAttempt = { active: false, valid: false };
+              const allRounds = runtime.playback.rounds.every((_,index)=>finalAttempt.successfulRounds.has(index+1));
+              if (finalAttempt.valid && allRounds && finalPracticeSettingsReady()) {
+                finalAttempt.active=false;runtime.playback.roundBoard?.pulseCompleteChain?.();
+                global.setTimeout(()=>{if(state.practiceGuideStage==='final-practice'&&finalAttempt.valid)completeTutorial();},520);
+              }
+              else finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
             } else if (finalAttempt.active && !active && !snapshot.ended) {
-              finalAttempt = { active: false, valid: false };
+              finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
             }
             syncPracticeGuide();
             return;
@@ -1146,18 +1168,17 @@
             saveState(storage, state);
           }
           if (state.practiceGuideStage === 'playing' && snapshot.ended && runtime.playback.practiceEnabled()) {
-            state.practiceGuideStage = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-info') : 'metronome-on';
-            if (state.practiceGuideStage === 'round-info') state.roundUnlocked = true;
-            state.metronomeUnlocked = true;
-            syncProgress();
-            saveState(storage, state);
+            showOk12(() => {
+              state.practiceGuideStage = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-info') : 'metronome-on';
+              if (state.practiceGuideStage === 'round-info') state.roundUnlocked = true;
+              state.metronomeUnlocked = true; syncProgress(); saveState(storage, state); syncPracticeGuide();
+            });
           }
           if (state.practiceGuideStage === 'metronome-play' && (snapshot.running || snapshot.state === 'waiting_for_input')) {
             clearHints(); state.practiceGuideStage = 'metronome-playing'; saveState(storage, state);
           }
           if (state.practiceGuideStage === 'metronome-playing' && snapshot.ended) {
-            state.practiceGuideStage = 'round-info'; state.roundUnlocked = true;
-            syncProgress(); saveState(storage, state);
+            showOk12(() => { state.practiceGuideStage = 'round-info'; state.roundUnlocked = true;syncProgress();saveState(storage,state);syncPracticeGuide(); });
           }
           syncPracticeGuide();
           return;
