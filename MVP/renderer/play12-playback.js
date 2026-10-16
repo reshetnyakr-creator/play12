@@ -588,6 +588,12 @@
       const expectedPitches = new Set(expected.events.map(event => event.midi));
       if (!expectedPitches.has(midiNote)) {
         this.stage.dataset.lastPracticeInput = `wrong:${midiNote}`;
+        global.dispatchEvent(new CustomEvent('play12:practice-wrong-input', {detail: {
+          midi: midiNote,
+          expectedStart: expected.start,
+          position: this.clock.position,
+          source: 'user'
+        }}));
         return false;
       }
       let timingDeltaMs;
@@ -632,6 +638,16 @@
       this.stage.dataset.lastPracticeTimingDeltaMs = timingDeltaMs.toFixed(2);
       this.stage.dataset.lastPracticeTimingClass = expected.timingClass;
       this.stage.dataset.lastCompletedPracticeEventStart = String(expected.start);
+      const roundIndex = Math.max(0, this.rounds.findIndex(round => expected.start >= round.start - EPSILON && expected.start < round.end - EPSILON));
+      const round = this.rounds[roundIndex];
+      const roundEvents = this.practiceEvents.filter(candidate => candidate.start >= round.start - EPSILON && candidate.start < round.end - EPSILON);
+      global.dispatchEvent(new CustomEvent('play12:practice-event-complete', {detail: {
+        position: expected.start,
+        round: roundIndex + 1,
+        roundComplete: roundEvents.length > 0 && roundEvents.every(candidate => candidate.completed),
+        expectedCount: roundEvents.length,
+        source: 'user'
+      }}));
       const frozenTime = expected.start;
       if (this.waitingForInput) {
         this.waitingForInput = null;
@@ -816,6 +832,7 @@
       }
     }
     requestPause() {
+      if (this.practiceEnabled()) global.dispatchEvent(new CustomEvent('play12:practice-interruption', {detail:{action:'pause'}}));
       this.clearPracticeCandidate();
       if (this.practiceEnabled() && (this.clock.running || this.waitingForInput) && !this.countIn && !this.loopGap) {
         this.clock.pause();
@@ -884,6 +901,7 @@
       this.paint(this.displayPosition);
     }
     restart() {
+      if (this.practiceEnabled()) global.dispatchEvent(new CustomEvent('play12:practice-interruption', {detail:{action:'restart'}}));
       this.resetRobotNotes();
       this.audio.stopAll();
       this.preRollPrep = null;

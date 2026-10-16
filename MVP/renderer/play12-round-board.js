@@ -21,6 +21,7 @@
   function create({root,playback:c,repetitions,title}){
     const element=id=>root.querySelector('#'+id), total=c.rounds.length;
     const timeline=element('round-timeline'),strip=element('round-strip'),head=element('round-playhead'),frame=element('round-loop-frame');
+    const trainingProgress=element('round-training-progress'),trainingCount=element('round-training-count');
     const previous=element('round-previous'),next=element('round-next'),loop=element('round-loop-toggle'),precount=element('round-precount-toggle');
     const key=`play12.round-loop.v1:${title}`;
     c.loopGapInput.value='direct';
@@ -33,7 +34,8 @@
     }catch(_){}
     const initialRange=normalizeRange(total,c.loopStartInput.value,c.loopEndInput.value);
     c.loopStartInput.value=String(initialRange.from);c.loopEndInput.value=String(initialRange.to);
-    const publish=action=>{try{localStorage.setItem(key,JSON.stringify({from:Number(c.loopStartInput.value)+1,to:Number(c.loopEndInput.value)+1,loop:c.loopInput.checked,precount:c.countInInput.checked}));}catch(_){}global.dispatchEvent(new CustomEvent('play12:round-control',{detail:{action}}));};
+    const controlState=()=>({currentRound:Number(root.dataset.currentRound)||1,from:Number(c.loopStartInput.value)+1,to:Number(c.loopEndInput.value)+1,loop:c.loopInput.checked,precount:c.countInInput.checked});
+    const publish=action=>{const detail={action,...controlState()};try{localStorage.setItem(key,JSON.stringify({from:detail.from,to:detail.to,loop:detail.loop,precount:detail.precount}));}catch(_){}global.dispatchEvent(new CustomEvent('play12:round-control',{detail}));};
     c.rounds.forEach((round,index)=>{
       const block=document.createElement('span');block.className='round-mini-block';block.textContent=String(index+1);block.dataset.round=String(index+1);
       for(const [hand,edge] of [['L','top'],['R','bottom']]){const color=ribbonFor(repetitions,hand,index+1);if(color){const ribbon=document.createElement('i');ribbon.className='round-mini-ribbon is-'+edge;ribbon.style.backgroundColor=color;ribbon.dataset.hand=hand;block.appendChild(ribbon);}}
@@ -64,7 +66,8 @@
         stripPosition=pcIndex+elapsed/(count.endsAt-count.startedAt);
         root.dataset.precountVisible='true';
       }else{pc.remove();root.dataset.precountVisible='false';}
-      strip.style.transform=`translateX(${-stripPosition*width}px)`;
+      const anchor=root.classList.contains('is-training')?timeline.clientWidth*.58:0;
+      strip.style.transform=`translateX(${anchor-stripPosition*width}px)`;
       root.dataset.stripPosition=String(stripPosition);
       const from=Number(c.loopStartInput.value),to=Number(c.loopEndInput.value);
       element('round-from').textContent=String(from+1);element('round-to').textContent=String(to+1);
@@ -108,8 +111,13 @@
       try{localStorage.removeItem(key);}catch(_){}
       c.pauseImmediate(0);update(0);
     };
+    const blocks=()=>[...strip.querySelectorAll('.round-mini-block[data-round]')];
+    const clearTrainingSuccess=()=>{for(const block of blocks())block.classList.remove('is-round-success','is-round-success-pulse','is-chain-complete');};
+    const setRoundSuccess=(number,success=true)=>{const block=strip.querySelector(`[data-round="${number}"]`);if(!block)return;block.classList.toggle('is-round-success',success);if(success){block.classList.remove('is-round-success-pulse');void block.offsetWidth;block.classList.add('is-round-success-pulse');}};
+    const pulseCompleteChain=()=>{for(const block of blocks().filter(block=>block.classList.contains('is-round-success')))block.classList.add('is-chain-complete');global.setTimeout(()=>{for(const block of blocks())block.classList.remove('is-chain-complete');},600);};
+    const setTraining=(active,passes=0)=>{root.classList.toggle('is-training',active);trainingProgress.hidden=!active;trainingCount.textContent=String(passes);root.dataset.trainingPasses=String(passes);if(!active)clearTrainingSuccess();update(c.clock.position);};
     update(c.clock.position);
-    return {root,update,pulse,reset,syncGeometry};
+    return {root,update,pulse,reset,syncGeometry,setTraining,setRoundSuccess,clearTrainingSuccess,pulseCompleteChain,controlState};
   }
   global.Play12RoundBoard={create,roundIndex,ribbonFor,normalizeRange,editRange};
 })(window);

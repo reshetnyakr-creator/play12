@@ -49,7 +49,7 @@
         practiceRightHandEnabled: value.practiceRightHandEnabled !== false,
         oneSkillMode: false, activeSkillId: null,
         listenGuideStage: ['initial', 'pause', 'continue', 'listening'].includes(value.listenGuideStage) ? value.listenGuideStage : null,
-        practiceGuideStage: ['enable', 'hand', 'explain', 'ready', 'playing', 'metronome-on', 'metronome-tempo', 'metronome-play', 'metronome-playing', 'round-nav', 'round-loop', 'round-range', 'round-precount', 'round-practice', 'final-instruction', 'final-practice', 'completed', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : value.practiceGuideStage === 'complete' ? 'free' : 'enable'
+        practiceGuideStage: ['enable', 'hand', 'explain', 'ready', 'playing', 'metronome-on', 'metronome-tempo', 'metronome-play', 'metronome-playing', 'round-info', 'round-go4', 'round-loop-info', 'round-loop', 'round-range', 'round-precount-info', 'round-precount', 'round-practice', 'round-nav', 'final-instruction', 'final-practice', 'completed', 'free'].includes(value.practiceGuideStage) ? value.practiceGuideStage : value.practiceGuideStage === 'complete' ? 'free' : 'enable'
       };
     } catch (_) {
       return null;
@@ -103,12 +103,14 @@
     const completionTitle = root.querySelector('#onboarding-completion-title');
     const completionMessage = root.querySelector('#onboarding-completion-message');
     const confettiLayer = root.querySelector('#onboarding-confetti');
+    const ok12Toast = root.querySelector('#round-ok12');
     let recoveringMidi = false;
     let resumeRequested = false;
     let completionCardTimer = null;
     let celebrationFired = false;
     let finalAttempt = { active: false, valid: false };
-    let loopPracticeAttempt = { active: false, valid: false, from: null, to: null };
+    let roundTraining = { active: false, started: false, valid: false, passes: 0, successfulRounds: new Set(), feedbackPending: false };
+    let ok12Timer = null;
     const progressItems = new Map([...root.querySelectorAll('[data-progress-step]')]
       .map(element => [Number(element.dataset.progressStep), element]));
     const savedState = readSavedState(storage);
@@ -127,6 +129,7 @@
       chooseZeroCompleted: false,
       cardsSetupCompleted: false, zeroSetupStage: null
     };
+    if (state.practiceGuideStage === 'round-nav') state.practiceGuideStage = 'round-info';
     let runtime = null;
     let pianoHome = null;
     let stageHome = null;
@@ -231,6 +234,7 @@
       const y = Math.max(130, Math.min(viewportHeight - 130, rect.top + rect.height * .36));
       root.style.setProperty('--mvp-note-field-center-x', `${x}px`);
       root.style.setProperty('--mvp-note-field-upper-center-y', `${y}px`);
+      root.style.setProperty('--mvp-note-field-top-y', `${rect.top}px`);
     };
 
     const reconnectCopy = () => isRu()
@@ -550,6 +554,10 @@
 
     const startNew = () => {
       runtime?.resetLearningSetup?.();
+      clearTimeout(ok12Timer); ok12Timer = null;
+      if (ok12Toast) ok12Toast.hidden = true;
+      runtime?.playback?.roundBoard?.setTraining?.(false, 0);
+      roundTraining = { active: false, started: false, valid: false, passes: 0, successfulRounds: new Set(), feedbackPending: false };
       state = {
         onboardingStarted: true,
         onboardingStep: 'MIDI_CONNECT',
@@ -594,11 +602,12 @@
       if (number > highestUnlocked() || number < 1 || number > 6) return;
       state.highestUnlockedStep = highestUnlocked();
       runtime?.playback?.pauseImmediate();
+      clearRoundTraining();
       if (number !== 2) global.dispatchEvent(new CustomEvent('play12:choose-zero-close'));
       state.onboardingStep = number === 1 ? 'LISTEN_AND_CONTROL' : number === 2 ? 'CHOOSE_ZERO' : 'TRY_IT_YOURSELF';
       state.zeroSetupStage = null;
       if (number >= 3) {
-        state.practiceGuideStage = ({3:'enable', 4:'metronome-on', 5:'round-nav', 6:'final-instruction'})[number];
+        state.practiceGuideStage = ({3:'enable', 4:'metronome-on', 5:'round-info', 6:'final-instruction'})[number];
         if (number >= 4) state.metronomeUnlocked = true;
         if (number >= 5) state.roundUnlocked = true;
         restorePracticeSettings();
@@ -812,8 +821,73 @@
         settings.practiceRightHandEnabled === true && runtime?.playback?.loopInput?.checked !== true;
     };
 
+    const playRoundFeedback = kind => {
+      try {
+        const audioContext = runtime?.playback?.audioContext;
+        if (!audioContext || audioContext.state === 'closed') return;
+        const now = audioContext.currentTime;
+        const notes = kind === 'ok12' ? [[523.25, 0], [659.25, .1]] : [[659.25, 0]];
+        const gain = audioContext.createGain();
+        gain.gain.setValueAtTime(.0001, now);
+        gain.gain.exponentialRampToValueAtTime(kind === 'ok12' ? .025 : .012, now + .012);
+        gain.gain.exponentialRampToValueAtTime(.0001, now + (kind === 'ok12' ? .32 : .14));
+        gain.connect(audioContext.destination);
+        for (const [frequency, offset] of notes) {
+          const oscillator = audioContext.createOscillator();
+          oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(frequency, now + offset);
+          oscillator.connect(gain); oscillator.start(now + offset); oscillator.stop(now + offset + .16);
+        }
+      } catch (_) { /* Tutorial feedback must not block progression. */ }
+    };
+    const clearRoundTraining = () => {
+      clearTimeout(ok12Timer); ok12Timer = null;
+      if (ok12Toast) ok12Toast.hidden = true;
+      roundTraining = { active: false, started: false, valid: false, passes: 0, successfulRounds: new Set(), feedbackPending: false };
+      runtime?.playback?.roundBoard?.setTraining?.(false, 0);
+    };
+    const invalidateRoundTraining = () => {
+      if (state.practiceGuideStage !== 'round-practice' || !roundTraining.active) return;
+      roundTraining.started = false; roundTraining.valid = false; roundTraining.successfulRounds.clear();
+      runtime?.playback?.roundBoard?.clearTrainingSuccess?.();
+    };
+    const showOk12 = after => {
+      if (roundTraining.feedbackPending) return;
+      roundTraining.feedbackPending = true;
+      clearHints();
+      if (ok12Toast) ok12Toast.hidden = false;
+      playRoundFeedback('ok12');
+      clearTimeout(ok12Timer);
+      ok12Timer = global.setTimeout(() => {
+        if (ok12Toast) ok12Toast.hidden = true;
+        roundTraining.feedbackPending = false;
+        after?.();
+      }, 950);
+    };
+    const setRoundGuideStage = next => {
+      state.practiceGuideStage = next;
+      state.metronomeUnlocked = true; state.roundUnlocked = true;
+      state.highestUnlockedStep = Math.max(state.highestUnlockedStep || 1, 5);
+      syncProgress(); saveState(storage, state); syncPracticeGuide();
+    };
+    const completeRoundControlTask = next => showOk12(() => setRoundGuideStage(next));
+    const prepareRoundPractice = () => {
+      clearRoundTraining();
+      roundTraining = { active: true, started: false, valid: false, passes: 0, successfulRounds: new Set(), feedbackPending: false };
+      state.practiceModeEnabled = true; state.practiceLeftHandEnabled = false; state.practiceRightHandEnabled = true;
+      runtime.playback.setPracticeSettings({practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});
+      if (runtime.playback.metronomeButton) runtime.playback.setMetronome(false, false);
+      else runtime.playback.metronomeInput.checked = false;
+      runtime.playback.loopInput.checked = true;
+      runtime.playback.loopStartInput.value = '1'; runtime.playback.loopEndInput.value = '3';
+      runtime.playback.countInInput.checked = true;
+      runtime.playback.pauseImmediate(runtime.playback.rounds?.[1]?.start ?? 0);
+      runtime.playback.roundBoard?.setTraining?.(true, 0);
+      setRoundGuideStage('round-practice');
+    };
+
     const beginFinalPractice = () => {
       if (!runtime || state.onboardingCompleted) return;
+      clearRoundTraining();
       clearHints();
       state.practiceGuideStage = 'final-practice';
       state.practiceModeEnabled = true;
@@ -849,8 +923,8 @@
     const advancePracticeInstruction = (skipped = false) => {
       if (state.practiceGuideStage === 'final-instruction') { beginFinalPractice(); return; }
       clearHints();
-      const next = {enable: 'hand', hand: 'explain', explain: 'ready', ready: 'playing', playing: 'metronome-on', 'metronome-playing': 'round-nav', 'metronome-on': 'metronome-tempo', 'metronome-tempo': 'metronome-play', 'metronome-play': 'round-nav', 'round-nav': 'round-loop', 'round-loop': 'round-range', 'round-range': 'round-precount', 'round-precount': 'round-practice'};
-      const freeNext = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-nav') : 'metronome-on';
+      const next = {enable: 'hand', hand: 'explain', explain: 'ready', ready: 'playing', playing: 'metronome-on', 'metronome-playing': 'round-info', 'metronome-on': 'metronome-tempo', 'metronome-tempo': 'metronome-play', 'metronome-play': 'round-info', 'round-info':'round-go4', 'round-go4':'round-loop-info', 'round-loop-info':'round-loop', 'round-loop':'round-range', 'round-range':'round-precount-info', 'round-precount-info':'round-precount', 'round-precount':'round-practice'};
+      const freeNext = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-info') : 'metronome-on';
       state.practiceGuideStage = skipped && state.practiceGuideStage === 'round-practice' ? 'final-instruction'
         : next[state.practiceGuideStage] || (skipped && state.practiceGuideStage === 'free' ? freeNext : 'free');
       if (state.practiceGuideStage.startsWith('metronome-') || state.practiceGuideStage.startsWith('round-')) state.metronomeUnlocked = true;
@@ -871,6 +945,7 @@
 
     const syncPracticeGuide = () => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || visibleStep !== 'TRY_IT_YOURSELF' || !runtime || returnAfterZero) return;
+      if (state.practiceGuideStage === 'round-practice' && !roundTraining.active) { prepareRoundPractice(); return; }
       const settings = runtime.playback.getPracticeSettings();
       practiceModeButton.setAttribute('aria-pressed', String(settings.practiceModeEnabled));
       leftHandButton.setAttribute('aria-pressed', String(settings.practiceLeftHandEnabled));
@@ -891,11 +966,17 @@
       else if (stage === 'metronome-on') showActionCoach(isRu() ? 'Добавим ровный пульс<br>Включите метроном' : 'Let’s add a steady beat<br>Turn on the metronome', 'metronome-toggle');
       else if (stage === 'metronome-tempo') showActionCoach(isRu() ? 'Можно играть медленнее или быстрее<br><small>Введите BPM или меняйте темп кнопками − / + с шагом 10</small>' : 'Slow down or speed up the piece<br><small>Type a BPM, or use − / + to change it by 10</small>', 'metronome-tempo-controls');
       else if (stage === 'metronome-play') showActionCoach(isRu() ? 'Сыграйте ещё раз под ровный пульс<br>Нажмите Play' : 'Play it again with a steady beat<br>Press Play', 'play');
-      else if (stage === 'round-nav') showActionCoach(isRu() ? 'Перемещайтесь по произведению раундами' : 'Move through the piece by rounds', 'round-navigation');
-      else if (stage === 'round-loop') showActionCoach(isRu() ? 'Повторяйте участок, который хотите потренировать' : 'Loop a section you want to practise', 'round-loop-toggle');
-      else if (stage === 'round-range') showActionCoach(isRu() ? 'Выберите раунды, которые хотите повторять' : 'Choose the rounds you want to repeat', 'round-range');
-      else if (stage === 'round-precount') showActionCoach(isRu() ? 'Нужен момент перед попыткой?<br>Включите Pre-count' : 'Need a moment before each try?<br>Turn on Pre-count', 'round-precount-toggle');
-      else if (stage === 'round-practice') showActionCoach(isRu() ? 'Сыграйте выбранный участок целиком<br><small>Нажмите Play и завершите один полный Loop</small>' : 'Play the selected section from beginning to end<br><small>Press Play and complete one full Loop</small>', 'play');
+      else if (stage === 'round-info') showCoach(isRu() ? 'Раунды делят произведение на участки.<br><small>Можно сразу перейти к тому участку, который хочешь потренировать.</small>' : 'Rounds divide the piece into sections.<br><small>You can jump directly to the section you want to practise.</small>', 'round-navigation', false, () => setRoundGuideStage('round-go4'));
+      else if (stage === 'round-go4') showActionCoach(isRu() ? 'Перейдите точно к Round 4' : 'Go to Round 4', 'round-navigation');
+      else if (stage === 'round-loop-info') showCoach(isRu() ? 'Loop повторяет выбранный тобой участок.' : 'Loop repeats the section you choose.', 'round-loop-toggle', false, () => setRoundGuideStage('round-loop'));
+      else if (stage === 'round-loop') showActionCoach(isRu() ? 'Включите Loop' : 'Turn on Loop', 'round-loop-toggle');
+      else if (stage === 'round-range') showActionCoach(isRu() ? 'Установи Loop с раунда 2 по раунд 4' : 'Set the Loop from Round 2 to Round 4', 'round-range');
+      else if (stage === 'round-precount-info') showCoach(isRu() ? 'Pre-count даёт тебе время подготовиться перед каждой попыткой.' : 'Pre-count gives you a moment to get ready before each attempt.', 'round-precount-toggle', false, () => setRoundGuideStage('round-precount'));
+      else if (stage === 'round-precount') showActionCoach(isRu() ? 'Включите Pre-count' : 'Turn on Pre-count', 'round-precount-toggle');
+      else if (stage === 'round-practice') {
+        if (roundTraining.started || roundTraining.feedbackPending) showCoach('');
+        else showActionCoach(isRu() ? 'Сыграй раунды 2–4 два раза<br><small>Нажми Play, когда будешь готов.</small>' : "Play Rounds 2–4 twice<br><small>Press Play when you're ready.</small>", 'play');
+      }
       else if (stage === 'final-instruction') showCoach(isRu()
         ? 'А теперь попробуй сыграть всю мелодию правой рукой от начала до конца.<br><br>Не спеши. Если собьёшься — попробуй ещё раз.'
         : 'Now try to play the whole melody with your right hand from beginning to end.<br><br>Take your time. If you lose your place, try again.', 'explain', false, beginFinalPractice);
@@ -911,30 +992,51 @@
 
     global.addEventListener('play12:round-control', event => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || returnAfterZero) return;
+      const detail = event.detail || {};
       if (state.practiceGuideStage === 'round-practice' && ['navigate', 'range', 'loop-off'].includes(event.detail.action)) {
-        loopPracticeAttempt = { active: false, valid: false, from: null, to: null };
+        invalidateRoundTraining();
         return;
       }
       if (state.practiceGuideStage === 'final-practice' && event.detail.action === 'navigate') {
         finalAttempt = { active: false, valid: false };
         return;
       }
-      const required = {'round-nav':'navigate', 'round-loop':'loop-on', 'round-range':'range', 'round-precount':'precount'};
-      if (required[state.practiceGuideStage] === event.detail.action) advancePracticeInstruction();
+      if (state.practiceGuideStage === 'round-go4' && detail.currentRound === 4) completeRoundControlTask('round-loop-info');
+      else if (state.practiceGuideStage === 'round-loop' && detail.loop === true) completeRoundControlTask('round-range');
+      else if (state.practiceGuideStage === 'round-range' && detail.loop === true && detail.from === 2 && detail.to === 4) completeRoundControlTask('round-precount-info');
+      else if (state.practiceGuideStage === 'round-precount' && detail.precount === true) showOk12(prepareRoundPractice);
     });
+    global.addEventListener('play12:practice-event-complete', event => {
+      const detail = event.detail || {};
+      if (state.practiceGuideStage !== 'round-practice' || !roundTraining.started || !roundTraining.valid || detail.source !== 'user') return;
+      if (detail.round < 2 || detail.round > 4 || detail.roundComplete !== true || roundTraining.successfulRounds.has(detail.round)) return;
+      roundTraining.successfulRounds.add(detail.round);
+      runtime?.playback?.roundBoard?.setRoundSuccess?.(detail.round, true);
+      playRoundFeedback('round');
+    });
+    global.addEventListener('play12:practice-wrong-input', invalidateRoundTraining);
+    global.addEventListener('play12:practice-interruption', invalidateRoundTraining);
     global.addEventListener('play12:practice-loop-complete', event => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || state.practiceGuideStage !== 'round-practice') return;
       const detail = event.detail || {};
-      if (!loopPracticeAttempt.active || !loopPracticeAttempt.valid || detail.practice !== true ||
-          detail.from !== loopPracticeAttempt.from || detail.to !== loopPracticeAttempt.to) return;
-      loopPracticeAttempt = { active: false, valid: false, from: null, to: null };
-      clearHints();
-      runtime.playback.pauseImmediate(runtime.playback.currentLoop()?.start ?? 0);
-      state.practiceGuideStage = 'final-instruction';
-      state.highestUnlockedStep = Math.max(state.highestUnlockedStep || 1, 6);
-      syncProgress();
-      saveState(storage, state);
-      syncPracticeGuide();
+      const clean = roundTraining.started && roundTraining.valid && detail.practice === true && detail.from === 1 && detail.to === 3 &&
+        [2,3,4].every(number => roundTraining.successfulRounds.has(number));
+      if (!clean) { invalidateRoundTraining(); return; }
+      roundTraining.started = false; roundTraining.valid = false; roundTraining.passes += 1;
+      runtime?.playback?.roundBoard?.pulseCompleteChain?.();
+      runtime?.playback?.roundBoard?.setTraining?.(true, roundTraining.passes);
+      showOk12(() => {
+        if (roundTraining.passes >= 2) {
+          clearRoundTraining();
+          runtime.playback.pauseImmediate(runtime.playback.currentLoop()?.start ?? 0);
+          state.practiceGuideStage = 'final-instruction';
+          state.highestUnlockedStep = Math.max(state.highestUnlockedStep || 1, 6);
+          syncProgress(); saveState(storage, state); syncPracticeGuide();
+        } else {
+          roundTraining.successfulRounds.clear();
+          runtime?.playback?.roundBoard?.clearTrainingSuccess?.();
+        }
+      });
     });
 
     const changePracticeSetting = (key, button) => {
@@ -1026,11 +1128,14 @@
             const from = Number(runtime.playback.loopStartInput?.value);
             const to = Number(runtime.playback.loopEndInput?.value);
             const settings = runtime.playback.getPracticeSettings?.();
-            if (!loopPracticeAttempt.active && active && loop && settings?.practiceModeEnabled === true &&
-                snapshot.position <= loop.start + 1e-4) {
-              loopPracticeAttempt = { active: true, valid: true, from, to };
-            } else if (loopPracticeAttempt.active && (!active || !loop || from !== loopPracticeAttempt.from || to !== loopPracticeAttempt.to)) {
-              loopPracticeAttempt = { active: false, valid: false, from: null, to: null };
+            const exactSetup = loop && from === 1 && to === 3 && runtime.playback.loopInput?.checked === true &&
+              runtime.playback.countInInput?.checked === true && settings?.practiceModeEnabled === true &&
+              settings.practiceLeftHandEnabled === false && settings.practiceRightHandEnabled === true;
+            if (!roundTraining.started && !roundTraining.feedbackPending && active && exactSetup && snapshot.position <= loop.start + 1e-4) {
+              roundTraining.started = true; roundTraining.valid = true; roundTraining.successfulRounds.clear();
+              runtime?.playback?.roundBoard?.clearTrainingSuccess?.(); clearHints();
+            } else if (roundTraining.started && (!active || !exactSetup)) {
+              invalidateRoundTraining();
             }
             syncPracticeGuide();
             return;
@@ -1041,8 +1146,8 @@
             saveState(storage, state);
           }
           if (state.practiceGuideStage === 'playing' && snapshot.ended && runtime.playback.practiceEnabled()) {
-            state.practiceGuideStage = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-nav') : 'metronome-on';
-            if (state.practiceGuideStage === 'round-nav') state.roundUnlocked = true;
+            state.practiceGuideStage = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-info') : 'metronome-on';
+            if (state.practiceGuideStage === 'round-info') state.roundUnlocked = true;
             state.metronomeUnlocked = true;
             syncProgress();
             saveState(storage, state);
@@ -1051,7 +1156,7 @@
             clearHints(); state.practiceGuideStage = 'metronome-playing'; saveState(storage, state);
           }
           if (state.practiceGuideStage === 'metronome-playing' && snapshot.ended) {
-            state.practiceGuideStage = 'round-nav'; state.roundUnlocked = true;
+            state.practiceGuideStage = 'round-info'; state.roundUnlocked = true;
             syncProgress(); saveState(storage, state);
           }
           syncPracticeGuide();

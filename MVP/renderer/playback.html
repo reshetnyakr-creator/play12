@@ -183,6 +183,7 @@
                 <h2 id="onboarding-completion-title">Congratulations!</h2>
                 <p id="onboarding-completion-message">You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.</p>
               </aside>
+              <div id="round-ok12" class="mvp-ok12-toast" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span> OK12</div>
               <div id="onboarding-confetti" class="mvp-confetti" aria-hidden="true"></div>
               <aside id="returning-midi" class="mvp-midi-reconnect" role="status" aria-live="polite" hidden><span id="returning-midi-message">MIDI keyboard connection lost.<br>Reconnect your instrument or continue playing with your mouse.</span><button id="returning-midi-retry" type="button">Reconnect MIDI</button></aside>
             </div>
@@ -249,6 +250,7 @@
       <div id="unified-playback-block" class="unified-playback-block">
         <section id="round-loop-board" class="mvp-round-loop-board" aria-label="Round controls" hidden>
           <div id="round-timeline" class="round-timeline" aria-label="Composition rounds"><div id="round-strip" class="round-strip"><div id="round-loop-frame" class="round-loop-frame" hidden></div></div><span id="round-playhead" class="round-playhead" aria-hidden="true"></span></div>
+          <div id="round-training-progress" class="round-training-progress" hidden><span>Loop practice</span><strong><output id="round-training-count">0</output> / 2</strong></div>
           <div class="round-controls">
             <div id="round-navigation" class="round-navigation"><button id="round-previous" aria-label="Previous round" type="button">▼</button><output id="current-round" aria-label="Current round">1</output><button id="round-next" aria-label="Next round" type="button">▲</button></div>
             <button id="round-loop-toggle" type="button" aria-pressed="false">Loop</button>
