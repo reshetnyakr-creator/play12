@@ -844,6 +844,7 @@
       if (ok12Toast) ok12Toast.hidden = true;
       roundTraining = { active: false, started: false, valid: false, passes: 0, successfulRounds: new Set(), feedbackPending: false };
       runtime?.playback?.roundBoard?.setTraining?.(false, 0);
+      runtime?.playback?.setPracticeTimingStrict?.(true);
     };
     const invalidateRoundTraining = () => {
       if (state.practiceGuideStage !== 'round-practice' || !roundTraining.active) return;
@@ -875,13 +876,11 @@
       roundTraining = { active: true, started: false, valid: false, passes: 0, successfulRounds: new Set(), feedbackPending: false };
       state.practiceModeEnabled = true; state.practiceLeftHandEnabled = false; state.practiceRightHandEnabled = true;
       runtime.playback.setPracticeSettings({practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});
-      if (runtime.playback.metronomeButton) runtime.playback.setMetronome(false, false);
-      else runtime.playback.metronomeInput.checked = false;
+      runtime.playback.setPracticeTimingStrict?.(false);
       runtime.playback.loopInput.checked = true;
       runtime.playback.loopStartInput.value = '1'; runtime.playback.loopEndInput.value = '3';
-      runtime.playback.countInInput.checked = true;
       runtime.playback.pauseImmediate(runtime.playback.rounds?.[1]?.start ?? 0);
-      runtime.playback.roundBoard?.setTraining?.(true, 0);
+      runtime.playback.roundBoard?.setTraining?.(true, 0, {rounds:[2,3,4],totalPasses:null});
       setRoundGuideStage('round-practice');
     };
 
@@ -901,6 +900,7 @@
         practiceLeftHandEnabled: false,
         practiceRightHandEnabled: true
       });
+      runtime.playback.setPracticeTimingStrict?.(false);
       runtime.playback.pauseImmediate(0);
       runtime.playback.roundBoard?.setTraining?.(true, 0, {label:isRu()?'Вся мелодия':'Whole song',rounds:runtime.playback.rounds.map((_,index)=>index+1),totalPasses:null});
       syncProgress();
@@ -917,6 +917,7 @@
       state.highestUnlockedStep = 6;
       finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
       runtime?.playback?.roundBoard?.setTraining?.(false, 0);
+      runtime?.playback?.setPracticeTimingStrict?.(true);
       saveState(storage, state);
       showStep('ONBOARDING_COMPLETE');
       showCompletionCelebration();
@@ -958,6 +959,10 @@
         state.practiceGuideStage = 'metronome-tempo'; saveState(storage, state);
       }
       const stage = state.practiceGuideStage;
+      const controls = runtime.playback.roundBoard?.controlState?.();
+      if (!roundTraining.feedbackPending && stage === 'round-loop' && controls?.loop === true) { completeRoundControlTask('round-range'); return; }
+      if (!roundTraining.feedbackPending && stage === 'round-range' && controls?.loop === true && controls.from === 2 && controls.to === 4) { completeRoundControlTask('round-precount-info'); return; }
+      if (!roundTraining.feedbackPending && stage === 'round-precount' && controls?.precount === true) { showOk12(prepareRoundPractice); return; }
       practiceBoard.dataset.guideStage = stage;
       practiceBoard.hidden = false;
       practiceModeButton.classList.toggle('is-guided', stage === 'enable');
@@ -978,7 +983,7 @@
       else if (stage === 'round-precount') showActionCoach(isRu() ? 'Включите Pre-count' : 'Turn on Pre-count', 'round-precount-toggle');
       else if (stage === 'round-practice') {
         if (roundTraining.started || roundTraining.feedbackPending) showCoach('');
-        else showActionCoach(isRu() ? 'Сыграй раунды 2–4 два раза<br><small>Нажми Play, когда будешь готов.</small>' : "Play Rounds 2–4 twice<br><small>Press Play when you're ready.</small>", 'play');
+        else showActionCoach(isRu() ? 'Сыграй раунды 2–4 без ошибок<br><small>Нажми Play, когда будешь готов.</small>' : "Play Rounds 2–4 cleanly<br><small>Press Play when you're ready.</small>", 'play');
       }
       else if (stage === 'final-instruction') showCoach(isRu()
         ? 'А теперь попробуй сыграть всю мелодию правой рукой от начала до конца.<br><br>Не спеши. Если собьёшься — попробуй ещё раз.'
@@ -1012,17 +1017,31 @@
     });
     global.addEventListener('play12:practice-event-complete', event => {
       const detail = event.detail || {};
-      if (detail.source !== 'user' || detail.roundComplete !== true) return;
+      if ((detail.source !== 'user' && detail.emptyRound !== true) || detail.roundComplete !== true) return;
       if (state.practiceGuideStage === 'round-practice' && roundTraining.started && roundTraining.valid) {
         if (detail.round < 2 || detail.round > 4 || roundTraining.successfulRounds.has(detail.round)) return;
         roundTraining.successfulRounds.add(detail.round);
         runtime?.playback?.roundBoard?.setRoundSuccess?.(detail.round, true);
         playRoundFeedback('round');
+        if ([2,3,4].every(number => roundTraining.successfulRounds.has(number))) {
+          roundTraining.started=false;roundTraining.valid=false;
+          runtime?.playback?.roundBoard?.pulseCompleteChain?.();
+          showOk12(() => {
+            clearRoundTraining();
+            runtime.playback.pauseImmediate(runtime.playback.currentLoop()?.start ?? 0);
+            state.practiceGuideStage='final-instruction';state.highestUnlockedStep=Math.max(state.highestUnlockedStep||1,6);
+            syncProgress();saveState(storage,state);syncPracticeGuide();
+          });
+        }
       } else if (state.practiceGuideStage === 'final-practice' && finalAttempt.active && finalAttempt.valid) {
         if (detail.round < 1 || detail.round > runtime.playback.rounds.length || finalAttempt.successfulRounds.has(detail.round)) return;
         finalAttempt.successfulRounds.add(detail.round);
         runtime?.playback?.roundBoard?.setRoundSuccess?.(detail.round, true);
         playRoundFeedback('round');
+        if (runtime.playback.rounds.every((_,index)=>finalAttempt.successfulRounds.has(index+1))) {
+          finalAttempt.active=false;runtime.playback.roundBoard?.pulseCompleteChain?.();
+          global.setTimeout(()=>{if(state.practiceGuideStage==='final-practice'&&finalAttempt.valid)completeTutorial();},520);
+        }
       }
     });
     global.addEventListener('play12:practice-wrong-input', () => {
@@ -1035,25 +1054,10 @@
     });
     global.addEventListener('play12:practice-loop-complete', event => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || state.practiceGuideStage !== 'round-practice') return;
+      if (roundTraining.feedbackPending) return;
       const detail = event.detail || {};
-      const clean = roundTraining.started && roundTraining.valid && detail.practice === true && detail.from === 1 && detail.to === 3 &&
-        [2,3,4].every(number => roundTraining.successfulRounds.has(number));
-      if (!clean) { invalidateRoundTraining(); return; }
-      roundTraining.started = false; roundTraining.valid = false; roundTraining.passes += 1;
-      runtime?.playback?.roundBoard?.pulseCompleteChain?.();
-      runtime?.playback?.roundBoard?.setPasses?.(roundTraining.passes);
-      showOk12(() => {
-        if (roundTraining.passes >= 2) {
-          clearRoundTraining();
-          runtime.playback.pauseImmediate(runtime.playback.currentLoop()?.start ?? 0);
-          state.practiceGuideStage = 'final-instruction';
-          state.highestUnlockedStep = Math.max(state.highestUnlockedStep || 1, 6);
-          syncProgress(); saveState(storage, state); syncPracticeGuide();
-        } else {
-          roundTraining.successfulRounds.clear();
-          runtime?.playback?.roundBoard?.clearTrainingSuccess?.();
-        }
-      });
+      if (detail.practice !== true || detail.from !== 1 || detail.to !== 3) { invalidateRoundTraining(); return; }
+      if (!roundTraining.valid) invalidateRoundTraining();
     });
 
     const changePracticeSetting = (key, button) => {
@@ -1150,8 +1154,7 @@
             const from = Number(runtime.playback.loopStartInput?.value);
             const to = Number(runtime.playback.loopEndInput?.value);
             const settings = runtime.playback.getPracticeSettings?.();
-            const exactSetup = loop && from === 1 && to === 3 && runtime.playback.loopInput?.checked === true &&
-              runtime.playback.countInInput?.checked === true && settings?.practiceModeEnabled === true &&
+            const exactSetup = loop && from === 1 && to === 3 && runtime.playback.loopInput?.checked === true && settings?.practiceModeEnabled === true &&
               settings.practiceLeftHandEnabled === false && settings.practiceRightHandEnabled === true;
             if (!roundTraining.started && !roundTraining.feedbackPending && active && exactSetup && snapshot.position <= loop.start + 1e-4) {
               roundTraining.started = true; roundTraining.valid = true; roundTraining.successfulRounds.clear();

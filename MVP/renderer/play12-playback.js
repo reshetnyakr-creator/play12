@@ -255,6 +255,8 @@
       this.practiceSettings = { practiceLeftHandEnabled: true, practiceRightHandEnabled: true, oneSkillMode: false, activeSkillId: null };
       this.practicePaused = true;
       this.practiceEvents = [];
+      this.completedEmptyPracticeRounds = new Set();
+      this.practiceTimingStrict = true;
       this.expectedPracticeEvent = null;
       this.waitingForInput = null;
       this.playline.addEventListener("play12:modulemove", () => this.syncDraggedPlayMode());
@@ -406,9 +408,12 @@
       const noteFieldWidth = Number(this.svg.dataset.noteFieldWidth) || scoreWidth;
       const compactPlayer = this.stage.closest(".mvp-playback-host");
       const shellPadding = 7;
+      const progressRailWidth = this.stage.classList?.contains?.('has-round-progress') ? 32 : 0;
       if (compactPlayer) {
-        this.stage.style.width = `${scoreWidth + shellPadding * 2}px`;
+        this.stage.style.width = `${scoreWidth + progressRailWidth + shellPadding * 2}px`;
         this.stage.dataset.playerShellPadding = String(shellPadding);
+        this.stage.style.setProperty('--mvp-score-width',`${scoreWidth}px`);
+        this.stage.style.setProperty('--mvp-progress-rail-width',`${progressRailWidth}px`);
         this.playline.style.setProperty("--mvp-note-field-width", `${noteFieldWidth}px`);
       }
       const stageRect = this.stage.getBoundingClientRect();
@@ -419,11 +424,12 @@
       this.svg.parentElement.style.left = `${scoreLeft}px`;
       if (compactPlayer) {
         const scoreRect = this.svg.getBoundingClientRect();
-        const center = `${(scoreRect.left + scoreRect.right) / 2}px`;
+        const center = `${(scoreRect.left + scoreRect.right + progressRailWidth) / 2}px`;
         this.playline.style.setProperty("--mvp-note-field-center-x", center);
         document.documentElement?.style.setProperty("--mvp-note-field-center-x", center);
       }
       const executionHeight = Math.max(0, this.executionY());
+      this.stage.style.setProperty('--mvp-score-viewport-height',`${executionHeight}px`);
       // Extend the clipped score one physical pixel under the opaque zone.
       // This hides fractional-transform antialias seams without exposing past music.
       this.svg.parentElement.style.height = `${executionHeight + 1}px`;
@@ -451,7 +457,7 @@
       }
       this.stage.dataset.playlineOverhang = String(lineOverhang);
       this.stage.dataset.noteFieldWidth = String(noteFieldWidth);
-      this.stage.dataset.musicContentWidth = String(scoreWidth);
+      this.stage.dataset.musicContentWidth = String(scoreWidth + progressRailWidth);
       this.stage.dataset.progressStartX = String(this.progressStartX);
       this.stage.dataset.progressEndX = String(this.progressEndX);
       this.paint(this.displayPosition ?? this.clock.position);
@@ -535,6 +541,7 @@
       return !!this.practiceModeInput?.checked;
     }
     preparePractice(position) {
+      this.completedEmptyPracticeRounds.clear();
       for (const expected of this.practiceEvents) {
         expected.completed = expected.start < position - EPSILON;
         expected.matchedPitches.clear();
@@ -546,6 +553,21 @@
       }
       this.waitingForInput = null;
       this.armPracticeGate(position);
+    }
+    setPracticeTimingStrict(strict = true) {
+      this.practiceTimingStrict = strict !== false;
+      this.stage.dataset.practiceTimingStrict = String(this.practiceTimingStrict);
+    }
+    completeEmptyPracticeRounds(from, to) {
+      if (!this.practiceEnabled() || !(to > from + EPSILON)) return;
+      this.rounds.forEach((round, index) => {
+        const number = index + 1;
+        if (this.completedEmptyPracticeRounds.has(number) || from >= round.end - EPSILON || to < round.end - EPSILON) return;
+        const expected = this.practiceEvents.filter(event => event.start >= round.start - EPSILON && event.start < round.end - EPSILON);
+        if (expected.length) return;
+        this.completedEmptyPracticeRounds.add(number);
+        global.dispatchEvent(new CustomEvent('play12:practice-event-complete', {detail:{position:round.end,round:number,roundComplete:true,expectedCount:0,emptyRound:true,source:'system'}}));
+      });
     }
     armPracticeGate(position) {
       if (!this.practiceEnabled()) {
@@ -607,7 +629,7 @@
       } else {
         timingDeltaMs = (this.clock.position - expected.start) * 60000 / this.clock.bpm;
       }
-      if (this.metronomeAudio && this.metronomeInput.checked) {
+      if (this.practiceTimingStrict && this.metronomeAudio && this.metronomeInput.checked) {
         const base = expected.expectedAudioTime ?? this.clock.quarterToAudioTime(expected.start);
         const candidateDelta = (this.audioContext.currentTime - expected.candidateBeatTime) * 1000;
         const window = expected.candidateBeatTime != null && candidateDelta >= -150 - EPSILON && candidateDelta <= 200 + EPSILON
@@ -626,7 +648,7 @@
         expected.candidateBeatTime = window.when;
         acceptedBeatTime = window.when;
       }
-      if (timingDeltaMs < -PRACTICE_TIMING.earlyToleranceMs - EPSILON) {
+      if (this.practiceTimingStrict && timingDeltaMs < -PRACTICE_TIMING.earlyToleranceMs - EPSILON) {
         this.stage.dataset.lastPracticeInput = `too_early:${midiNote}:${timingDeltaMs.toFixed(2)}`;
         return false;
       }
@@ -1306,6 +1328,7 @@
       } else if (this.clock.running) {
         let q = this.clock.position;
         const loop = this.currentLoop();
+        this.completeEmptyPracticeRounds(this.lastPlaybackPosition ?? q, Math.min(q, loop?.end ?? q));
         if (this.practiceEnabled() && this.expectedPracticeEvent && q >= this.expectedPracticeEvent.start - EPSILON) {
           this.enterPracticeWait();
         } else if (this.pauseTarget != null && q >= this.pauseTarget - EPSILON) {

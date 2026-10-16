@@ -1,4 +1,4 @@
-/* Runtime PC reuses the actual musical Round grid, without notes or repetition metadata. */
+/* Runtime pre-count reuses the actual musical Round grid, without notes or repetition metadata. */
 (function(global){
   'use strict';
   function create({svg,selected,plan,signature,stepQuarters,cellHeight,originY,timelineOffset}){
@@ -17,7 +17,9 @@
       const round=make(layer,'svg',{x:box.x,y:top,width:box.width,height:duration*scale,viewBox:`${box.x} ${top} ${box.width} ${duration*scale}`,overflow:'hidden',class:'play12-precount-round'});
       make(round,'rect',{x:box.x,y:top,width:box.width,height:duration*scale,fill:'#FFFFFF'});
       for(const source of template){const node=source.cloneNode(true);node.setAttribute('y',String(Number(source.getAttribute('y'))+bottom-templateBottom));round.appendChild(node);}
-      make(round,'text',{x:box.x+box.width-2,y:top+10,'text-anchor':'end',fill:'#888','font-family':'Inter,sans-serif','font-size':6,'font-weight':500},'PC');
+      const iconX=box.x+box.width-7,iconY=top+7;
+      make(round,'line',{x1:iconX-3,y1:iconY-3,x2:iconX+3,y2:iconY+3,stroke:'#777','stroke-width':1.4,'stroke-linecap':'round'});
+      make(round,'line',{x1:iconX+3,y1:iconY-3,x2:iconX-3,y2:iconY+3,stroke:'#777','stroke-width':1.4,'stroke-linecap':'round'});
     }
     svg.appendChild(layer);
     return {clear(){layer.remove();svg.style.overflow=previousOverflow;}};

@@ -141,7 +141,8 @@ function onboarding(saved=null, midiDiagnostic=null) {
   vm.runInContext(readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8'),sandbox);
   const controller=window.Play12Onboarding.create({root,startButton:node('start'),continueButton:node('continue'),storage});
   const pianoView={mount:null,ranges:[],setRange(left,right){this.ranges.push([left,right]);},syncContainer(){}};
-  c.roundBoard={root:node('#round-loop-board'),successes:new Set(),passes:0,update(){},pulse(){},setTraining(active,passes,options={}){this.active=active;this.root.classList.toggle('is-training',active);this.passes=passes;this.taskRounds=options.rounds||[];if(!active)this.successes.clear();},setPasses(passes){this.passes=passes;},setRoundSuccess(round,on){on?this.successes.add(round):this.successes.delete(round);},clearTrainingSuccess(){this.successes.clear();},pulseCompleteChain(){this.pulses=(this.pulses||0)+1;}};
+  c.roundBoard={root:node('#round-loop-board'),successes:new Set(),passes:0,update(){},pulse(){},controlState(){return {currentRound:1,from:Number(c.loopStartInput.value)+1,to:Number(c.loopEndInput.value)+1,loop:c.loopInput.checked,precount:c.countInInput.checked};},setTraining(active,passes,options={}){this.active=active;this.root.classList.toggle('is-training',active);this.passes=passes;this.taskRounds=options.rounds||[];if(!active)this.successes.clear();},setPasses(passes){this.passes=passes;},setRoundSuccess(round,on){on?this.successes.add(round):this.successes.delete(round);},clearTrainingSuccess(){this.successes.clear();},pulseCompleteChain(){this.pulses=(this.pulses||0)+1;}};
+  c.setPracticeTimingStrict=strict=>{c.practiceTimingStrict=strict!==false;};
   c.stage.parentElement=node('home');controller.connectRuntime({playback:c,noteEvents:c,stage:c.stage,midiDiagnostic,pianoView});
   return {controller,c,node,root,values,window,timers,keydown,pianoView};
 }
@@ -446,6 +447,20 @@ test('Metronome timing accepts exact -150/+200 boundaries and rejects outside; l
   assert.equal(c.clock.anchorAudioTime,due+2);assert.equal(c.metronomePhaseTime,phase);assert.equal(c.metronomeBeatCounter,counter);
   assert.equal(c.expectedPracticeEvent.expectedAudioTime,due+4);
 });
+test('Onboarding clean mode accepts correct pitch independently of BPM and metronome window',async()=>{
+  for(const bpm of [40,96,180]){
+    const {c}=make(undefined,24,true);configure(c);c.bpmInput.value=String(bpm);c.changeBpm();c.setMetronome(true);c.setPracticeTimingStrict(false);await c.play();
+    c.audioContext.currentTime=(c.waitingForInput.expectedAudioTime||0)+3;
+    assert.equal(c.acceptPracticeInput(72),true,`correct pitch remains accepted at ${bpm} BPM`);
+  }
+});
+test('A learner-empty Round completes only when its end is traversed',()=>{
+  const {c,window}=make([['L',48,0]],24,true);c.rounds=[{start:0,end:4,beatQuarters:1,beats:4,measureQuarters:4}];configure(c,false,true);
+  const events=[];window.dispatchEvent=event=>{if(event.type==='play12:practice-event-complete')events.push(event.detail);};
+  c.completeEmptyPracticeRounds(0,3.99);assert.equal(events.length,0);
+  c.completeEmptyPracticeRounds(3.99,4);assert.equal(events.length,1);assert.equal(JSON.stringify(events[0]),JSON.stringify({position:4,round:1,roundComplete:true,expectedCount:0,emptyRound:true,source:'system'}));
+  c.completeEmptyPracticeRounds(0,4);assert.equal(events.length,1,'empty Round completion is emitted once per attempt');
+});
 test('Rhythmic chords require same timing window and independent 150ms spread',async()=>{
   const {c}=make([['R',72,0],['L',48,0]],24,true);configure(c,true,true);c.setMetronome(true);await c.play();
   const due=c.waitingForInput.expectedAudioTime;
@@ -526,9 +541,17 @@ test('Round tutorial requires exact Round 4, Loop, range 2–4 and Pre-count act
   h.window.dispatchEvent({type:'play12:round-control',detail:{action:'range',currentRound:2,from:2,to:3,loop:true,precount:false}});assert.equal(h.controller.getState().practiceGuideStage,'round-range');
   h.window.dispatchEvent({type:'play12:round-control',detail:{action:'range',currentRound:2,from:2,to:4,loop:true,precount:false}});finishOk();assert.equal(h.controller.getState().practiceGuideStage,'round-precount-info');
   h.node('#onboarding-skip').handlers.click();h.window.dispatchEvent({type:'play12:round-control',detail:{action:'precount',currentRound:2,from:2,to:4,loop:true,precount:true}});finishOk();
-  assert.equal(h.controller.getState().practiceGuideStage,'round-practice');assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);assert.equal(h.c.loopInput.checked,true);assert.equal(h.c.loopStartInput.value,'1');assert.equal(h.c.loopEndInput.value,'3');assert.equal(h.c.countInInput.checked,true);assert.equal(h.c.metronomeInput.checked,false);
+  assert.equal(h.controller.getState().practiceGuideStage,'round-practice');assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);assert.equal(h.c.loopInput.checked,true);assert.equal(h.c.loopStartInput.value,'1');assert.equal(h.c.loopEndInput.value,'3');assert.equal(h.c.countInInput.checked,false,'practice preserves the user pre-count setting instead of forcing it');
 });
-test('Round training requires two clean 2–4 passes and invalidates wrong input',()=>{
+test('Loop, range and Pre-count steps accept an already-correct state',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-loop',roundUnlocked:true,metronomeUnlocked:true,highestUnlockedStep:5,inputMode:'demo'});
+  h.c.loopInput.checked=true;h.c.loopStartInput.value='1';h.c.loopEndInput.value='3';h.c.countInInput.checked=true;h.controller.continueSession();
+  const finish=()=>{const timer=[...h.timers.values()].find(value=>value.delay===950);assert(timer);timer.fn();};
+  finish();assert.equal(h.controller.getState().practiceGuideStage,'round-range');
+  finish();assert.equal(h.controller.getState().practiceGuideStage,'round-precount-info');
+  h.node('#onboarding-skip').handlers.click();finish();assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
+});
+test('Round training accepts one visible clean 2–4 chain and invalidates wrong input',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'demo'});
   h.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));h.controller.continueSession();
   const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
@@ -542,13 +565,10 @@ test('Round training requires two clean 2–4 passes and invalidates wrong input
   event(3);h.window.dispatchEvent({type:'play12:practice-wrong-input',detail:{source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[]);
   event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[],'a broken pass cannot rebuild mid-loop');
   h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
-  for(let pass=1;pass<=2;pass++){
-    emit({state:'count-in',position:1,running:false,ended:false});event(2);event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[2,3,4]);
-    h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});
-    const okTimers=[...h.timers.values()].filter(value=>value.delay===950);assert.equal(okTimers.length,1,'one pass creates one OK12');
-    emit({state:'count-in',position:1,running:false,ended:false});h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1,'rerender cannot duplicate OK12');
-    assert.equal(h.c.roundBoard.passes,pass);finishOk();if(pass===1)assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
-  }
+  emit({state:'count-in',position:1,running:false,ended:false});event(2);event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[2,3,4]);
+  const okTimers=[...h.timers.values()].filter(value=>value.delay===950);assert.equal(okTimers.length,1,'the visible full chain creates OK12 without waiting for a hidden loop event');
+  h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1,'loop boundary cannot duplicate OK12');
+  finishOk();
   assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');assert(h.node('progress6').classList.contains('is-active'));
 });
 test('Miniature uses the same per-hand repetition detector colors as notation',()=>{
@@ -667,7 +687,7 @@ test('Approved reconnect, final instruction and completion copy are present in R
   assert(css.includes('left: var(--mvp-note-field-center-x'));assert(css.includes('background: #fff'));
 });
 
-test('Runtime PC clones the actual Round grid and Count without musical events, then cleans up',()=>{
+test('Runtime pre-count clones the actual Round grid and uses a drumstick icon',()=>{
   const {window,sandbox}=load();
   class Node{constructor(tag){this.tag=tag;this.attrs={};this.children=[];}setAttribute(k,v){this.attrs[k]=v;}getAttribute(k){return this.attrs[k]??null;}appendChild(n){this.children.push(n);n.parent=this;}remove(){this.parent.children=this.parent.children.filter(n=>n!==this);}cloneNode(){const n=new Node(this.tag);n.attrs={...this.attrs};n.textContent=this.textContent;return n;}}
   sandbox.document.createElementNS=(_,tag)=>new Node(tag);vm.runInContext(readFileSync(path.join(renderer,'play12-precount-view.js'),'utf8'),sandbox);
@@ -680,6 +700,6 @@ test('Runtime PC clones the actual Round grid and Count without musical events, 
   for(const n of grid)svg.appendChild(n);svg.querySelectorAll=()=>grid;const original=JSON.stringify(svg.children.map(n=>n.attrs));
   const view=window.Play12PreCountView.create({svg,selected:8,plan:{quarters:8},signature:{measureStart:8,measureQuarters:4,beatQuarters:1},stepQuarters:1,cellHeight:32,originY:1101.25,timelineOffset:0});
   const layer=svg.children.at(-1);assert.equal(layer.children.length,2);
-  for(const round of layer.children){assert.equal(round.attrs.height,'128');const clones=round.children.slice(1,-1);assert.equal(clones.length,grid.length);for(let i=0;i<clones.length;i++){const actual={...clones[i].attrs},expected={...grid[i].attrs};delete actual.y;delete expected.y;assert.deepEqual(actual,expected);assert.equal(clones[i].textContent,grid[i].textContent);assert(!clones[i].attrs['data-event-id']);}}
+  for(const round of layer.children){assert.equal(round.attrs.height,'128');const clones=round.children.slice(1,-2);assert.equal(clones.length,grid.length);for(let i=0;i<clones.length;i++){const actual={...clones[i].attrs},expected={...grid[i].attrs};delete actual.y;delete expected.y;assert.deepEqual(actual,expected);assert.equal(clones[i].textContent,grid[i].textContent);assert(!clones[i].attrs['data-event-id']);}assert.equal(round.children.at(-2).tag,'line');assert.equal(round.children.at(-1).tag,'line');}
   assert.equal(svg.style.overflow,'visible');view.clear();assert.equal(JSON.stringify(svg.children.map(n=>n.attrs)),original);assert.equal(svg.style.overflow,'hidden');
 });

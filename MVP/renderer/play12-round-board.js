@@ -20,9 +20,9 @@
   const stripOffset=(timelineWidth,positionUnits,blockWidth)=>timelineWidth*.5-positionUnits*blockWidth;
   const ribbonFor=(repetitions,hand,number)=>repetitions.segments.find(segment=>segment.hand===hand&&segment.occurrences.some(o=>number>=o.measure_start&&number<=o.measure_end))?.display_color;
   function create({root,playback:c,repetitions,title}){
-    const element=id=>root.querySelector('#'+id), total=c.rounds.length;
+    const element=id=>root.querySelector('#'+id)||document.getElementById(id), total=c.rounds.length;
     const timeline=element('round-timeline'),strip=element('round-strip'),head=element('round-playhead'),frame=element('round-loop-frame');
-    const trainingProgress=element('round-training-progress'),trainingLabel=element('round-training-label'),trainingCount=element('round-training-count'),trainingTotal=element('round-training-total'),trainingCounter=element('round-training-counter'),successTrack=element('round-success-track');
+    const trainingProgress=element('round-training-progress'),successTrack=element('round-success-track');
     const previous=element('round-previous'),next=element('round-next'),loop=element('round-loop-toggle'),precount=element('round-precount-toggle');
     const key=`play12.round-loop.v1:${title}`;
     c.loopGapInput.value='direct';
@@ -42,7 +42,8 @@
       for(const [hand,edge] of [['L','top'],['R','bottom']]){const color=ribbonFor(repetitions,hand,index+1);if(color){const ribbon=document.createElement('i');ribbon.className='round-mini-ribbon is-'+edge;ribbon.style.backgroundColor=color;ribbon.dataset.hand=hand;block.appendChild(ribbon);}}
       strip.insertBefore(block,frame);
     });
-    const pc=document.createElement('span');pc.className='round-mini-block round-mini-pc';pc.textContent='PC';pc.setAttribute('aria-label','Pre-count');
+    const pc=document.createElement('span');pc.className='round-mini-block round-mini-pc';pc.setAttribute('aria-label','Pre-count');
+    const sticks=document.createElement('i');sticks.className='precount-sticks';sticks.setAttribute('aria-hidden','true');pc.appendChild(sticks);
     const syncGeometry=()=>{
       const control=document.getElementById('metronome-toggle');
       if(root.hidden || !control)return;
@@ -121,19 +122,19 @@
     };
     const renderTrack=()=>{
       if(!successTrack)return;successTrack.replaceChildren();
-      for(const number of taskRounds){const dot=document.createElement('span');dot.className='round-success-dot';dot.dataset.round=String(number);dot.textContent=String(number);dot.setAttribute('aria-label',`Round ${number}`);successTrack.appendChild(dot);}
+      for(const number of taskRounds){const dot=document.createElement('span');dot.className='round-success-dot';dot.dataset.round=String(number);dot.setAttribute('aria-label',`Round ${number}`);successTrack.appendChild(dot);}
       for(const number of successfulRounds)applySuccess(number,true,false);
     };
     const clearTrainingSuccess=()=>{successfulRounds.clear();for(const number of taskRounds)applySuccess(number,false,false);for(const block of blocks())block.classList.remove('is-chain-complete');successTrack?.classList.remove('is-chain-complete');};
     const setRoundSuccess=(number,success=true)=>{if(success)successfulRounds.add(number);else successfulRounds.delete(number);applySuccess(number,success,success);};
     const pulseCompleteChain=()=>{for(const block of blocks().filter(block=>block.classList.contains('is-round-success')))block.classList.add('is-chain-complete');successTrack?.classList.add('is-chain-complete');global.setTimeout(()=>{for(const block of blocks())block.classList.remove('is-chain-complete');successTrack?.classList.remove('is-chain-complete');},600);};
     const setTraining=(active,passes=0,options={})=>{
-      root.classList.toggle('is-training',active);trainingProgress.hidden=!active;trainingCount.textContent=String(passes);root.dataset.trainingPasses=String(passes);
-      if(active){taskRounds=options.rounds||Array.from({length:Number(c.loopEndInput.value)-Number(c.loopStartInput.value)+1},(_,index)=>Number(c.loopStartInput.value)+index+1);trainingLabel.textContent=options.label||'Loop practice';const showCounter=options.totalPasses!==null,totalPasses=options.totalPasses??2;trainingTotal.textContent=String(totalPasses);trainingCounter.hidden=!showCounter;successfulRounds=new Set();renderTrack();}
+      root.classList.toggle('is-training',active);trainingProgress.hidden=!active;root.dataset.trainingPasses=String(passes);c.stage.classList.toggle('has-round-progress',active);
+      if(active){taskRounds=options.rounds||Array.from({length:Number(c.loopEndInput.value)-Number(c.loopStartInput.value)+1},(_,index)=>Number(c.loopStartInput.value)+index+1);successfulRounds=new Set();renderTrack();}
       else{clearTrainingSuccess();taskRounds=[];successTrack?.replaceChildren();}
-      update(c.clock.position);
+      update(c.clock.position);global.requestAnimationFrame?.(()=>c.layoutCoreGeometry?.());
     };
-    const setPasses=passes=>{trainingCount.textContent=String(passes);root.dataset.trainingPasses=String(passes);};
+    const setPasses=passes=>{root.dataset.trainingPasses=String(passes);};
     const syncSuccess=()=>{for(const number of successfulRounds)applySuccess(number,true,false);};
     update(c.clock.position);
     return {root,update(position){update(position);syncSuccess();},pulse,reset,syncGeometry,setTraining,setPasses,setRoundSuccess,clearTrainingSuccess,pulseCompleteChain,controlState,taskRounds:()=>[...taskRounds],successfulRounds:()=>[...successfulRounds]};

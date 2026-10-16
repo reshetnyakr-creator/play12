@@ -1190,7 +1190,7 @@
 /* Symmetric instrument board: BPM top to Practice bottom. */
 .mvp-round-loop-board{height:calc(var(--mvp-playback-board-height)*2 + 12px);padding:7px 10px;gap:7px;--mini-round-width:62px;}
 .round-timeline{display:block;flex:1;height:auto;min-height:32px;overflow:hidden;margin:0 3px;border-radius:5px;}
-.round-strip{position:absolute;left:10px;top:2px;bottom:2px;display:flex;width:max-content;will-change:transform;}
+.round-strip{position:absolute;left:0;top:2px;bottom:2px;display:flex;width:max-content;will-change:transform;}
 .round-mini-block{flex:0 0 var(--mini-round-width);width:var(--mini-round-width);height:100%;font:600 13px/1 Inter,sans-serif;display:flex;align-items:center;justify-content:center;border:1px solid #FAFAF8;}
 .round-mini-block::after{content:"";position:absolute;inset:3px 2px;border-radius:3px;background:transparent;z-index:0;pointer-events:none;transition:background 220ms ease,box-shadow 220ms ease,opacity 220ms ease;}
 .round-mini-block.is-round-success::after{background:#CEF93240;box-shadow:inset 0 0 0 1px #a8cf1899;}
@@ -1199,13 +1199,14 @@
 .round-mini-block.is-chain-complete::after{background:#CEF93266;box-shadow:0 0 5px #CEF93277,inset 0 0 0 1px #86ad00;}
 @keyframes round-success-pulse{0%{transform:scale(.96)}55%{transform:scale(1.045)}100%{transform:scale(1)}}
 .round-mini-ribbon{height:25%;z-index:2;}.round-mini-ribbon.is-top{top:0;}.round-mini-ribbon.is-bottom{bottom:0;}
-.round-mini-pc{background:#fff;color:#666;}
+.round-mini-pc{background:#fff;color:#666;}.precount-sticks{display:block;width:15px;height:15px;position:relative}.precount-sticks::before,.precount-sticks::after{content:"";position:absolute;left:7px;top:1px;width:2px;height:14px;border-radius:2px;background:#777;transform:rotate(42deg)}.precount-sticks::after{transform:rotate(-42deg)}
 .round-loop-frame{top:0;bottom:0;border-width:2px;}
 .round-playhead{left:50%;top:0;bottom:0;}
-.round-training-progress{position:absolute;left:10px;right:10px;top:-34px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;height:28px;padding:0 10px;border:1px solid #d1d3ce;border-radius:15px;background:#fafaf8;box-shadow:0 2px 7px #1111110a;color:#444;font:600 10px/1 Inter,sans-serif;white-space:nowrap;}
-.round-training-progress[hidden]{display:none;}.round-training-progress strong{color:#111;font-variant-numeric:tabular-nums;}.round-training-progress strong[hidden]{display:none;}
-.round-success-track{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;}
-.round-success-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;box-sizing:border-box;border:1px solid #b9bcb6;border-radius:50%;background:#fff;color:#444;box-shadow:0 1px 2px #1111111a;font:700 9px/1 Inter,sans-serif;transition:background 220ms ease,border-color 220ms ease,transform 220ms ease;}
+.round-training-progress{position:absolute;z-index:8;top:8px;height:calc(var(--mvp-score-viewport-height,241px) - 16px);left:calc(50% + var(--mvp-score-width,290px)/2 - var(--mvp-progress-rail-width,32px)/2 + 10px);width:22px;pointer-events:none;}
+.round-training-progress[hidden]{display:none;}
+.round-success-track{position:relative;display:flex;flex-direction:column-reverse;align-items:center;justify-content:space-between;width:22px;height:100%;min-height:0;}
+.round-success-track::before{content:"";position:absolute;left:50%;top:11px;bottom:11px;width:1px;background:#d4d7d1;transform:translateX(-50%);z-index:-1;}
+.round-success-dot{display:block;flex:0 0 22px;width:22px;height:22px;box-sizing:border-box;border:1px solid #b9bcb6;border-radius:50%;background:#fff;box-shadow:0 1px 2px #1111111a;transition:background 220ms ease,border-color 220ms ease,transform 220ms ease;}
 .round-success-dot.is-round-success{background:#CEF932;border-color:#98bf00;color:#263400;}
 .round-success-dot.is-round-success-pulse{animation:round-success-pulse 420ms ease-out;}
 .round-success-track.is-chain-complete{animation:round-track-complete 520ms ease-out;}@keyframes round-track-complete{0%{transform:scale(.98)}50%{transform:scale(1.035);filter:drop-shadow(0 0 5px #CEF93299)}100%{transform:scale(1);filter:none}}
@@ -1223,7 +1224,7 @@
 @media (max-width:850px){.mvp-round-loop-board{bottom:calc(100% + 12px);}}
 
 /* Final controls follow rendered BPM dimensions; score is centered inside its border. */
-.mvp-playback-host .playback-score{left:50% !important;transform:translateX(-50%);}
+.mvp-playback-host .playback-score{left:50% !important;transform:translateX(-50%);}.mvp-playback-host .playback-stage.has-round-progress .playback-score{left:calc(50% - var(--mvp-progress-rail-width,32px)/2) !important;}
 .round-timeline{flex:0 0 var(--round-mini-height,32px);height:var(--round-mini-height,32px);min-height:0;margin-top:auto;margin-bottom:auto;}
 .round-strip{top:0;bottom:0;}
 .round-mini-block{background:#FAFAF8;}
