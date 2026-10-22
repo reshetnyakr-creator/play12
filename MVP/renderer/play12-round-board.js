@@ -80,7 +80,8 @@
       element('round-to-plus').disabled=!c.loopInput.checked||to>=total-1;
       element('round-range-controls').classList.toggle('is-disabled',!c.loopInput.checked);
     };
-    for(const [button,direction] of [[previous,-1],[next,1]])button.addEventListener('click',()=>{c.moveRound(direction);update(c.clock.position);publish('navigate');});
+    const navigate=direction=>{c.moveRound(direction);update(c.clock.position);publish('navigate');};
+    for(const [button,direction] of [[previous,-1],[next,1]])button.addEventListener('click',()=>navigate(direction));
     loop.addEventListener('click',()=>{
       const valid=normalizeRange(total,c.loopStartInput.value,c.loopEndInput.value);
       c.loopStartInput.value=String(valid.from);c.loopEndInput.value=String(valid.to);
@@ -137,7 +138,7 @@
     const setPasses=passes=>{root.dataset.trainingPasses=String(passes);};
     const syncSuccess=()=>{for(const number of successfulRounds)applySuccess(number,true,false);};
     update(c.clock.position);
-    return {root,update(position){update(position);syncSuccess();},pulse,reset,syncGeometry,setTraining,setPasses,setRoundSuccess,clearTrainingSuccess,pulseCompleteChain,controlState,taskRounds:()=>[...taskRounds],successfulRounds:()=>[...successfulRounds]};
+    return {root,update(position){update(position);syncSuccess();},navigate,pulse,reset,syncGeometry,setTraining,setPasses,setRoundSuccess,clearTrainingSuccess,pulseCompleteChain,controlState,taskRounds:()=>[...taskRounds],successfulRounds:()=>[...successfulRounds]};
   }
   global.Play12RoundBoard={create,roundIndex,stripOffset,ribbonFor,normalizeRange,editRange};
 })(window);

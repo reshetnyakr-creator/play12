@@ -8,16 +8,19 @@ const renderer = path.join(__dirname, '../renderer');
 class Element {
   constructor(dataset = {}) { this.dataset = dataset; this.checked = false; this.value = '0'; this.disabled = false; this.hidden = false; this.handlers = {}; this.style = {setProperty(){}}; this.classList = {add(){},remove(){},toggle(){}}; }
   addEventListener(name, fn) { this.handlers[name] = fn; }
+  click() { if (!this.disabled) this.handlers.click?.({target:this}); }
   setAttribute(name,value) { this[name] = value; }
   getBoundingClientRect() {return {top:0,left:0,right:100,width:100,height:42};}
   querySelectorAll() {return [];}
   closest(){return null;}
 }
 class AudioContext {
-  constructor(){this.currentTime=0;this.state='running';this.destination={};}
+  constructor(){this.currentTime=0;this.state='running';this.destination={};this.sampleRate=48000;}
   resume(){return Promise.resolve();}
   createGain(){return {gain:{value:0,setValueAtTime(){},exponentialRampToValueAtTime(){},cancelScheduledValues(){}},connect(){return this;}};}
-  createOscillator(){const handlers=[];return {frequency:{value:0},connect(){return this;},start(at){this.startAt=at;},stop(at){this.stopAt=at;},addEventListener(event,fn){if(event==='ended')handlers.push(fn);},finish(){handlers.forEach(fn=>fn());}};}
+  createOscillator(){const handlers=[];return {frequency:{value:0,setValueAtTime(value){this.value=value;}},connect(){return this;},start(at){this.startAt=at;},stop(at){this.stopAt=at;},addEventListener(event,fn){if(event==='ended')handlers.push(fn);},finish(){handlers.forEach(fn=>fn());}};}
+  createBuffer(channels,frames){const data=Array.from({length:channels},()=>new Float32Array(frames));return {getChannelData:index=>data[index]};}
+  createBufferSource(){return {connect(){return this;},start(at){this.startAt=at;},stop(at){this.stopAt=at;}};}
 }
 function load(extra={}) {
   const window = {AudioContext, dispatchEvent(){}, ...extra};
@@ -136,7 +139,7 @@ function onboarding(saved=null, midiDiagnostic=null) {
   const listeners={};const timers=new Map();let timerId=0;
   window.addEventListener=(name,fn)=>(listeners[name] ||= []).push(fn);window.dispatchEvent=event=>(listeners[event.type]||[]).forEach(fn=>fn(event));
   window.setTimeout=(fn,delay)=>{timers.set(++timerId,{fn,delay});return timerId;};
-  Object.assign(sandbox,{document:{body:node('body'),documentElement:node('html'),addEventListener(){},createElement:()=>new Element(),getElementById:id=>id==='play12-onboarding'?root:node('#'+id)},URLSearchParams,location:{hostname:'127.0.0.1',search:''},Event:class{constructor(type){this.type=type;}},CustomEvent:class{constructor(type){this.type=type;}},clearTimeout:id=>timers.delete(id)});
+  Object.assign(sandbox,{document:{body:node('body'),documentElement:node('html'),addEventListener(){},createElement:()=>new Element(),getElementById:id=>id==='play12-onboarding'?root:node('#'+id)},URLSearchParams,location:{hostname:'127.0.0.1',search:''},Event:class{constructor(type){this.type=type;}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options?.detail;}},clearTimeout:id=>timers.delete(id)});
   window.Play12Coach={create:()=>({show(){},stop(){}})};
   vm.runInContext(readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8'),sandbox);
   const controller=window.Play12Onboarding.create({root,startButton:node('start'),continueButton:node('continue'),storage});
@@ -455,7 +458,7 @@ test('Onboarding clean mode accepts correct pitch independently of BPM and metro
   }
 });
 test('Lenient accepted timing preserves canonical transport and robot grid across BPM, metronome and Pre-count',async()=>{
-  for(const bpm of [60,120])for(const metronome of [false,true])for(const precount of [false,true]){
+  for(const bpm of [60,96,136])for(const metronome of [false,true])for(const precount of [false,true]){
     const {c,scheduled}=make([['R',72,0],['L',48,1],['R',74,2],['L',50,3],['R',76,4],['L',52,5]],24,true);
     configure(c);c.setPracticeTimingStrict(false);c.bpmInput.value=String(bpm);c.changeBpm();c.setMetronome(metronome);c.countInInput.checked=precount;
     await c.play();
@@ -475,12 +478,29 @@ test('Lenient accepted timing preserves canonical transport and robot grid acros
     for(const robot of scheduled.filter(event=>event.hand==='L'&&Number.isFinite(event.when)))assert(Math.abs(robot.when-(origin+robot.start*beat))<1e-8,`robot ${robot.start} stays on canonical grid`);
   }
 });
+test('Semantic command pipeline uses Round Board navigation and actual transport buttons',async()=>{
+  const {c}=make(undefined,24,true);const navigation=[];
+  c.roundBoard={root:{hidden:false,querySelector(){return {disabled:false};}},navigate:direction=>navigation.push(direction),update(){}};
+  assert.equal(c.runCommand('next-round'),true);assert.equal(c.runCommand('previous-round'),true);assert.deepEqual(navigation,[1,-1]);
+  assert.equal(c.runCommand('play'),true);await new Promise(resolve=>setImmediate(resolve));assert(c.clock.running);
+  assert.equal(c.runCommand('play'),false,'disabled Play command matches disabled UI button');
+  assert.equal(c.runCommand('pause'),true);assert(c.pauseTarget!=null);
+  assert.equal(c.runCommand('restart'),true);assert.equal(c.clock.position,0);assert.equal(c.pauseTarget,null);
+});
 test('A learner-empty Round completes only when its end is traversed',()=>{
   const {c,window}=make([['L',48,0]],24,true);c.rounds=[{start:0,end:4,beatQuarters:1,beats:4,measureQuarters:4}];configure(c,false,true);
   const events=[];window.dispatchEvent=event=>{if(event.type==='play12:practice-event-complete')events.push(event.detail);};
   c.completeEmptyPracticeRounds(0,3.99);assert.equal(events.length,0);
   c.completeEmptyPracticeRounds(3.99,4);assert.equal(events.length,1);assert.equal(JSON.stringify(events[0]),JSON.stringify({position:4,round:1,roundComplete:true,expectedCount:0,emptyRound:true,source:'system'}));
   c.completeEmptyPracticeRounds(0,4);assert.equal(events.length,1,'empty Round completion is emitted once per attempt');
+});
+test('Learner-empty Round completes at its natural boundary with Pre-count ON or OFF',async()=>{
+  for(const precount of [false,true]){
+    const {c,window}=make([['L',48,0]],24,true);c.rounds=[{start:0,end:4,beatQuarters:1,beats:4,measureQuarters:4,measureStart:0}];configure(c,false,true);c.countInInput.checked=precount;
+    const events=[];window.dispatchEvent=event=>{if(event.type==='play12:practice-event-complete')events.push(event.detail);};await c.play();
+    if(precount){assert.equal(events.length,0);c.audioContext.currentTime=c.countIn.endsAt;c.tick();}
+    c.audioContext.currentTime=c.clock.quarterToAudioTime(4);c.tick();assert.equal(events.filter(event=>event.emptyRound).length,1,`precount=${precount}`);
+  }
 });
 test('Rhythmic chords require same timing window and independent 150ms spread',async()=>{
   const {c}=make([['R',72,0],['L',48,0]],24,true);configure(c,true,true);c.setMetronome(true);await c.play();
@@ -564,6 +584,25 @@ test('Round tutorial requires exact Round 4, Loop, range 2–4 and Pre-count act
   h.node('#onboarding-skip').handlers.click();h.window.dispatchEvent({type:'play12:round-control',detail:{action:'precount',currentRound:2,from:2,to:4,loop:true,precount:true}});finishOk();
   assert.equal(h.controller.getState().practiceGuideStage,'round-practice');assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);assert.equal(h.c.loopInput.checked,true);assert.equal(h.c.loopStartInput.value,'1');assert.equal(h.c.loopEndInput.value,'3');assert.equal(h.c.countInInput.checked,false,'practice preserves the user pre-count setting instead of forcing it');
 });
+test('Function Round commands reach Round 4 through the same semantic tutorial event',()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-go4',roundUnlocked:true,metronomeUnlocked:true,highestUnlockedStep:5,inputMode:'midi'});h.controller.continueSession();
+  h.c.roundBoard.navigate=direction=>{
+    h.c.moveRound(direction);
+    const currentRound=Math.max(1,h.c.rounds.findIndex(round=>h.c.clock.position>=round.start&&h.c.clock.position<round.end)+1);
+    h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate',currentRound,from:1,to:2,loop:false,precount:false}});
+  };
+  assert.equal(h.c.runCommand('next-round'),true);assert.equal(h.c.runCommand('next-round'),true);assert.equal(h.c.runCommand('next-round'),true);
+  assert.equal(h.c.clock.position,3);assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1);
+  assert.equal(h.c.runCommand('previous-round'),true);assert.equal(h.c.clock.position,2);
+  const ok=[...h.timers.values()].find(value=>value.delay===950);ok.fn();assert.equal(h.controller.getState().practiceGuideStage,'round-loop-info');
+});
+test('Function transport commands follow button availability through Pre-count, Pause and Restart',async()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'midi'});
+  h.c.loopInput.checked=true;h.c.loopStartInput.value='1';h.c.loopEndInput.value='3';h.c.countInInput.checked=true;h.controller.continueSession();
+  assert.equal(h.root.dataset.playbackShortcutsEnabled,'true');assert.equal(h.c.runCommand('play'),true);await new Promise(resolve=>setImmediate(resolve));assert(h.c.countIn);
+  assert.equal(h.c.runCommand('play'),false);assert.equal(h.c.runCommand('pause'),true);assert.equal(h.c.countIn,null);
+  assert.equal(h.c.runCommand('restart'),true);await new Promise(resolve=>setImmediate(resolve));assert(h.c.countIn,'Restart uses the same UI path and starts configured Pre-count');
+});
 test('Loop, range and Pre-count steps accept an already-correct state',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-loop',roundUnlocked:true,metronomeUnlocked:true,highestUnlockedStep:5,inputMode:'demo'});
   h.c.loopInput.checked=true;h.c.loopStartInput.value='1';h.c.loopEndInput.value='3';h.c.countInInput.checked=true;h.controller.continueSession();
@@ -582,13 +621,13 @@ test('Round training ignores Count-in, starts at music, and invalidates wrong in
   emit({state:'count-in',position:1,running:false,ended:false});assert.equal(h.node('#onboarding-listen-coach').hidden,false);
   h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:2,roundComplete:true,source:'robot'}});assert.deepEqual([...h.c.roundBoard.successes],[]);
   event(2);assert.deepEqual([...h.c.roundBoard.successes],[],'Count-in is not Round progress');
-  emit({state:'waiting_for_input',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[2]);
+  h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1,afterPreCount:true}});emit({state:'waiting_for_input',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[2]);
   emit({state:'waiting_for_input',position:2,running:false,ended:false});assert.deepEqual([...h.c.roundBoard.successes],[2],'hesitation does not reset success');
   event(3);h.window.dispatchEvent({type:'play12:practice-wrong-input',detail:{source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[]);
   event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[],'a broken pass cannot rebuild mid-loop');
   h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
   emit({state:'count-in',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[]);
-  emit({state:'playing',position:1,running:true,ended:false});event(2);event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[2,3,4]);
+  h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1,afterPreCount:true}});emit({state:'playing',position:1,running:true,ended:false});event(2);event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[2,3,4]);
   const okTimers=[...h.timers.values()].filter(value=>value.delay===950);assert.equal(okTimers.length,1,'the visible full chain creates OK12 without waiting for a hidden loop event');
   h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1,'loop boundary cannot duplicate OK12');
   finishOk();
@@ -601,10 +640,27 @@ test('Clean Round 2–4 acceptance is identical for Pre-count and Metronome ON/O
     const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
     const event=round=>h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
     if(precount){emit({state:'count-in',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[]);}
-    emit({state:'waiting_for_input',position:1,running:false,ended:false});event(2);event(3);event(4);
+    h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1,afterPreCount:precount}});emit({state:'waiting_for_input',position:1,running:false,ended:false});event(2);event(3);event(4);
     assert.deepEqual([...h.c.roundBoard.successes],[2,3,4],`metronome=${metronome} precount=${precount}`);
     assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1);
   }
+});
+test('Progress audio ascends per Round, adds ovation only for full-song final third, and resets silently',()=>{
+  const loop=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'demo'});
+  loop.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));loop.controller.continueSession();
+  let loopBuffers=0;loop.c.audioContext.createBuffer=(...args)=>{loopBuffers++;return AudioContext.prototype.createBuffer.call(loop.c.audioContext,...args);};
+  loop.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1}});
+  for(const round of [2,3,4])loop.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
+  assert.equal(loopBuffers,0,'short Loop task never adds applause');
+
+  const full=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:6,inputMode:'demo'});full.controller.continueSession();
+  let oscillators=0,buffers=0;const peaks=[],originalOscillator=full.c.audioContext.createOscillator.bind(full.c.audioContext),originalBuffer=full.c.audioContext.createBuffer.bind(full.c.audioContext),originalGain=full.c.audioContext.createGain.bind(full.c.audioContext);
+  full.c.audioContext.createOscillator=()=>{oscillators++;return originalOscillator();};full.c.audioContext.createBuffer=(...args)=>{buffers++;return originalBuffer(...args);};full.c.audioContext.createGain=()=>{const gain=originalGain(),ramp=gain.gain.exponentialRampToValueAtTime;gain.gain.exponentialRampToValueAtTime=(value,time)=>{peaks.push(value);return ramp.call(gain.gain,value,time);};return gain;};
+  full.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:0}});
+  for(let round=1;round<=5;round++)full.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
+  assert.equal(buffers,0);full.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:6,roundComplete:true,source:'user'}});assert.equal(buffers,1);assert(oscillators>=13);assert(Math.max(...peaks)<.03,'motif and applause gains retain ample headroom');
+  full.window.dispatchEvent({type:'play12:practice-wrong-input',detail:{source:'user'}});assert.deepEqual([...full.c.roundBoard.successes],[]);
+  const before=buffers;full.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:7,roundComplete:true,source:'user'}});assert.equal(buffers,before,'broken attempt cannot retain escalating audio progress');
 });
 test('Miniature uses the same per-hand repetition detector colors as notation',()=>{
   const {window,sandbox}=load();
@@ -663,16 +719,16 @@ test('Final Right Hand Practice completes only after one uninterrupted full run'
   const round=number=>h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:number,roundComplete:true,source:'user'}});
   const completeDelay=()=>{const timer=[...h.timers.values()].find(value=>value.delay===520);assert(timer);timer.fn();};
   assert.deepEqual(h.c.roundBoard.taskRounds,[1,2,3,4,5,6,7,8,9]);
-  emit({state:'waiting_for_input',position:0,running:false,ended:false});
+  h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:0,afterPreCount:false}});emit({state:'waiting_for_input',position:0,running:false,ended:false});
   round(1);round(2);h.window.dispatchEvent({type:'play12:practice-wrong-input',detail:{source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[]);
   for(let n=3;n<=9;n++)round(n);
   emit({state:'paused',position:8,running:false,ended:true});
   assert.equal(h.controller.getState().onboardingCompleted,false,'wrong input and mid-song continuation cannot complete');
-  emit({state:'waiting_for_input',position:0,running:false,ended:false});
+  h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:0,afterPreCount:false}});emit({state:'waiting_for_input',position:0,running:false,ended:false});
   h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate'}});
   emit({state:'paused',position:8,running:false,ended:true});
   assert.equal(h.controller.getState().onboardingCompleted,false,'round jump cannot complete');
-  emit({state:'waiting_for_input',position:0,running:false,ended:false});
+  h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:0,afterPreCount:true}});emit({state:'waiting_for_input',position:0,running:false,ended:false});
   for(let n=1;n<=9;n++)round(n);assert.deepEqual([...h.c.roundBoard.successes],[1,2,3,4,5,6,7,8,9]);
   emit({state:'paused',position:8,running:false,ended:true});
   assert.equal(h.controller.getState().onboardingCompleted,false,'full-row pulse remains perceptible before completion');completeDelay();
@@ -685,9 +741,17 @@ test('Final Right Hand Practice completes only after one uninterrupted full run'
 });
 test('Real Practice controller end plus semantic Round success triggers completion',async()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:6,inputMode:'demo'});
-  h.c.rounds=[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4}];h.controller.continueSession();await h.c.play();h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:1,roundComplete:true,source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[1]);h.c.clock.pause(8);h.c.paint(8);
+  const starts=[];h.window.addEventListener('play12:musical-attempt-start',event=>starts.push(event.detail));
+  h.c.rounds=[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4}];h.controller.continueSession();await h.c.play();assert.equal(starts.length,1);assert.equal(starts[0].position,0);h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:1,roundComplete:true,source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[1]);h.c.clock.pause(8);h.c.paint(8);
   const timer=[...h.timers.values()].find(value=>value.delay===520);assert(timer);timer.fn();
   assert.equal(h.controller.getState().onboardingCompleted,true);assert.equal(h.node('#onboarding-completion').hidden,false);
+});
+test('Final whole-song attempt starts only after Pre-count and can reach completion',async()=>{
+  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:6,inputMode:'demo'});
+  h.c.rounds=[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4,measureStart:0}];h.controller.continueSession();h.c.countInInput.checked=true;await h.c.play();
+  h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:1,roundComplete:true,source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[],'Pre-count cannot credit full-song progress');
+  h.c.audioContext.currentTime=h.c.countIn.endsAt;h.c.tick();h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:1,roundComplete:true,source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[1]);
+  h.c.clock.pause(8);h.c.paint(8);const timer=[...h.timers.values()].find(value=>value.delay===520);assert(timer);timer.fn();assert.equal(h.controller.getState().onboardingCompleted,true);
 });
 
 test('Robot playback end and Skip never fake final completion',()=>{

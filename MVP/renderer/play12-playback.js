@@ -781,17 +781,22 @@
         this.beginPreCount(selected);
       } else {
         const startAt = this.metronomeAudio && this.metronomeInput.checked ? this.nextGridStart(selected) : this.audioContext.currentTime;
-        this.clock.start(selected, startAt);
-        this.armPracticeGate(selected);
-        if (this.practiceEnabled() && this.expectedPracticeEvent?.start <= selected + EPSILON) {
-          this.enterPracticeWait();
-          return;
-        }
-        this.clock.start(selected, startAt);
-        this.armPracticeGate(selected);
-        this.lastPlaybackPosition = selected - EPSILON;
-        this.scheduleAhead();
+        this.startMusicalAttempt(selected, startAt, false);
       }
+      this.updateControls();
+    }
+    startMusicalAttempt(selected, audioTime, afterPreCount = false) {
+      this.clock.start(selected, audioTime);
+      this.armPracticeGate(selected);
+      global.dispatchEvent(new CustomEvent('play12:musical-attempt-start', {detail:{
+        position:selected, audioTime, afterPreCount, loop:!!this.currentLoop(), bpm:this.clock.bpm
+      }}));
+      if (this.practiceEnabled() && this.expectedPracticeEvent?.start <= selected + EPSILON) {
+        this.enterPracticeWait();
+        return;
+      }
+      this.lastPlaybackPosition = selected - EPSILON;
+      this.scheduleAhead();
       this.updateControls();
     }
     preCountEnabled() {
@@ -965,6 +970,19 @@
       if (index < 0) index = this.rounds.length - 1;
       this.pauseImmediate(this.rounds[clamp(index + direction, 0, this.rounds.length - 1)].start);
     }
+    commandAvailable(action) {
+      if (action === 'previous-round') return !!this.roundBoard?.navigate && !this.roundBoard.root?.hidden && !this.roundBoard.root?.querySelector?.('#round-previous')?.disabled;
+      if (action === 'next-round') return !!this.roundBoard?.navigate && !this.roundBoard.root?.hidden && !this.roundBoard.root?.querySelector?.('#round-next')?.disabled;
+      const button = {metronome:this.metronomeButton,'bpm-down':this.bpmMinus,'bpm-up':this.bpmPlus,play:this.playButton,pause:this.pauseButton,restart:this.restartButton}[action];
+      return !!button && !button.disabled;
+    }
+    runCommand(action) {
+      if (!this.commandAvailable(action)) return false;
+      if (action === 'previous-round') this.roundBoard.navigate(-1);
+      else if (action === 'next-round') this.roundBoard.navigate(1);
+      else ({metronome:this.metronomeButton,'bpm-down':this.bpmMinus,'bpm-up':this.bpmPlus,play:this.playButton,pause:this.pauseButton,restart:this.restartButton}[action]).click();
+      return true;
+    }
     syncTempoControls() {
       this.bpmInput.value = String(this.clock.bpm);
       this.bpmInput.classList.remove('is-original-tempo');
@@ -1134,14 +1152,11 @@
       }}));
       if (this.preCountEnabled()) { this.beginPreCount(loop.start, cycleAt); publishCompletedLoop(); return; }
       this.schedulePlaybackAnchor(loop.start, cycleAt);
-      this.clock.start(loop.start, cycleAt);
-      this.armPracticeGate(loop.start);
-      this.lastPlaybackPosition = loop.start - EPSILON;
       this.stage.dataset.loopGapState = "off";
+      publishCompletedLoop();
+      this.startMusicalAttempt(loop.start, cycleAt, false);
       this.paint(loop.start);
       this.pulseAt(loop.start);
-      this.scheduleAhead();
-      publishCompletedLoop();
     }
     currentLoop() {
       if (!this.loopInput.checked || this.roundBoard?.root.hidden) return null;
@@ -1306,18 +1321,11 @@
           const startAt = this.countIn.endsAt;
           this.countIn = null;
           this.setPreRollVisibility(selected, false);
-          this.clock.start(selected, startAt);
-          this.armPracticeGate(selected);
-          if (this.practiceEnabled() && this.expectedPracticeEvent?.start <= selected + EPSILON) {
-            this.enterPracticeWait();
+          this.startMusicalAttempt(selected, startAt, true);
+          if (this.waitingForInput) {
             this.frame = requestAnimationFrame(() => this.tick());
             return;
           }
-          this.clock.start(selected, startAt);
-          this.armPracticeGate(selected);
-          this.lastPlaybackPosition = selected - EPSILON;
-          this.scheduleAhead();
-          this.updateControls();
         }
       } else if (this.loopGap) {
         const q = this.clock.position;

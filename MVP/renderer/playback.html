@@ -333,12 +333,12 @@
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=tutorial-ux-06"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
-  <script src="play12-round-board.js?v=final-polish-01"></script>
-  <script src="play12-playback.js?v=round-final-01"></script>
+  <script src="play12-round-board.js?v=training-controls-01"></script>
+  <script src="play12-playback.js?v=training-controls-01"></script>
   <script src="web-midi-diagnostic.js?v=tutorial-ux-06"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
-  <script src="play12-onboarding.js?v=final-polish-01"></script>
+  <script src="play12-onboarding.js?v=training-controls-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     const playbackParams = new URLSearchParams(location.search);
@@ -567,9 +567,9 @@
       const onboardingRoot = document.getElementById('play12-onboarding');
       const commandAvailability = action => {
         const playbackAllowed = onboardingRoot.hidden || onboardingRoot.dataset.playbackShortcutsEnabled === 'true';
-        if (['play','pause','restart'].includes(action)) return playbackAllowed;
-        if (['metronome','bpm-down','bpm-up'].includes(action)) return !document.getElementById('metronome-board').hidden;
-        if (['previous-round','next-round'].includes(action)) return !document.getElementById('round-loop-board').hidden;
+        if (['play','pause','restart'].includes(action)) return playbackAllowed && window.play12Playback.commandAvailable(action);
+        if (['metronome','bpm-down','bpm-up'].includes(action)) return !document.getElementById('metronome-board').hidden && window.play12Playback.commandAvailable(action);
+        if (['previous-round','next-round'].includes(action)) return !document.getElementById('round-loop-board').hidden && window.play12Playback.commandAvailable(action);
         return false;
       };
       window.play12MidiDiagnostic = Play12MidiDiagnostic.create({
@@ -577,16 +577,7 @@
         noteEvents: window.play12Playback,
         commandActions: {
           available: commandAvailability,
-          run: action => {
-            if (action === 'metronome') window.play12Playback.setMetronome(!document.getElementById('metronome').checked);
-            else if (action === 'previous-round') window.play12Playback.moveRound(-1);
-            else if (action === 'bpm-down') window.play12Playback.adjustBpm(-10);
-            else if (action === 'next-round') window.play12Playback.moveRound(1);
-            else if (action === 'bpm-up') window.play12Playback.adjustBpm(10);
-            else if (action === 'play') window.play12Playback.play();
-            else if (action === 'pause') window.play12Playback.requestPause();
-            else if (action === 'restart') window.play12Playback.restart();
-          }
+          run: action => window.play12Playback.runCommand(action)
         }
       });
       const rangeWarning = document.getElementById('keyboard-range-warning');
