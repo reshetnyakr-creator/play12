@@ -178,6 +178,14 @@ h1 {
   color: #E96E40;
 }
 
+.hero-heading-line {
+  display: block;
+}
+
+.hero-heading-nowrap {
+  white-space: nowrap;
+}
+
 .tagline {
   font-size: clamp(24px, 2vw, 34px);
   line-height: 1.2;
@@ -296,7 +304,7 @@ h1 {
 }
 
 .keyboard-img {
-  width: min(100%, 720px);
+  width: min(110%, 792px);
   height: auto;
   display: block;
 }
@@ -332,7 +340,7 @@ h1 {
   }
 
   .keyboard-img {
-    width: min(100%, 720px);
+    width: min(100%, 792px);
   }
 }
 
@@ -400,6 +408,10 @@ h1 {
 }
 
 @media (max-width: 720px) {
+  .hero-heading-nowrap {
+    white-space: normal;
+  }
+
   nav a:nth-child(n+3) {
     display: none;
   }
@@ -502,9 +514,9 @@ h1 {
 <main class="hero" id="hero">
   <section class="hero-content">
     <h1>
-      There Are Only<br>
-      <span class="accent">12 Notes</span><br>
-      In Music.
+      <span class="hero-heading-line">There Are</span>
+      <span class="hero-heading-line hero-heading-nowrap">Only <span class="accent">12 Notes</span></span>
+      <span class="hero-heading-line">In Music.</span>
     </h1>
 
     <div class="tagline">
