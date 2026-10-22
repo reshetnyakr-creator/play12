@@ -1085,7 +1085,7 @@
 }
 .mvp-control-column {
   position: absolute; width: var(--compact-zero-size); height: 100%;
-  left: calc(var(--mvp-note-field-center-x, 50%) - var(--compact-playback-width) / 2 - var(--compact-practice-width) - var(--compact-zero-size) - var(--compact-gap) * 2);
+  left: calc(var(--mvp-note-field-center-x, 50%) - var(--mvp-unified-board-width, var(--compact-playback-width)) / 2 - var(--compact-practice-width) - var(--compact-zero-size) - var(--compact-gap) * 2);
 }
 .mvp-control-column #onboarding-choose-zero {
   position: static; width: var(--compact-zero-size); min-width: 0; height: var(--compact-zero-size);
@@ -1097,18 +1097,18 @@
 }
 .mvp-control-row .mvp-practice-board {
   position: absolute; right: auto;
-  left: calc(var(--mvp-note-field-center-x, 50%) - var(--compact-playback-width) / 2 - var(--compact-practice-width) - var(--compact-gap));
+  left: calc(var(--mvp-note-field-center-x, 50%) - var(--mvp-unified-board-width, var(--compact-playback-width)) / 2 - var(--compact-practice-width) - var(--compact-gap));
   bottom: 0; width: var(--compact-practice-width); gap: 1px; padding: 4px;
   box-shadow: 0 2px 7px #1111110a; background: #fafaf8;
 }
-.mvp-control-row .mvp-practice-board button { font: 600 11px/1 Inter,sans-serif; padding: 0 6px; flex: 1 0 auto; color: #333; }
+.mvp-control-row .mvp-practice-board button { min-width: 0; font: 600 11px/1 Inter,sans-serif; padding: 0 4px; flex: 1 1 0; color: #333; white-space: nowrap; }
 .mvp-control-row .mvp-practice-board button[aria-pressed="true"] { color: #fff; }
 .play12-onboarding-listen .mvp-control-row .playback-zone {
   position: absolute; top: auto !important; right: auto !important; bottom: 0;
   left: var(--mvp-note-field-center-x, 50%) !important;
-  width: var(--compact-playback-width) !important; height: var(--mvp-playback-board-height) !important;
-  transform: translateX(-50%); border-radius: 24px; border: 1px solid #d1d3ce;
-  background: #fafaf8; box-shadow: 0 2px 7px #1111110a;
+  width: var(--mvp-unified-board-width, var(--compact-playback-width)) !important; height: var(--mvp-playback-board-height) !important;
+  transform: translateX(-50%); border: 1px solid rgba(17,17,17,.22); border-top: 0;
+  border-radius: 0 0 12px 12px; background: rgba(255,255,255,.78); box-shadow: 0 10px 24px rgba(17,24,39,.10);
   display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
   align-items: center; gap: 5px; padding: 4px 8px;
 }
@@ -1164,7 +1164,7 @@
 
 /* Round / Loop / Pre-count is the right-hand member of the instrument control row. */
 .mvp-round-loop-board {
-  position:absolute;left:calc(var(--mvp-note-field-center-x,50%) + var(--compact-playback-width)/2 + var(--compact-gap));bottom:0;
+  position:absolute;left:calc(var(--mvp-note-field-center-x,50%) + var(--mvp-unified-board-width,var(--compact-playback-width))/2 + var(--compact-gap));bottom:0;
   width:430px;height:var(--mvp-playback-board-height);box-sizing:border-box;padding:3px 10px;
   border:1px solid #d1d3ce;border-radius:24px;background:#fafaf8;box-shadow:0 2px 7px #1111110a;
   display:flex;flex-direction:column;gap:1px;
@@ -1188,7 +1188,7 @@
 @media(max-width:950px){.mvp-round-loop-board button,.round-controls{font-size:8px;}.mvp-round-loop-board button{padding:0 3px;}.round-stepper button,.round-navigation button{width:14px;padding:0;}.round-stepper output,.round-navigation output{min-width:10px;}.round-controls,.round-navigation,.round-range-controls,.round-stepper{gap:1px;}}
 
 /* Symmetric instrument board: BPM top to Practice bottom. */
-.mvp-round-loop-board{height:calc(var(--mvp-playback-board-height)*2 + 12px);padding:7px 10px;gap:7px;--mini-round-width:62px;}
+.mvp-round-loop-board{width:max(285px,calc(var(--compact-zero-size) + var(--compact-gap) + var(--compact-practice-width)));height:calc(var(--mvp-playback-board-height)*2 + 12px);padding:7px 6px;gap:5px;--mini-round-width:52px;}
 .round-timeline{display:block;flex:1;height:auto;min-height:32px;overflow:hidden;margin:0 3px;border-radius:5px;}
 .round-strip{position:absolute;left:0;top:2px;bottom:2px;display:flex;width:max-content;will-change:transform;}
 .round-mini-block{flex:0 0 var(--mini-round-width);width:var(--mini-round-width);height:100%;font:600 13px/1 Inter,sans-serif;display:flex;align-items:center;justify-content:center;border:1px solid #FAFAF8;}
@@ -1219,6 +1219,7 @@
 @keyframes mvp-green-beat{0%,35%{background:#CEF932;box-shadow:0 0 5px #CEF93266;}100%{background:#c4cac5;box-shadow:none;}}
 @media(max-width:1100px){.mvp-round-loop-board{padding:7px 6px;--mini-round-width:54px;}.mvp-round-loop-board button,.round-controls{font-size:10px;}.round-stepper button,.round-navigation button{width:14px;}.round-controls,.round-navigation,.round-range-controls,.round-stepper{gap:1px;}.mvp-round-loop-board button{padding:0 3px;}.round-stepper button,.round-navigation button{padding:0;}}
 @media(max-width:950px){.mvp-round-loop-board button,.round-controls{font-size:9px;}.round-stepper output,.round-navigation output{min-width:10px;}.round-stepper button,.round-navigation button{width:12px;}}
+@media(max-width:950px){.mvp-round-loop-board{left:auto;right:6px;width:268px;min-width:0;}}
 @media(prefers-reduced-motion:reduce){.round-mini-block.is-round-success-pulse,.round-success-dot.is-round-success-pulse,.round-success-track.is-chain-complete,.mvp-ok12-toast{animation:none}.round-mini-block,.round-mini-block::after,.round-success-dot{transition:none}}
 
 @media (max-width:850px){.mvp-round-loop-board{bottom:calc(100% + 12px);}}
@@ -1232,6 +1233,9 @@
 .mvp-round-loop-board button,.round-controls,.round-controls output,.mvp-control-row .mvp-practice-board button,.play12-onboarding-listen .mvp-control-row .playback-zone-transport button{font-size:var(--mvp-control-font-size) !important;font-weight:600;}
 @media(max-width:1100px){.mvp-control-row{--mvp-control-font-size:9px;}}
 @media(max-width:950px){.mvp-control-row{--mvp-control-font-size:8px;}}
+html[lang="ru"] .mvp-control-row .mvp-practice-board button{font-size:10px !important;padding-inline:2px;}
+@media(max-width:1100px){html[lang="ru"] .mvp-control-row .mvp-practice-board button{font-size:8px !important;}}
+@media(max-width:950px){html[lang="ru"] .mvp-control-row .mvp-practice-board button{font-size:7.5px !important;}}
 .play12-piano-view.is-calibration-hidden { visibility: hidden; pointer-events: none; }
 
 /* Song identity stays with the tutorial column; Skip shares the control-row right edge. */
@@ -1239,7 +1243,7 @@
   --mvp-upper-board-top: calc(var(--play12-site-header-height) + 28px);
   --mvp-layout-playback-width: 350px;
   --mvp-layout-control-gap: 10px;
-  --mvp-layout-round-width: 430px;
+  --mvp-layout-round-width: 372px;
 }
 @media (min-width: 851px) {
   .mvp-onboarding-progress { align-self: stretch; padding-top: 0; }
@@ -1259,14 +1263,15 @@
   }
 }
 @media (min-width: 951px) and (max-width: 1100px) {
-  .play12-onboarding { --mvp-layout-playback-width: 290px; --mvp-layout-control-gap: 8px; --mvp-layout-round-width: 350px; }
+  .play12-onboarding { --mvp-layout-playback-width: 290px; --mvp-layout-control-gap: 8px; --mvp-layout-round-width: 285px; }
 }
 @media (min-width: 851px) and (max-width: 950px) {
   .play12-onboarding {
     --mvp-layout-playback-width: 260px;
     --mvp-layout-control-gap: 6px;
-    --mvp-layout-round-width: max(285px, calc(50vw - var(--mvp-layout-playback-width) / 2 - var(--mvp-layout-control-gap) - 18px));
+    --mvp-layout-round-width: 285px;
   }
 }
+@media (max-width:900px){.mvp-round-loop-board{bottom:calc(100% + 12px);}}
 #cards-ready { min-width: 112px; min-height: 38px; margin-top: 14px; padding: 9px 18px; font-size: 14px; pointer-events: auto; }
 .piano-visible-card-region { pointer-events: none; }

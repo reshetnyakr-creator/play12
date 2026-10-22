@@ -233,7 +233,11 @@
       const rect = field?.getBoundingClientRect?.();
       if (!rect || rect.width <= 0 || rect.height <= 0) return;
       const viewportHeight = Number(global.innerHeight) || document.documentElement.clientHeight || 800;
-      const x = rect.left + rect.width / 2;
+      const scoreSvg = field.querySelector?.('svg.play12-score');
+      const scoreRect = scoreSvg?.getBoundingClientRect?.();
+      const markerRailWidth = Number(scoreSvg?.dataset.roundMarkerGap || 0) + Number(scoreSvg?.dataset.roundMarkerDiameter || 0);
+      const noteFieldWidth = Number(scoreSvg?.dataset.noteFieldWidth || 0);
+      const x = scoreRect && noteFieldWidth > 0 ? scoreRect.left + markerRailWidth + noteFieldWidth / 2 : rect.left + rect.width / 2;
       const y = Math.max(130, Math.min(viewportHeight - 130, rect.top + rect.height * .36));
       root.style.setProperty('--mvp-note-field-center-x', `${x}px`);
       root.style.setProperty('--mvp-note-field-upper-center-y', `${y}px`);

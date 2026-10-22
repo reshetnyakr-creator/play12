@@ -13,7 +13,7 @@ test('Russian route is a lightweight wrapper around shared playback',()=>{
 
 test('approved Russian product terms live in the shared dictionary',()=>{
   const source=readFileSync(path.join(root,'renderer/play12-i18n.js'),'utf8');
-  for(const term of ['Play','Раунд','Повтор','Отсчёт','Режим тренировки','Клавиша «Функция»','OK12']) assert(source.includes(term));
+  for(const term of ['Play','Раунд','Повтор','Отсчёт','Практика','Левая рука','Правая рука','Один навык','Клавиша «Функция»','OK12']) assert(source.includes(term));
   for(const count of ['49 клавиш','61 клавишу','88 клавиш']) {
     const number=Number(count.split(' ')[0]);
     const one=number%10===1&&number%100!==11?'клавишу':[2,3,4].includes(number%10)&&![12,13,14].includes(number%100)?'клавиши':'клавиш';

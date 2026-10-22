@@ -410,10 +410,12 @@
       const shellPadding = 7;
       const progressRailWidth = this.stage.classList?.contains?.('has-round-progress') ? 32 : 0;
       if (compactPlayer) {
-        this.stage.style.width = `${scoreWidth + progressRailWidth + shellPadding * 2}px`;
+        const unifiedBoardWidth = scoreWidth + progressRailWidth + shellPadding * 2;
+        this.stage.style.width = `${unifiedBoardWidth}px`;
         this.stage.dataset.playerShellPadding = String(shellPadding);
         this.stage.style.setProperty('--mvp-score-width',`${scoreWidth}px`);
         this.stage.style.setProperty('--mvp-progress-rail-width',`${progressRailWidth}px`);
+        document.documentElement?.style.setProperty('--mvp-unified-board-width', `${unifiedBoardWidth}px`);
         this.playline.style.setProperty("--mvp-note-field-width", `${noteFieldWidth}px`);
       }
       const stageRect = this.stage.getBoundingClientRect();
@@ -427,6 +429,7 @@
         const center = `${(scoreRect.left + scoreRect.right + progressRailWidth) / 2}px`;
         this.playline.style.setProperty("--mvp-note-field-center-x", center);
         document.documentElement?.style.setProperty("--mvp-note-field-center-x", center);
+        this.stage.closest('.play12-onboarding')?.style?.setProperty('--mvp-note-field-center-x', center);
       }
       const executionHeight = Math.max(0, this.executionY());
       this.stage.style.setProperty('--mvp-score-viewport-height',`${executionHeight}px`);

@@ -150,7 +150,8 @@
     const markerGap = cfg.roundMarkerGap * cfg.zoom;
     const noteFieldWidth = totalWidth + edgePadding * 2 + leftRibbonSpace + rightRibbonSpace;
     const renderedWidth = noteFieldWidth + markerGap + markerDiameter;
-    svg.setAttribute("viewBox", `${-edgePadding - leftRibbonSpace} ${-edgePadding} ${renderedWidth} ${steps * height + edgePadding * 2}`);
+    const noteFieldLeft = -edgePadding - leftRibbonSpace;
+    svg.setAttribute("viewBox", `${noteFieldLeft - markerGap - markerDiameter} ${-edgePadding} ${renderedWidth} ${steps * height + edgePadding * 2}`);
     // Expanding the viewBox for ribbons must not scale down the established grid geometry.
     svg.style.width = `${renderedWidth}px`;
     svg.setAttribute("role", "img");
@@ -203,7 +204,7 @@
       const time = measure.attributes.time;
       const length = time.beats * 4 / time.beat_type;
       const centerY = (steps - (roundStart + length / 2 - startQ) / stepQ) * height;
-      const centerX = totalWidth + rightRibbonSpace + markerGap + markerDiameter / 2;
+      const centerX = noteFieldLeft - markerGap - markerDiameter / 2;
       const marker = global.document.createElementNS(svgNS, "g");
       marker.setAttribute("class", "play12-round-marker");
       marker.setAttribute("data-round-marker", String(index + 1));
