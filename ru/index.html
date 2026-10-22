@@ -32,6 +32,11 @@
       var url = new URL(link.href, window.location.href);
       var path = url.pathname;
 
+      var ctaGoal = link.getAttribute("data-metrika-goal");
+      if (ctaGoal) {
+        window.play12ReachGoal(ctaGoal);
+      }
+
       if (path.endsWith("/assets/pdf/Play12_Manual_v_01.pdf")) {
         window.play12ReachGoal("download_manual_en");
       } else if (path.endsWith("/assets/pdf/Play12_Manual_RU.pdf")) {
@@ -191,10 +196,13 @@ h1 {
 }
 
 .buttons {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
-  flex-wrap: wrap;
 }
+
+.buttons .button { min-width: 0; padding-inline: 8px; }
+.buttons .button-primary { grid-column: 1 / -1; }
 
 .button {
   min-width: 220px;
@@ -216,6 +224,11 @@ h1 {
   background: #E96E40;
   border-color: #E96E40;
   color: #ffffff;
+}
+
+.button-primary {
+  background: #CEF932;
+  border-color: #CEF932;
 }
 
 .download-trigger {
@@ -291,6 +304,8 @@ h1 {
     display: none !important;
 }
 @media (max-width: 1100px) {
+  .buttons { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .buttons .button-primary { grid-column: auto; }
   header {
     padding: 0 28px;
   }
@@ -322,6 +337,7 @@ h1 {
 }
 
 @media (max-width: 920px) {
+  .buttons { grid-template-columns: 1fr; }
   header {
     height: auto;
     padding: 22px 22px;
@@ -489,6 +505,7 @@ h1 {
     <div class="tagline">Музыка. Просто. Играй.</div>
     <p class="description">Play12 — простой способ научиться играть любимые мелодии на пианино.<br><br>Play12 использует навыки, которыми ты уже пользуешься каждый день, чтобы сделать музыку понятнее и быстрее путь к игре.</p>
     <div class="buttons">
+      <a class="button button-primary" href="/MVP/ru/" data-metrika-goal="try_play12_ru">Попробовать Play12</a>
       <a class="button" href="manual.html">Читать инструкцию</a>
       <button class="button download-trigger" type="button" id="open-language-modal">Скачать PDF</button>
     </div>

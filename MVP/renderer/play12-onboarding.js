@@ -491,10 +491,10 @@
       listenContinue.hidden = true;
       const stage = state.listenGuideStage || (state.pauseLearned ? 'continue' : state.playLearned ? 'pause' : 'initial');
       if (state.listenFragmentCompleted) { showCoach(''); listenContinue.hidden = false; }
-      else if (stage === 'initial') showActionCoach('Listen to how the melody sounds<br>Press Play or P', 'play');
+      else if (stage === 'initial') showActionCoach(`${t('Listen to how the melody sounds')}<br>${t('Press Play or P')}`, 'play');
       else if (listenPlaybackState === 'pause-queued') showCoach('');
-      else if (stage === 'pause' && (listenPosition >= 4.8 || state.listenGuideStage === 'pause')) showActionCoach('Try pausing it', 'pause');
-      else if (stage === 'continue') showActionCoach('Continue', 'play');
+      else if (stage === 'pause' && (listenPosition >= 4.8 || state.listenGuideStage === 'pause')) showActionCoach(t('Try pausing it'), 'pause');
+      else if (stage === 'continue') showActionCoach(t('Continue'), 'play');
       else showCoach('');
       exposeState();
     };
@@ -775,7 +775,7 @@
       if (state.zeroSetupStage === 'verify-yellow') {
         state.zeroSetupStage = 'verify-green'; saveState(storage, state); showCardVerificationPrompt();
       } else {
-        showCoach('Cards are ready ✓');
+        showCoach(t('Cards are ready ✓'));
         global.setTimeout(finishCardsSetup, 650);
       }
       return true;
@@ -980,10 +980,10 @@
       practiceBoard.hidden = false;
       practiceModeButton.classList.toggle('is-guided', stage === 'enable');
       leftHandButton.classList.toggle('is-guided', stage === 'hand');
-      if (stage === 'enable') showActionCoach('Now try it yourself<br>Turn on Practice Mode', 'practice-board-mode');
-      else if (stage === 'hand') showActionCoach('Let’s start with your right hand<br>Turn off Left Hand', 'practice-left-hand');
-      else if (stage === 'explain') showCoach('Watch the Note Field and play the keys it shows you<br><small>The music will wait until you press the right key</small>', 'explain', false, advancePracticeInstruction);
-      else if (stage === 'ready') showActionCoach("Press Play when you're ready", 'play');
+      if (stage === 'enable') showActionCoach(`${t('Now try it yourself')}<br>${t('Turn on Practice Mode')}`, 'practice-board-mode');
+      else if (stage === 'hand') showActionCoach(`${t('Let’s start with your right hand')}<br>${t('Turn off Left Hand')}`, 'practice-left-hand');
+      else if (stage === 'explain') showCoach(`${t('Watch the Note Field and play the keys it shows you')}<br><small>${t('The music will wait until you press the right key')}</small>`, 'explain', false, advancePracticeInstruction);
+      else if (stage === 'ready') showActionCoach(t("Press Play when you're ready"), 'play');
       else if (stage === 'metronome-on') showActionCoach(`${t('Let’s add a steady beat')}<br>${t('Turn on the metronome')}`, 'metronome-toggle');
       else if (stage === 'metronome-tempo') showActionCoach(`${t('Slow down or speed up the piece')}<br><small>${t('Type a BPM, or use − / + to change it by 10')}</small>`, 'metronome-tempo-controls');
       else if (stage === 'metronome-play') showActionCoach(`${t('Play it again with a steady beat')}<br>${t('Press Play')}`, 'play');

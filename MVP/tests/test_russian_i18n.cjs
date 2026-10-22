@@ -27,3 +27,19 @@ test('English remains the source copy and locale does not use onboarding storage
   assert(!source.includes('localStorage'));
   assert(source.includes("locale === 'ru' ? (ru[key] || key) : key"));
 });
+
+test('transient pause coach uses the shared dictionary in both locales',()=>{
+  const dictionary=readFileSync(path.join(root,'renderer/play12-i18n.js'),'utf8');
+  const onboarding=readFileSync(path.join(root,'renderer/play12-onboarding.js'),'utf8');
+  assert(dictionary.includes("'Try pausing it':'Попробуй нажать «Пауза»'"));
+  assert(onboarding.includes("showActionCoach(t('Try pausing it'), 'pause')"));
+  assert(!onboarding.includes("showActionCoach('Try pausing it', 'pause')"));
+});
+
+test('homepages expose localized primary MVP CTAs and analytics goals',()=>{
+  const en=readFileSync(path.resolve(root,'../index.html'),'utf8');
+  const ru=readFileSync(path.resolve(root,'../ru/index.html'),'utf8');
+  assert(en.includes('href="/MVP/" data-metrika-goal="try_play12_en">Try Play12</a>'));
+  assert(ru.includes('href="/MVP/ru/" data-metrika-goal="try_play12_ru">Попробовать Play12</a>'));
+  for(const page of [en,ru]) assert(page.includes('window.play12ReachGoal(ctaGoal)'));
+});

@@ -38,6 +38,7 @@
     'Listen':'Послушай','Choose your 0':'Выбери свой 0','Choose Your 0':'Выбери свой 0','Play':'Play',
     'Metronome':'Метроном','Round & Loop':'Раунд и повтор','You can do it!':'Ты сможешь!',
     'Listen to how the melody sounds':'Послушай, как звучит мелодия','Press Play or P':'Нажми Play или P',
+    'Try pausing it':'Попробуй нажать «Пауза»',
     'Set up your Play12 cards':'Разложи карточки Play12','Place the cards on your piano to match the layout you see here':'Размести карточки на пианино так же, как показано здесь',
     'How to place the Play12 cards':'Как разместить карточки Play12','Check that the cards are placed correctly and try again.':'Проверь, правильно ли расположены карточки, и попробуй ещё раз',
     'Press the key under the yellow 1 card':'Нажми клавишу под жёлтой карточкой 1','Press the key under the green 2 card':'Нажми клавишу под зелёной карточкой 2',
