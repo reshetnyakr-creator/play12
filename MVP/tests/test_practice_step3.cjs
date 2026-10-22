@@ -165,7 +165,7 @@ test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actua
   assert.equal(h.node('#practice-board').hidden,true);assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Set up your Play12 cards/);
   h.node('#onboarding-skip').handlers.click();
   assert.equal(h.controller.getState().onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.node('#practice-board').hidden,false);
-  assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Turn on Practice Mode/);
+  assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Turn on Practice/);
   h.node('#practice-board-mode').handlers.click();assert.match(h.node('#onboarding-listen-prompt').innerHTML,/Turn off Left Hand/);
   h.node('#practice-left-hand').handlers.click();assert.match(h.node('#onboarding-listen-prompt').innerHTML,/music will wait/);assert.equal(h.c.clock.running,false);
   assert(h.node('progress1').classList.contains('is-complete'));assert(h.node('progress2').classList.contains('is-complete'));assert(h.node('progress3').classList.contains('is-active'));assert(!h.node('progress4').classList.contains('is-active'));

@@ -984,7 +984,7 @@
       practiceBoard.hidden = false;
       practiceModeButton.classList.toggle('is-guided', stage === 'enable');
       leftHandButton.classList.toggle('is-guided', stage === 'hand');
-      if (stage === 'enable') showActionCoach(`${t('Now try it yourself')}<br>${t('Turn on Practice Mode')}`, 'practice-board-mode');
+      if (stage === 'enable') showActionCoach(`${t('Now try it yourself')}<br>${t('Turn on Practice')}`, 'practice-board-mode');
       else if (stage === 'hand') showActionCoach(`${t('Let’s start with your right hand')}<br>${t('Turn off Left Hand')}`, 'practice-left-hand');
       else if (stage === 'explain') showCoach(`${t('Watch the Note Field and play the keys it shows you')}<br><small>${t('The music will wait until you press the right key')}</small>`, 'explain', false, advancePracticeInstruction);
       else if (stage === 'ready') showActionCoach(t("Press Play when you're ready"), 'play');
