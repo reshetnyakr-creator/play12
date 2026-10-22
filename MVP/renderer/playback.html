@@ -26,7 +26,7 @@
         <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
         <a href="https://x.com/play12_official">X</a>
         <span class="mvp-language-switch" aria-label="Language selection">
-          <span class="mvp-active-language" aria-current="page">EN</span><span aria-hidden="true">/</span><a href="/ru/" lang="ru">RU</a>
+          <span class="mvp-active-language" aria-current="page">EN</span><span aria-hidden="true">/</span><a href="/MVP/ru/" lang="ru">RU</a>
         </span>
       </nav>
     </header>
@@ -221,7 +221,7 @@
       <div><h1>When the Saints Go Marching In — Play12 Manual</h1><p>Approved onboarding fragment · audio clock</p></div>
       <output id="position" class="playback-position" aria-live="off"></output>
     </header>
-    <section id="playback-stage" class="playback-stage" aria-label="Движущееся нотное поле Play12">
+    <section id="playback-stage" class="playback-stage" aria-label="Moving Play12 Note Field">
         <section id="round-loop-module" class="playback-service-panel round-loop-control">
           <div class="playback-service-panel-heading">Round / Loop Control</div>
           <div class="playback-service-panel-body">
@@ -328,6 +328,7 @@
       </section>
     </section>
   </main>
+  <script src="play12-i18n.js?v=russian-mvp-01"></script>
   <script src="play12-renderer.js?v=reference-zero-color-01"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
@@ -423,7 +424,7 @@
       const gridButton = document.getElementById('playback-grid');
       const syncGridButton = () => {
         gridButton.textContent = `×${reviewGrid.value.split('/')[1]}`;
-        gridButton.setAttribute('aria-label', `Display grid ${reviewGrid.value}; click to subdivide`);
+        gridButton.setAttribute('aria-label', window.Play12I18n.t('Display grid {grid}; click to subdivide', {grid:reviewGrid.value}));
       };
       syncGridButton();
       const svg = render(reviewGrid.value);
@@ -563,7 +564,7 @@
           selectedPitchClass: candidateZeroPitchClass, layoutZeroNote: candidateZeroMidi
         }}));
       });
-      if (playbackParams.get('midi') === '1') document.getElementById('midi-diagnostic').hidden = false;
+      if (playbackParams.get('midi') === '1' || window.Play12I18n.isRu()) document.getElementById('midi-diagnostic').hidden = false;
       const onboardingRoot = document.getElementById('play12-onboarding');
       const commandAvailability = action => {
         const playbackAllowed = onboardingRoot.hidden || onboardingRoot.dataset.playbackShortcutsEnabled === 'true';

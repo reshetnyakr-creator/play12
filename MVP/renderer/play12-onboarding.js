@@ -1,5 +1,8 @@
 (function (global) {
   'use strict';
+  const i18n = global.Play12I18n || { isRu:()=>false, t:key=>key, keysText:count=>`We detected ${count} keys.` };
+  const t = (key, params) => i18n.t(key, params);
+  const localizedHtml = (...parts) => parts.map(part => t(part)).join('');
 
   const STEPS = Object.freeze([
     'WELCOME', 'MIDI_CONNECT', 'LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF', 'AUDIO_CHECK', 'LEARN_PLAY',
@@ -237,9 +240,10 @@
       root.style.setProperty('--mvp-note-field-top-y', `${rect.top}px`);
     };
 
-    const reconnectCopy = () => isRu()
-      ? { message: 'Соединение с MIDI-клавиатурой потеряно.<br>Подключи инструмент снова или продолжи играть мышкой.', button: 'Подключить MIDI' }
-      : { message: 'MIDI keyboard connection lost.<br>Reconnect your instrument or continue playing with your mouse.', button: 'Reconnect MIDI' };
+    const reconnectCopy = () => ({
+      message: localizedHtml('MIDI keyboard connection lost.','<br>','Reconnect your instrument or continue playing with your mouse.'),
+      button: t('Reconnect MIDI')
+    });
 
     const setReconnectVisible = (visible, status = 'no-input') => {
       if (!reconnectCard) return;
@@ -304,13 +308,8 @@
       if (celebrationFired) return;
       celebrationFired = true;
       syncOverlayGeometry();
-      if (isRu()) {
-        completionTitle.textContent = 'Поздравляем!';
-        completionMessage.innerHTML = 'Ты прошёл обучение Play12.<br><br>Теперь ты можешь тренировать свои навыки и разучивать любимые мелодии самостоятельно.';
-      } else {
-        completionTitle.textContent = 'Congratulations!';
-        completionMessage.innerHTML = "You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.";
-      }
+      completionTitle.textContent = t('Congratulations!');
+      completionMessage.innerHTML = localizedHtml("You've completed the Play12 tutorial.",'<br><br>','Now you can practise your skills and learn your favourite melodies on your own.');
       completionCard.hidden = false;
       clearTimeout(completionCardTimer);
       completionCardTimer = global.setTimeout(() => { completionCard.hidden = true; }, 6500);
@@ -422,7 +421,7 @@
       root.classList.toggle('has-metronome-board', boards.metronome);
       const roundBoard = document.getElementById('round-loop-board');
       if (roundBoard) roundBoard.hidden = !boards.rounds;
-      if (songStep) songStep.textContent = `Step ${activeStep} of 6`;
+      if (songStep) songStep.textContent = t('Step {current} of 6', { current: activeStep });
       if (skipButton) skipButton.hidden = !['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(visibleStep);
     };
 
@@ -725,7 +724,7 @@
       if (!range) return;
       const count = root.querySelector('#onboarding-midi-key-count');
       const unusual = root.querySelector('#onboarding-midi-unusual-count');
-      const copy = `We detected ${range.keyCount} keys.`;
+      const copy = i18n.keysText(range.keyCount);
       if (count) count.textContent = copy;
       if (unusual) unusual.textContent = copy;
       runtime?.pianoView?.setRange?.(range.leftMidi, range.rightMidi);
@@ -741,12 +740,10 @@
     };
 
     const showCardsSetup = () => {
-      const ru = (document.documentElement.lang || 'en').startsWith('ru');
-      showCoach(ru
-        ? 'Разложите карточки Play12<br><small>Разместите карточки на пианино так же, как показано здесь</small><a href="/ru/manual.html#chapter2" target="_blank" rel="noopener">Как разместить карточки Play12</a>'
-        : 'Set up your Play12 cards<br><small>Place the cards on your piano to match the layout you see here</small><a href="/manual.html#chapter2" target="_blank" rel="noopener">How to place the Play12 cards</a>', 'cards', true);
+      const manual = isRu() ? '/ru/manual.html#chapter2' : '/manual.html#chapter2';
+      showCoach(`${t('Set up your Play12 cards')}<br><small>${t('Place the cards on your piano to match the layout you see here')}</small><a href="${manual}" target="_blank" rel="noopener">${t('How to place the Play12 cards')}</a>`, 'cards', true);
       keepCoachUntilAction();
-      cardsReady.textContent = ru ? 'Готово' : 'Ready';
+      cardsReady.textContent = t('Ready');
       cardsReady.hidden = false;
     };
     const visibleCardMidi = (symbol, colorIndex) => {
@@ -758,10 +755,10 @@
     const showCardVerificationPrompt = (retry = false) => {
       const yellow = state.zeroSetupStage === 'verify-yellow';
       const target = expectedCardMidi();
-      const retryCopy = retry ? 'Check that the cards are placed correctly and try again.<br>' : '';
+      const retryCopy = retry ? `${t('Check that the cards are placed correctly and try again.')}<br>` : '';
       showCoach(target == null
-        ? `The ${yellow ? 'yellow 1' : 'green 2'} card is not visible on this keyboard range.`
-        : `${retryCopy}Press the key under the <strong>${yellow ? 'yellow 1' : 'green 2'}</strong> card`, 'cards', true);
+        ? t(yellow ? 'The yellow 1 card is not visible on this keyboard range.' : 'The green 2 card is not visible on this keyboard range.')
+        : `${retryCopy}${t(yellow ? 'Press the key under the <strong>yellow 1</strong> card' : 'Press the key under the <strong>green 2</strong> card')}`, 'cards', true);
       keepCoachUntilAction();
     };
     const startCardVerification = () => {
@@ -918,7 +915,7 @@
       });
       runtime.playback.setPracticeTimingStrict?.(false);
       runtime.playback.pauseImmediate(0);
-      runtime.playback.roundBoard?.setTraining?.(true, 0, {label:isRu()?'Вся мелодия':'Whole song',rounds:runtime.playback.rounds.map((_,index)=>index+1),totalPasses:null});
+      runtime.playback.roundBoard?.setTraining?.(true, 0, {label:t('Whole song'),rounds:runtime.playback.rounds.map((_,index)=>index+1),totalPasses:null});
       syncProgress();
       saveState(storage, state);
       syncPracticeGuide();
@@ -965,7 +962,7 @@
     const syncPracticeGuide = () => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || visibleStep !== 'TRY_IT_YOURSELF' || !runtime || returnAfterZero) return;
       if (state.practiceGuideStage === 'round-practice' && !roundTraining.active) { prepareRoundPractice(); return; }
-      if (state.practiceGuideStage === 'final-practice' && !runtime.playback.roundBoard?.root?.classList.contains('is-training')) runtime.playback.roundBoard?.setTraining?.(true, 0, {label:isRu()?'Вся мелодия':'Whole song',rounds:runtime.playback.rounds.map((_,index)=>index+1),totalPasses:null});
+      if (state.practiceGuideStage === 'final-practice' && !runtime.playback.roundBoard?.root?.classList.contains('is-training')) runtime.playback.roundBoard?.setTraining?.(true, 0, {label:t('Whole song'),rounds:runtime.playback.rounds.map((_,index)=>index+1),totalPasses:null});
       const settings = runtime.playback.getPracticeSettings();
       practiceModeButton.setAttribute('aria-pressed', String(settings.practiceModeEnabled));
       leftHandButton.setAttribute('aria-pressed', String(settings.practiceLeftHandEnabled));
@@ -987,26 +984,24 @@
       else if (stage === 'hand') showActionCoach('Let’s start with your right hand<br>Turn off Left Hand', 'practice-left-hand');
       else if (stage === 'explain') showCoach('Watch the Note Field and play the keys it shows you<br><small>The music will wait until you press the right key</small>', 'explain', false, advancePracticeInstruction);
       else if (stage === 'ready') showActionCoach("Press Play when you're ready", 'play');
-      else if (stage === 'metronome-on') showActionCoach(isRu() ? 'Добавим ровный пульс<br>Включите метроном' : 'Let’s add a steady beat<br>Turn on the metronome', 'metronome-toggle');
-      else if (stage === 'metronome-tempo') showActionCoach(isRu() ? 'Можно играть медленнее или быстрее<br><small>Введите BPM или меняйте темп кнопками − / + с шагом 10</small>' : 'Slow down or speed up the piece<br><small>Type a BPM, or use − / + to change it by 10</small>', 'metronome-tempo-controls');
-      else if (stage === 'metronome-play') showActionCoach(isRu() ? 'Сыграйте ещё раз под ровный пульс<br>Нажмите Play' : 'Play it again with a steady beat<br>Press Play', 'play');
-      else if (stage === 'round-info') showCoach(isRu() ? 'Раунды делят произведение на участки.<br><small>Можно сразу перейти к тому участку, который хочешь потренировать.</small>' : 'Rounds divide the piece into sections.<br><small>You can jump directly to the section you want to practise.</small>', 'round-navigation', false, () => setRoundGuideStage('round-go4'));
-      else if (stage === 'round-go4') showActionCoach(isRu() ? 'Перейдите точно к Round 4' : 'Go to Round 4', 'round-navigation');
-      else if (stage === 'round-loop-info') showCoach(isRu() ? 'Loop повторяет выбранный тобой участок.' : 'Loop repeats the section you choose.', 'round-loop-toggle', false, () => setRoundGuideStage('round-loop'));
-      else if (stage === 'round-loop') showActionCoach(isRu() ? 'Включите Loop' : 'Turn on Loop', 'round-loop-toggle');
-      else if (stage === 'round-range') showActionCoach(isRu() ? 'Установи Loop с раунда 2 по раунд 4' : 'Set the Loop from Round 2 to Round 4', 'round-range');
-      else if (stage === 'round-precount-info') showCoach(isRu() ? 'Pre-count даёт тебе время подготовиться перед каждой попыткой.' : 'Pre-count gives you a moment to get ready before each attempt.', 'round-precount-toggle', false, () => setRoundGuideStage('round-precount'));
-      else if (stage === 'round-precount') showActionCoach(isRu() ? 'Включите Pre-count' : 'Turn on Pre-count', 'round-precount-toggle');
+      else if (stage === 'metronome-on') showActionCoach(`${t('Let’s add a steady beat')}<br>${t('Turn on the metronome')}`, 'metronome-toggle');
+      else if (stage === 'metronome-tempo') showActionCoach(`${t('Slow down or speed up the piece')}<br><small>${t('Type a BPM, or use − / + to change it by 10')}</small>`, 'metronome-tempo-controls');
+      else if (stage === 'metronome-play') showActionCoach(`${t('Play it again with a steady beat')}<br>${t('Press Play')}`, 'play');
+      else if (stage === 'round-info') showCoach(`${t('Rounds divide the piece into sections.')}<br><small>${t('You can jump directly to the section you want to practise.')}</small>`, 'round-navigation', false, () => setRoundGuideStage('round-go4'));
+      else if (stage === 'round-go4') showActionCoach(t('Go to Round 4'), 'round-navigation');
+      else if (stage === 'round-loop-info') showCoach(t('Loop repeats the section you choose.'), 'round-loop-toggle', false, () => setRoundGuideStage('round-loop'));
+      else if (stage === 'round-loop') showActionCoach(t('Turn on Loop'), 'round-loop-toggle');
+      else if (stage === 'round-range') showActionCoach(t('Set the Loop from Round 2 to Round 4'), 'round-range');
+      else if (stage === 'round-precount-info') showCoach(t('Pre-count gives you a moment to get ready before each attempt.'), 'round-precount-toggle', false, () => setRoundGuideStage('round-precount'));
+      else if (stage === 'round-precount') showActionCoach(t('Turn on Pre-count'), 'round-precount-toggle');
       else if (stage === 'round-practice') {
         if (roundTraining.started || roundTraining.feedbackPending) showCoach('');
-        else showActionCoach(isRu() ? 'Сыграй раунды 2–4 без ошибок<br><small>Нажми Play, когда будешь готов.</small>' : "Play Rounds 2–4 cleanly<br><small>Press Play when you're ready.</small>", 'play');
+        else showActionCoach(`${t('Play Rounds 2–4 cleanly')}<br><small>${t("Press Play when you're ready.")}</small>`, 'play');
       }
-      else if (stage === 'final-instruction') showCoach(isRu()
-        ? 'А теперь попробуй сыграть всю мелодию правой рукой от начала до конца.<br><br>Не спеши. Если собьёшься — попробуй ещё раз.'
-        : 'Now try to play the whole melody with your right hand from beginning to end.<br><br>Take your time. If you lose your place, try again.', 'explain', false, beginFinalPractice);
+      else if (stage === 'final-instruction') showCoach(`${t('Now try to play the whole melody with your right hand from beginning to end.')}<br><br>${t('Take your time. If you lose your place, try again.')}`, 'explain', false, beginFinalPractice);
       else showCoach('');
     };
-    const isRu = () => document.documentElement.lang === 'ru' || new URLSearchParams(location.search).get('lang') === 'ru';
+    const isRu = () => i18n.isRu();
     global.addEventListener('play12:metronome-change', event => {
       if (state.onboardingStep === 'TRY_IT_YOURSELF' && state.practiceGuideStage === 'metronome-on' && event.detail.enabled) advancePracticeInstruction();
     });
@@ -1250,7 +1245,7 @@
     document.body.classList.remove('play12-onboarding-boot');
     document.body.classList.add('play12-onboarding-active');
     continueButton.hidden = !returning;
-    if (returning) { startButton.textContent = 'Start fresh'; continueButton.textContent = 'Continue with saved setup'; }
+    if (returning) { startButton.textContent = t('Start fresh'); continueButton.textContent = t('Continue with saved setup'); }
     startButton.addEventListener('click', startNew);
     continueButton.addEventListener('click', continueSession);
     root.querySelector('#onboarding-midi-ready').addEventListener('click', beginMidiTest);

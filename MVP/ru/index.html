@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Play12 MVP</title></head>
+<body>
+  <script>
+    fetch('../renderer/playback.html').then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.text();
+    }).then(source => {
+      source = source.replace('<html lang="en">', '<html lang="ru">')
+        .replace('<head>', '<head><base href="/MVP/renderer/"><script>window.__PLAY12_LOCALE__="ru";<\/script>');
+      document.open(); document.write(source); document.close();
+    }).catch(() => { document.body.textContent = 'Не удалось загрузить Play12. Обнови страницу.'; });
+  </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 /* MIDI input diagnostic. It never opens or sends to MIDI outputs. */
 (function (global) {
   "use strict";
+  const t = key => global.Play12I18n?.t?.(key) ?? key;
 
   const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   const CALIBRATION_KEY = "play12.midi-calibration.v1";
@@ -150,7 +151,7 @@
       for (const [offset, action, label] of COMMANDS) {
         const midi = firstC + offset;
         if (midi > range.rightMidi || midi < 21 || midi > 108 || (range.verified && !this.pianoView.keys.has(midi))) return null;
-        map.set(midi, { action, label });
+        map.set(midi, { action, label: t(label.replace('Bpm','BPM')) });
       }
       return map;
     }

@@ -1,6 +1,7 @@
 /* Approved Piano View: one immutable SVG strip per 12-note color cycle. */
 (function (global) {
   "use strict";
+  const t=key=>global.Play12I18n?.t?.(key)??key;
   const NS = "http://www.w3.org/2000/svg", XLINK = "http://www.w3.org/1999/xlink";
   const SYMBOLS = "0123456789XY";
   const PITCH_CLASSES = { C:0,"C#":1,D:2,"D#":3,E:4,F:5,"F#":6,G:7,"G#":8,A:9,"A#":10,B:11 };
@@ -55,7 +56,7 @@
       this.zeroMidi = zeroMidi;
       this.keys.clear();
       const outer = element("svg", { viewBox:`0 0 ${PIANO_WIDTH} ${VIEW_HEIGHT}`,
-        preserveAspectRatio:"xMidYMid meet", role:"img", "aria-label":`Фортепианная клавиатура Play12, MIDI ${zeroMidi} = 0` });
+        preserveAspectRatio:"xMidYMid meet", role:"img", "aria-label":global.Play12I18n?.isRu?.()?`Фортепианная клавиатура Play12, MIDI ${zeroMidi} = 0`:`Play12 piano keyboard, MIDI ${zeroMidi} = 0` });
       outer.classList.add("play12-piano-svg","play12-piano-composite");
       const defs=element("defs");
       const cardBounds=element("clipPath",{id:"play12-card-keyboard-bounds"});
@@ -166,7 +167,7 @@
 
     showFunctionOverlay(commandLabels, functionMidi) {
       if(!this.commandOverlay||!this.keyAnchors)return false;
-      const entries=[...commandLabels.entries(),[functionMidi,"Function"]];
+      const entries=[...commandLabels.entries(),[functionMidi,t("Function")]];
       if(entries.some(([midi])=>!this.keys.has(midi)||!this.keyAnchors.has(midi))){
         this.hideFunctionOverlay();
         return false;

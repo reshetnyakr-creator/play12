@@ -777,9 +777,10 @@ test('Completed tutorial persists without replaying celebration on Continue',()=
 
 test('Approved reconnect, final instruction and completion copy are present in RU and EN',()=>{
   const js=readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8');
+  const i18n=readFileSync(path.join(renderer,'play12-i18n.js'),'utf8');
   const html=readFileSync(path.join(renderer,'playback.html'),'utf8');
   const css=readFileSync(path.join(renderer,'play12-onboarding.css'),'utf8');
-  for(const text of ['Соединение с MIDI-клавиатурой потеряно.','Подключи инструмент снова или продолжи играть мышкой.','Подключить MIDI','А теперь попробуй сыграть всю мелодию правой рукой от начала до конца.','Не спеши. Если собьёшься — попробуй ещё раз.','Поздравляем!','Ты прошёл обучение Play12.','Теперь ты можешь тренировать свои навыки и разучивать любимые мелодии самостоятельно.']) assert(js.includes(text));
+  for(const text of ['Соединение с MIDI-клавиатурой потеряно','Подключи инструмент снова или продолжи играть мышью','Подключить MIDI','А теперь попробуй сыграть всю мелодию правой рукой от начала до конца','Не спеши. Если собьёшься — попробуй ещё раз','Поздравляем!','Ты прошёл обучение Play12','Теперь ты можешь тренировать свои навыки и самостоятельно разучивать любимые мелодии']) assert(i18n.includes(text));
   assert(html.includes('MIDI keyboard connection lost.'));assert(html.includes('Reconnect your instrument or continue playing with your mouse.'));
   assert(!html.includes('Music can be simple.'));assert(!html.includes('Pitch class ${candidateZeroPitchClass}'));assert(!html.includes('layout MIDI'));
   assert(js.includes("You've completed the Play12 tutorial."));assert(js.includes('Now you can practise your skills and learn your favourite melodies on your own.'));

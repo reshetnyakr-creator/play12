@@ -1,6 +1,7 @@
 /* Compact round controls reuse the production player's position and loop inputs. */
 (function(global){
   'use strict';
+  const t=(key,params)=>global.Play12I18n?.t?.(key,params)??key;
   const clamp=(value,lo,hi)=>Math.max(lo,Math.min(hi,value));
   const normalizeRange=(total,from,to)=>{
     if(total<2)return {from:0,to:0};
@@ -42,7 +43,7 @@
       for(const [hand,edge] of [['L','top'],['R','bottom']]){const color=ribbonFor(repetitions,hand,index+1);if(color){const ribbon=document.createElement('i');ribbon.className='round-mini-ribbon is-'+edge;ribbon.style.backgroundColor=color;ribbon.dataset.hand=hand;block.appendChild(ribbon);}}
       strip.insertBefore(block,frame);
     });
-    const pc=document.createElement('span');pc.className='round-mini-block round-mini-pc';pc.setAttribute('aria-label','Pre-count');
+    const pc=document.createElement('span');pc.className='round-mini-block round-mini-pc';pc.setAttribute('aria-label',t('Pre-count'));
     const sticks=document.createElement('i');sticks.className='precount-sticks';sticks.setAttribute('aria-hidden','true');pc.appendChild(sticks);
     const syncGeometry=()=>{
       const control=document.getElementById('metronome-toggle');
@@ -123,7 +124,7 @@
     };
     const renderTrack=()=>{
       if(!successTrack)return;successTrack.replaceChildren();
-      for(const number of taskRounds){const dot=document.createElement('span');dot.className='round-success-dot';dot.dataset.round=String(number);dot.setAttribute('aria-label',`Round ${number}`);successTrack.appendChild(dot);}
+      for(const number of taskRounds){const dot=document.createElement('span');dot.className='round-success-dot';dot.dataset.round=String(number);dot.setAttribute('aria-label',t('Round {number}',{number}));successTrack.appendChild(dot);}
       for(const number of successfulRounds)applySuccess(number,true,false);
     };
     const clearTrainingSuccess=()=>{successfulRounds.clear();for(const number of taskRounds)applySuccess(number,false,false);for(const block of blocks())block.classList.remove('is-chain-complete');successTrack?.classList.remove('is-chain-complete');};

@@ -154,7 +154,8 @@
     // Expanding the viewBox for ribbons must not scale down the established grid geometry.
     svg.style.width = `${renderedWidth}px`;
     svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", `${document.score.title}: первые ${measureCount} такта в нотации Play12`);
+    const scoreDescription=global.Play12I18n?.t?.('First {count} measures in Play12 notation',{count:measureCount}) || `First ${measureCount} measures in Play12 notation`;
+    svg.setAttribute("aria-label", `${document.score.title}: ${scoreDescription}`);
     svg.classList.add("play12-score");
     svg.dataset.totalQuarters = String(endQ);
     svg.dataset.stepQuarters = String(stepQ);
