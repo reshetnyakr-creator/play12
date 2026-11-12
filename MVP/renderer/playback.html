@@ -347,7 +347,9 @@
     const playbackParams = new URLSearchParams(location.search);
     const saintsReviewMode = playbackParams.get('review') === 'when-the-saints';
     const saintsManualReviewMode = playbackParams.get('review') === 'when-the-saints-manual';
-    const savedCompositionId = playbackParams.get('composition');
+    const previewId = playbackParams.get('preview');
+    const savedCompositionId = playbackParams.get('composition') || (previewId ? 'preview:'+previewId : null);
+    const loadEditorDocument = () => { if (!previewId) return Play12Editor.Store.get(savedCompositionId); const raw=sessionStorage.getItem('play12.preview:'+previewId); if(!raw) return Promise.reject(new Error('Предпросмотр недоступен. Откройте прослушивание из редактора повторно.')); return Promise.resolve(JSON.parse(raw)); };
     const compositionReviewMode = saintsReviewMode || saintsManualReviewMode || !!savedCompositionId;
     if (compositionReviewMode) {
       document.body.classList.remove('play12-onboarding-boot', 'play12-onboarding-active');
@@ -361,7 +363,7 @@
       continueButton: document.getElementById('onboarding-continue')
     });
     Promise.all([
-      savedCompositionId ? Play12Editor.Store.get(savedCompositionId).then(doc => { if (!doc) throw new Error('Сохранённое произведение не найдено в этом браузере'); window.play12EditorDocument = doc; document.title = doc.title + ' — Play12'; return Play12Editor.effective(doc); }) : fetch(saintsReviewMode ? '../examples/when_the_saints_play12_beginner.play12.json' : '../examples/when_the_saints_manual.play12.json').then(r => r.json()),
+      savedCompositionId ? loadEditorDocument().then(doc => { if (!doc) throw new Error('Сохранённое произведение не найдено в этом браузере'); window.play12EditorDocument = doc; document.title = doc.title + ' — Play12'; return Play12Editor.effective(doc); }) : fetch(saintsReviewMode ? '../examples/when_the_saints_play12_beginner.play12.json' : '../examples/when_the_saints_manual.play12.json').then(r => r.json()),
       Play12CardThemes.loadReadyAssets(),
       saintsReviewMode ? fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json()) : Promise.resolve(null)
     ]).then(([baseScore, cardTheme, seedReviewOverlay]) => {
