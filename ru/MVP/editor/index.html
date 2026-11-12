@@ -389,18 +389,18 @@ h1 {
 
 .import-area{min-height:calc(100vh - 96px);display:flex;align-items:center;justify-content:center;padding:40px 24px}.import-card{width:100%;max-width:650px;text-align:center}.import-button{display:inline-block;padding:22px 32px;cursor:pointer;transition:background .25s}.import-button:hover{background:#E96E40}.import-button:focus-visible{outline:3px solid #111;outline-offset:4px}.import-button:disabled{opacity:.45;cursor:wait}#status{margin:24px 0;line-height:1.6}h2{font-size:24px;margin:20px 0}select{padding:10px;margin:6px}fieldset{padding:20px;margin:20px 0;text-align:left}fieldset label{display:block;margin:12px 0}#diagnostics{white-space:pre-wrap;text-align:left;font-size:12px}#warnings{color:#68431c;margin:16px 0;line-height:1.6}[hidden]{display:none!important}</style></head><body><header>
   <a href="/ru/" class="logo-link" aria-label="Главная страница Play12">
-    <img src="../P12 logo.png" alt="Play12 logo" class="logo-img">
+    <img src="/P12%20logo.png" alt="Play12 logo" class="logo-img">
   </a>
 
   <nav>
-    <a href="manual.html">Инструкция</a>
-    <a href="manifesto.html">Манифест</a>
+    <a href="/ru/manual.html">Инструкция</a>
+    <a href="/ru/manifesto.html">Манифест</a>
     <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
     <a href="https://www.instagram.com/play12_official/">Instagram</a>
     <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
     <a href="https://x.com/play12_official">X</a>
     <span class="language-switch" aria-label="Выбор языка">
-      <a href="../" lang="en">EN</a><span aria-hidden="true">/</span><span class="active-language" aria-current="page">RU</span>
+      <a href="/" lang="en">EN</a><span aria-hidden="true">/</span><span class="active-language" aria-current="page">RU</span>
     </span>
   </nav>
 </header><main class="import-area"><section class="import-card"><label class="button button-primary import-button">Загрузить MusicXML / MXL<input hidden id="file" type="file" accept=".xml,.musicxml,.mxl"></label><p id="status" role="status" aria-live="polite"></p><div id="setup" hidden><h2 id="title"></h2><div id="hands"></div><fieldset id="choice" hidden><legend>В произведении уже указана аппликатура. Какую использовать?</legend><label><input type="radio" name="source" value="engine" checked> Play12 Fingering Engine</label><label><input type="radio" name="source" value="source"> Аппликатура из файла</label></fieldset><button id="calculate" class="button button-primary import-button">Подготовить произведение</button></div><p id="warnings"></p><button id="save" class="button button-primary import-button" hidden>Сохранить в мои мелодии</button><section id="dev" hidden><pre id="diagnostics"></pre><button id="export">Экспорт диагностики JSON</button></section></section></main><script src="/MVP/editor/core.js"></script><script src="/MVP/editor/mxl.js"></script><script src="/MVP/editor/import.js"></script></body></html>
