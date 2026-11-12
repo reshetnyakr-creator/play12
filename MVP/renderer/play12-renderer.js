@@ -53,7 +53,7 @@
     return `#${mixed.map((channel) => channel.toString(16).padStart(2, "0")).join("").toUpperCase()}`;
   }
 
-  function selectMeasureRange(document, measureCount) {
+  function selectMeasureRange(document, measureCount, cfg = {}) {
     const notes = [];
     const selectedMeasures = document.score.parts[0].measures.slice(0, measureCount);
     let totalQuarters = 0;
@@ -69,10 +69,10 @@
         const pickupPadding = measure.implicit ? Math.max(0, nominal - extent) : 0;
         for (const event of events) {
           if (event.kind === "note") {
-            notes.push({ ...event, globalStart: offset + pickupPadding + fraction(event.start_quarters), measureIndex: measure.index });
+            notes.push({ ...event, globalStart: cfg.editorTimeline && event.editor_onset_q != null ? fraction(event.editor_onset_q) : offset + pickupPadding + fraction(event.start_quarters), measureIndex: measure.index });
           }
         }
-        offset += nominal;
+        offset += cfg.editorTimeline && measure.editor_duration_q ? fraction(measure.editor_duration_q) : nominal;
       }
       totalQuarters = Math.max(totalQuarters, offset);
     }
@@ -98,7 +98,7 @@
       return { finger: benchmarkFinger, mode: "benchmark", confidence: 1 };
     }
     const candidate = note.method.auto_fingering_candidate;
-    if (!cfg.candidatePreview || !candidate || !Number.isInteger(candidate.finger)) return null;
+    if (!cfg.candidatePreview || !candidate || !Number.isInteger(candidate.finger)) return cfg.unassignedDisplay ? { finger: 3, mode: "unassigned", confidence: null } : null;
     if (candidate.zero_note !== document.play12.zero_pitch_class) return null;
     const reviewedFinger = cfg.reviewOverrides && cfg.reviewOverrides[note.id];
     if (Number.isInteger(reviewedFinger)) {
@@ -122,7 +122,7 @@
     const cfg = { ...DEFAULTS, ...options };
     if (document.play12.zero_pitch_class !== cfg.zeroNote) throw new Error("Renderer zeroNote does not match the score");
     const measureCount = options.measureCount || 8;
-    const selection = selectMeasureRange(document, measureCount);
+    const selection = selectMeasureRange(document, measureCount, cfg);
     const notes = selection.notes
       .map((note) => ({ note, displayFingering: resolveDisplayFingering(document, note, cfg) }))
       .filter((item) => item.displayFingering);
@@ -223,7 +223,7 @@
     const meter = `${time.beats}/${time.beat_type}`;
     const beatSteps = (4 / time.beat_type) / stepQ;
     const measureSteps = time.beats * beatSteps;
-    const metricMap = cfg.metricMaps[meter];
+    const metricMap = cfg.metricMaps[meter] || (cfg.editorTimeline ? Array.from({length:time.beats}, (_,i) => i === 0 ? "primary" : "weak") : undefined);
     const countLabels = [];
     for (let s = 0; s < steps; s++) {
       const y = (steps - 1 - s) * height;
@@ -268,7 +268,7 @@
       make("text", { x: item.x, y: item.y, "text-anchor": "middle", class: countClass }, item.text);
     }
 
-    const dynamic = dynamicAtStart(document);
+    const dynamic = cfg.editorTimeline ? (document.score.parts.flatMap(p => p.measures).flatMap(m => m.dynamic_marks || [])[0]?.value || "mf") : dynamicAtStart(document);
     const fillOpacity = cfg.dynamicsOpacity[dynamic];
     if (fillOpacity == null) throw new Error(`No opacity configured for dynamic ${dynamic}`);
     for (const item of notes) {
@@ -282,7 +282,7 @@
       const group = global.document.createElementNS(svgNS, "g");
       group.setAttribute("data-event-id", note.id);
       group.setAttribute("data-hand", note.hand);
-      group.setAttribute("data-finger", finger);
+      group.setAttribute("data-finger", displayFingering.mode === "unassigned" ? "" : finger);
       group.setAttribute("data-global-start-quarters", note.globalStart);
       group.setAttribute("data-duration-quarters", fraction(note.duration_quarters));
       group.setAttribute("data-midi", note.pitch.midi);
@@ -315,7 +315,7 @@
       block.setAttribute("width", width);
       block.setAttribute("height", noteDuration * height);
       block.setAttribute("rx", width * cfg.radiusRatio);
-      const officialColor = colorForMidi(note.pitch.midi, cfg.colors, document.play12.reference_zero_midi ?? 21);
+      const officialColor = cfg.wrapCycles ? cfg.colors[((Math.floor((note.pitch.midi-(document.play12.reference_zero_midi ?? 21))/12)%cfg.colors.length)+cfg.colors.length)%cfg.colors.length] : colorForMidi(note.pitch.midi, cfg.colors, document.play12.reference_zero_midi ?? 21);
       block.setAttribute("fill", mixWithWhite(officialColor, fillOpacity));
       block.setAttribute("fill-opacity", 1);
       block.setAttribute("stroke", "#111111");

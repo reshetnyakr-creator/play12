@@ -329,23 +329,26 @@
     </section>
   </main>
   <script src="play12-i18n.js?v=practice-copy-01"></script>
-  <script src="play12-renderer.js?v=mvp-layout-cleanup-01"></script>
+  <script src="../editor/core.js?v=editor-03"></script>
+  <script src="play12-renderer.js?v=editor-03"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=tutorial-ux-06"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
   <script src="play12-round-board.js?v=training-controls-01"></script>
-  <script src="play12-playback.js?v=mvp-layout-cleanup-02"></script>
+  <script src="play12-playback.js?v=editor-01"></script>
   <script src="web-midi-diagnostic.js?v=tutorial-ux-06"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
   <script src="play12-onboarding.js?v=practice-copy-01"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
+    window.addEventListener('unhandledrejection', event => { if (new URLSearchParams(location.search).has('composition')) { const msg = document.createElement('p'); msg.textContent = 'Не удалось открыть композицию: ' + (event.reason?.message || event.reason); document.body.prepend(msg); } });
     const playbackParams = new URLSearchParams(location.search);
     const saintsReviewMode = playbackParams.get('review') === 'when-the-saints';
     const saintsManualReviewMode = playbackParams.get('review') === 'when-the-saints-manual';
-    const compositionReviewMode = saintsReviewMode || saintsManualReviewMode;
+    const savedCompositionId = playbackParams.get('composition');
+    const compositionReviewMode = saintsReviewMode || saintsManualReviewMode || !!savedCompositionId;
     if (compositionReviewMode) {
       document.body.classList.remove('play12-onboarding-boot', 'play12-onboarding-active');
       document.body.classList.add('play12-onboarding-dismissed', 'play12-composition-review');
@@ -358,7 +361,7 @@
       continueButton: document.getElementById('onboarding-continue')
     });
     Promise.all([
-      fetch(saintsReviewMode ? '../examples/when_the_saints_play12_beginner.play12.json' : '../examples/when_the_saints_manual.play12.json').then(r => r.json()),
+      savedCompositionId ? Play12Editor.Store.get(savedCompositionId).then(doc => { if (!doc) throw new Error('Сохранённое произведение не найдено в этом браузере'); window.play12EditorDocument = doc; document.title = doc.title + ' — Play12'; return Play12Editor.effective(doc); }) : fetch(saintsReviewMode ? '../examples/when_the_saints_play12_beginner.play12.json' : '../examples/when_the_saints_manual.play12.json').then(r => r.json()),
       Play12CardThemes.loadReadyAssets(),
       saintsReviewMode ? fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json()) : Promise.resolve(null)
     ]).then(([baseScore, cardTheme, seedReviewOverlay]) => {
@@ -395,7 +398,7 @@
         : Number.isInteger(savedPitchClass) && savedPitchClass >= 0 && savedPitchClass < 12
           ? savedPitchClass
           : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
-      const initialZeroMidi = Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
+      const initialZeroMidi = savedCompositionId ? referenceZeroNote : Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
       const defaultZeroMidi = Play12PianoView.layoutZeroForMidi(referenceZeroNote, 21);
       const reviewGrid = saintsReviewMode ? document.getElementById('review-grid-select') : saintsManualReviewMode ? document.getElementById('manual-review-grid') : document.getElementById('grid-resolution');
       const reviewController = saintsReviewMode ? Play12CompositionReview.create({
@@ -410,7 +413,7 @@
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
         segments: repetitionSegments,
-        onboardingLayout: true, noteSelectionEnabled: saintsReviewMode,
+        onboardingLayout: !savedCompositionId, editorTimeline: !!savedCompositionId, unassignedDisplay: !!savedCompositionId, wrapCycles: !!savedCompositionId, noteSelectionEnabled: saintsReviewMode,
         selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => reviewController?.select(eventId),
         zeroNote: score.play12.zero_pitch_class,
         countWords: saintsReviewMode ? Play12Renderer.defaults.countWords : { 1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR' },
@@ -444,7 +447,7 @@
       let globalMeasureStart = 0;
       for (const measure of score.score.parts[0].measures.slice(0, reviewMeasureCount)) {
         const time = measure.attributes.time;
-        const length = time.beats * 4 / time.beat_type;
+        const length = savedCompositionId ? Number(new Play12Editor.Q(measure.editor_duration_q)) : time.beats * 4 / time.beat_type;
         rounds.push({
           index: measure.index,
           implicit: measure.implicit === true,
@@ -480,8 +483,23 @@
         gridResolutionInput: reviewGrid, pulse: document.getElementById('grid-pulse'),
         progressHead: document.getElementById('progress-head'), timecode: document.getElementById('timecode'), pianoView,
         referenceZeroNote, runtimeZeroNote: initialZeroMidi,
+        musicSchedule: savedCompositionId ? Play12Editor.contacts(score).contacts.map(c => ({id:c.id, start:Number(new Play12Editor.Q(c.start)), duration:Number(new Play12Editor.Q(c.end).sub(c.start)), hand:c.hand, sourceMidi:c.key, dynamic:'mf'})).concat(Play12Editor.events(score).filter(e => !e.editor_supported || !e.hand).filter(e => !e.grace && Number.isInteger(e.pitch.midi) && Number(new Play12Editor.Q(e.duration_quarters)) > 0).map(e => ({id:e.id,start:Number(new Play12Editor.Q(e.editor_onset_q)),duration:Number(new Play12Editor.Q(e.duration_quarters)),hand:e.hand || 'R',sourceMidi:e.pitch.midi,dynamic:'mf'}))) : null,
         beatLamp: document.getElementById('metronome-beat-lamp')
       });
+      if (savedCompositionId) {
+        const bar = document.createElement('section'); bar.setAttribute('aria-label','Тренировка сохранённой композиции');
+        bar.style.cssText='display:flex;flex-wrap:wrap;gap:8px;padding:18px;justify-content:center;background:#f5f5f5;position:relative;z-index:20';
+        const label = document.createElement('strong');label.textContent = window.play12EditorDocument.title;bar.append(label);
+        const settings = {practiceModeEnabled:false,practiceLeftHandEnabled:true,practiceRightHandEnabled:true};
+        for (const [key,text] of [['practiceModeEnabled','Практика'],['practiceLeftHandEnabled','Левая рука'],['practiceRightHandEnabled','Правая рука']]) {
+          const button = document.createElement('button');button.textContent=text;button.style.cssText='padding:8px 12px;border:1px solid #aaa;border-radius:8px;background:white';
+          const paint = () => button.setAttribute('aria-pressed',String(settings[key]));paint();
+          button.addEventListener('click',()=>{ if (key!=='practiceModeEnabled' && settings[key] && !settings[key==='practiceLeftHandEnabled'?'practiceRightHandEnabled':'practiceLeftHandEnabled']) return;settings[key]=!settings[key];window.play12Playback.setPracticeSettings(settings);paint(); });bar.append(button);
+        }
+        const tempo = document.createElement('input');tempo.type='number';tempo.min='30';tempo.max='240';tempo.value=String(originalTempo);tempo.setAttribute('aria-label','Темп BPM');tempo.style.width='75px';tempo.addEventListener('change',()=>{document.getElementById('bpm').value=tempo.value;window.play12Playback.changeBpm();tempo.value=document.getElementById('bpm').value;});bar.append(tempo);
+        const back = document.createElement('a');back.href='../editor/';back.textContent='Вернуться в редактор';bar.append(back);document.querySelector('main').prepend(bar);
+        reviewGrid.addEventListener('change',()=>{window.play12Playback.pauseImmediate();window.play12Playback.replaceSvg(render(reviewGrid.value));syncGridButton();});
+      }
       window.play12Playback.roundBoard = Play12RoundBoard.create({root: document.getElementById('round-loop-board'), playback: window.play12Playback, repetitions: repetitionSegments, title: baseScore.score.title});
       reviewController?.connect(effectiveScore => {
         score = effectiveScore;
@@ -560,6 +578,7 @@
         Object.assign(document.getElementById('playback-stage').dataset, {
           selectedPitchClass: String(candidateZeroPitchClass), layoutZeroNote: String(candidateZeroMidi), zeroMidi: String(candidateZeroMidi)
         });
+        if (savedCompositionId) { const warning = document.getElementById('keyboard-range-warning'); warning.hidden = false; warning.textContent = 'Физическая транспозиция: применимость аппликатуры устарела. Вернитесь в редактор для проверки.'; }
         window.dispatchEvent(new CustomEvent('play12:zero-confirmed', { detail: {
           selectedPitchClass: candidateZeroPitchClass, layoutZeroNote: candidateZeroMidi
         }}));

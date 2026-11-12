@@ -391,6 +391,10 @@
           duration: Number(group.dataset.durationQuarters), hand: group.dataset.hand, sourceMidi, midi, dynamic: group.dataset.dynamic
         };
       });
+      if (this.musicSchedule) {
+        const groups = new Map(this.events.map(e => [e.id, e.group]));
+        this.events = this.musicSchedule.map(e => ({ ...e, group: groups.get(e.id), midi: effectiveMidiPitch(e.sourceMidi, this.referenceZeroNote, this.runtimeZeroNote) }));
+      }
       this.buildPracticeEvents();
       Object.assign(this.stage.dataset, {
         referenceZeroNote: String(this.referenceZeroNote),
