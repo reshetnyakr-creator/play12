@@ -497,7 +497,7 @@
           button.addEventListener('click',()=>{ if (key!=='practiceModeEnabled' && settings[key] && !settings[key==='practiceLeftHandEnabled'?'practiceRightHandEnabled':'practiceLeftHandEnabled']) return;settings[key]=!settings[key];window.play12Playback.setPracticeSettings(settings);paint(); });bar.append(button);
         }
         const tempo = document.createElement('input');tempo.type='number';tempo.min='30';tempo.max='240';tempo.value=String(originalTempo);tempo.setAttribute('aria-label','Темп BPM');tempo.style.width='75px';tempo.addEventListener('change',()=>{document.getElementById('bpm').value=tempo.value;window.play12Playback.changeBpm();tempo.value=document.getElementById('bpm').value;});bar.append(tempo);
-        const back = document.createElement('a');back.href='../editor/';back.textContent='Вернуться в редактор';bar.append(back);document.querySelector('main').prepend(bar);
+        const back = document.createElement('a');back.href='../editor/';back.textContent='Вернуться в редактор';bar.append(back);document.querySelector('main.playback-page').prepend(bar);
         reviewGrid.addEventListener('change',()=>{window.play12Playback.pauseImmediate();window.play12Playback.replaceSvg(render(reviewGrid.value));syncGridButton();});
       }
       window.play12Playback.roundBoard = Play12RoundBoard.create({root: document.getElementById('round-loop-board'), playback: window.play12Playback, repetitions: repetitionSegments, title: baseScore.score.title});
