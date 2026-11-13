@@ -181,7 +181,7 @@
               </div>
               <aside id="onboarding-completion" class="mvp-completion-card" role="status" aria-live="polite" hidden>
                 <h2 id="onboarding-completion-title">Congratulations!</h2>
-                <p id="onboarding-completion-message">You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.</p>
+                <a class="mvp-button mvp-button-primary" href="/ru/MVP/main/">Перейти в Play12</a><p id="onboarding-completion-message">You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.</p>
               </aside>
               <div id="round-ok12" class="mvp-ok12-toast" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span> OK12</div>
               <div id="onboarding-confetti" class="mvp-confetti" aria-hidden="true"></div>
@@ -350,7 +350,8 @@
     const previewId = playbackParams.get('preview');
     const savedCompositionId = playbackParams.get('composition') || (previewId ? 'preview:'+previewId : null);
     const loadEditorDocument = () => { if (!previewId) return Play12Editor.Store.get(savedCompositionId); const raw=sessionStorage.getItem('play12.preview:'+previewId); if(!raw) return Promise.reject(new Error('Предпросмотр недоступен. Откройте прослушивание из редактора повторно.')); return Promise.resolve(JSON.parse(raw)); };
-    const compositionReviewMode = saintsReviewMode || saintsManualReviewMode || !!savedCompositionId;
+    const mainMode = window.__PLAY12_MAIN__ === true;
+    const compositionReviewMode = mainMode || saintsReviewMode || saintsManualReviewMode || !!savedCompositionId;
     if (compositionReviewMode) {
       document.body.classList.remove('play12-onboarding-boot', 'play12-onboarding-active');
       document.body.classList.add('play12-onboarding-dismissed', 'play12-composition-review');
@@ -362,7 +363,7 @@
       startButton: document.getElementById('onboarding-start'),
       continueButton: document.getElementById('onboarding-continue')
     });
-    Promise.all([
+    if (!mainMode || savedCompositionId) Promise.all([
       savedCompositionId ? loadEditorDocument().then(doc => { if (!doc) throw new Error('Сохранённое произведение не найдено в этом браузере'); window.play12EditorDocument = doc; document.title = doc.title + ' — Play12'; return Play12Editor.effective(doc); }) : fetch(saintsReviewMode ? '../examples/when_the_saints_play12_beginner.play12.json' : '../examples/when_the_saints_manual.play12.json').then(r => r.json()),
       Play12CardThemes.loadReadyAssets(),
       saintsReviewMode ? fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json()) : Promise.resolve(null)
@@ -415,8 +416,8 @@
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
         segments: repetitionSegments,
-        onboardingLayout: !savedCompositionId, editorTimeline: !!savedCompositionId, unassignedDisplay: !!savedCompositionId, wrapCycles: !!savedCompositionId, noteSelectionEnabled: saintsReviewMode,
-        selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => reviewController?.select(eventId),
+        onboardingLayout: !savedCompositionId, editorTimeline: !!savedCompositionId, unassignedDisplay: !!savedCompositionId, wrapCycles: !!savedCompositionId, noteSelectionEnabled: saintsReviewMode || mainMode,
+        selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => { if(mainMode) window.play12Main?.select(eventId); else reviewController?.select(eventId); },
         zeroNote: score.play12.zero_pitch_class,
         countWords: saintsReviewMode ? Play12Renderer.defaults.countWords : { 1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR' },
         countAnd: saintsReviewMode ? Play12Renderer.defaults.countAnd : 'AND'
@@ -488,7 +489,7 @@
         musicSchedule: savedCompositionId ? Play12Editor.contacts(score).contacts.map(c => ({id:c.id, start:Number(new Play12Editor.Q(c.start)), duration:Number(new Play12Editor.Q(c.end).sub(c.start)), hand:c.hand, sourceMidi:c.key, dynamic:'mf'})).concat(Play12Editor.events(score).filter(e => !e.editor_supported || !e.hand).filter(e => !e.grace && Number.isInteger(e.pitch.midi) && Number(new Play12Editor.Q(e.duration_quarters)) > 0).map(e => ({id:e.id,start:Number(new Play12Editor.Q(e.editor_onset_q)),duration:Number(new Play12Editor.Q(e.duration_quarters)),hand:e.hand || 'R',sourceMidi:e.pitch.midi,dynamic:'mf'}))) : null,
         beatLamp: document.getElementById('metronome-beat-lamp')
       });
-      if (savedCompositionId) {
+      if (savedCompositionId && !mainMode) {
         const bar = document.createElement('section'); bar.setAttribute('aria-label','Тренировка сохранённой композиции');
         bar.style.cssText='display:flex;flex-wrap:wrap;gap:8px;padding:18px;justify-content:center;background:#f5f5f5;position:relative;z-index:20';
         const label = document.createElement('strong');label.textContent = window.play12EditorDocument.title;bar.append(label);
@@ -649,6 +650,18 @@
         reviewGrid.dispatchEvent(new Event('change'));
       });
       window.play12Playback.stage.dataset.recommendedGrid = recommendedGrid;
+      if(mainMode) {
+        window.play12MainController = {
+          document: window.play12EditorDocument, playback: window.play12Playback,
+          refresh(nextDocument) {
+            const p=window.play12Playback, position=p.clock.position;
+            p.pauseImmediate(position); score=Play12Editor.effective(nextDocument);
+            p.replaceSvg(render(reviewGrid.value)); p.pauseImmediate(position);
+          }
+        };
+        reviewGrid.addEventListener('change',()=>window.play12MainController.refresh(window.play12MainController.document));
+        window.dispatchEvent(new Event('play12:main-ready'));
+      }
       if (playbackParams.has('at')) window.play12Playback.seek(Number(playbackParams.get('at')));
       localStorage.removeItem('play12.ui-module-position.play-mode');
       window.play12DraggableModules = Play12DraggableModules.init({
@@ -660,7 +673,7 @@
           ['midi-diagnostic', document.getElementById('midi-diagnostic')]
         ]
       });
-    }).catch(error => { document.getElementById('play12-score').textContent = error.message; });
+    }).catch(error => { document.getElementById('play12-score').textContent = error.message; window.dispatchEvent(new CustomEvent('play12:load-error',{detail:error.message})); });
   </script>
 <script src="../editor/library.js"></script></body>
 </html>
