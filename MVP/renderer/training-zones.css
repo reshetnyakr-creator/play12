@@ -1,0 +1,38 @@
+/* Only outer slots change. Musical component internals remain shared. */
+.play12-three-zones{position:relative;padding-bottom:var(--training-footer-height,230px)}
+.main-layout.training-three-zones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:20px max(24px,env(safe-area-inset-right)) 16px max(24px,env(safe-area-inset-left));align-items:stretch;min-width:0}
+.training-three-zones>.training-zone{min-width:0;display:flex;flex-direction:column;position:relative;box-sizing:border-box;gap:14px}
+.training-three-zones>.training-zone-right{padding-bottom:0}.training-zone-right>h2{margin-top:auto}.training-zone-right>p{margin-bottom:auto}
+.training-three-zones .training-panel-slot{flex:none;position:relative;margin-top:auto;align-self:center;max-width:100%}
+.training-three-zones .training-zone-controls{--mvp-control-font-size:11px;display:flex;align-items:flex-end;gap:10px;position:relative;width:max-content;flex:none;max-width:none;height:96px}
+.training-zone-controls>.mvp-metronome-board,.training-zone-controls>.mvp-practice-board,.training-zone-controls>.mvp-round-loop-board,.training-zone-controls>#onboarding-choose-zero{position:relative;inset:auto;transform:none;flex:none;margin:0;box-sizing:border-box}
+.training-zone-controls>.mvp-metronome-board{width:180px;height:42px}
+.training-zone-controls>.mvp-practice-board{width:320px;height:42px;gap:1px;padding:4px}
+.training-zone-controls>.mvp-practice-board button{font:600 10px/1 Inter,Arial,sans-serif!important;min-width:0;flex:1 1 0;padding:0 2px;white-space:nowrap}
+.training-zone-controls>.mvp-round-loop-board{width:372px;height:96px;min-width:0}
+.training-zone-controls>#onboarding-choose-zero{width:42px;min-width:42px;height:42px;border-radius:50%;padding:0;font:700 23px/1 Inter,Arial,sans-serif}
+.training-three-zones .mvp-playback-host{margin-top:auto;display:flex;justify-content:center;min-width:0}
+.training-three-zones .training-music-slot{position:relative;flex:none;align-self:center}
+.training-three-zones .music-workspace{margin:0}
+.training-three-zones .main-tools{flex:none}.training-three-zones .main-melodies{max-height:40vh}
+.main-footer.training-persistent-footer{position:fixed;z-index:65;bottom:0;left:0;right:0;padding:6px max(12px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));box-sizing:border-box;background:#faf9fc;border-top:1px solid #e6e1ed;max-width:100%;margin:0}
+.training-persistent-footer .main-midi{margin:3px 0;flex-wrap:wrap}.training-persistent-footer .mvp-piano-host{overflow:visible}
+.training-persistent-footer .play12-piano-view{max-width:100%;margin-inline:auto}
+.training-zone-navigation{display:flex;justify-content:center;gap:8px;flex:none}
+.training-zone-navigation button{border:1px solid #ddd;background:white;border-radius:20px;padding:7px 12px;font:500 12px Inter,Arial,sans-serif}
+.training-zone-navigation button[aria-current="true"]{background:#CEF932}
+.is-three-wide+.training-persistent-footer .training-zone-navigation{display:none}
+.training-keyboard-notice{font-size:11px;margin:2px 0;color:#704d24}
+.main-layout.training-three-zones.is-three-narrow{display:flex;flex-direction:row;gap:0;padding:12px 0 16px;margin:0 max(12px,env(safe-area-inset-right)) 0 max(12px,env(safe-area-inset-left));overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;align-items:stretch}
+.is-three-narrow>.training-zone{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;order:0}
+.is-three-narrow>.training-zone-right{border-radius:20px;padding:12px 0 0;grid-column:auto}
+.is-three-narrow .training-left-controls>.mvp-practice-board{width:215px}
+.is-three-narrow .training-right-controls>.mvp-round-loop-board{width:268px}
+.is-three-narrow .training-right-controls>#onboarding-choose-zero{width:36px;min-width:36px;height:36px}
+.training-nav-locked .training-three-zones.is-three-narrow{overflow-x:hidden}
+.training-zone-controls,.music-workspace button,.music-workspace input{touch-action:pan-y}
+.training-persistent-footer .piano-key{touch-action:none}
+
+.training-width-probe{position:absolute;left:max(24px,env(safe-area-inset-left));right:max(24px,env(safe-area-inset-right));height:0;visibility:hidden;pointer-events:none}
+.training-panel-slot,.training-music-slot{overflow:clip}
+.training-panel-slot button:focus-visible,.training-music-slot button:focus-visible{outline-offset:-3px}

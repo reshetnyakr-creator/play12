@@ -7,18 +7,18 @@ const path=require('node:path');
 class Classes{constructor(){this.values=new Set();}add(...v){v.forEach(x=>this.values.add(x));}remove(...v){v.forEach(x=>this.values.delete(x));}toggle(v,on){on?this.values.add(v):this.values.delete(v);}contains(v){return this.values.has(v);}}
 class Node{
   constructor(tag='g'){this.tag=tag;this.attrs={};this.children=[];this.dataset={};this.classList=new Classes();this.style={setProperty(){}};this.parentElement=null;this.clientWidth=1200;this.clientHeight=800;}
-  setAttribute(k,v){this.attrs[k]=String(v);}setAttributeNS(_,k,v){this.setAttribute(k,v);}appendChild(n){n.parentElement=this;this.children.push(n);return n;}
+  getAttribute(k){return this.attrs[k]||null;}removeAttribute(k){delete this.attrs[k];}setAttribute(k,v){this.attrs[k]=String(v);}setAttributeNS(_,k,v){this.setAttribute(k,v);}appendChild(n){n.parentElement=this;this.children.push(n);return n;}
   replaceChildren(...nodes){this.children=[];nodes.forEach(n=>this.appendChild(n));}addEventListener(){}getClientRects(){return[{}];}
   querySelectorAll(selector){const out=[];const visit=n=>{for(const child of n.children){if(selector==='path'&&child.tag==='path')out.push(child);visit(child);}};visit(this);return out;}
   querySelector(){return null;}closest(){return null;}remove(){if(this.parentElement)this.parentElement.children=this.parentElement.children.filter(x=>x!==this);}
   replaceWith(n){const i=this.parentElement.children.indexOf(this);this.parentElement.children[i]=n;n.parentElement=this.parentElement;this.parentElement=null;}
 }
-class PathNode extends Node{constructor(index){super('path');this.index=index;}getBBox(){return{x:this.index*36.616,y:128,width:36.616,height:436};}getCTM(){return{a:1,b:0,c:0,d:1,e:0,f:0};}}
+class PathNode extends Node{constructor(index){super('path');this.index=index;}cloneNode(){const n=new PathNode(this.index);n.attrs={...this.attrs};return n;}getBBox(){return{x:this.index*36.616,y:128,width:36.616,height:436};}getCTM(){return{a:1,b:0,c:0,d:1,e:0,f:0};}}
 function keyboard(){const svg=new Node('svg');for(let i=0;i<88;i++)svg.appendChild(new PathNode(i));return svg;}
 class Point{constructor(x,y){this.x=x;this.y=y;}matrixTransform(m){return{x:this.x*m.a+this.y*m.c+m.e,y:this.x*m.b+this.y*m.d+m.f};}}
 function setup(){
   const document={createElementNS:(_,tag)=>new Node(tag),importNode:node=>node};
-  const window={innerWidth:1400,addEventListener(){},document};
+  const window={innerWidth:1400,innerHeight:800,addEventListener(){},document};
   const sandbox={window,document,DOMParser:class{parseFromString(){return{documentElement:keyboard()};}},DOMPoint:Point,ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>(fn(),1),console};
   vm.createContext(sandbox);vm.runInContext(readFileSync(path.join(__dirname,'../renderer/piano-view.js'),'utf8'),sandbox);
   const parent=new Node('div'),mount=new Node('div');parent.classList.add('mvp-piano-host');parent.appendChild(mount);
@@ -62,3 +62,12 @@ test('card verification targets come from rendered symbol and cycle color for ev
     assert.equal(piano.keys.get(green).dataset.play12Symbol,'2');assert.equal(piano.keys.get(green).dataset.play12Color,'#0f0');
   }
 });
+
+for(const [name,min,max]of [['single pitch',60,60],['less than octave',61,66],['wide',28,103],['physical extremes',21,108],['MIDI extremes',0,127]])test('Adaptive Window: '+name+' keeps every pitch without changing calibration',()=>{
+ const {piano,mount}=setup();piano.setRange(36,84);const physical=[piano.minMidi,piano.maxMidi],zero=piano.zeroMidi;piano.setVisualWindow({min,max});
+ assert.equal(piano.keys.size,max-min+1);for(let midi=min;midi<=max;midi++)assert(piano.keys.has(midi));
+ assert.deepEqual([piano.minMidi,piano.maxMidi],physical);assert.equal(piano.zeroMidi,zero);assert.equal(Number(mount.dataset.minMidi),min);assert.equal(Number(mount.dataset.maxMidi),max);
+ assert(Number.isFinite(parseFloat(mount.style.height)));assert(parseFloat(mount.style.width)<=mount.parentElement.clientWidth);assert(parseFloat(mount.style.height)<=200.001);
+ piano.setVisualWindow(null);assert.equal(piano.keys.size,49);
+});
+test('Adaptive Window unchanged pitch set does not rebuild SVG or alter held notes',()=>{const {piano}=setup();piano.setVisualWindow({min:48,max:84});const svg=piano.svg;piano.setActiveMidis([60],'midi');piano.setVisualWindow({min:48,max:84});assert.equal(piano.svg,svg);assert(piano.activeBySource.get('midi').has(60));});

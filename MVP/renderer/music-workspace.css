@@ -1,0 +1,11 @@
+/* Shared stage + whole Playback: one local coordinate system on Main and Onboarding. */
+.music-workspace{position:relative;display:flex;flex-direction:column;flex:none;margin-inline:auto;box-sizing:border-box}
+.music-workspace>.playback-stage{flex:none;margin:0!important;min-height:0!important}
+.music-workspace>.playback-zone,
+body :is(.play12-onboarding-listen,.play12-training-shell) .music-workspace>.playback-zone,
+body.play12-onboarding-listen .music-workspace>.playback-zone,
+body.play12-training-shell .music-workspace>.playback-zone{position:relative!important;inset:auto!important;transform:none;width:100%!important;height:42px!important;flex:none;box-sizing:border-box;border-radius:0 0 12px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:5px;padding:4px 8px}
+.music-workspace .playback-zone-transport{position:static;display:flex;gap:2px;align-items:center}
+.music-workspace .playback-zone-transport button{height:30px;min-width:0;padding:0 7px;border-radius:18px;font:600 11px/1 Inter,Arial,sans-serif;white-space:nowrap}
+.music-workspace .playback-timecode{position:static;transform:none;white-space:nowrap;font:500 10px/1 Inter,Arial,sans-serif}
+.music-workspace .playback-grid-control{display:block;position:static;width:42px;height:28px;justify-self:end}

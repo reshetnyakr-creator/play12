@@ -408,7 +408,8 @@
     layoutCoreGeometry() {
       if (!this.svg?.isConnected || !this.pianoView?.mount?.isConnected) return;
       const lineOverhang = Number(this.svg.querySelector(".play12-cell").getAttribute("width"));
-      const scoreWidth = this.svg.getBoundingClientRect().width;
+      const localWorkspace = this.stage.parentElement?.classList.contains('music-workspace');
+      const scoreWidth = localWorkspace ? parseFloat(this.svg.style.width) : this.svg.getBoundingClientRect().width;
       const noteFieldWidth = Number(this.svg.dataset.noteFieldWidth) || scoreWidth;
       const compactPlayer = this.stage.closest(".mvp-playback-host");
       const shellPadding = 7;
@@ -416,6 +417,7 @@
       if (compactPlayer) {
         const unifiedBoardWidth = scoreWidth + progressRailWidth + shellPadding * 2;
         this.stage.style.width = `${unifiedBoardWidth}px`;
+        if(localWorkspace)this.stage.parentElement.style.width=`${unifiedBoardWidth}px`;
         this.stage.dataset.playerShellPadding = String(shellPadding);
         this.stage.style.setProperty('--mvp-score-width',`${scoreWidth}px`);
         this.stage.style.setProperty('--mvp-progress-rail-width',`${progressRailWidth}px`);
@@ -459,8 +461,8 @@
       const cellRects = [...this.svg.querySelectorAll(".play12-cell")].map(cell => cell.getBoundingClientRect());
       this.progressStartX = Math.min(...cellRects.map(rect => rect.left)) - zoneRect.left - zoneBorder;
       this.progressEndX = Math.max(...cellRects.map(rect => rect.right)) - zoneRect.left - zoneBorder;
-      if (this.playline.closest('.mvp-control-row')) {
-        this.progressStartX = 16; this.progressEndX = zoneRect.width - 16;
+      if (localWorkspace || this.playline.closest('.mvp-control-row')) {
+        this.progressStartX = 16; this.progressEndX = (localWorkspace ? parseFloat(this.stage.style.width) : zoneRect.width) - 16;
       }
       this.stage.dataset.playlineOverhang = String(lineOverhang);
       this.stage.dataset.noteFieldWidth = String(noteFieldWidth);
@@ -470,6 +472,7 @@
       this.paint(this.displayPosition ?? this.clock.position);
     }
     syncDraggedPlayMode() {
+      if(this.stage.parentElement?.classList.contains('music-workspace')){this.layoutCoreGeometry();return;}
       if (!this.svg?.parentElement) return;
       this.svg.parentElement.style.height = `${this.executionY() + 1}px`;
       const zoneRect = this.playline.getBoundingClientRect();
@@ -480,6 +483,7 @@
       this.paint(this.displayPosition ?? this.clock.position);
     }
     executionY() {
+      if(this.stage.parentElement?.classList.contains('music-workspace'))return this.stage.offsetHeight;
       return this.playline.getBoundingClientRect().top - this.stage.getBoundingClientRect().top;
     }
     signatureAt(position) {

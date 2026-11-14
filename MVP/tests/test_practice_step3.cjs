@@ -6,12 +6,15 @@ const {test} = require('node:test');
 const path = require('node:path');
 const renderer = path.join(__dirname, '../renderer');
 class Element {
-  constructor(dataset = {}) { this.dataset = dataset; this.checked = false; this.value = '0'; this.disabled = false; this.hidden = false; this.handlers = {}; this.style = {setProperty(){}}; this.classList = {add(){},remove(){},toggle(){}}; }
+  constructor(dataset = {}) { this.dataset = dataset; this.checked = false; this.value = '0'; this.disabled = false; this.hidden = false; this.handlers = {}; this.style = {setProperty(){}}; this.classList = {add(){},remove(){},toggle(){},contains(){return false;}}; }
   addEventListener(name, fn) { this.handlers[name] = fn; }
   removeEventListener(name,fn) { if(this.handlers[name]===fn)delete this.handlers[name]; }
   click() { if (!this.disabled) this.handlers.click?.({target:this}); }
   setAttribute(name,value) { this[name] = value; }
   getBoundingClientRect() {return {top:0,left:0,right:100,width:100,height:42};}
+  appendChild(child){child.parentElement=this;return child;}
+  prepend(child){return this.appendChild(child);}
+  querySelector(){return null;}
   querySelectorAll() {return [];}
   closest(){return null;}
 }

@@ -446,6 +446,7 @@
       const mount=runtime?.pianoView?.mount;
       if(mount&&listenPianoHost&&!pianoHome) pianoHome={parent:mount.parentElement,nextSibling:mount.nextSibling};
       global.Play12TrainingShell.place({stage,playbackHost,transport,controlRow:row,roundBoard:document.getElementById('round-loop-board'),piano:mount,pianoHost:listenPianoHost});
+      global.Play12TrainingShell.mountWorkspace(stage,playbackHost,transport);
       if(mount&&listenPianoHost){keepPianoFixed();runtime.pianoView.syncContainer?.();}
       document.body.classList.add('play12-onboarding-listen');
       global.dispatchEvent(new Event('resize'));
