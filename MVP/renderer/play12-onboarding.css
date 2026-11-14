@@ -663,7 +663,7 @@
   box-shadow: 0 16px 45px rgba(17, 24, 39, .075);
 }
 
-.play12-onboarding-listen .mvp-playback-host .playback-zone {
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-playback-host .playback-zone {
   position: fixed;
   z-index: 61;
   top: auto !important;
@@ -780,12 +780,12 @@
   background: transparent;
 }
 
-.play12-onboarding-listen .playback-zone-transport {
+:is(.play12-onboarding-listen,.play12-training-shell) .playback-zone-transport {
   left: 10px;
   gap: 6px;
 }
 
-.play12-onboarding-listen .playback-zone-transport button {
+:is(.play12-onboarding-listen,.play12-training-shell) .playback-zone-transport button {
   height: 28px;
   padding: 0 11px;
   border-color: rgba(17, 17, 17, .13);
@@ -793,13 +793,13 @@
   background: rgba(255, 255, 255, .82);
 }
 
-.play12-onboarding-listen .playback-zone-transport button.is-transport-active {
+:is(.play12-onboarding-listen,.play12-training-shell) .playback-zone-transport button.is-transport-active {
   border-color: #E96E40;
   background: #E96E40;
   color: #fff;
 }
 
-.play12-onboarding-listen .playback-timecode {
+:is(.play12-onboarding-listen,.play12-training-shell) .playback-timecode {
   right: 14px;
 }
 
@@ -962,8 +962,8 @@
 
 /* The inner score/shell owns clipping at the fixed execution boundary.
    Outer fixed-height containers must not cut it short after scrolling. */
-.play12-onboarding-listen .mvp-playback-host,
-.play12-onboarding-listen .mvp-playback-host .playback-stage { overflow: visible; }
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-playback-host,
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-playback-host .playback-stage { overflow: visible; }
 .mvp-onboarding-progress li[role="button"] { cursor: pointer; }
 .mvp-onboarding-progress li[aria-disabled="true"] { cursor: default; }
 .mvp-onboarding-progress li:focus-visible { outline: 2px solid #E96E40; outline-offset: 5px; }
@@ -1065,8 +1065,8 @@
 .mvp-zero-chooser-card.has-dismiss-timer { animation: mvp-hint-lifetime 12s linear forwards; }
 
 /* Transport emphasis reflects playback, never an unconditional Play default. */
-.play12-onboarding-listen .playback-zone-transport button:not(.is-transport-active) { color: #111; }
-.play12-onboarding-listen .playback-zone-transport button.is-transport-active:disabled { opacity: 1; }
+:is(.play12-onboarding-listen,.play12-training-shell) .playback-zone-transport button:not(.is-transport-active) { color: #111; }
+:is(.play12-onboarding-listen,.play12-training-shell) .playback-zone-transport button.is-transport-active:disabled { opacity: 1; }
 .mvp-zero-chooser-card .mvp-zero-actions .mvp-button-secondary { color: #111; }
 .mvp-zero-chooser-card .mvp-zero-actions .mvp-button-secondary:is(:hover, :focus-visible) {
   color: #111; background: #fff2e9; border-color: #e96e40; box-shadow: 0 0 0 3px #e96e4026;
@@ -1103,7 +1103,7 @@
 }
 .mvp-control-row .mvp-practice-board button { min-width: 0; font: 600 11px/1 Inter,sans-serif; padding: 0 4px; flex: 1 1 0; color: #333; white-space: nowrap; }
 .mvp-control-row .mvp-practice-board button[aria-pressed="true"] { color: #fff; }
-.play12-onboarding-listen .mvp-control-row .playback-zone {
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-zone {
   position: absolute; top: auto !important; right: auto !important; bottom: 0;
   left: var(--mvp-note-field-center-x, 50%) !important;
   width: var(--mvp-unified-board-width, var(--compact-playback-width)) !important; height: var(--mvp-playback-board-height) !important;
@@ -1112,20 +1112,20 @@
   display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
   align-items: center; gap: 5px; padding: 4px 8px;
 }
-.play12-onboarding-listen .mvp-control-row .playback-zone-transport {
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-zone-transport {
   position: static; transform: none; display: flex; gap: 2px; align-items: center;
 }
-.play12-onboarding-listen .mvp-control-row .playback-zone-transport button {
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-zone-transport button {
   height: 30px; padding: 0 7px; min-width: 0; border-radius: 18px;
   font: 600 11px/1 Inter,sans-serif; background: transparent; border: 1px solid transparent;
 }
-.play12-onboarding-listen .mvp-control-row .playback-zone-transport button.is-transport-active { background: #e96e40; color: #fff; }
-.play12-onboarding-listen .mvp-control-row .playback-timecode {
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-zone-transport button.is-transport-active { background: #e96e40; color: #fff; }
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-timecode {
   position: static; transform: none; justify-self: start; margin: 0; padding: 0;
   font: 500 10px/1 Inter,sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; color: #666;
 }
 .playback-grid-control { display: none; }
-.play12-onboarding-listen .mvp-control-row .playback-grid-control {
+:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-grid-control {
   display: block; justify-self: end; width: 42px; height: 28px; padding: 0 4px;
   border: 0; border-left: 1px solid #d1d3ce; border-radius: 0 14px 14px 0;
   background: transparent; color: #333; font: 600 12px/1 Inter,sans-serif; cursor: pointer;
@@ -1149,8 +1149,8 @@
 @media (max-width: 1100px) {
   .mvp-control-row { --compact-playback-width: 290px; --compact-practice-width: 230px; --compact-zero-size: 38px; --compact-gap: 8px; }
   .mvp-control-row .mvp-practice-board button { padding: 0 3px; font-size: 9px; }
-  .play12-onboarding-listen .mvp-control-row .playback-zone-transport button { padding: 0 4px; font-size: 10px; }
-  .play12-onboarding-listen .mvp-control-row .playback-timecode { font-size: 9px; }
+  :is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-zone-transport button { padding: 0 4px; font-size: 10px; }
+  :is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-timecode { font-size: 9px; }
 }
 @media (max-width: 850px) {
   .mvp-control-column { left: 12px; }
@@ -1184,7 +1184,7 @@
 .round-stepper button,.round-navigation button{width:20px;padding:0;}.round-stepper output,.round-navigation output{min-width:12px;text-align:center;font-variant-numeric:tabular-nums;}
 @media(max-width:1100px){.mvp-round-loop-board{width:350px;padding:3px 6px;}.mvp-round-loop-board button,.round-controls{font-size:9px;}.round-stepper button,.round-navigation button{width:16px;}}
 @media(max-width:950px){.mvp-round-loop-board{width:calc(50vw - var(--compact-playback-width)/2 - var(--compact-gap) - 18px);min-width:285px;}.mvp-control-row{--compact-playback-width:260px;--compact-practice-width:215px;--compact-zero-size:36px;--compact-gap:6px;}}
-@media(max-width:950px){.play12-onboarding-listen .mvp-control-row .playback-zone-transport button{font-size:8px;padding:0 4px;}.play12-onboarding-listen .mvp-control-row .playback-timecode{font-size:8px;}}
+@media(max-width:950px){:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-zone-transport button{font-size:8px;padding:0 4px;}:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-timecode{font-size:8px;}}
 @media(max-width:950px){.mvp-round-loop-board button,.round-controls{font-size:8px;}.mvp-round-loop-board button{padding:0 3px;}.round-stepper button,.round-navigation button{width:14px;padding:0;}.round-stepper output,.round-navigation output{min-width:10px;}.round-controls,.round-navigation,.round-range-controls,.round-stepper{gap:1px;}}
 
 /* Symmetric instrument board: BPM top to Practice bottom. */
@@ -1230,7 +1230,7 @@
 .round-strip{top:0;bottom:0;}
 .round-mini-block{background:#FAFAF8;}
 .mvp-control-row{--mvp-control-font-size:11px;}
-.mvp-round-loop-board button,.round-controls,.round-controls output,.mvp-control-row .mvp-practice-board button,.play12-onboarding-listen .mvp-control-row .playback-zone-transport button{font-size:var(--mvp-control-font-size) !important;font-weight:600;}
+.mvp-round-loop-board button,.round-controls,.round-controls output,.mvp-control-row .mvp-practice-board button,:is(.play12-onboarding-listen,.play12-training-shell) .mvp-control-row .playback-zone-transport button{font-size:var(--mvp-control-font-size) !important;font-weight:600;}
 @media(max-width:1100px){.mvp-control-row{--mvp-control-font-size:9px;}}
 @media(max-width:950px){.mvp-control-row{--mvp-control-font-size:8px;}}
 html[lang="ru"] .mvp-control-row .mvp-practice-board button{font-size:10px !important;padding-inline:2px;}
@@ -1275,3 +1275,4 @@ html[lang="ru"] .mvp-control-row .mvp-practice-board button{font-size:10px !impo
 @media (max-width:900px){.mvp-round-loop-board{bottom:calc(100% + 12px);}}
 #cards-ready { min-width: 112px; min-height: 38px; margin-top: 14px; padding: 9px 18px; font-size: 14px; pointer-events: auto; }
 .piano-visible-card-region { pointer-events: none; }
+

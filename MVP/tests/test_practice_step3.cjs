@@ -8,6 +8,7 @@ const renderer = path.join(__dirname, '../renderer');
 class Element {
   constructor(dataset = {}) { this.dataset = dataset; this.checked = false; this.value = '0'; this.disabled = false; this.hidden = false; this.handlers = {}; this.style = {setProperty(){}}; this.classList = {add(){},remove(){},toggle(){}}; }
   addEventListener(name, fn) { this.handlers[name] = fn; }
+  removeEventListener(name,fn) { if(this.handlers[name]===fn)delete this.handlers[name]; }
   click() { if (!this.disabled) this.handlers.click?.({target:this}); }
   setAttribute(name,value) { this[name] = value; }
   getBoundingClientRect() {return {top:0,left:0,right:100,width:100,height:42};}
@@ -141,6 +142,7 @@ function onboarding(saved=null, midiDiagnostic=null) {
   window.setTimeout=(fn,delay)=>{timers.set(++timerId,{fn,delay});return timerId;};
   Object.assign(sandbox,{document:{body:node('body'),documentElement:node('html'),addEventListener(){},createElement:()=>new Element(),getElementById:id=>id==='play12-onboarding'?root:node('#'+id)},URLSearchParams,location:{hostname:'127.0.0.1',search:''},Event:class{constructor(type){this.type=type;}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options?.detail;}},clearTimeout:id=>timers.delete(id)});
   window.Play12Coach={create:()=>({show(){},stop(){}})};
+  vm.runInContext(readFileSync(path.join(renderer,'training-shell.js'),'utf8'),sandbox);
   vm.runInContext(readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8'),sandbox);
   const controller=window.Play12Onboarding.create({root,startButton:node('start'),continueButton:node('continue'),storage});
   const pianoView={mount:null,ranges:[],setRange(left,right){this.ranges.push([left,right]);},syncContainer(){}};

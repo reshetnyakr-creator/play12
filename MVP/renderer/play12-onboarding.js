@@ -133,7 +133,7 @@
       cardsSetupCompleted: false, zeroSetupStage: null
     };
     if (state.practiceGuideStage === 'round-nav') state.practiceGuideStage = 'round-info';
-    let runtime = null;
+    let runtime = null, practiceBindingDispose=null;
     let pianoHome = null;
     let stageHome = null;
     let transportHome = null;
@@ -323,31 +323,13 @@
     let fixedPianoResizeHandler = null;
 
     const syncFixedPiano = () => {
-      const mount = runtime?.pianoView?.mount;
-      if (!mount?.classList.contains('is-fixed-piano-view')) return;
-      runtime.pianoView.syncContainer?.();
-      requestAnimationFrame(() => {
-        const fieldRect = playbackHost?.getBoundingClientRect();
-        mount.style.left = fieldRect?.width > 0 ? `${fieldRect.left + fieldRect.width / 2}px` : '50%';
-        const pianoRect = mount.getBoundingClientRect();
-        const height = Math.ceil(pianoRect.height);
-        const playbackHeight = document.body.classList.contains('play12-onboarding-listen') ? 50 : 0;
-        const reserved = height + playbackHeight + 36;
-        root.style.setProperty('--mvp-fixed-piano-height', `${height}px`);
-        document.documentElement.style.setProperty('--mvp-fixed-piano-height', `${height}px`);
-        root.style.setProperty('--mvp-fixed-piano-space', `${reserved}px`);
-        document.documentElement.style.setProperty('--mvp-fixed-piano-space', `${reserved}px`);
-        document.documentElement.style.setProperty('--mvp-piano-right-inset', `${global.innerWidth - pianoRect.right}px`);
-        root.style.setProperty('--mvp-piano-left-x', `${pianoRect.left}px`);
-        document.documentElement.style.setProperty('--mvp-piano-left-x', `${pianoRect.left}px`);
-      });
+      if(global.Play12TrainingShell) return global.Play12TrainingShell.syncFixedPiano({runtime,root,playbackHost});
     };
 
     const keepPianoFixed = () => {
       const mount = runtime?.pianoView?.mount;
       if (!mount) return;
-      mount.classList.add('is-fixed-piano-view');
-      document.body.classList.add('play12-fixed-piano-visible');
+      global.Play12TrainingShell.keepFixed(mount);
       if (!fixedPianoResizeHandler) {
         fixedPianoResizeHandler = () => {
           syncFixedPiano();
@@ -441,7 +423,7 @@
       if (!runtime?.pianoView?.mount || !pianoHost) return;
       const mount = runtime.pianoView.mount;
       if (!pianoHome) pianoHome = { parent: mount.parentElement, nextSibling: mount.nextSibling };
-      if (mount.parentElement !== pianoHost) pianoHost.appendChild(mount);
+      global.Play12TrainingShell.placePiano(mount,pianoHost);
       keepPianoFixed();
       runtime.pianoView.syncContainer?.();
     };
@@ -458,22 +440,13 @@
       const stage = runtime?.stage;
       if (!stage || !playbackHost) return;
       if (!stageHome) stageHome = { parent: stage.parentElement, nextSibling: stage.nextSibling };
-      if (stage.parentElement !== playbackHost) playbackHost.appendChild(stage);
       const transport = document.getElementById('playline');
       const row = document.getElementById('onboarding-control-row');
-      if (transport && row) {
-        transportHome ||= transport.parentElement;
-        row.appendChild(transport);
-        const roundBoard = document.getElementById('round-loop-board');
-        if (roundBoard) row.appendChild(roundBoard);
-      }
-      if (runtime?.pianoView?.mount && listenPianoHost) {
-        const mount = runtime.pianoView.mount;
-        if (!pianoHome) pianoHome = { parent: mount.parentElement, nextSibling: mount.nextSibling };
-        if (mount.parentElement !== listenPianoHost) listenPianoHost.appendChild(mount);
-        keepPianoFixed();
-        runtime.pianoView.syncContainer?.();
-      }
+      if(transport&&row) transportHome ||= transport.parentElement;
+      const mount=runtime?.pianoView?.mount;
+      if(mount&&listenPianoHost&&!pianoHome) pianoHome={parent:mount.parentElement,nextSibling:mount.nextSibling};
+      global.Play12TrainingShell.place({stage,playbackHost,transport,controlRow:row,roundBoard:document.getElementById('round-loop-board'),piano:mount,pianoHost:listenPianoHost});
+      if(mount&&listenPianoHost){keepPianoFixed();runtime.pianoView.syncContainer?.();}
       document.body.classList.add('play12-onboarding-listen');
       global.dispatchEvent(new Event('resize'));
       requestAnimationFrame(() => runtime?.playback?.layoutCoreGeometry?.());
@@ -483,9 +456,7 @@
       const stage = runtime?.stage;
       if (!stage || !stageHome) return;
       const transport = document.getElementById('playline');
-      if (transportHome && transport) transportHome.prepend(transport);
-      if (stageHome.nextSibling?.parentElement === stageHome.parent) stageHome.parent.insertBefore(stage, stageHome.nextSibling);
-      else stageHome.parent.appendChild(stage);
+      global.Play12TrainingShell.restore({stage,stageHome,transport,transportHome});
       document.body.classList.remove('play12-onboarding-listen');
       global.dispatchEvent(new Event('resize'));
       requestAnimationFrame(() => runtime?.playback?.layoutCoreGeometry?.());
@@ -1051,7 +1022,7 @@
     });
     global.addEventListener('play12:practice-event-complete', event => {
       const detail = event.detail || {};
-      if ((detail.source !== 'user' && detail.emptyRound !== true) || detail.roundComplete !== true) return;
+      if (!global.Play12TrainingShell.isSuccessfulRound(detail) && !(detail.emptyRound===true&&detail.roundComplete===true)) return;
       if (state.practiceGuideStage === 'round-practice' && roundTraining.started && roundTraining.valid) {
         if (detail.round < 2 || detail.round > 4 || roundTraining.successfulRounds.has(detail.round)) return;
         roundTraining.successfulRounds.add(detail.round);
@@ -1094,10 +1065,10 @@
       if (!roundTraining.valid) invalidateRoundTraining();
     });
 
-    const changePracticeSetting = (key, button) => {
+    const changePracticeSetting = (key, button, applied=false) => {
       if (!runtime) return;
       const current = runtime.playback.getPracticeSettings();
-      if (!runtime.playback.setPracticeSettings({ [key]: !current[key] })) {
+      if (!applied && !runtime.playback.setPracticeSettings({ [key]: !current[key] })) {
         button.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(0)' }], { duration: 220 });
         return;
       }
@@ -1109,12 +1080,14 @@
       saveState(storage, state);
       syncPracticeGuide();
     };
-    practiceModeButton.addEventListener('click', () => changePracticeSetting('practiceModeEnabled', practiceModeButton));
-    leftHandButton.addEventListener('click', () => changePracticeSetting('practiceLeftHandEnabled', leftHandButton));
-    rightHandButton.addEventListener('click', () => changePracticeSetting('practiceRightHandEnabled', rightHandButton));
+
+
+
 
     const connectRuntime = nextRuntime => {
       runtime = nextRuntime;
+      practiceBindingDispose?.();
+      practiceBindingDispose=global.Play12TrainingShell.bindPractice({playback:runtime.playback,root,onChange:(_state,key)=>changePracticeSetting(key,({practiceModeEnabled:practiceModeButton,practiceLeftHandEnabled:leftHandButton,practiceRightHandEnabled:rightHandButton})[key],true),onReject:button=>button.animate([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(0)'}],{duration:220})});
       removeNoteListener?.();
       removeMidiStatusListener?.();
       removeMidiInputInterceptor?.();
@@ -1351,3 +1324,4 @@
 
   global.Play12Onboarding = Object.freeze({ STEPS, STORAGE_KEYS, create });
 })(window);
+

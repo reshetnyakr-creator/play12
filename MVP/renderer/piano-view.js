@@ -213,7 +213,6 @@
 
     fitReferenceAspect() {
       const parent=this.mount.parentElement, availableHeight=Math.max(0,parent.clientHeight*.22-42);
-      if(parent.classList.contains('main-piano-host')){const width=Math.max(720,parent.clientWidth-20);this.mount.style.width=`${width*this.cropWidth/PIANO_WIDTH}px`;this.mount.style.height=`${width*VIEW_HEIGHT/PIANO_WIDTH}px`;return;}
 
       if(parent.classList.contains("mvp-piano-host")||this.mount.classList.contains("is-fixed-piano-view")){
         const availableWidth=this.mount.classList.contains("is-fixed-piano-view")
@@ -293,3 +292,4 @@
   }
   global.Play12PianoView={render:options=>new PianoView(options),mappingForMidi,layoutZeroForMidi};
 })(window);
+

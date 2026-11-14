@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=dynamic-piano-01">
-  <link rel="stylesheet" href="play12-onboarding.css?v=mvp-layout-cleanup-03">
+  <link rel="stylesheet" href="play12-onboarding.css?v=shell-13">
 </head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -333,14 +333,15 @@
   <script src="play12-renderer.js?v=editor-03"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
-  <script src="piano-view.js?v=tutorial-ux-06"></script>
+  <script src="piano-view.js?v=shell-13"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
   <script src="play12-round-board.js?v=training-controls-01"></script>
-  <script src="play12-playback.js?v=editor-01"></script>
+  <script src="play12-playback.js?v=shell-13"></script>
   <script src="web-midi-diagnostic.js?v=tutorial-ux-06"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
-  <script src="play12-onboarding.js?v=practice-copy-01"></script>
+  <script src="training-shell.js?v=1.3"></script>
+  <script src="play12-onboarding.js?v=shell-13"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     window.addEventListener('unhandledrejection', event => { if (new URLSearchParams(location.search).has('composition')) { const msg = document.createElement('p'); msg.textContent = 'Не удалось открыть композицию: ' + (event.reason?.message || event.reason); document.body.prepend(msg); } });
@@ -389,19 +390,19 @@
       const scoreRoot = document.getElementById('play12-score');
       const zeroStorageKey = 'play12.zero_note.midi';
       const zeroPitchClassStorageKey = 'play12.zero_note.pitch_class';
-      const savedZeroMidi = Number(localStorage.getItem(zeroStorageKey));
-      const savedPitchClass = Number(localStorage.getItem(zeroPitchClassStorageKey));
+      const savedZeroMidi = localStorage.getItem(zeroStorageKey)==null?NaN:Number(localStorage.getItem(zeroStorageKey));
+      const savedPitchClass = localStorage.getItem(zeroPitchClassStorageKey)==null?NaN:Number(localStorage.getItem(zeroPitchClassStorageKey));
       const pitchClasses = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
       const referenceZeroNote = Number.isInteger(score.play12.reference_zero_midi)
         ? score.play12.reference_zero_midi
         : Array.from({length: 88}, (_, index) => index + 21).find(midi => pitchClasses[midi % 12] === score.play12.zero_pitch_class);
       if (!Number.isInteger(referenceZeroNote)) throw new Error(`Не удалось определить reference zero для ${score.play12.zero_pitch_class}`);
-      const restoredPitchClass = compositionReviewMode
+      const restoredPitchClass = compositionReviewMode && !mainMode
         ? referenceZeroNote % 12
         : Number.isInteger(savedPitchClass) && savedPitchClass >= 0 && savedPitchClass < 12
           ? savedPitchClass
           : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
-      const initialZeroMidi = savedCompositionId ? referenceZeroNote : Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
+      const initialZeroMidi = savedCompositionId && !mainMode ? referenceZeroNote : Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
       const defaultZeroMidi = Play12PianoView.layoutZeroForMidi(referenceZeroNote, 21);
       const reviewGrid = saintsReviewMode ? document.getElementById('review-grid-select') : saintsManualReviewMode ? document.getElementById('manual-review-grid') : document.getElementById('grid-resolution');
       const reviewController = saintsReviewMode ? Play12CompositionReview.create({
@@ -677,3 +678,4 @@
   </script>
 <script src="../editor/library.js"></script></body>
 </html>
+

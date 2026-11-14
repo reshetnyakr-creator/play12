@@ -426,11 +426,11 @@
       const pianoRect = this.pianoView.mount.getBoundingClientRect();
       const scoreLeft = compactPlayer
         ? shellPadding
-        : document.body.classList.contains("play12-main") ? (stageRect.width - scoreWidth) / 2 : pianoRect.left - stageRect.left + (pianoRect.width - scoreWidth) / 2;
+        : pianoRect.left - stageRect.left + (pianoRect.width - scoreWidth) / 2;
       this.svg.parentElement.style.left = `${scoreLeft}px`;
       if (compactPlayer) {
         const scoreRect = this.svg.getBoundingClientRect();
-        const center = `${(scoreRect.left + scoreRect.right + progressRailWidth) / 2}px`;
+        const center = `${global.Play12TrainingShell ? global.Play12TrainingShell.anchorX(this.stage,scoreRect,progressRailWidth) : (scoreRect.left + scoreRect.right + progressRailWidth) / 2}px`;
         this.playline.style.setProperty("--mvp-note-field-center-x", center);
         document.documentElement?.style.setProperty("--mvp-note-field-center-x", center);
         this.stage.closest('.play12-onboarding')?.style?.setProperty('--mvp-note-field-center-x', center);
@@ -441,7 +441,7 @@
       // This hides fractional-transform antialias seams without exposing past music.
       this.svg.parentElement.style.height = `${executionHeight + 1}px`;
       this.svg.parentElement.style.overflow = "hidden";
-      if (compactPlayer && document.body.classList.contains("play12-onboarding-listen")) {
+      if (compactPlayer && (document.body.classList.contains("play12-onboarding-listen") || document.body.classList.contains("play12-training-shell"))) {
         const shell = this.stage.querySelector(".unified-playback-block");
         if (shell) shell.style.height = `${executionHeight + 1}px`;
       }
@@ -1382,3 +1382,4 @@
 
   global.Play12Playback = { preCountPlan, practiceBeatWindow, nextGridResolution, start: options => new Controller(options), effectiveMidiPitch, practiceScheduleEnd, findPracticeEvent, classifyPracticeTiming, PRACTICE_TIMING, LOOP_EMPTY_ROUNDS, PlaybackClock };
 })(window);
+
