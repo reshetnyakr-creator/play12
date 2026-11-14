@@ -6,3 +6,8 @@
 
 /* v1.3.1: center editing within the central column; connection color reflects real status. */
 .main-tools #main-edit-tools{margin-inline:auto;justify-content:center;max-width:100%;box-sizing:border-box}.main-midi-status{color:#E96E40}.main-midi-status[data-midi-status="connected"]{color:#268329}
+
+/* Author decision: hover is visual only; title click owns activation. */
+.main-melody:not([aria-current]):hover,.main-melody:not([aria-current]):focus-within{background:#f0f5df}
+.main-melody[aria-current],.main-melody[aria-current]:hover,.main-melody[aria-current]:focus-within{background:#eefaaf}
+.main-melody-title{font:500 13px Inter,Arial,sans-serif;text-align:left;border:0;background:transparent;color:inherit;padding:0;min-width:0;overflow-wrap:anywhere;cursor:pointer}

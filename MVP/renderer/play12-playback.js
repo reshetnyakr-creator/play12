@@ -1377,6 +1377,12 @@
     }
   }
 
+  // Main's approved UI cycle; legacy renderer resolution support remains unchanged.
+  const MAIN_GRIDS = Object.freeze(['1/4','1/8','1/16','1/32']);
+  const mainGridState = current => {
+    const index=Math.max(0,MAIN_GRIDS.indexOf(current)),grid=MAIN_GRIDS[index];
+    return {grid,multiplier:Number(grid.split('/')[1])/4,next:MAIN_GRIDS[(index+1)%MAIN_GRIDS.length]};
+  };
   const nextGridResolution = (current, recommended) => {
     const options = ['1/4', '1/8', '1/16', '1/32', '1/64'];
     const minimum = options.includes(recommended) ? recommended : options[0];
@@ -1384,6 +1390,6 @@
     return next && options.indexOf(next) >= options.indexOf(minimum) ? next : minimum;
   };
 
-  global.Play12Playback = { preCountPlan, practiceBeatWindow, nextGridResolution, start: options => new Controller(options), effectiveMidiPitch, practiceScheduleEnd, findPracticeEvent, classifyPracticeTiming, PRACTICE_TIMING, LOOP_EMPTY_ROUNDS, PlaybackClock };
+  global.Play12Playback = { preCountPlan, practiceBeatWindow, nextGridResolution, mainGridState, start: options => new Controller(options), effectiveMidiPitch, practiceScheduleEnd, findPracticeEvent, classifyPracticeTiming, PRACTICE_TIMING, LOOP_EMPTY_ROUNDS, PlaybackClock };
 })(window);
 

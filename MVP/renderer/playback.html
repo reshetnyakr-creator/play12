@@ -337,7 +337,7 @@
   <script src="piano-view.js?v=1.4.1"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
   <script src="play12-round-board.js?v=training-controls-01"></script>
-  <script src="play12-playback.js?v=1.4"></script>
+  <script src="play12-playback.js?v=1.4.2-author"></script>
   <script src="web-midi-diagnostic.js?v=tutorial-ux-06"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
@@ -429,10 +429,11 @@
       const gridMetadata = score.play12.recommended_grid || score.play12.default_grid;
       // Without per-composition metadata retain the established configured display default.
       const recommendedGrid = gridOptions.includes(gridMetadata) ? gridMetadata : reviewGrid.value;
-      if (!compositionReviewMode) reviewGrid.value = recommendedGrid;
+      if(mainMode){for(const option of [...reviewGrid.options])if(option.value==='1/64')option.remove();reviewGrid.value='1/4';}
+      else if (!compositionReviewMode) reviewGrid.value = recommendedGrid;
       const gridButton = document.getElementById('playback-grid');
       const syncGridButton = () => {
-        gridButton.textContent = `×${reviewGrid.value.split('/')[1]}`;
+        gridButton.textContent = `×${mainMode?Play12Playback.mainGridState(reviewGrid.value).multiplier:reviewGrid.value.split('/')[1]}`;
         gridButton.setAttribute('aria-label', window.Play12I18n.t('Display grid {grid}; click to subdivide', {grid:reviewGrid.value}));
       };
       syncGridButton();
@@ -656,7 +657,7 @@
         syncGridButton();
       });
       gridButton.addEventListener('click', () => {
-        reviewGrid.value = Play12Playback.nextGridResolution(reviewGrid.value, recommendedGrid);
+        reviewGrid.value = mainMode?Play12Playback.mainGridState(reviewGrid.value).next:Play12Playback.nextGridResolution(reviewGrid.value, recommendedGrid);
         reviewGrid.dispatchEvent(new Event('change'));
       });
       window.play12Playback.stage.dataset.recommendedGrid = recommendedGrid;
@@ -669,7 +670,7 @@
             p.replaceSvg(render(reviewGrid.value)); p.pauseImmediate(position);
           }
         };
-        reviewGrid.addEventListener('change',()=>{window.play12MainController.refresh(window.play12MainController.document);syncGridButton();});
+        reviewGrid.addEventListener('change',()=>{reviewGrid.value=Play12Playback.mainGridState(reviewGrid.value).grid;window.play12MainController.refresh(window.play12MainController.document);syncGridButton();});
         window.dispatchEvent(new Event('play12:main-ready'));
       }
       if (playbackParams.has('at')) window.play12Playback.seek(Number(playbackParams.get('at')));
