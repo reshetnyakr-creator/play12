@@ -337,13 +337,12 @@
   <script src="piano-view.js?v=1.4.3"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
   <script src="play12-round-board.js?v=1.4.3"></script>
-  <script src="play12-playback.js?v=1.4.4"></script>
+  <script src="play12-playback.js?v=1.4.3"></script>
   <script src="web-midi-diagnostic.js?v=tutorial-ux-06"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
   <script src="training-shell.js?v=1.4"></script>
   <script src="training-zones.js?v=1.4.3"></script>
-  <script src="../main/visual-adapter.js?v=1.4.4"></script>
   <script src="play12-onboarding.js?v=1.4"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
@@ -561,8 +560,7 @@
         zeroConfirmation.hidden = false;
         window.dispatchEvent(new CustomEvent('play12:zero-ui-candidate'));
       };
-      const beginZeroSelection = event => {
-        if(mainMode)zeroChooser.zeroInitiator=event?.currentTarget?.tagName==='BUTTON'?event.currentTarget:document.activeElement;
+      const beginZeroSelection = () => {
         if (window.play12Playback.practiceEnabled()) window.play12Playback.requestPause();
         choosingZero = true;
         zeroChooser.dataset.choosingZero = 'true';
@@ -583,7 +581,7 @@
       });
       chooseAnotherZero.addEventListener('click', () => { waitForZero(); window.dispatchEvent(new CustomEvent('play12:zero-ui-open')); });
       useZero.addEventListener('click', () => {
-        if (!choosingZero || candidateZeroMidi == null) return;
+        if (candidateZeroMidi == null) return;
         pianoView.setZeroMidi(candidateZeroMidi);
         window.play12Playback.setRuntimeZeroNote(candidateZeroMidi);
         localStorage.setItem(zeroStorageKey, String(candidateZeroMidi));
@@ -599,7 +597,6 @@
           selectedPitchClass: candidateZeroPitchClass, layoutZeroNote: candidateZeroMidi
         }}));
       });
-      if(mainMode)Play12MainVisuals.createZeroModal({chooser:zeroChooser,pianoView,playback:window.play12Playback,onSelect:midi=>previewZero(midi,'mouse')});
       if (playbackParams.get('midi') === '1' || window.Play12I18n.isRu()) document.getElementById('midi-diagnostic').hidden = false;
       const onboardingRoot = document.getElementById('play12-onboarding');
       const commandAvailability = action => {

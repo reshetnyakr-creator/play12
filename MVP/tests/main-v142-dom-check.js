@@ -16,7 +16,5 @@
  for(const [name,selector]of [['header','.mvp-site-header'],['piano','#piano-view'],['MIDI','.main-midi'],['workspace','.music-workspace']]){const n=doc.querySelector(selector);if(n){const r=n.getBoundingClientRect();rects[name]={left:r.left,right:r.right,top:r.top,bottom:r.bottom};check(name+' within visible viewport',r.top>=viewportTop-2&&r.bottom<=viewportBottom+2);}}
  const marker=doc.querySelector('#progress-head');if(marker){const r=marker.getBoundingClientRect(),b=nodes.playback.getBoundingClientRect();check('whole progress circle inside Playback',r.left>=b.left&&r.right<=b.right&&r.top>=b.top&&r.bottom<=b.bottom);rects.progress={left:r.left,right:r.right,top:r.top,bottom:r.bottom};}
  if(cells.length)check('title/visible graphic right',near(rects.title.right,Math.max(...cells.map(n=>n.getBoundingClientRect().right))));
- const zero=doc.querySelector('.main-zero-dialog[open]');if(zero){const r=zero.getBoundingClientRect();check('zero dialog body portal',zero.parentElement===doc.body&&!doc.querySelector('#zero-chooser').closest('.playback-stage'));check('zero dialog viewport',r.top>=viewportTop-2&&r.bottom<=viewportBottom+2);check('zero dialog focus',zero.contains(doc.activeElement));}
- const avatar=doc.querySelector('.main-profile-avatar');if(avatar)check('personal avatar loaded',avatar.complete&&avatar.naturalWidth>0);
  return{pass:checks.every(c=>c.pass),checks,rects,viewport:{width:doc.documentElement.clientWidth,height:G.visualViewport?.height||G.innerHeight},scrollY:G.scrollY};
 };})(typeof window!=='undefined'?window:globalThis);
