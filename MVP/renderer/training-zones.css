@@ -36,3 +36,19 @@
 .training-width-probe{position:absolute;left:max(24px,env(safe-area-inset-left));right:max(24px,env(safe-area-inset-right));height:0;visibility:hidden;pointer-events:none}
 .training-panel-slot,.training-music-slot{overflow:clip}
 .training-panel-slot button:focus-visible,.training-music-slot button:focus-visible{outline-offset:-3px}
+
+/* v1.4.1: Desktop is a three-column layout, even when side panels need fitting. */
+.main-layout.training-three-zones.is-three-wide{overflow-x:clip;scroll-snap-type:none;overscroll-behavior-x:auto;margin-inline:0}
+.is-three-wide>.training-zone{width:auto;order:0;scroll-snap-align:none;container-type:inline-size}
+.is-three-wide>.training-zone-right{grid-column:auto;order:0;flex-direction:column}
+.is-three-wide .training-zone-navigation{display:none}
+@container(max-width:510px){.training-left-controls>.mvp-practice-board{width:215px}}
+@container(max-width:460px){.training-right-controls>.mvp-round-loop-board{width:268px}.training-right-controls>#onboarding-choose-zero{width:36px;min-width:36px;height:36px}}
+.training-persistent-footer [data-keyboard-mode="desktop-full"]{width:100%;max-width:100%}
+
+@container(max-width:460px){
+ .training-right-controls{--mvp-control-font-size:9px}
+ .training-right-controls .round-stepper button,.training-right-controls .round-navigation button{width:12px;padding:0}
+ .training-right-controls .round-stepper output,.training-right-controls .round-navigation output{min-width:10px}
+ .training-right-controls .round-controls,.training-right-controls .round-navigation,.training-right-controls .round-range-controls,.training-right-controls .round-stepper{gap:1px}
+}

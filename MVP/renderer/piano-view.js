@@ -85,7 +85,7 @@
         .map(path=>({path,bounds:this.boundsInPianoCoordinates(path)})).filter(item=>item.bounds.width>0&&item.bounds.height>0)
         .sort((a,b)=>(a.bounds.left+a.bounds.width/2)-(b.bounds.left+b.bounds.width/2));
       if(faces.length!==FULL_MAX_MIDI-FULL_MIN_MIDI+1) throw new Error(`Piano_Roll.svg: expected 88 keys, found ${faces.length}`);
-      const allAnchors=new Map(),keyAnchors=new Map(),displayMin=this.visualWindow?.min??this.minMidi,displayMax=this.visualWindow?.max??this.maxMidi;
+      const allAnchors=new Map(),keyAnchors=new Map(),displayMin=this.desktopWindow?FULL_MIN_MIDI:(this.visualWindow?.min??this.minMidi),displayMax=this.desktopWindow?FULL_MAX_MIDI:(this.desktopWindow?FULL_MAX_MIDI:(this.visualWindow?.max??this.maxMidi));
       const indexedFaces=faces.map((face,index)=>({...face,midi:FULL_MIN_MIDI+index}));
       if(this.visualWindow){
         const octave=faces[12].bounds.left-faces[0].bounds.left;
@@ -123,7 +123,7 @@
       this.cardClipRect.setAttribute("x",String(this.cropLeft));
       this.cardClipRect.setAttribute("width",String(this.visualWindow?this.cropWidth:Math.max(0,Math.min(this.cropRight,penultimateKeyAnchor.right)-this.cropLeft)));
       this.mount.dataset.cardClipRight=String(penultimateKeyAnchor.right);
-      this.mount.dataset.cardClipLastVisibleMidi=String(this.maxMidi-1);
+      this.mount.dataset.cardClipLastVisibleMidi=String(displayMax-1);
       this.renderStrips(allAnchors);
       this.cardRegion=element("rect",{x:this.cropLeft,y:0,
         width:Math.max(0,Math.min(this.cropRight,penultimateKeyAnchor.right)-this.cropLeft),height:CARD_HEIGHT,
@@ -155,7 +155,7 @@
       const firstCycle=this.visualWindow?Math.floor((this.visualWindow.min-this.zeroMidi)/12):0,lastCycle=this.visualWindow?Math.floor((this.visualWindow.max-this.zeroMidi)/12):this.cardTheme.cycleNames.length-1;
       for(let cycle=firstCycle;cycle<=lastCycle;cycle++){
         const cycleStartMidi=this.zeroMidi+cycle*12;
-        if(cycleStartMidi>(this.visualWindow?.max??this.maxMidi)) break;
+        if(cycleStartMidi>(this.desktopWindow?FULL_MAX_MIDI:(this.visualWindow?.max??this.maxMidi))) break;
         const yMidi=this.zeroMidi+cycle*12+11;
         const yAnchor=this.anchorForMidi(yMidi,keyAnchors,octaveSpan);
         const zeroAnchor=this.visualWindow?this.anchorForMidi(cycleStartMidi,keyAnchors,octaveSpan):keyAnchors.get(cycleStartMidi);
@@ -232,6 +232,7 @@
         const availableWidth=this.mount.classList.contains("is-fixed-piano-view")
           ? Math.max(0,global.innerWidth-24)
           : Math.max(0,parent.clientWidth);
+        if(this.desktopWindow){this.mount.style.width=`${availableWidth}px`;this.mount.style.height=`${availableWidth*VIEW_HEIGHT/PIANO_WIDTH}px`;return;}
         if(this.visualWindow){const visualWidth=Math.min(availableWidth,Math.max(36,this.cropWidth*.5),Math.max(72,Math.min(180,global.innerHeight*.25))*this.cropWidth/VIEW_HEIGHT);this.mount.style.width=`${visualWidth}px`;this.mount.style.height=`${visualWidth*VIEW_HEIGHT/this.cropWidth}px`;return;}
         const fullWidth=Math.max(1100,availableWidth);
         this.mount.style.width=`${fullWidth*this.cropWidth/PIANO_WIDTH}px`;
@@ -247,6 +248,12 @@
       this.resizeObserver.observe(this.mount.parentElement);
       this.fitReferenceAspect();
       if(!this.keys.size) requestAnimationFrame(()=>this.bindGeometry());
+    }
+    setWorkspaceKeyboard(mode,range){
+      const desktop=mode==='desktop',next=desktop?null:range;
+      if(this.desktopWindow===desktop&&JSON.stringify(next)===JSON.stringify(this.visualWindow))return;
+      this.desktopWindow=desktop;this.visualWindow=next;this.windowOutOfRange=false;this.render(this.zeroMidi);
+      this.mount.dataset.keyboardMode=desktop?'desktop-full':'composition-range';
     }
     setVisualWindow(range){
       const next=range?{min:Math.max(0,range.min),max:Math.min(127,range.max)}:null;
