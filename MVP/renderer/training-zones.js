@@ -7,6 +7,7 @@ function metrics(available,left,music,right){const minimum=Math.max(left,music,r
  // Keep music at >=90% and the existing compact Left pair at >=75%.
  const threshold=Math.ceil(Math.max(3*music*.9+2*zoneGap,3*Math.min(left,405)*.75+2*zoneGap));
  return{wide:available>=1232||available>=threshold,threshold,unscaledThreshold,minimum};}
+function corridors({left,right,playbackLeft,playbackRight,gap,leftWidth,rightWidth}){const leftAvailable=Math.max(0,playbackLeft-left-gap),rightAvailable=Math.max(0,right-playbackRight-gap);return{leftAvailable,rightAvailable,leftScale:fit(leftWidth,leftAvailable),rightScale:fit(rightWidth,rightAvailable)};}
 function compositionRange(events){const notes=events.map(e=>e.midi).filter(n=>Number.isInteger(n)&&n>=0&&n<=127);return notes.length?{min:Math.min(...notes),max:Math.max(...notes)}:{min:60,max:72,empty:true};}
 function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
  let mounted=false,frame=0,observer,active=1,wide=false,initial=true,pendingRange=null,lastRange='',scrollFrame=0,desktopLeft=0,desktopRight=0,cachedEvents=null,cachedCount=-1,cachedZero=null,cachedRange=null;const off=[],homes=[];
@@ -14,26 +15,39 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
  const node=(tag,cls)=>{const n=doc.createElement(tag);n.className=cls;return n;};
  const remember=n=>homes.push({n,parent:n.parentElement,next:n.nextSibling});
  const leftSlot=node('div','training-panel-slot'),leftControls=node('div','training-zone-controls training-left-controls'),rightSlot=node('div','training-panel-slot'),rightControls=node('div','training-zone-controls training-right-controls');
- const musicSlot=node('div','training-music-slot');let workspace,nav,warning,widthProbe;
+ const musicSlot=node('div','training-music-slot');let workspace,nav,warning,widthProbe,skillCard;
  const listen=(target,type,fn,options)=>{target.addEventListener(type,fn,options);off.push(()=>target.removeEventListener(type,fn,options));};
  const popupOpen=()=>!!doc.querySelector('#main-fingers:not([hidden]),dialog[open],.zero-chooser:not([hidden])');
  const hidePopup=()=>{G.play12Main?.closePicker?.();const p=doc.getElementById('main-fingers');if(p)p.hidden=true;};
  const mark=()=>{[...nav.children].forEach((b,i)=>b.setAttribute('aria-current',String(i===active)));root.dataset.activeZone=['left','center','right'][active];};
  function go(index){active=Math.max(0,Math.min(2,index));hidePopup();root.scrollTo({left:wide?0:root.clientWidth*active,behavior:'auto'});mark();}
  function scaleSlot(slot,content,width){const parent=slot.parentElement,style=getComputedStyle(parent),available=parent.clientWidth-parseFloat(style.paddingLeft||0)-parseFloat(style.paddingRight||0),s=fit(width,available);content.style.transform=`scale(${s})`;content.style.transformOrigin='top left';slot.style.width=`${width*s}px`;slot.style.height=`${content.offsetHeight*s}px`;slot.dataset.scale=String(s);return s;}
+ function layoutCorridors(){
+  if(!wide){left.style.paddingBottom='';leftSlot.style.left='';rightSlot.style.right='';right.style.paddingBottom='';if(skillCard)skillCard.style.height='';leftControls.children[1].style.width='';rightControls.children[0].style.width='';return;}
+  const profile=left.querySelector('.main-profile'),library=left.querySelector('.main-library-card');if(!profile||!library)return;
+  const line=doc.getElementById('playline'),p=line.getBoundingClientRect(),a=profile.getBoundingClientRect(),b=right.getBoundingClientRect(),spacing=parseFloat(getComputedStyle(leftControls).columnGap)||gap;
+  const c=corridors({left:a.left,right:b.right,playbackLeft:p.left,playbackRight:p.right,gap:spacing,leftWidth:desktopLeft,rightWidth:desktopRight});
+  const practice=leftControls.children[1],round=rightControls.children[0];practice.style.width=Math.max(320,c.leftAvailable-leftControls.children[0].offsetWidth-spacing)+'px';round.style.width=Math.max(372,c.rightAvailable-rightControls.children[1].offsetWidth-spacing)+'px';
+  const ls=fit(leftControls.scrollWidth,c.leftAvailable),rs=fit(rightControls.scrollWidth,c.rightAvailable);
+  for(const[slot,content,s]of [[leftSlot,leftControls,ls],[rightSlot,rightControls,rs]]){content.style.transform=`scale(${s})`;content.style.transformOrigin='top left';slot.style.width=content.scrollWidth*s+'px';slot.style.height=content.offsetHeight*s+'px';slot.dataset.scale=String(s);}
+  leftSlot.style.left=a.left-left.getBoundingClientRect().left+'px';rightSlot.style.right='0px';const reserve=Math.max(leftControls.offsetHeight*ls,rightControls.offsetHeight*rs)+14;left.style.paddingBottom=reserve+'px';right.style.paddingBottom=reserve+'px';
+  const lib=library.getBoundingClientRect();if(skillCard)skillCard.style.height=Math.max(0,lib.bottom-a.top)+'px';
+ }
+ function alignTitle(){const heading=center.querySelector('.main-tools h1'),cells=runtime.stage.querySelectorAll?.('.play12-cell');if(!heading||!cells?.length)return;const x=Math.min(...[...cells].map(n=>n.getBoundingClientRect().left)),inset=Math.max(0,x-center.getBoundingClientRect().left);heading.style.marginInlineStart=inset+'px';heading.style.width=`calc(100% - ${inset}px)`;}
  function rangeForComposition(){const p=runtime.playback,events=p.events||[];if(events!==cachedEvents||events.length!==cachedCount||p.runtimeZeroNote!==cachedZero){cachedEvents=events;cachedCount=events.length;cachedZero=p.runtimeZeroNote;cachedRange=compositionRange(events);}return cachedRange;}
  function updateKeyboard(){const piano=runtime.pianoView,busy=piano.virtualPointers.size>0||[...piano.activeBySource].some(([,set])=>set.size>0);const next=wide?null:rangeForComposition(),key=JSON.stringify(next);if(key===lastRange){pendingRange=null;return;}if(busy){pendingRange=next;return;}if(piano.setWorkspaceKeyboard)piano.setWorkspaceKeyboard(wide?'desktop':'adaptive',next);else piano.setVisualWindow?.(next);lastRange=key;pendingRange=null;}
  function layout(){if(!mounted)return;runtime.playback.layoutCoreGeometry();const music=parseFloat(runtime.stage.style.width)||runtime.stage.offsetWidth,l=desktopLeft,r=desktopRight,m=metrics(widthProbe.clientWidth,l,music,r),changed=wide!==m.wide;wide=m.wide;root.classList.toggle('is-three-wide',wide);root.classList.toggle('is-three-narrow',!wide);root.dataset.wideThreshold=String(m.threshold);root.dataset.unscaledThreshold=String(m.unscaledThreshold);root.dataset.keyboardMode=wide?'desktop-full':'composition-range';nav.hidden=wide;root.style.setProperty('--training-music-width',music+'px');
   // Keep measured intrinsic sizes stable: CSS removes legacy viewport-based widths only in these slots.
-  scaleSlot(leftSlot,leftControls,leftControls.scrollWidth);scaleSlot(rightSlot,rightControls,rightControls.scrollWidth);
-  const s=fit(music,center.clientWidth);workspace.style.transform=`scale(${s})`;workspace.style.transformOrigin='top left';musicSlot.style.width=music*s+'px';const footerHeight=footer.getBoundingClientRect().height;root.style.setProperty('--training-footer-height',footerHeight+'px');document.body.style.setProperty('--training-footer-height',footerHeight+'px');
-  const free=Math.max(260,(G.innerHeight-footerHeight-center.getBoundingClientRect().top-120)/s);runtime.stage.style.height=Math.floor(free)+'px';musicSlot.style.height=(runtime.stage.offsetHeight+doc.getElementById('playline').offsetHeight)*s+'px';runtime.playback.layoutCoreGeometry();updateKeyboard();runtime.pianoView.syncContainer();
+  if(!wide){layoutCorridors();scaleSlot(leftSlot,leftControls,leftControls.scrollWidth);scaleSlot(rightSlot,rightControls,rightControls.scrollWidth);}
+  layoutCorridors();const s=fit(music,center.clientWidth);workspace.style.transform=`scale(${s})`;workspace.style.transformOrigin='top left';musicSlot.style.width=music*s+'px';const footerHeight=footer.getBoundingClientRect().height;root.style.setProperty('--training-footer-height',footerHeight+'px');document.body.style.setProperty('--training-footer-height',footerHeight+'px');
+  const free=Math.max(260,(G.innerHeight-footerHeight-center.getBoundingClientRect().top-120)/s);runtime.stage.style.height=Math.floor(free)+'px';musicSlot.style.height=(runtime.stage.offsetHeight+doc.getElementById('playline').offsetHeight)*s+'px';runtime.playback.layoutCoreGeometry();layoutCorridors();alignTitle();updateKeyboard();runtime.pianoView.syncContainer();
   warning.hidden=wide||!runtime.pianoView.windowReadabilityLimited?.();warning.textContent='Диапазон произведения показан целиком. На этом экране обозначения клавиш могут быть слишком мелкими.';
   if(initial||changed){initial=false;go(active);}mark();
  }
  const resize=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(layout);};
  return{resize,go,get activeZone(){return active;},mount(){if(mounted)return;mounted=true;widthProbe=node('div','training-width-probe');widthProbe.setAttribute('aria-hidden','true');root.before(widthProbe);root.classList.add('training-three-zones','training-shell-main');doc.body.classList.add('play12-training-shell','play12-three-zones');
   remember(footer);for(const n of [runtime.stage,doc.getElementById('playline'),runtime.pianoView.mount,doc.getElementById('metronome-board'),doc.getElementById('practice-board'),doc.getElementById('round-loop-board'),doc.getElementById('onboarding-choose-zero')])remember(n);
+  if(right.classList.contains('main-skill')){skillCard=node('section','main-skill training-skill-card');while(right.firstChild)skillCard.append(right.firstChild);right.classList.remove('main-skill');right.append(skillCard);}
   left.classList.add('training-zone','training-zone-left');center.classList.add('training-zone','training-zone-center');right.classList.add('training-zone','training-zone-right');
   for(const [i,n]of [left,center,right].entries()){n.setAttribute('aria-label',['Профиль и мелодии','Музыкальное рабочее пространство','Skill Bank и раунды'][i]);n.setAttribute('tabindex','0');}
   footer.classList.add('training-persistent-footer');root.after(footer);helpers.placePiano(runtime.pianoView.mount,pianoHost);
@@ -49,5 +63,5 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   observer=new ResizeObserver(resize);[root,footer,leftControls,rightControls,widthProbe].forEach(n=>observer.observe(n));listen(G,'resize',resize);resize();
  },dispose(){if(!mounted)return;mounted=false;observer?.disconnect();cancelAnimationFrame(frame);cancelAnimationFrame(scrollFrame);off.splice(0).forEach(f=>f());for(const h of homes.reverse()){if(h.next?.parentElement===h.parent)h.parent.insertBefore(h.n,h.next);else h.parent.appendChild(h.n);}leftSlot.remove();rightSlot.remove();musicSlot.remove();nav.remove();warning.remove();widthProbe.remove();root.classList.remove('training-three-zones','training-shell-main','is-three-wide','is-three-narrow');doc.body.classList.remove('play12-three-zones','play12-training-shell');}};
 }
-G.Play12TrainingZones={fit,metrics,compositionRange,create};if(typeof module!=='undefined')module.exports=G.Play12TrainingZones;
+G.Play12TrainingZones={fit,metrics,corridors,compositionRange,create};if(typeof module!=='undefined')module.exports=G.Play12TrainingZones;
 })(typeof window!=='undefined'?window:globalThis);

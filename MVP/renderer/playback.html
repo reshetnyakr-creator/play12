@@ -342,7 +342,7 @@
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=round-final-01"></script>
   <script src="training-shell.js?v=1.4"></script>
-  <script src="training-zones.js?v=1.4.1"></script>
+  <script src="training-zones.js?v=1.4.2"></script>
   <script src="play12-onboarding.js?v=1.4"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
@@ -669,7 +669,7 @@
             p.replaceSvg(render(reviewGrid.value)); p.pauseImmediate(position);
           }
         };
-        reviewGrid.addEventListener('change',()=>window.play12MainController.refresh(window.play12MainController.document));
+        reviewGrid.addEventListener('change',()=>{window.play12MainController.refresh(window.play12MainController.document);syncGridButton();});
         window.dispatchEvent(new Event('play12:main-ready'));
       }
       if (playbackParams.has('at')) window.play12Playback.seek(Number(playbackParams.get('at')));
