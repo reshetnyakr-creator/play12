@@ -3,3 +3,6 @@
 @media(max-width:1050px){.main-layout{grid-template-columns:230px minmax(0,1fr)}.main-skill{grid-column:1/-1;order:4;flex-direction:row;align-items:center;gap:16px;padding:12px}.main-skill h2{font-size:20px;margin:0}.main-skill p{font-size:14px}}
 @media(max-width:720px){.main-layout{display:flex;flex-direction:column;padding:12px;gap:12px}.main-library{order:0}.main-layout>.playback-page{order:1}.main-footer{order:2}.main-skill{order:3}.main-melodies{max-height:180px}.main-profile{padding:10px}.play12-main>.mvp-site-header{height:auto;padding:12px;gap:12px}.main-tools h1{font-size:22px}}
 @media(hover:none){.main-melody{grid-template-columns:18px minmax(0,1fr) repeat(3,46px)}.main-action-label{position:static;clip-path:none;width:auto;height:auto;display:block;font-size:9px}.main-icon-action{height:auto}}
+
+/* v1.3.1: center editing within the central column; connection color reflects real status. */
+.main-tools #main-edit-tools{margin-inline:auto;justify-content:center;max-width:100%;box-sizing:border-box}.main-midi-status{color:#E96E40}.main-midi-status[data-midi-status="connected"]{color:#268329}
