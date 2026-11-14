@@ -426,7 +426,7 @@
       const pianoRect = this.pianoView.mount.getBoundingClientRect();
       const scoreLeft = compactPlayer
         ? shellPadding
-        : pianoRect.left - stageRect.left + (pianoRect.width - scoreWidth) / 2;
+        : document.body.classList.contains("play12-main") ? (stageRect.width - scoreWidth) / 2 : pianoRect.left - stageRect.left + (pianoRect.width - scoreWidth) / 2;
       this.svg.parentElement.style.left = `${scoreLeft}px`;
       if (compactPlayer) {
         const scoreRect = this.svg.getBoundingClientRect();
