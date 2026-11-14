@@ -1,0 +1,20 @@
+/* Bounded workstation: header / remaining workspace / persistent dock. */
+body.play12-three-zones{position:fixed;top:var(--training-visual-top,0px);left:0;right:0;width:100%;height:var(--training-viewport-height,100dvh);min-height:0;max-height:var(--training-viewport-height,100dvh);box-sizing:border-box;padding:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+.play12-three-zones>.main-layout.training-three-zones{min-height:0;height:100%;max-height:100%;box-sizing:border-box}
+.play12-three-zones>.main-footer.training-persistent-footer{position:relative;inset:auto;min-height:0;grid-row:3}
+.training-three-zones>.training-zone{min-height:0;max-height:100%}
+.training-three-zones .main-profile{flex:none}
+.training-three-zones .main-library-card{min-height:0;display:flex;flex-direction:column;flex:1 1 0}
+.training-three-zones .main-library-heading,.training-three-zones .main-library-card>details{flex:none}
+.training-three-zones .main-melodies{min-height:0;max-height:none;flex:1 1 0;overflow-y:auto}
+.training-three-zones .mvp-playback-host,.training-three-zones .training-music-slot{min-height:0;flex:none}
+.training-three-zones.is-three-narrow>.training-zone{overflow-y:auto;overflow-x:clip}
+.training-three-zones .main-tools .main-title-board{height:42px;min-height:42px;max-height:42px;font:700 16px/24px Inter,Arial,sans-serif;box-sizing:border-box;border:1px solid #d1d3ce;border-radius:24px;background:#fafaf8;padding:8px 12px;overflow:hidden;white-space:nowrap;box-shadow:none;flex:none}
+.main-title-text{display:block;width:max-content;white-space:nowrap;will-change:auto}
+.main-title-board.is-overflowing .main-title-text{animation:play12-title-pan var(--title-duration,14s) ease-in-out infinite}
+.main-title-board:hover .main-title-text,.main-title-board:focus .main-title-text{animation-play-state:paused}
+.main-title-board:focus-visible{outline:2px solid #E96E40;outline-offset:2px}
+@keyframes play12-title-pan{0%,15%{transform:translateX(0)}45%,60%{transform:translateX(var(--title-travel,0px))}90%,100%{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.main-title-board.is-overflowing .main-title-text{animation:none;max-width:100%;overflow:hidden;text-overflow:ellipsis}}
+/* Keep the 4.5px circle inside the 42px board and below its 30px buttons. */
+.play12-main .music-workspace .playback-progress-head{top:auto;bottom:1px;transform:translateX(-50%);z-index:4;pointer-events:none}

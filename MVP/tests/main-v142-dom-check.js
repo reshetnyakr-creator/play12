@@ -11,5 +11,10 @@
  check('document horizontal overflow',doc.documentElement.scrollWidth<=doc.documentElement.clientWidth+2);
  const wide=nodes.strip.classList.contains('is-three-wide');check('desktop three columns',wide&&G.getComputedStyle(nodes.strip).display==='grid');check('desktop no snap',G.getComputedStyle(nodes.strip).scrollSnapType==='none');
  for(const [name,selector]of [['Practice','#practice-board button'],['RoundBoard','#round-loop-board button']]){const controls=[...doc.querySelectorAll(selector)];check(name+' text fits',controls.every(n=>n.scrollWidth<=n.clientWidth+2));}
- return{pass:checks.every(c=>c.pass),checks,rects,viewport:{width:doc.documentElement.clientWidth,height:G.innerHeight},scrollY:G.scrollY};
+ check('document vertical overflow',doc.documentElement.scrollHeight<=doc.documentElement.clientHeight+2);
+ const viewportTop=G.visualViewport?.offsetTop||0,viewportBottom=viewportTop+(G.visualViewport?.height||G.innerHeight);
+ for(const [name,selector]of [['header','.mvp-site-header'],['piano','#piano-view'],['MIDI','.main-midi'],['workspace','.music-workspace']]){const n=doc.querySelector(selector);if(n){const r=n.getBoundingClientRect();rects[name]={left:r.left,right:r.right,top:r.top,bottom:r.bottom};check(name+' within visible viewport',r.top>=viewportTop-2&&r.bottom<=viewportBottom+2);}}
+ const marker=doc.querySelector('#progress-head');if(marker){const r=marker.getBoundingClientRect(),b=nodes.playback.getBoundingClientRect();check('whole progress circle inside Playback',r.left>=b.left&&r.right<=b.right&&r.top>=b.top&&r.bottom<=b.bottom);rects.progress={left:r.left,right:r.right,top:r.top,bottom:r.bottom};}
+ if(cells.length)check('title/visible graphic right',near(rects.title.right,Math.max(...cells.map(n=>n.getBoundingClientRect().right))));
+ return{pass:checks.every(c=>c.pass),checks,rects,viewport:{width:doc.documentElement.clientWidth,height:G.visualViewport?.height||G.innerHeight},scrollY:G.scrollY};
 };})(typeof window!=='undefined'?window:globalThis);

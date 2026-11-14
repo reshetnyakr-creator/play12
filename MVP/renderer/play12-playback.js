@@ -880,6 +880,7 @@
         this.clock.pause();
         this.audio.stopAll(this.audioContext.currentTime, true);
         this.audio.robotGain.gain.setValueAtTime(0, this.audioContext.currentTime);
+        this.roundBoard?.suggestRepeatAtPause?.(this.clock.position);
         this.practicePaused = true;
         this.waitingForInput = null;
         this.pauseTarget = null;
@@ -890,9 +891,11 @@
       }
       if (this.loopGap) {
         this.pauseImmediate(this.clock.position);
+        this.roundBoard?.suggestRepeatAtPause?.(this.clock.position);
         return;
       }
       if (this.waitingForInput) {
+        this.roundBoard?.suggestRepeatAtPause?.(this.clock.position);
         this.waitingForInput = null;
         this.expectedPracticeEvent = null;
         this.clock.setCeiling(Infinity);
@@ -908,6 +911,7 @@
         this.stage.classList.remove("is-preroll-prep");
         this.setPreRollVisibility(selected, false);
         this.clearNoteOnEffects();
+        this.roundBoard?.suggestRepeatAtPause?.(selected);
         this.paint(selected);
         this.updateControls();
         return;
@@ -1170,7 +1174,7 @@
       this.pulseAt(loop.start);
     }
     currentLoop() {
-      if (!this.loopInput.checked || this.roundBoard?.root.hidden) return null;
+      if (!this.rounds.length || !this.loopInput.checked || this.roundBoard?.root.hidden) return null;
       const startIndex = Number(this.loopStartInput.value);
       const endIndex = Math.max(startIndex, Number(this.loopEndInput.value));
       return { start: this.rounds[startIndex].start, end: this.rounds[endIndex].end };
@@ -1354,6 +1358,7 @@
         } else if (this.pauseTarget != null && q >= this.pauseTarget - EPSILON) {
           q = this.pauseTarget;
           this.clock.pause(q);
+          this.roundBoard?.suggestRepeatAtPause?.(q);
           this.audio.stopAll();
           this.pauseTarget = null;
           this.clearNoteOnEffects();
