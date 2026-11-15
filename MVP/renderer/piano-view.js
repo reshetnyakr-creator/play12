@@ -85,7 +85,7 @@
         .map(path=>({path,bounds:this.boundsInPianoCoordinates(path)})).filter(item=>item.bounds.width>0&&item.bounds.height>0)
         .sort((a,b)=>(a.bounds.left+a.bounds.width/2)-(b.bounds.left+b.bounds.width/2));
       if(faces.length!==FULL_MAX_MIDI-FULL_MIN_MIDI+1) throw new Error(`Piano_Roll.svg: expected 88 keys, found ${faces.length}`);
-      const allAnchors=new Map(),keyAnchors=new Map(),displayMin=this.desktopWindow?FULL_MIN_MIDI:(this.visualWindow?.min??this.minMidi),displayMax=this.desktopWindow?FULL_MAX_MIDI:(this.desktopWindow?FULL_MAX_MIDI:(this.visualWindow?.max??this.maxMidi));
+      const allAnchors=new Map(),keyAnchors=new Map(),displayMin=this.desktopWindow?(this.workspaceRange?.min??FULL_MIN_MIDI):(this.visualWindow?.min??this.minMidi),displayMax=this.desktopWindow?(this.workspaceRange?.max??FULL_MAX_MIDI):(this.desktopWindow?FULL_MAX_MIDI:(this.visualWindow?.max??this.maxMidi));
       const indexedFaces=faces.map((face,index)=>({...face,midi:FULL_MIN_MIDI+index}));
       if(this.visualWindow){
         const octave=faces[12].bounds.left-faces[0].bounds.left;
@@ -118,10 +118,10 @@
       this.svg.setAttribute("viewBox",`${this.cropLeft} 0 ${this.cropWidth} ${VIEW_HEIGHT}`);
       this.mount.dataset.keyCount=String(this.keys.size);
       Object.assign(this.mount.dataset,{minMidi:String(displayMin),maxMidi:String(displayMax),cropLeft:String(this.cropLeft),cropRight:String(this.cropRight),cropWidth:String(this.cropWidth)});
-      const penultimateKeyAnchor=allAnchors.get((this.visualWindow?displayMax:Math.min(displayMax,FULL_MAX_MIDI-1)));
+      const penultimateKeyAnchor=allAnchors.get((this.visualWindow||this.workspaceRange?displayMax:Math.min(displayMax,FULL_MAX_MIDI-1)));
       if(!penultimateKeyAnchor) throw new Error("Piano_Roll.svg: penultimate key geometry is missing");
       this.cardClipRect.setAttribute("x",String(this.cropLeft));
-      this.cardClipRect.setAttribute("width",String(this.visualWindow?this.cropWidth:Math.max(0,Math.min(this.cropRight,penultimateKeyAnchor.right)-this.cropLeft)));
+      this.cardClipRect.setAttribute("width",String(this.visualWindow||this.workspaceRange?this.cropWidth:Math.max(0,Math.min(this.cropRight,penultimateKeyAnchor.right)-this.cropLeft)));
       this.mount.dataset.cardClipRight=String(penultimateKeyAnchor.right);
       this.mount.dataset.cardClipLastVisibleMidi=String(displayMax-1);
       this.renderStrips(allAnchors);
@@ -232,7 +232,7 @@
         const availableWidth=this.mount.classList.contains("is-fixed-piano-view")
           ? Math.max(0,global.innerWidth-24)
           : Math.max(0,parent.clientWidth);
-        if(this.desktopWindow){this.mount.style.width=`${availableWidth}px`;this.mount.style.height=`${availableWidth*VIEW_HEIGHT/PIANO_WIDTH}px`;return;}
+        if(this.desktopWindow){const scale=availableWidth/PIANO_WIDTH;this.mount.style.width=`${(this.workspaceRange?this.cropWidth:PIANO_WIDTH)*scale}px`;this.mount.style.height=`${VIEW_HEIGHT*scale}px`;return;}
         if(this.visualWindow){const visualWidth=Math.min(availableWidth,Math.max(36,this.cropWidth*.5),Math.max(72,Math.min(180,(global.visualViewport?.height||global.innerHeight)*.25))*this.cropWidth/VIEW_HEIGHT);this.mount.style.width=`${visualWidth}px`;this.mount.style.height=`${visualWidth*VIEW_HEIGHT/this.cropWidth}px`;return;}
         const fullWidth=Math.max(1100,availableWidth);
         this.mount.style.width=`${fullWidth*this.cropWidth/PIANO_WIDTH}px`;
@@ -250,10 +250,11 @@
       if(!this.keys.size) requestAnimationFrame(()=>this.bindGeometry());
     }
     setWorkspaceKeyboard(mode,range){
-      const desktop=mode==='desktop',next=desktop?null:range;
-      if(this.desktopWindow===desktop&&JSON.stringify(next)===JSON.stringify(this.visualWindow))return;
-      this.desktopWindow=desktop;this.visualWindow=next;this.windowOutOfRange=false;this.render(this.zeroMidi);
-      this.mount.dataset.keyboardMode=desktop?'desktop-full':'composition-range';
+      const desktop=mode==='desktop',physical=desktop?range:null,next=desktop?null:range;
+      if(physical&&(!Number.isInteger(physical.min)||!Number.isInteger(physical.max)||physical.min<FULL_MIN_MIDI||physical.max>FULL_MAX_MIDI||physical.max<physical.min))throw new Error('Unsupported physical keyboard range');
+      if(this.desktopWindow===desktop&&JSON.stringify(next)===JSON.stringify(this.visualWindow)&&JSON.stringify(physical)===JSON.stringify(this.workspaceRange??null))return;
+      this.desktopWindow=desktop;this.workspaceRange=physical;this.visualWindow=next;this.windowOutOfRange=false;this.render(this.zeroMidi);
+      this.mount.dataset.keyboardMode=desktop?(physical?'desktop-physical':'desktop-full'):'composition-range';
     }
     setVisualWindow(range){
       const next=range?{min:Math.max(0,range.min),max:Math.min(127,range.max)}:null;

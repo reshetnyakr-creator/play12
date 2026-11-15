@@ -16,10 +16,12 @@ class Node{
 class PathNode extends Node{constructor(index){super('path');this.index=index;}cloneNode(){const n=new PathNode(this.index);n.attrs={...this.attrs};return n;}getBBox(){return{x:this.index*36.616,y:128,width:36.616,height:436};}getCTM(){return{a:1,b:0,c:0,d:1,e:0,f:0};}}
 function keyboard(){const svg=new Node('svg');for(let i=0;i<88;i++)svg.appendChild(new PathNode(i));return svg;}
 class Point{constructor(x,y){this.x=x;this.y=y;}matrixTransform(m){return{x:this.x*m.a+this.y*m.c+m.e,y:this.x*m.b+this.y*m.d+m.f};}}
-function setup(){
+function setup(real=false){
   const document={createElementNS:(_,tag)=>new Node(tag),importNode:node=>node};
+  const realBounds=real?require('./real-piano-geometry.js')():null;
+  const productionKeyboard=()=>{const svg=new Node('svg');for(const [i,b]of realBounds.entries()){const p=new PathNode(i);p.getBBox=()=>({x:b.left,y:b.top,width:b.width,height:b.height});svg.appendChild(p);}return svg;};
   const window={innerWidth:1400,innerHeight:800,addEventListener(){},document};
-  const sandbox={window,document,DOMParser:class{parseFromString(){return{documentElement:keyboard()};}},DOMPoint:Point,ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>(fn(),1),console};
+  const sandbox={window,document,DOMParser:class{parseFromString(){return{documentElement:real?productionKeyboard():keyboard()};}},DOMPoint:Point,ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>(fn(),1),console};
   vm.createContext(sandbox);vm.runInContext(readFileSync(path.join(__dirname,'../renderer/piano-view.js'),'utf8'),sandbox);
   const parent=new Node('div'),mount=new Node('div');parent.classList.add('mvp-piano-host');parent.appendChild(mount);
   const cardTheme={id:'test',pianoSvgText:'<svg/>',pianoUrl:'piano.svg',cycleNames:['red','orange','yellow','green','blue','purple','pink'],stripUrls:{red:'r',orange:'o',yellow:'y',green:'g',blue:'b',purple:'p',pink:'p'},stripWidth:439.4,stripHeight:128};
@@ -72,4 +74,22 @@ for(const [name,min,max]of [['single pitch',60,60],['less than octave',61,66],['
 });
 test('Adaptive Window unchanged pitch set does not rebuild SVG or alter held notes',()=>{const {piano}=setup();piano.setVisualWindow({min:48,max:84});const svg=piano.svg;piano.setActiveMidis([60],'midi');piano.setVisualWindow({min:48,max:84});assert.equal(piano.svg,svg);assert(piano.activeBySource.get('midi').has(60));});
 
-test('Desktop workspace always shows all 88 keys despite short instrument or narrow composition',()=>{const {piano,mount}=setup();piano.setRange(36,84);piano.setWorkspaceKeyboard('adaptive',{min:60,max:65});assert.equal(piano.keys.size,6);piano.setWorkspaceKeyboard('desktop',null);assert.equal(piano.keys.size,88);assert(piano.keys.has(21));assert(piano.keys.has(108));assert.equal(piano.minMidi,36);assert.equal(piano.maxMidi,84);assert.equal(mount.dataset.keyboardMode,'desktop-full');assert.equal(parseFloat(mount.style.width),mount.parentElement.clientWidth);piano.setRange(41,93);assert.equal(piano.keys.size,88);piano.setWorkspaceKeyboard('adaptive',{min:28,max:103});assert.equal(piano.keys.size,76);assert.equal(piano.minMidi,41);assert.equal(piano.maxMidi,93);});
+test('Desktop fallback is full and an explicit physical range survives workspace changes',()=>{const {piano,mount}=setup();piano.setRange(36,84);piano.setWorkspaceKeyboard('adaptive',{min:60,max:65});assert.equal(piano.keys.size,6);piano.setWorkspaceKeyboard('desktop',null);assert.equal(piano.keys.size,88);assert(piano.keys.has(21));assert(piano.keys.has(108));assert.equal(piano.minMidi,36);assert.equal(piano.maxMidi,84);assert.equal(mount.dataset.keyboardMode,'desktop-full');assert.equal(parseFloat(mount.style.width),mount.parentElement.clientWidth);piano.setRange(41,93);assert.equal(piano.keys.size,88);const height=mount.style.height;piano.setWorkspaceKeyboard('desktop',{min:41,max:93});assert.equal(piano.keys.size,53);assert.equal(mount.style.height,height);assert.equal(mount.dataset.keyboardMode,'desktop-physical');piano.setWorkspaceKeyboard('adaptive',{min:28,max:103});assert.equal(piano.keys.size,76);assert.equal(piano.minMidi,41);assert.equal(piano.maxMidi,93);});
+
+for(const [left,right] of [[36,84],[36,96],[28,100],[28,103],[21,108],[37,85],[41,98]])test(`production SVG exact physical ${left}–${right}`,()=>{
+ const {piano,mount}=setup(true);piano.setWorkspaceKeyboard('desktop',null);const height=mount.style.height;
+ const original=new Map(piano.keyAnchors),mapping=new Map([...piano.keys].map(([n,k])=>[n,{...k.dataset}]));
+ piano.setWorkspaceKeyboard('desktop',{min:left,max:right});assert.equal(piano.keys.size,right-left+1);assert.equal(mount.style.height,height);
+ assert.equal(Number(mount.dataset.minMidi),left);assert.equal(Number(mount.dataset.maxMidi),right);
+ const anchors=[...piano.keyAnchors.values()];assert.equal(piano.cropLeft,Math.min(...anchors.map(a=>a.left)));assert.equal(piano.cropRight,Math.max(...anchors.map(a=>a.right)));
+ for(const [n,a]of piano.keyAnchors){assert.deepEqual(a,original.get(n));assert.deepEqual(piano.keys.get(n).dataset,mapping.get(n));}
+ assert(Math.abs(parseFloat(mount.style.width)/parseFloat(mount.style.height)-piano.cropWidth/564)<1e-9);
+ assert(piano.cropLeft<=piano.keyAnchors.get(left).left);assert(piano.cropRight>=piano.keyAnchors.get(right).right);
+ const whites=anchors.filter(a=>a.type==='white'),blacks=anchors.filter(a=>a.type==='black');assert(whites.some(w=>blacks.some(b=>w.width>b.width&&w.height>b.height)));
+ const svg=piano.svg;piano.setWorkspaceKeyboard('desktop',{min:left,max:right});assert.equal(piano.svg,svg);
+});
+
+for(const width of [1024,1280,1440,1920])test(`physical SVG preserves full-keyboard dock height at ${width}px`,()=>{
+ const {piano,mount}=setup(true);mount.parentElement.clientWidth=width-24;piano.setWorkspaceKeyboard('desktop',null);piano.fitReferenceAspect();const fullHeight=mount.style.height;
+ for(const range of [{min:36,max:84},{min:36,max:96},{min:28,max:103}]){piano.setWorkspaceKeyboard('desktop',range);assert.equal(mount.style.height,fullHeight);assert(parseFloat(mount.style.width)<=width-24);assert(Math.abs(parseFloat(mount.style.width)/parseFloat(mount.style.height)-piano.cropWidth/564)<1e-9);}
+});

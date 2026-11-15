@@ -53,7 +53,9 @@
       this.inputInterceptors = new Set();
       this.statusListeners = new Set();
       this.calibrationListeners = new Set();
+      this.inputStateListeners = new Set();
       this.calibration = readCalibration(storage);
+      try { this.invalidSavedCalibration=storage.getItem(CALIBRATION_KEY)!==null&&!this.calibration; } catch (_) { this.invalidSavedCalibration=true; }
       this.calibrationDraft = null;
       this.calibrationMode = null;
       this.functionTokens = new Set();
@@ -95,6 +97,12 @@
       this.calibrationListeners.add(listener);
       return () => this.calibrationListeners.delete(listener);
     }
+
+    addInputStateListener(listener) {
+      this.inputStateListeners.add(listener);
+      return () => this.inputStateListeners.delete(listener);
+    }
+    inputBusy() { return this.activeMidiTokens.size>0 || this.functionTokens.size>0 || this.commandTokens.size>0; }
 
     addInputInterceptor(listener) {
       this.inputInterceptors.add(listener);
@@ -217,6 +225,7 @@
         if (!connectedIds.has(id)) {
           input.onmidimessage = null;
           this.inputHandlers.delete(id);
+          if ([...this.functionTokens,...this.commandTokens.keys()].some(token=>token.startsWith(`${id}:`))) this.clearFunctionState();
           for (const [token, note] of [...this.activeMidiTokens]) {
             if (!token.startsWith(`${id}:`)) continue;
             this.activeMidiTokens.delete(token);
@@ -282,6 +291,7 @@
         const draft = this.calibrationDraft;
         if (this.sameInput(draft, input, message) && message.note === draft.rightMidi) {
           this.calibration = { ...draft, verified: true };
+          this.invalidSavedCalibration = false;
           this.storage.setItem(CALIBRATION_KEY, JSON.stringify(this.calibration));
           this.calibrationMode = null;
           this.rangeWarningDismissed = false;
@@ -372,6 +382,7 @@
       this.fields.message.textContent = consumed ? "Function/control input consumed."
         : inRange ? "Физическая клавиша найдена в Piano View." : "Нота вне отображаемого диапазона Piano View.";
       this.syncDiagnostic();
+      for (const listener of this.inputStateListeners) listener();
     }
 
     syncDiagnostic() {

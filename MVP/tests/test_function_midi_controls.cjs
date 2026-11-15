@@ -89,3 +89,16 @@ test('reacquire detaches stale inputs and binds exactly once across repeated rec
   third.onmidimessage({data:[0x90,61,100]});assert.equal(f.events.filter(event=>event[0]==='on').length,2);
   assert.equal(f.requestCount(),3);assert.equal(f.diagnostic.inputHandlers.size,1);
 });
+
+test('input-state listeners report functional release without forwarding musical notes',()=>{
+ const t=setup(),m=t.diagnostic;const states=[];const off=m.addInputStateListener(()=>states.push(m.inputBusy()));
+ m.calibration={inputId:'A',channel:1,leftMidi:36,rightMidi:96,functionMidi:96,keyCount:61,verified:true};
+ t.send(t.inputA,96);assert.equal(m.inputBusy(),true);t.send(t.inputA,96,0);assert.equal(m.inputBusy(),false);assert.deepEqual(states,[true,false]);assert.equal(t.events.length,0);
+ off();t.send(t.inputA,60);assert.equal(states.length,2);
+});
+test('disconnecting the calibrated input clears its functional hold while another input stays connected',()=>{
+ const t=setup(),m=t.diagnostic;t.inputA.state='connected';t.inputB.state='connected';
+ m.access={inputs:new Map([['A',t.inputA],['B',t.inputB]])};m.refreshInputs();
+ m.calibration={inputId:'A',channel:1,leftMidi:36,rightMidi:96,functionMidi:96,keyCount:61,verified:true};
+ t.send(t.inputA,96);assert.equal(m.inputBusy(),true);t.inputA.state='disconnected';m.refreshInputs();assert.equal(m.inputBusy(),false);assert.equal(m.currentStatus.status,'connected');assert(m.inputHandlers.has('B'));assert(!m.inputHandlers.has('A'));
+});

@@ -10,6 +10,15 @@ function metrics(available,left,music,right){const minimum=Math.max(left,music,r
 function corridors({left,right,playbackLeft,playbackRight,gap,leftWidth,rightWidth}){const leftAvailable=Math.max(0,playbackLeft-left-gap),rightAvailable=Math.max(0,right-playbackRight-gap);return{leftAvailable,rightAvailable,leftScale:fit(leftWidth,leftAvailable),rightScale:fit(rightWidth,rightAvailable)};}
 function fieldBudget(zoneHeight,chromeHeight,scale,lineHeight){return Math.max(0,Math.floor((Math.max(0,zoneHeight-chromeHeight))/Math.max(.01,scale)-lineHeight));}
 function compositionRange(events){const notes=events.map(e=>e.midi).filter(n=>Number.isInteger(n)&&n>=0&&n<=127);return notes.length?{min:Math.min(...notes),max:Math.max(...notes)}:{min:60,max:72,empty:true};}
+// A saved calibration is applicable only while its exact MIDI input is connected.
+function physicalKeyboard(midi){
+ const c=midi?.getCalibration?.();
+ if(!c)return{range:null,reason:midi?.invalidSavedCalibration?'Сохранённая калибровка MIDI повреждена. Показаны 88 клавиш.':''};
+ const valid=c.verified===true&&typeof c.inputId==='string'&&c.inputId.length>0&&Number.isInteger(c.channel)&&c.channel>=1&&c.channel<=16&&Number.isInteger(c.leftMidi)&&Number.isInteger(c.rightMidi)&&c.leftMidi>=21&&c.rightMidi<=108&&c.rightMidi>c.leftMidi&&c.keyCount===c.rightMidi-c.leftMidi+1&&c.functionMidi===c.rightMidi;
+ if(!valid)return{range:null,reason:'Сохранённый диапазон MIDI некорректен или не поддерживается (21–108). Показаны 88 клавиш.'};
+ const input=midi.inputHandlers?.get(c.inputId);
+ return{range:midi.currentStatus?.status==='connected'&&input?.state==='connected'?{min:c.leftMidi,max:c.rightMidi}:null,reason:''};
+}
 function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
  let mounted=false,frame=0,observer,active=1,wide=false,initial=true,pendingRange=null,lastRange='',scrollFrame=0,desktopLeft=0,desktopRight=0,cachedEvents=null,cachedCount=-1,cachedZero=null,cachedRange=null;const off=[],homes=[];
  const {left,center,right}=zones,doc=root.ownerDocument||document;
@@ -38,7 +47,13 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   let label=heading.querySelector('.main-title-text');if(!label){label=node('span','main-title-text');label.textContent=heading.textContent;heading.replaceChildren(label);}heading.title=label.textContent;heading.setAttribute('aria-label',label.textContent);const hs=getComputedStyle(heading),available=heading.clientWidth-(parseFloat(hs.paddingLeft)||0)-(parseFloat(hs.paddingRight)||0),travel=Math.max(0,label.scrollWidth-available);heading.classList.toggle('is-overflowing',travel>1);heading.setAttribute('tabindex',travel>1?'0':'-1');heading.style.setProperty('--title-travel',-travel+'px');heading.style.setProperty('--title-duration',Math.max(12,travel/20+6)+'s');
  }
  function rangeForComposition(){const p=runtime.playback,events=p.events||[];if(events!==cachedEvents||events.length!==cachedCount||p.runtimeZeroNote!==cachedZero){cachedEvents=events;cachedCount=events.length;cachedZero=p.runtimeZeroNote;cachedRange=compositionRange(events);}return cachedRange;}
- function updateKeyboard(){const piano=runtime.pianoView,busy=piano.virtualPointers.size>0||[...piano.activeBySource].some(([,set])=>set.size>0);const next=wide?null:rangeForComposition(),key=JSON.stringify(next);if(key===lastRange){pendingRange=null;return;}if(busy){pendingRange=next;return;}if(piano.setWorkspaceKeyboard)piano.setWorkspaceKeyboard(wide?'desktop':'adaptive',next);else piano.setVisualWindow?.(next);lastRange=key;pendingRange=null;}
+ function updateRangeWarning(physical){const n=doc.getElementById('keyboard-range-warning');if(!n)return;const outside=physical.range&&(runtime.playback.events||[]).some(e=>Number.isInteger(e.midi)&&(e.midi<physical.range.min||e.midi>physical.range.max));
+ // Preserve independent warnings (for example, fingering after changing zero).
+ if(!n.hidden&&n.textContent!==n.dataset.rangeMessage)n.dataset.rangeBaseMessage=n.textContent;
+ const message=physical.reason||(outside?'В произведении есть ноты за пределами диапазона подключённой MIDI-клавиатуры.':'');
+ const text=[n.dataset.rangeBaseMessage,message].filter(Boolean).join(' ');if(n.textContent!==text)n.textContent=text;n.dataset.rangeMessage=text;n.hidden=!text;
+ }
+ function updateKeyboard(){const piano=runtime.pianoView,busy=runtime.midiDiagnostic?.inputBusy?.()||piano.virtualPointers.size>0||[...piano.activeBySource].some(([,set])=>set.size>0);const physical=physicalKeyboard(runtime.midiDiagnostic);updateRangeWarning(physical);const next=wide?physical.range:rangeForComposition(),key=JSON.stringify([wide,next]);root.dataset.keyboardMode=wide?(next?'desktop-physical':'desktop-full'):'composition-range';if(key===lastRange){pendingRange=null;return;}if(busy){pendingRange=next;return;}if(piano.setWorkspaceKeyboard)piano.setWorkspaceKeyboard(wide?'desktop':'adaptive',next);else piano.setVisualWindow?.(next);lastRange=key;pendingRange=null;root.dataset.keyboardMode=wide?(next?'desktop-physical':'desktop-full'):'composition-range';}
  function layout(){if(!mounted)return;const viewportHeight=G.visualViewport?.height||G.innerHeight;doc.body.style.setProperty('--training-viewport-height',viewportHeight+'px');doc.body.style.setProperty('--training-visual-top',(G.visualViewport?.offsetTop||0)+'px');runtime.playback.layoutCoreGeometry();const music=parseFloat(runtime.stage.style.width)||runtime.stage.offsetWidth,l=desktopLeft,r=desktopRight,m=metrics(widthProbe.clientWidth,l,music,r),changed=wide!==m.wide;wide=m.wide;root.classList.toggle('is-three-wide',wide);root.classList.toggle('is-three-narrow',!wide);root.dataset.wideThreshold=String(m.threshold);root.dataset.unscaledThreshold=String(m.unscaledThreshold);root.dataset.keyboardMode=wide?'desktop-full':'composition-range';nav.hidden=wide;root.style.setProperty('--training-music-width',music+'px');
   // Keep measured intrinsic sizes stable: CSS removes legacy viewport-based widths only in these slots.
   if(!wide){layoutCorridors();scaleSlot(leftSlot,leftControls,leftControls.scrollWidth);scaleSlot(rightSlot,rightControls,rightControls.scrollWidth);}
@@ -59,12 +74,16 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   workspace=helpers.mountWorkspace(runtime.stage,playbackHost,doc.getElementById('playline'));workspace.dataset.progressContract='local';workspace.parentElement.insertBefore(musicSlot,workspace);musicSlot.append(workspace);
   nav=node('nav','training-zone-navigation');nav.setAttribute('aria-label','Области рабочего пространства');['Мои мелодии','Музыка','Раунды'].forEach((text,i)=>{const b=doc.createElement('button');b.type='button';b.textContent=text;b.onclick=()=>go(i);nav.append(b);});footer.prepend(nav);warning=node('p','training-keyboard-notice');warning.hidden=true;footer.prepend(warning);
   off.push(helpers.bindPractice({playback:runtime.playback}),helpers.trackSuccess(runtime.playback));
-  off.push(runtime.playback.addStateListener?.(()=>{if(initial)return;if(pendingRange!==null||JSON.stringify(wide?null:rangeForComposition())!==lastRange)updateKeyboard();})||(()=>{}));
+  off.push(runtime.playback.addStateListener?.(()=>{if(initial)return;updateKeyboard();})||(()=>{}));
+  const midi=runtime.midiDiagnostic;
+  if(midi){off.push(midi.addStatusListener(resize),midi.addCalibrationListener(resize));if(midi.addInputStateListener)off.push(midi.addInputStateListener(()=>{if(mounted)updateKeyboard();}));}
+  for(const type of ['pointerup','pointercancel','blur'])listen(G,type,resize);
+  for(const type of ['pointerleave','lostpointercapture'])listen(runtime.pianoView.mount,type,resize);
   listen(root,'scroll',()=>{cancelAnimationFrame(scrollFrame);scrollFrame=requestAnimationFrame(()=>{if(!wide){active=Math.round(root.scrollLeft/Math.max(1,root.clientWidth));active=Math.max(0,Math.min(2,active));hidePopup();mark();}});},{passive:true});
   listen(root,'keydown',e=>{if(e.target!==root&&![left,center,right].includes(e.target))return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();go(active+(e.key==='ArrowLeft'?-1:1));}});
   listen(root,'touchstart',e=>{if(popupOpen())return;const interactive=e.target.closest('button,input,select,a,[role="dialog"],.mvp-round-loop-board,.mvp-practice-board,.mvp-metronome-board');if(interactive)e.stopPropagation();},{passive:true});
   observer=new ResizeObserver(resize);[root,footer,leftControls,rightControls,widthProbe].forEach(n=>observer.observe(n));listen(G,'resize',resize);if(doc.fonts){doc.fonts.ready?.then(resize);if(doc.fonts.addEventListener)listen(doc.fonts,'loadingdone',resize);}if(G.visualViewport){listen(G.visualViewport,'resize',resize);listen(G.visualViewport,'scroll',resize);}resize();
  },dispose(){if(!mounted)return;mounted=false;observer?.disconnect();cancelAnimationFrame(frame);cancelAnimationFrame(scrollFrame);off.splice(0).forEach(f=>f());for(const h of homes.reverse()){if(h.next?.parentElement===h.parent)h.parent.insertBefore(h.n,h.next);else h.parent.appendChild(h.n);}leftSlot.remove();rightSlot.remove();musicSlot.remove();nav.remove();warning.remove();widthProbe.remove();root.classList.remove('training-three-zones','training-shell-main','is-three-wide','is-three-narrow');doc.body.classList.remove('play12-three-zones','play12-training-shell');}};
 }
-G.Play12TrainingZones={fit,metrics,corridors,fieldBudget,compositionRange,create};if(typeof module!=='undefined')module.exports=G.Play12TrainingZones;
+G.Play12TrainingZones={fit,metrics,corridors,fieldBudget,compositionRange,physicalKeyboard,create};if(typeof module!=='undefined')module.exports=G.Play12TrainingZones;
 })(typeof window!=='undefined'?window:globalThis);
