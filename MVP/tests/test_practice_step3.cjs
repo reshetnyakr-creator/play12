@@ -330,6 +330,7 @@ test('Skip every instruction preserves real settings, learned actions and defaul
 });
 test('Card placement and actions persist; explanatory cards use the shared timeout',()=>{
   const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();h.window.dispatchEvent({type:'play12:zero-confirmed'});
+  const feedback=[...h.timers.entries()].find(([,t])=>t.delay===950);assert.ok(feedback);h.timers.delete(feedback[0]);feedback[1].fn();
   const expire=()=>{const entries=[...h.timers.values()];assert.equal(entries.length,1);entries[0].fn();};
   assert.equal(h.timers.size,0);assert.equal(h.controller.getState().zeroSetupStage,'cards');
   h.node('#cards-ready').handlers.click();assert.equal(h.controller.getState().zeroSetupStage,'verify-yellow');
@@ -345,6 +346,7 @@ test('Restart onboarding and stage revisits cancel card timers and start a fresh
 });
 test('Manual zero during card setup resumes instruction without a stale timeout dead end',()=>{
   const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();h.window.dispatchEvent({type:'play12:zero-confirmed'});
+  const feedback=[...h.timers.entries()].find(([,t])=>t.delay===950);assert.ok(feedback);h.timers.delete(feedback[0]);feedback[1].fn();
   h.window.dispatchEvent({type:'play12:zero-ui-open'});h.window.dispatchEvent({type:'play12:zero-confirmed'});
   assert.equal(h.controller.getState().zeroSetupStage,'cards');assert.equal(h.node('#onboarding-listen-coach').hidden,false);
   assert.equal(h.timers.size,0);assert.equal(h.controller.getState().zeroSetupStage,'cards');
@@ -810,3 +812,25 @@ test('Runtime pre-count clones the actual Round grid and uses a drumstick icon',
 });
 test('explicit queued Pause suggests Repeat only at the actual paused engine position; seek does not',()=>{const {c}=make(),seen=[];c.roundBoard={suggestRepeatAtPause:p=>seen.push(p),update(){},pulse(){}};c.clock.start(0,0);c.audioContext.currentTime=.2;c.requestPause();const target=c.pauseTarget;assert(Number.isFinite(target));assert.equal(seen.length,0);c.audioContext.currentTime=c.clock.quarterToAudioTime(target)+.001;c.tick();assert.deepEqual(seen,[target]);assert.equal(c.clock.running,false);c.seek(4);assert.deepEqual(seen,[target]);});
 test('Practice Pause reports the actual position without proposing on unrelated immediate pauses',async()=>{const {c}=make(),seen=[];c.roundBoard={suggestRepeatAtPause:p=>seen.push(p),update(){},pulse(){}};configure(c);await c.play();c.requestPause();assert.deepEqual(seen,[c.clock.position]);c.pauseImmediate(2);assert.equal(seen.length,1);});
+
+test('early zero OK12 occurs once after confirmation without delaying the cards instruction',()=>{
+ const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();
+ assert.equal(h.node('#round-ok12').hidden,true);h.window.dispatchEvent({type:'play12:zero-ui-candidate'});assert.equal(h.node('#round-ok12').hidden,true);
+ h.window.dispatchEvent({type:'play12:zero-confirmed'});assert.equal(h.node('#round-ok12').hidden,false);assert.equal(h.controller.getState().zeroSetupStage,'cards');
+ const feedback=[...h.timers.entries()].find(([,t])=>t.delay===950);assert.ok(feedback);h.timers.delete(feedback[0]);feedback[1].fn();assert.equal(h.node('#round-ok12').hidden,true);
+ h.window.dispatchEvent({type:'play12:zero-confirmed'});assert.equal(h.node('#round-ok12').hidden,true);
+});
+
+test('metronome early success is transient and is not replayed on repeated events',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',highestUnlockedStep:4,inputMode:'demo',metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false});h.controller.continueSession();
+ h.window.dispatchEvent({type:'play12:metronome-change',detail:{enabled:true}});
+ assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');assert.equal(h.node('#round-ok12').hidden,false);
+ const feedback=[...h.timers.entries()].find(([,t])=>t.delay===950);assert.ok(feedback);h.timers.delete(feedback[0]);feedback[1].fn();
+ h.window.dispatchEvent({type:'play12:metronome-change',detail:{enabled:true}});assert.equal(h.node('#round-ok12').hidden,true);
+ assert.equal(h.controller.getState().metronomeSuccessFeedback,true);
+});
+
+test('legacy saved metronome success suppresses early OK12 on a lesson revisit',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-tempo',highestUnlockedStep:4,inputMode:'demo',metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false});h.controller.continueSession();
+ h.node('progress4').handlers.click();h.window.dispatchEvent({type:'play12:metronome-change',detail:{enabled:true}});assert.equal(h.node('#round-ok12').hidden,true);
+});

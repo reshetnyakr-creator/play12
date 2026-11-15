@@ -340,10 +340,12 @@
   <script src="play12-playback.js?v=1.4.3"></script>
   <script src="web-midi-diagnostic.js?v=physical-midi-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
-  <script src="play12-coach.js?v=round-final-01"></script>
+  <script src="play12-coach.js?v=alignment-1-round-final-01"></script>
   <script src="training-shell.js?v=1.4"></script>
   <script src="training-zones.js?v=physical-midi-1"></script>
-  <script src="play12-onboarding.js?v=1.4"></script>
+  <script src="tutorial-layout.js?v=1"></script>
+  <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=1.4.3','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=1']){const link=document.createElement('link');link.rel='stylesheet';link.href=href;document.head.append(link);}}</script>
+  <script src="play12-onboarding.js?v=alignment-1-1.4"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     window.addEventListener('unhandledrejection', event => { if (new URLSearchParams(location.search).has('composition')) { const msg = document.createElement('p'); msg.textContent = 'Не удалось открыть композицию: ' + (event.reason?.message || event.reason); document.body.prepend(msg); } });

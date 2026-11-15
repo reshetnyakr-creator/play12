@@ -1,8 +1,8 @@
 (function (global) {
   'use strict';
   // One visual spotlight, independent of the instructional card's lifetime.
-  function create(root) {
-    const padding = 16, feather = 16;
+  function create(root, options = {}) {
+    const padding = options.padding ?? 16, feather = options.feather ?? 16;
     const ns = 'http://www.w3.org/2000/svg';
     const node = (name, attributes = {}) => {
       const element = document.createElementNS(ns, name);
@@ -18,7 +18,7 @@
     const holes = node('g', {fill: 'black'});
     mask.appendChild(holes); defs.appendChild(mask); defs.appendChild(softEdge); overlay.appendChild(defs);
     overlay.appendChild(node('rect', {width: '100%', height: '100%', fill: '#343a40', 'fill-opacity': '.60', mask: 'url(#play12-coach-mask)'}));
-    root.appendChild(overlay);
+    (options.portal ? document.body : root).appendChild(overlay);
     let timer = 0, frame = 0, pulse = null, owner = null;
     function stop(card) {
       if (card && card !== owner) return;
@@ -45,6 +45,7 @@
         const seen = new Set();
         // Zero changes rebuild Piano View asynchronously; follow the current elements.
         const currentTargets = typeof targets === 'function' ? targets() : targets;
+        options.reveal?.(currentTargets.find(Boolean));
         for (const element of currentTargets.filter(Boolean)) {
           const r = element.getBoundingClientRect();
           if (r.width <= 0 || r.height <= 0) continue;

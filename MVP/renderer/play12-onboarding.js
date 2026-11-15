@@ -37,6 +37,7 @@
         midiVerified: value.midiVerified === true,
         inputMode: value.inputMode === 'midi' || value.inputMode === 'demo' ? value.inputMode : null,
         midiUsbGuideSeen: value.midiUsbGuideSeen === true,
+        metronomeSuccessFeedback: value.metronomeSuccessFeedback === true || ['metronome-tempo','metronome-play','metronome-playing','round-info','round-go4','round-loop-info','round-loop','round-range','round-precount-info','round-precount','round-practice','final-instruction','final-practice','completed'].includes(value.practiceGuideStage),
         playLearned: value.playLearned === true,
         pauseLearned: value.pauseLearned === true,
         listenFragmentCompleted: value.listenFragmentCompleted === true,
@@ -133,7 +134,7 @@
       cardsSetupCompleted: false, zeroSetupStage: null
     };
     if (state.practiceGuideStage === 'round-nav') state.practiceGuideStage = 'round-info';
-    let runtime = null, practiceBindingDispose=null;
+    let runtime = null, practiceBindingDispose=null, alignedLayout=null;
     let pianoHome = null;
     let stageHome = null;
     let transportHome = null;
@@ -145,7 +146,7 @@
     let midiConnectState = 'choice';
     let listenPosition = 0;
     let listenPlaybackState = 'paused';
-    const spotlight = global.Play12Coach.create(root);
+    const spotlight = global.Play12Coach.create(root,{padding:3,feather:3,portal:true,reveal:target=>alignedLayout?.reveal(target)});
     // Targets describe WHERE for each instruction; card positioning is independent.
     const targetsFor = instruction => {
       const element = id => document.getElementById(id);
@@ -157,6 +158,7 @@
       return instruction ? [element(instruction)] : [];
     };
     const spotlightHint = (element, instruction, pulse = false) => {
+      alignedLayout?.reveal(targetsFor(instruction).find(Boolean));
       if (!element.hidden) spotlight.show(element, () => targetsFor(instruction), pulse ? runtime?.pianoView?.mount : null,
         document.getElementById('play12-score'));
     };
@@ -327,6 +329,7 @@
     };
 
     const keepPianoFixed = () => {
+      if(alignedLayout&&document.body.classList.contains('tutorial-main-aligned')){alignedLayout.resize();return;}
       const mount = runtime?.pianoView?.mount;
       if (!mount) return;
       global.Play12TrainingShell.keepFixed(mount);
@@ -437,6 +440,7 @@
     };
 
     const moveStageToOnboarding = () => {
+      if(runtime&&global.Play12TutorialLayout){alignedLayout ||= global.Play12TutorialLayout.create({runtime,root});alignedLayout.mount();return;}
       const stage = runtime?.stage;
       if (!stage || !playbackHost) return;
       if (!stageHome) stageHome = { parent: stage.parentElement, nextSibling: stage.nextSibling };
@@ -454,6 +458,7 @@
     };
 
     const restoreStage = () => {
+      if(alignedLayout){alignedLayout.dispose();return;}
       const stage = runtime?.stage;
       if (!stage || !stageHome) return;
       const transport = document.getElementById('playline');
@@ -515,6 +520,7 @@
         completionCard.hidden = true;
         requestAnimationFrame(syncOverlayGeometry);
       }
+      alignedLayout?.resize();
       exposeState();
     };
 
@@ -786,7 +792,7 @@
         showStep('CHOOSE_ZERO');
       }
     };
-    const handleZeroConfirmed = () => finishZero(true);
+    const handleZeroConfirmed = () => {const first=!state.chooseZeroCompleted;finishZero(true);if(first)showEarlyOk12();};
 
     const finalPracticeSettingsReady = () => {
       const settings = runtime?.playback?.getPracticeSettings?.();
@@ -852,6 +858,11 @@
         roundTraining.feedbackPending = false;
         after?.();
       }, 950);
+    };
+    const showEarlyOk12 = () => {
+      if(roundTraining.feedbackPending||!ok12Toast)return;
+      ok12Toast.hidden=false;playRoundFeedback('ok12');clearTimeout(ok12Timer);
+      ok12Timer=global.setTimeout(()=>{ok12Toast.hidden=true;},950);
     };
     const setRoundGuideStage = next => {
       state.practiceGuideStage = next;
@@ -979,7 +990,7 @@
     };
     const isRu = () => i18n.isRu();
     global.addEventListener('play12:metronome-change', event => {
-      if (state.onboardingStep === 'TRY_IT_YOURSELF' && state.practiceGuideStage === 'metronome-on' && event.detail.enabled) advancePracticeInstruction();
+      if (state.onboardingStep === 'TRY_IT_YOURSELF' && state.practiceGuideStage === 'metronome-on' && event.detail.enabled) {const first=state.highestUnlockedStep<=4&&!state.metronomeSuccessFeedback;advancePracticeInstruction();if(first){state.metronomeSuccessFeedback=true;saveState(storage,state);showEarlyOk12();}}
     });
     global.addEventListener('play12:tempo-change', () => {
       if (state.onboardingStep === 'TRY_IT_YOURSELF' && state.practiceGuideStage === 'metronome-tempo') advancePracticeInstruction();
@@ -1278,6 +1289,12 @@
       const chooser = document.getElementById('zero-chooser');
       if (chooser) hideHint(chooser);
     });
+    global.addEventListener('pagehide',()=>{
+      spotlight.stop();alignedLayout?.dispose();
+      for(const timer of hintTimers.values())global.clearTimeout(timer);
+      hintTimers.clear();global.clearTimeout(ok12Timer);global.clearTimeout(completionCardTimer);
+      practiceBindingDispose?.();removeNoteListener?.();removeMidiStatusListener?.();removeMidiInputInterceptor?.();removeCalibrationListener?.();removePlaybackStateListener?.();
+    },{once:true});
     showStep('WELCOME');
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('onboardingPreview') === 'listen') {
       state = {

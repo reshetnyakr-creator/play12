@@ -43,3 +43,11 @@ test('Spotlight follows card nodes rebuilt asynchronously after a runtime zero c
   assert.equal(holes.children.length,1);assert.equal(holes.children[0].attrs.x,84);
   h.coach.stop();assert.equal(h.frames.size,0);assert.equal(h.timers.size,0);
 });
+
+test('Tutorial can use an unclipped viewport portal and reveal live mobile targets',()=>{
+ const timers=new Map(),frames=new Map();let ticket=0,reveals=0;const body=new Element(),root=new Element(),window={innerWidth:390,innerHeight:844,setTimeout:(fn,delay)=>{timers.set(++ticket,{fn,delay});return ticket;},clearTimeout:i=>timers.delete(i),requestAnimationFrame:fn=>{frames.set(++ticket,fn);return ticket;},cancelAnimationFrame:i=>frames.delete(i)};
+ vm.runInNewContext(readFileSync(path.join(__dirname,'../renderer/play12-coach.js'),'utf8'),{window,document:{body,createElementNS:()=>new Element()}});
+ const card=new Element(),target=new Element(),coach=window.Play12Coach.create(root,{padding:3,feather:3,portal:true,reveal:n=>{assert.equal(n,target);reveals++;target.rect.left=12;}});
+ coach.show(card,()=>[target]);assert.equal(root.children.length,0);assert.equal(body.children.length,1);assert.equal(reveals,1);
+ const holes=body.children[0].children[0].children[0].children[1];assert.equal(holes.children[0].attrs.x,9);assert.equal(holes.children[0].attrs.width,206);assert.equal([...timers.values()][0].delay,5000);coach.stop();assert.equal(frames.size,0);
+});
