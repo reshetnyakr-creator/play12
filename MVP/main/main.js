@@ -23,6 +23,11 @@ if(!heading||!position)throw Error('Отсутствует обязательн�
 position.hidden=true;center.prepend(position);heading.remove();
 const required=['playback-stage','play12-score','piano-view','position','bpm','bpm-minus','bpm-plus','metronome-board','metronome-toggle','metronome','metronome-volume','metronome-beat-lamp','count-in','music-audio','practice-mode','choose-zero','grid-resolution','play','pause','restart','loop','loop-gap','loop-start','loop-end','previous-round','next-round','round-loop-board','midi-diagnostic','enable-midi'];
 const missing=required.filter(id=>!root.getElementById(id));if(missing.length)throw Error('Отсутствуют обязательные элементы Playback: '+missing.join(', '));
+// Preserve both existing zero-selection stages and their listeners, outside the
+// transformed/clipped score ancestors. A higher z-index inside them cannot help.
+const zeroChooser=root.getElementById('zero-chooser');
+if(!zeroChooser)throw Error('Отсутствует обязательный элемент Playback: zero-chooser');
+root.body.append(zeroChooser);
 return required;
 }
 const header=initializeHeader(document);document.getElementById('onboarding-skip')?.remove();
@@ -68,4 +73,3 @@ midi.addCalibrationListener(e=>{if(midi.currentStatus?.status!=='connected')retu
 window.addEventListener('play12:main-ready',ready);window.addEventListener('play12:load-error',ev=>{empty.textContent=ev.detail;error(Error(ev.detail));});if(window.play12MainController)ready();await library();
 window.addEventListener('beforeunload',ev=>{remember();if(dirty){ev.preventDefault();ev.returnValue='';}});document.addEventListener('click',ev=>{const a=ev.target.closest('a[href]');if(a&&dirty&&!leave())ev.preventDefault();});window.addEventListener('pagehide',remember);
 })().catch(e=>{const n=document.getElementById('main-status')||document.body;n.textContent='Не удалось открыть рабочее пространство: '+e.message;});
-

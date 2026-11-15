@@ -11,3 +11,9 @@
 .main-melody:not([aria-current]):hover,.main-melody:not([aria-current]):focus-within{background:#f0f5df}
 .main-melody[aria-current],.main-melody[aria-current]:hover,.main-melody[aria-current]:focus-within{background:#eefaaf}
 .main-melody-title{font:500 13px Inter,Arial,sans-serif;text-align:left;border:0;background:transparent;color:inherit;padding:0;min-width:0;overflow-wrap:anywhere;cursor:pointer}
+
+/* Existing sequential zero cards use viewport coordinates, outside the score. */
+.play12-main > #zero-chooser {
+  position: fixed;
+  z-index: 1000;
+}
