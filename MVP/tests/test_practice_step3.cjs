@@ -131,7 +131,7 @@ test('Approved manual RH has no simultaneous note set; source remains 9 rounds',
   const measures=doc.score.parts[0].measures;assert.equal(measures.length,9);
   for(const m of measures){const starts=m.events.filter(e=>e.kind==='note'&&e.hand==='R').map(e=>e.start_quarters);assert.equal(new Set(starts).size,starts.length);}
 });
-function onboarding(saved=null, midiDiagnostic=null) {
+function onboarding(saved=null, midiDiagnostic=null, layoutSpy=null) {
   const {c,window,sandbox}=make();const keydown=sandbox.document.handlers.keydown;const nodes=new Map();
   c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));
   const node=id=>{if(!nodes.has(id)) {const e=new Element(); const classes=new Set();e.classList={add(...xs){xs.forEach(x=>classes.add(x));},remove(...xs){xs.forEach(x=>classes.delete(x));},toggle(x,on){on ? classes.add(x):classes.delete(x);},contains(x){return classes.has(x);}};e.removeAttribute=name=>delete e[name];e.animate=()=>{};e.appendChild=child=>child.parentElement=e;e.insertBefore=e.appendChild;e.prepend=e.appendChild;nodes.set(id,e);}return nodes.get(id);};
@@ -145,6 +145,7 @@ function onboarding(saved=null, midiDiagnostic=null) {
   window.setTimeout=(fn,delay)=>{timers.set(++timerId,{fn,delay});return timerId;};
   Object.assign(sandbox,{document:{body:node('body'),documentElement:node('html'),addEventListener(){},createElement:()=>new Element(),getElementById:id=>id==='play12-onboarding'?root:node('#'+id)},URLSearchParams,location:{hostname:'127.0.0.1',search:''},Event:class{constructor(type){this.type=type;}},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options?.detail;}},clearTimeout:id=>timers.delete(id)});
   window.Play12Coach={create:()=>({show(){},stop(){}})};
+  if(layoutSpy)window.Play12TutorialLayout={create:()=>layoutSpy};
   vm.runInContext(readFileSync(path.join(renderer,'training-shell.js'),'utf8'),sandbox);
   vm.runInContext(readFileSync(path.join(renderer,'play12-onboarding.js'),'utf8'),sandbox);
   const controller=window.Play12Onboarding.create({root,startButton:node('start'),continueButton:node('continue'),storage});
@@ -833,4 +834,11 @@ test('metronome early success is transient and is not replayed on repeated event
 test('legacy saved metronome success suppresses early OK12 on a lesson revisit',()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-tempo',highestUnlockedStep:4,inputMode:'demo',metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false});h.controller.continueSession();
  h.node('progress4').handlers.click();h.window.dispatchEvent({type:'play12:metronome-change',detail:{enabled:true}});assert.equal(h.node('#round-ok12').hidden,true);
+});
+
+test('saved lesson does not mount TrainingZones until the visible Start/Continue decision',()=>{
+ let mounts=0;const layout={mount(){mounts++;},resize(){},dispose(){},reveal(){}};
+ const saved={onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',highestUnlockedStep:4,inputMode:'demo',metronomeUnlocked:true,chooseZeroCompleted:true,cardsSetupCompleted:true};
+ const h=onboarding(saved,null,layout);assert.equal(h.root.dataset.visibleStep,'WELCOME');assert.equal(mounts,0);assert.equal(h.controller.getState().practiceGuideStage,'metronome-on');
+ h.controller.continueSession();assert.equal(h.root.dataset.visibleStep,'TRY_IT_YOURSELF');assert.equal(mounts,1);
 });

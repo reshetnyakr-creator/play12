@@ -6,7 +6,7 @@ const root=path.resolve(__dirname,'..');
 
 test('Russian route is a lightweight wrapper around shared playback',()=>{
   const route=readFileSync(path.join(root,'ru/index.html'),'utf8');
-  assert(route.includes("fetch('../renderer/playback.html?v=tutorial-alignment-1')"));
+  assert(route.includes("fetch('../renderer/playback.html?v=entry-start-1')"));
   for(const duplicated of ['play12-onboarding.js','play12-playback.js','play12-round-board.js','web-midi-diagnostic.js']) assert(!route.includes(duplicated));
   assert(route.includes('window.__PLAY12_LOCALE__="ru"'));
 });
@@ -39,7 +39,7 @@ test('transient pause coach uses the shared dictionary in both locales',()=>{
 test('homepages expose localized primary MVP CTAs and analytics goals',()=>{
   const en=readFileSync(path.resolve(root,'../index.html'),'utf8');
   const ru=readFileSync(path.resolve(root,'../ru/index.html'),'utf8');
-  assert(en.includes('href="/MVP/" data-metrika-goal="try_play12_en">Try Play12</a>'));
-  assert(ru.includes('href="/MVP/ru/" data-metrika-goal="try_play12_ru">Попробовать Play12</a>'));
+  assert(en.includes('href="/MVP/menu/" data-metrika-goal="try_play12_en">Try Play12</a>'));
+  assert(ru.includes('href="/ru/MVP/menu/" data-metrika-goal="try_play12_ru">Попробовать Play12</a>'));
   for(const page of [en,ru]) assert(page.includes('window.play12ReachGoal(ctaGoal)'));
 });

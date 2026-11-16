@@ -1224,9 +1224,17 @@
         if (state.onboardingStep === 'CHOOSE_ZERO' && state.zeroSetupStage !== 'cards') global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
         recoverMidi();
       }
-      if (state.onboardingStep === 'MIDI_CONNECT') movePianoToOnboarding();
-      if (state.onboardingStep === 'LISTEN_AND_CONTROL' || state.onboardingStep === 'CHOOSE_ZERO' || state.onboardingStep === 'TRY_IT_YOURSELF' || state.onboardingStep === 'ONBOARDING_COMPLETE') moveStageToOnboarding();
-      if (state.onboardingStep === 'CHOOSE_ZERO' && new URLSearchParams(location.search).get('onboardingPreview') === 'choose-zero') {
+      // Restored lesson progress is data, not the visible screen. Do not mount
+      // TrainingZones or its dock while the user is still choosing Start/Continue.
+      if (visibleStep === 'MIDI_CONNECT') movePianoToOnboarding();
+      if (visibleStep === 'LISTEN_AND_CONTROL' || visibleStep === 'CHOOSE_ZERO' || visibleStep === 'TRY_IT_YOURSELF' || visibleStep === 'ONBOARDING_COMPLETE') {
+        moveStageToOnboarding();
+        // A user can choose Continue before the asynchronous score is ready.
+        // Mounting must retain the lesson's existing visibility/unlock decisions.
+        syncProgress();
+        if (visibleStep === 'TRY_IT_YOURSELF') syncPracticeGuide();
+      }
+      if (visibleStep === 'CHOOSE_ZERO' && new URLSearchParams(location.search).get('onboardingPreview') === 'choose-zero') {
         global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
       }
     };
@@ -1234,7 +1242,8 @@
     document.body.classList.remove('play12-onboarding-boot');
     document.body.classList.add('play12-onboarding-active');
     continueButton.hidden = !returning;
-    if (returning) { startButton.textContent = t('Start fresh'); continueButton.textContent = t('Continue with saved setup'); }
+    startButton.textContent=t(returning?'Start fresh':'Start');
+    continueButton.textContent=t(returning?'Continue with saved setup':'Continue');
     startButton.addEventListener('click', startNew);
     continueButton.addEventListener('click', continueSession);
     root.querySelector('#onboarding-midi-ready').addEventListener('click', beginMidiTest);
