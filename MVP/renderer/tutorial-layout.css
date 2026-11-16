@@ -43,3 +43,11 @@ body.tutorial-main-aligned{grid-template-columns:minmax(0,1fr)}
 
 /* The Main ID rule is lower than the Tutorial mask unless explicitly overridden. */
 body.tutorial-main-aligned > #zero-chooser{z-index:10004}
+
+/* Welcome is the same vertical action group in both locales. */
+#play12-onboarding [data-onboarding-view="WELCOME"] .mvp-actions{display:flex;flex-direction:column;align-items:stretch;width:min(380px,100%);margin-inline:auto;gap:22px}
+#play12-onboarding [data-onboarding-view="WELCOME"] .mvp-actions>.mvp-button{width:100%;min-width:0;min-height:62px;box-sizing:border-box;font:700 20px/1.2 Inter,sans-serif;padding:18px 24px;white-space:normal}
+body.tutorial-main-aligned .training-left-controls>#metronome-board[hidden]{display:flex!important;visibility:hidden;pointer-events:none}
+#tutorial-pass-caption{position:absolute;bottom:100%;right:8px;font:600 11px/1.4 Inter,sans-serif;color:#333;white-space:nowrap}
+/* Match Main's compact profile padding before measuring the narrow left zone. */
+.tutorial-main-aligned .is-three-narrow .tutorial-identity{padding-block:10px}

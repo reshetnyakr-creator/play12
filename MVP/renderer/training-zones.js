@@ -1,6 +1,7 @@
 /* External three-zone layout. One existing runtime; navigation never changes music state. */
 (function(G){'use strict';
 const gap=10,zoneGap=18;
+const local=(ru,en)=>G.__PLAY12_MAIN__||G.Play12I18n?.isRu?.()?ru:en;
 function fit(width,available){return Math.min(1,Math.max(0,available)/Math.max(1,width));}
 function metrics(available,left,music,right){const minimum=Math.max(left,music,right),unscaledThreshold=3*minimum+2*zoneGap;
  // A fit threshold for unscaled panels is not a desktop/mobile breakpoint.
@@ -13,9 +14,9 @@ function compositionRange(events){const notes=events.map(e=>e.midi).filter(n=>Nu
 // A saved calibration is applicable only while its exact MIDI input is connected.
 function physicalKeyboard(midi){
  const c=midi?.getCalibration?.();
- if(!c)return{range:null,reason:midi?.invalidSavedCalibration?'Сохранённая калибровка MIDI повреждена. Показаны 88 клавиш.':''};
+ if(!c)return{range:null,reason:midi?.invalidSavedCalibration?local("Сохранённая калибровка MIDI повреждена. Показаны 88 клавиш.","Saved MIDI calibration is invalid. Showing 88 keys."):''};
  const valid=c.verified===true&&typeof c.inputId==='string'&&c.inputId.length>0&&Number.isInteger(c.channel)&&c.channel>=1&&c.channel<=16&&Number.isInteger(c.leftMidi)&&Number.isInteger(c.rightMidi)&&c.leftMidi>=21&&c.rightMidi<=108&&c.rightMidi>c.leftMidi&&c.keyCount===c.rightMidi-c.leftMidi+1&&c.functionMidi===c.rightMidi;
- if(!valid)return{range:null,reason:'Сохранённый диапазон MIDI некорректен или не поддерживается (21–108). Показаны 88 клавиш.'};
+ if(!valid)return{range:null,reason:local("Сохранённый диапазон MIDI некорректен или не поддерживается (21–108). Показаны 88 клавиш.","The saved MIDI range is invalid or unsupported (21\u2013108). Showing 88 keys.")};
  const input=midi.inputHandlers?.get(c.inputId);
  return{range:midi.currentStatus?.status==='connected'&&input?.state==='connected'?{min:c.leftMidi,max:c.rightMidi}:null,reason:''};
 }
@@ -50,7 +51,7 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
  function updateRangeWarning(physical){const n=doc.getElementById('keyboard-range-warning');if(!n)return;const outside=physical.range&&(runtime.playback.events||[]).some(e=>Number.isInteger(e.midi)&&(e.midi<physical.range.min||e.midi>physical.range.max));
  // Preserve independent warnings (for example, fingering after changing zero).
  if(!n.hidden&&n.textContent!==n.dataset.rangeMessage)n.dataset.rangeBaseMessage=n.textContent;
- const message=physical.reason||(outside?'В произведении есть ноты за пределами диапазона подключённой MIDI-клавиатуры.':'');
+ const message=physical.reason||(outside?local("В произведении есть ноты за пределами диапазона подключённой MIDI-клавиатуры.","This piece uses notes outside your connected keyboard range."):'');
  const text=[n.dataset.rangeBaseMessage,message].filter(Boolean).join(' ');if(n.textContent!==text)n.textContent=text;n.dataset.rangeMessage=text;n.hidden=!text;
  }
  function updateKeyboard(){const piano=runtime.pianoView,busy=runtime.midiDiagnostic?.inputBusy?.()||piano.virtualPointers.size>0||[...piano.activeBySource].some(([,set])=>set.size>0);const physical=physicalKeyboard(runtime.midiDiagnostic);updateRangeWarning(physical);const next=wide?physical.range:rangeForComposition(),key=JSON.stringify([wide,next]);root.dataset.keyboardMode=wide?(next?'desktop-physical':'desktop-full'):'composition-range';if(key===lastRange){pendingRange=null;return;}if(busy){pendingRange=next;return;}if(piano.setWorkspaceKeyboard)piano.setWorkspaceKeyboard(wide?'desktop':'adaptive',next);else piano.setVisualWindow?.(next);lastRange=key;pendingRange=null;root.dataset.keyboardMode=wide?(next?'desktop-physical':'desktop-full'):'composition-range';}
@@ -59,7 +60,7 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   if(!wide){layoutCorridors();scaleSlot(leftSlot,leftControls,leftControls.scrollWidth);scaleSlot(rightSlot,rightControls,rightControls.scrollWidth);}
   layoutCorridors();const s=fit(music,center.clientWidth);workspace.style.transform=`scale(${s})`;workspace.style.transformOrigin='top left';musicSlot.style.width=music*s+'px';const footerHeight=footer.getBoundingClientRect().height;root.style.setProperty('--training-footer-height',footerHeight+'px');document.body.style.setProperty('--training-footer-height',footerHeight+'px');
   alignTitle();const cs=getComputedStyle(center),visible=[...center.children].filter(n=>!n.hidden&&n!==playbackHost&&getComputedStyle(n).display!=='none'),chrome=visible.reduce((sum,n)=>{const style=getComputedStyle(n);return sum+n.getBoundingClientRect().height+(parseFloat(style.marginTop)||0)+(parseFloat(style.marginBottom)||0);},0)+visible.length*(parseFloat(cs.rowGap)||0),available=center.clientHeight||center.getBoundingClientRect().height,field=fieldBudget(available,chrome,s,doc.getElementById('playline').offsetHeight);runtime.stage.style.height=field+'px';root.dataset.viewportLimited=String(field<2*(runtime.playback.cellHeight||32));musicSlot.style.height=(runtime.stage.offsetHeight+doc.getElementById('playline').offsetHeight)*s+'px';runtime.playback.layoutCoreGeometry();layoutCorridors();alignTitle();updateKeyboard();runtime.pianoView.syncContainer();
-  warning.hidden=root.dataset.viewportLimited!=='true'&&(wide||!runtime.pianoView.windowReadabilityLimited?.());warning.textContent=root.dataset.viewportLimited==='true'?'Недостаточно высоты окна для удобного нотного поля. Увеличьте окно или измените ориентацию.':'Диапазон произведения показан целиком. На этом экране обозначения клавиш могут быть слишком мелкими.';
+  warning.hidden=root.dataset.viewportLimited!=='true'&&(wide||!runtime.pianoView.windowReadabilityLimited?.());warning.textContent=root.dataset.viewportLimited==='true'?local("Недостаточно высоты окна для удобного нотного поля. Увеличьте окно или измените ориентацию.","The window is too short for a comfortable note field. Enlarge it or change orientation."):local("Диапазон произведения показан целиком. На этом экране обозначения клавиш могут быть слишком мелкими.","The complete piece range is shown. Key labels may be too small on this screen.");
   if(initial||changed){initial=false;go(active);}mark();
  }
  const resize=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(layout);};
@@ -67,12 +68,12 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   remember(footer);for(const n of [runtime.stage,doc.getElementById('playline'),runtime.pianoView.mount,doc.getElementById('metronome-board'),doc.getElementById('practice-board'),doc.getElementById('round-loop-board'),doc.getElementById('onboarding-choose-zero')])remember(n);
   if(right.classList.contains('main-skill')){skillCard=node('section','main-skill training-skill-card');while(right.firstChild)skillCard.append(right.firstChild);right.classList.remove('main-skill');right.append(skillCard);}
   left.classList.add('training-zone','training-zone-left');center.classList.add('training-zone','training-zone-center');right.classList.add('training-zone','training-zone-right');
-  for(const [i,n]of [left,center,right].entries()){n.setAttribute('aria-label',['Профиль и мелодии','Музыкальное рабочее пространство','Skill Bank и раунды'][i]);n.setAttribute('tabindex','0');}
+  for(const [i,n]of [left,center,right].entries()){n.setAttribute('aria-label',[local("Профиль и мелодии","Profile and melodies"),local("Музыкальное рабочее пространство","Music workspace"),local("Skill Bank и раунды","Skill Bank and rounds")][i]);n.setAttribute('tabindex','0');}
   footer.classList.add('training-persistent-footer');root.after(footer);helpers.placePiano(runtime.pianoView.mount,pianoHost);
   const bpm=doc.getElementById('metronome-board'),practice=doc.getElementById('practice-board'),round=doc.getElementById('round-loop-board'),zero=doc.getElementById('onboarding-choose-zero');for(const n of [bpm,practice,round,zero])n.hidden=false;
   leftControls.append(bpm,practice);rightControls.append(round,zero);leftSlot.append(leftControls);rightSlot.append(rightControls);left.append(leftSlot);right.append(rightSlot);desktopLeft=leftControls.scrollWidth;desktopRight=rightControls.scrollWidth;
   workspace=helpers.mountWorkspace(runtime.stage,playbackHost,doc.getElementById('playline'));workspace.dataset.progressContract='local';workspace.parentElement.insertBefore(musicSlot,workspace);musicSlot.append(workspace);
-  nav=node('nav','training-zone-navigation');nav.setAttribute('aria-label','Области рабочего пространства');['Мои мелодии','Музыка','Раунды'].forEach((text,i)=>{const b=doc.createElement('button');b.type='button';b.textContent=text;b.onclick=()=>go(i);nav.append(b);});footer.prepend(nav);warning=node('p','training-keyboard-notice');warning.hidden=true;footer.prepend(warning);
+  nav=node('nav','training-zone-navigation');nav.setAttribute('aria-label',local("Области рабочего пространства","Workspace areas"));[local("Мои мелодии","My melodies"),local("Музыка","Music"),local("Раунды","Rounds")].forEach((text,i)=>{const b=doc.createElement('button');b.type='button';b.textContent=text;b.onclick=()=>go(i);nav.append(b);});footer.prepend(nav);warning=node('p','training-keyboard-notice');warning.hidden=true;footer.prepend(warning);
   off.push(helpers.bindPractice({playback:runtime.playback}),helpers.trackSuccess(runtime.playback));
   off.push(runtime.playback.addStateListener?.(()=>{if(initial)return;updateKeyboard();})||(()=>{}));
   const midi=runtime.midiDiagnostic;

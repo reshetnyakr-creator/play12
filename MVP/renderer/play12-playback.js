@@ -652,6 +652,7 @@
         if (!window.accepted) {
           this.clearPracticeCandidate();
           this.stage.dataset.lastPracticeInput = `outside_window:${midiNote}:${timingDeltaMs.toFixed(2)}`;
+          global.dispatchEvent(new CustomEvent('play12:practice-input-rejected',{detail:{reason:'outside-window',position:expected.start,source:'user'}}));
           return false;
         }
         // All chord contacts must belong to this same window, independently of spread.
@@ -661,6 +662,7 @@
       }
       if (this.practiceTimingStrict && timingDeltaMs < -PRACTICE_TIMING.earlyToleranceMs - EPSILON) {
         this.stage.dataset.lastPracticeInput = `too_early:${midiNote}:${timingDeltaMs.toFixed(2)}`;
+        global.dispatchEvent(new CustomEvent('play12:practice-input-rejected',{detail:{reason:'too-early',position:expected.start,source:'user'}}));
         return false;
       }
       if (expectedPitches.size > 1 && expected.candidateStartedAt == null) expected.candidateStartedAt = this.audioContext.currentTime;

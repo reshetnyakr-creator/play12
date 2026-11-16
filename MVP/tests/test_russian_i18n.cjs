@@ -6,7 +6,7 @@ const root=path.resolve(__dirname,'..');
 
 test('Russian route is a lightweight wrapper around shared playback',()=>{
   const route=readFileSync(path.join(root,'ru/index.html'),'utf8');
-  assert(route.includes("fetch('../renderer/playback.html?v=interaction-1')"));
+  assert(route.includes("fetch('../renderer/playback.html?v=ru-en-rounds-1')"));
   for(const duplicated of ['play12-onboarding.js','play12-playback.js','play12-round-board.js','web-midi-diagnostic.js']) assert(!route.includes(duplicated));
   assert(route.includes('window.__PLAY12_LOCALE__="ru"'));
 });

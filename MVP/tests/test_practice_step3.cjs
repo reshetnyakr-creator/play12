@@ -165,7 +165,7 @@ test('Saved tutorial state cannot expose Skip on the initial Continue screen',()
 test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actual controls advance',async()=>{
  const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();
  for(const snapshot of [{state:'playing',position:1,running:true},{state:'paused',position:2,running:false},{state:'playing',position:2,running:true},{state:'paused',position:8,running:false,ended:true}])for(const fn of h.c.stateListeners)fn(snapshot);
- assert.equal(h.controller.getState().zeroSetupStage,'intro');assert.match(h.node('#onboarding-listen-prompt').innerHTML,/comfortable reference key/);expire(h,6000);assert.equal(h.controller.getState().zeroSetupStage,'button');
+ assert.equal(h.controller.getState().zeroSetupStage,'intro');assert.match(h.node('#onboarding-listen-prompt').innerHTML,/starting point/);expire(h,6000);assert.equal(h.controller.getState().zeroSetupStage,'button');
  h.window.dispatchEvent({type:'play12:zero-ui-open'});h.window.dispatchEvent({type:'play12:zero-confirmed'});expire(h,950);assert.equal(h.controller.getState().zeroSetupStage,'cards');h.node('#onboarding-skip').handlers.click();
  assert.equal(h.controller.getState().practiceGuideStage,'practice-info');assert.match(h.node('#onboarding-listen-prompt').innerHTML,/This is the Practice panel/);expire(h,6000);assert.equal(h.c.clock.running,false);
  h.node('#practice-board-mode').handlers.click();expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'hand');h.node('#practice-left-hand').handlers.click();expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'ready');
@@ -177,7 +177,7 @@ test('Practice settings persist in existing key; Continue restores and Start re-
   h.controller.continueSession();assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);
   h.node('#practice-left-hand').handlers.click();const saved=JSON.parse(h.values.get('play12.onboarding.state.v1'));assert.equal(saved.practiceLeftHandEnabled,true);
   assert.deepEqual([...h.values.keys()].sort(),['play12.onboarding.state.v1','play12.session.exists.v1']);
-  h.controller.startNew();assert.equal(h.c.practiceEnabled(),false);assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,true);assert.equal(h.c.practiceSettings.practiceRightHandEnabled,true);
+  h.controller.startNew();assert.equal(h.c.practiceEnabled(),true);assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,true);assert.equal(h.c.practiceSettings.practiceRightHandEnabled,true);
 });
 test('Penultimate Y playback and Practice use orange Y for every runtime zero',async()=>{
   const doc=JSON.parse(readFileSync(path.join(__dirname,'../examples/when_the_saints_manual.play12.json')));
@@ -592,11 +592,13 @@ test('Loop, range and Pre-count steps accept an already-correct state',()=>{
   finish();assert.equal(h.controller.getState().practiceGuideStage,'round-precount-info');
   h.node('#onboarding-skip').handlers.click();finish();assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
 });
+function roundFixture(h){h.c.practiceEvents=h.c.rounds.map(r=>({start:r.start,events:[{hand:'R',midi:72}],matchedPitches:new Set(),candidateStartedAt:null,completed:false}));}
+function creditRound(h,round){const r=h.c.rounds[round-1],notes=h.c.practiceEvents.filter(e=>e.start>=r.start&&e.start<r.end);for(const e of notes)h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,position:e.start,roundComplete:e===notes.at(-1),expectedCount:notes.length,source:'user'}});}
 test('Round training ignores Count-in, starts at music, and invalidates wrong input',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'demo'});
-  h.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));h.controller.continueSession();
+  h.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));h.controller.continueSession();roundFixture(h);
   const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
-  const event=round=>h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
+  const event=round=>creditRound(h,round);
   const finishOk=()=>{expire(h,950);};
   assert.equal(h.node('#onboarding-listen-coach').hidden,false);
   emit({state:'count-in',position:1,running:false,ended:false});assert.equal(h.node('#onboarding-listen-coach').hidden,false);
@@ -609,6 +611,8 @@ test('Round training ignores Count-in, starts at music, and invalidates wrong in
   h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
   emit({state:'count-in',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[]);
   h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1,afterPreCount:true}});emit({state:'playing',position:1,running:true,ended:false});event(2);event(3);event(4);assert.deepEqual([...h.c.roundBoard.successes],[2,3,4]);
+  assert.equal(h.controller.getState().roundPasses,1);assert.equal(h.node('#round-ok12').hidden,true);
+  h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1,afterPreCount:true}});event(2);event(3);event(4);
   const okTimers=[...h.timers.values()].filter(value=>value.delay===950);assert.equal(okTimers.length,1,'the visible full chain creates OK12 without waiting for a hidden loop event');
   h.window.dispatchEvent({type:'play12:practice-loop-complete',detail:{practice:true,from:1,to:3}});assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1,'loop boundary cannot duplicate OK12');
   finishOk();
@@ -617,31 +621,31 @@ test('Round training ignores Count-in, starts at music, and invalidates wrong in
 test('Clean Round 2–4 acceptance is identical for Pre-count and Metronome ON/OFF',()=>{
   for(const metronome of [false,true])for(const precount of [false,true]){
     const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'demo'});
-    h.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));h.c.metronomeInput.checked=metronome;h.c.countInInput.checked=precount;h.controller.continueSession();
+    h.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));h.c.metronomeInput.checked=metronome;h.c.countInInput.checked=precount;h.controller.continueSession();roundFixture(h);
     const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
-    const event=round=>h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
+    const event=round=>creditRound(h,round);
     if(precount){emit({state:'count-in',position:1,running:false,ended:false});event(2);assert.deepEqual([...h.c.roundBoard.successes],[]);}
     h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1,afterPreCount:precount}});emit({state:'waiting_for_input',position:1,running:false,ended:false});event(2);event(3);event(4);
     assert.deepEqual([...h.c.roundBoard.successes],[2,3,4],`metronome=${metronome} precount=${precount}`);
-    assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1);
+    assert.equal(h.controller.getState().roundPasses,1);assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,0);h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1}});event(2);event(3);event(4);assert.equal(h.controller.getState().roundPasses,2);assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1);
   }
 });
 test('Progress audio ascends per Round, adds ovation only for full-song final third, and resets silently',()=>{
   const loop=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:5,inputMode:'demo'});
-  loop.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));loop.controller.continueSession();
+  loop.c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));loop.controller.continueSession();roundFixture(loop);
   let loopBuffers=0;loop.c.audioContext.createBuffer=(...args)=>{loopBuffers++;return AudioContext.prototype.createBuffer.call(loop.c.audioContext,...args);};
   loop.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1}});
-  for(const round of [2,3,4])loop.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
+  for(const round of [2,3,4])creditRound(loop,round);
   assert.equal(loopBuffers,0,'short Loop task never adds applause');
 
-  const full=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:6,inputMode:'demo'});full.controller.continueSession();
+  const full=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',roundUnlocked:true,metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,highestUnlockedStep:6,inputMode:'demo'});full.controller.continueSession();roundFixture(full);
   let oscillators=0,buffers=0;const peaks=[],originalOscillator=full.c.audioContext.createOscillator.bind(full.c.audioContext),originalBuffer=full.c.audioContext.createBuffer.bind(full.c.audioContext),originalGain=full.c.audioContext.createGain.bind(full.c.audioContext);
   full.c.audioContext.createOscillator=()=>{oscillators++;return originalOscillator();};full.c.audioContext.createBuffer=(...args)=>{buffers++;return originalBuffer(...args);};full.c.audioContext.createGain=()=>{const gain=originalGain(),ramp=gain.gain.exponentialRampToValueAtTime;gain.gain.exponentialRampToValueAtTime=(value,time)=>{peaks.push(value);return ramp.call(gain.gain,value,time);};return gain;};
   full.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:0}});
-  for(let round=1;round<=5;round++)full.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,roundComplete:true,source:'user'}});
-  assert.equal(buffers,0);full.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:6,roundComplete:true,source:'user'}});assert.equal(buffers,1);assert(oscillators>=13);assert(Math.max(...peaks)<.03,'motif and applause gains retain ample headroom');
+  for(let round=1;round<=5;round++)creditRound(full,round);
+  assert.equal(buffers,0);creditRound(full,6);assert.equal(buffers,1);assert(oscillators>=13);assert(Math.max(...peaks)<.03,'motif and applause gains retain ample headroom');
   full.window.dispatchEvent({type:'play12:practice-wrong-input',detail:{source:'user'}});assert.deepEqual([...full.c.roundBoard.successes],[]);
-  const before=buffers;full.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:7,roundComplete:true,source:'user'}});assert.equal(buffers,before,'broken attempt cannot retain escalating audio progress');
+  const before=buffers;creditRound(full,7);assert.equal(buffers,before,'broken attempt cannot retain escalating audio progress');
 });
 test('Miniature uses the same per-hand repetition detector colors as notation',()=>{
   const {window,sandbox}=load();
@@ -682,22 +686,19 @@ test('Skip during unfinished Metronome pass unlocks Round guidance',async()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:3});h.controller.continueSession();await h.c.play();
   assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-info');assert.equal(h.node('#round-loop-board').hidden,false);assert.equal(h.c.clock.running,false);
 });
-test('Completed Metronome run shows OK12 once before Round guidance',()=>{
-  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-playing',metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:4});h.controller.continueSession();
-  const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
-  emit({state:'paused',position:9,running:false,ended:true});
-  assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1);
-  emit({state:'paused',position:9,running:false,ended:true});
-  assert.equal([...h.timers.values()].filter(value=>value.delay===950).length,1,'repeated ended snapshots cannot duplicate OK12');
-  const ok=[...h.timers.values()].find(value=>value.delay===950);ok.fn();
-  assert.equal(h.controller.getState().practiceGuideStage,'round-info');
+test('Metronome credits exactly five accepted actions, resets on wrong/pause, rejects autoplay',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',practiceModeEnabled:true,practiceLeftHandEnabled:false,metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:4});h.c.metronomeInput.checked=true;h.controller.continueSession();
+ const start=()=>{h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:0}});for(const f of h.c.stateListeners)f({state:'waiting_for_input',position:0,running:false});};
+ const note=(position,source='user')=>h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{position,round:1,roundComplete:false,source}});
+ start();note(0,'system');assert.equal(h.controller.getState().metronomeStreak,0);for(let i=0;i<4;i++)note(i);assert.equal(h.controller.getState().metronomeStreak,4);assert.equal(h.node('#round-ok12').hidden,true);
+ h.window.dispatchEvent({type:'play12:practice-wrong-input',detail:{expectedStart:4}});assert.equal(h.controller.getState().metronomeStreak,0);note(4);assert.equal(h.controller.getState().metronomeStreak,1);h.window.dispatchEvent({type:'play12:practice-interruption',detail:{action:'pause'}});assert.equal(h.controller.getState().metronomeStreak,0);start();for(let i=0;i<5;i++)note(i);assert.equal(h.node('#round-ok12').hidden,false);assert.equal(h.controller.getState().metronomeStreak,5);expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'round-info');note(9);assert.equal(h.node('#round-ok12').hidden,true);
 });
 
 test('Final Right Hand Practice completes only after one uninterrupted full run',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:3,inputMode:'demo'});
-  h.controller.continueSession();
+  h.controller.continueSession();roundFixture(h);
   const emit=snapshot=>[...h.c.stateListeners].forEach(listener=>listener(snapshot));
-  const round=number=>h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:number,roundComplete:true,source:'user'}});
+  const round=number=>creditRound(h,number);
   const completeDelay=()=>{expire(h,520);assert.equal(h.node('#round-ok12').hidden,false);expire(h,950);};
   assert.deepEqual(h.c.roundBoard.taskRounds,[1,2,3,4,5,6,7,8,9]);
   h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:0,afterPreCount:false}});emit({state:'waiting_for_input',position:0,running:false,ended:false});
@@ -723,15 +724,15 @@ test('Final Right Hand Practice completes only after one uninterrupted full run'
 test('Real Practice controller end plus semantic Round success triggers completion',async()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:6,inputMode:'demo'});
   const starts=[];h.window.addEventListener('play12:musical-attempt-start',event=>starts.push(event.detail));
-  h.c.rounds=[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4}];h.controller.continueSession();await h.c.play();assert.equal(starts.length,1);assert.equal(starts[0].position,0);h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:1,roundComplete:true,source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[1]);h.c.clock.pause(8);h.c.paint(8);
+  h.c.rounds=[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4}];h.controller.continueSession();await h.c.play();assert.equal(starts.length,1);assert.equal(starts[0].position,0);creditRound(h,1);assert.deepEqual([...h.c.roundBoard.successes],[1]);h.c.clock.pause(8);h.c.paint(8);
   expire(h,520);expire(h,950);
   assert.equal(h.controller.getState().onboardingCompleted,true);assert.equal(h.node('#onboarding-completion').hidden,false);
 });
 test('Final whole-song attempt starts only after Pre-count and can reach completion',async()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'final-practice',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:6,inputMode:'demo'});
   h.c.rounds=[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4,measureStart:0}];h.controller.continueSession();h.c.countInInput.checked=true;await h.c.play();
-  h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:1,roundComplete:true,source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[],'Pre-count cannot credit full-song progress');
-  h.c.audioContext.currentTime=h.c.countIn.endsAt;h.c.tick();h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round:1,roundComplete:true,source:'user'}});assert.deepEqual([...h.c.roundBoard.successes],[1]);
+  creditRound(h,1);assert.deepEqual([...h.c.roundBoard.successes],[],'Pre-count cannot credit full-song progress');
+  h.c.audioContext.currentTime=h.c.countIn.endsAt;h.c.tick();creditRound(h,1);assert.deepEqual([...h.c.roundBoard.successes],[1]);
   h.c.clock.pause(8);h.c.paint(8);expire(h,520);expire(h,950);assert.equal(h.controller.getState().onboardingCompleted,true);
 });
 
@@ -833,4 +834,17 @@ test('Skip cancels a pending action-success timer without undoing later instruct
 });
 test('explicit legacy metronome feedback migrates without a repeated OK12',()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',metronomeSuccessFeedback:true,introducedPanels:{metronome:true},metronomeUnlocked:true,highestUnlockedStep:4,inputMode:'demo'});h.c.metronomeInput.checked=true;h.controller.continueSession();assert(h.controller.getState().successes['metronome-on']);assert.equal(h.node('#round-ok12').hidden,true);assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');
+});
+
+test('Start over on Welcome preserves saved hand preferences and calibration/settings keys',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',inputMode:'midi',midiVerified:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});for(const k of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.tempo.v1:test'])h.values.set(k,'preserved');h.controller.startNew();const s=h.controller.getState();assert.equal(s.practiceLeftHandEnabled,false);assert.equal(s.practiceModeEnabled,true);assert.equal(s.playLearned,false);assert.equal(s.roundPasses,0);for(const k of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.tempo.v1:test'])assert.equal(h.values.get(k),'preserved');
+});
+test('Visual round success requires all actual selected-hand actions, not a partial round',async()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',inputMode:'demo',highestUnlockedStep:3,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});h.c.rounds=[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4}];h.controller.continueSession();await h.c.play();h.c.acceptPracticeInput(72);assert.deepEqual([...h.c.roundBoard.successes],[]);h.c.audioContext.currentTime=2;h.c.tick();h.c.acceptPracticeInput(74);assert.deepEqual([...h.c.roundBoard.successes],[1]);h.node('#practice-board-mode').handlers.click();assert.deepEqual([...h.c.roundBoard.successes],[]);
+});
+test('Timing-rejected input resets the metronome series without counting it',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:4,practiceModeEnabled:true,practiceLeftHandEnabled:false});h.c.metronomeInput.checked=true;h.controller.continueSession();h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:0}});for(const f of h.c.stateListeners)f({state:'waiting_for_input',position:0,running:false});for(let i=0;i<4;i++)h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{position:i,source:'user'}});assert.equal(h.controller.getState().metronomeStreak,4);h.window.dispatchEvent({type:'play12:practice-input-rejected',detail:{reason:'outside-window',source:'user'}});assert.equal(h.controller.getState().metronomeStreak,0);assert.equal(h.node('#round-ok12').hidden,true);
+});
+test('One completed round pass persists across restore; only a second complete pass finishes',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundPasses:1,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:5,inputMode:'demo',practiceModeEnabled:true,practiceLeftHandEnabled:false});h.controller.continueSession();roundFixture(h);assert.equal(h.controller.getState().roundPasses,1);h.window.dispatchEvent({type:'play12:practice-interruption',detail:{action:'pause'}});assert.equal(h.controller.getState().roundPasses,1);h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1}});creditRound(h,2);creditRound(h,3);assert.equal(h.node('#round-ok12').hidden,true);creditRound(h,4);assert.equal(h.controller.getState().roundPasses,2);assert.equal(h.node('#round-ok12').hidden,false);creditRound(h,4);assert.equal([...h.timers.values()].filter(t=>t.delay===950).length,1);expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');assert.equal(h.controller.getState().roundPasses,2);
 });

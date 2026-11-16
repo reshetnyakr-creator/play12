@@ -208,7 +208,9 @@
       const marker = global.document.createElementNS(svgNS, "g");
       marker.setAttribute("class", "play12-round-marker");
       marker.setAttribute("data-round-marker", String(index + 1));
-      marker.setAttribute("transform", `translate(${centerX} ${centerY})`);
+      marker.setAttribute("data-round-top-x", String(noteFieldLeft + noteFieldWidth / 2));
+      marker.setAttribute("data-round-top-y", String((steps - (roundStart + length - startQ) / stepQ) * height));
+      marker.setAttribute("transform", cfg.roundMarkerPlacement==='top-center'?`translate(${marker.getAttribute("data-round-top-x")} ${marker.getAttribute("data-round-top-y")})`:`translate(${centerX} ${centerY})`);
       const circle = global.document.createElementNS(svgNS, "circle");
       circle.setAttribute("r", String(markerDiameter / 2)); circle.setAttribute("class", "play12-round-marker-circle");
       const number = global.document.createElementNS(svgNS, "text");

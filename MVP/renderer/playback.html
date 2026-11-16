@@ -182,7 +182,7 @@
               </div>
               <aside id="onboarding-completion" class="mvp-completion-card" role="status" aria-live="polite" hidden>
                 <h2 id="onboarding-completion-title">Congratulations!</h2>
-                <a class="mvp-button mvp-button-primary" href="/ru/MVP/main/">Перейти в Play12</a><p id="onboarding-completion-message">You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.</p>
+                <a class="mvp-button mvp-button-primary" href="/ru/MVP/main/">Go to Play12</a><p id="onboarding-completion-message">You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.</p>
               </aside>
               <div id="round-ok12" class="mvp-ok12-toast" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span> OK12</div>
               <div id="onboarding-confetti" class="mvp-confetti" aria-hidden="true"></div>
@@ -299,7 +299,7 @@
           <div><dt>Channel</dt><dd id="midi-channel">—</dd></div>
           <div><dt>Active MIDI notes</dt><dd id="midi-active-notes">—</dd></div>
         </dl>
-        <p id="midi-message" class="midi-diagnostic-message" aria-live="polite">Нажмите Enable MIDI и разрешите доступ к подключённому инструменту.</p>
+        <p id="midi-message" class="midi-diagnostic-message" aria-live="polite">Press Enable MIDI and allow access to your connected instrument.</p>
       </aside>
       <aside id="composition-review-inspector" class="composition-review-inspector" hidden aria-label="Selected note inspector">
         <div class="composition-review-heading"><strong>Note Inspector</strong><span id="review-status">Selected</span><button id="review-close" type="button" aria-label="Close note inspector">×</button></div>
@@ -329,23 +329,23 @@
       </section>
     </section>
   </main>
-  <script src="play12-i18n.js?v=interaction-1"></script>
+  <script src="play12-i18n.js?v=ru-en-rounds-1"></script>
   <script src="../editor/core.js?v=editor-03"></script>
-  <script src="play12-renderer.js?v=editor-03"></script>
+  <script src="play12-renderer.js?v=ru-en-rounds-1"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=physical-midi-1"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
-  <script src="play12-round-board.js?v=1.4.3"></script>
-  <script src="play12-playback.js?v=1.4.3"></script>
+  <script src="play12-round-board.js?v=ru-en-rounds-1"></script>
+  <script src="play12-playback.js?v=ru-en-rounds-1"></script>
   <script src="web-midi-diagnostic.js?v=physical-midi-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=alignment-1-round-final-01"></script>
   <script src="training-shell.js?v=1.4"></script>
-  <script src="training-zones.js?v=interaction-1"></script>
-  <script src="tutorial-layout.js?v=interaction-1"></script>
-  <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=1.4.3','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=interaction-1'])document.write('<link rel="stylesheet" href="'+href+'">');}</script>
-  <script src="play12-onboarding.js?v=interaction-1"></script>
+  <script src="training-zones.js?v=ru-en-rounds-1"></script>
+  <script src="tutorial-layout.js?v=ru-en-rounds-1"></script>
+  <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=1.4.3','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=ru-en-rounds-1'])document.write('<link rel="stylesheet" href="'+href+'">');}</script>
+  <script src="play12-onboarding.js?v=ru-en-rounds-1"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     window.addEventListener('unhandledrejection', event => { if (new URLSearchParams(location.search).has('composition')) { const msg = document.createElement('p'); msg.textContent = 'Не удалось открыть композицию: ' + (event.reason?.message || event.reason); document.body.prepend(msg); } });
@@ -420,7 +420,7 @@
       const repetitionSegments = Play12Repetitions.detect(score);
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
-        segments: repetitionSegments,
+        segments: repetitionSegments, roundMarkerPlacement: !savedCompositionId && !compositionReviewMode ? 'top-center' : 'side',
         onboardingLayout: !savedCompositionId, editorTimeline: !!savedCompositionId, unassignedDisplay: !!savedCompositionId, wrapCycles: !!savedCompositionId, noteSelectionEnabled: saintsReviewMode || mainMode,
         selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => { if(mainMode) window.play12Main?.select(eventId); else reviewController?.select(eventId); },
         zeroNote: score.play12.zero_pitch_class,
