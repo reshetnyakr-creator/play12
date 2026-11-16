@@ -40,3 +40,6 @@ body.tutorial-main-aligned{grid-template-columns:minmax(0,1fr)}
 .tutorial-main-aligned .training-shell-main .mvp-playback-host .playback-stage{min-height:0}
 
 .tutorial-main-aligned .tutorial-midi-status{min-height:29px}
+
+/* The Main ID rule is lower than the Tutorial mask unless explicitly overridden. */
+body.tutorial-main-aligned > #zero-chooser{z-index:10004}

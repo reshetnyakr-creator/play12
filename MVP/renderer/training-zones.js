@@ -63,7 +63,7 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   if(initial||changed){initial=false;go(active);}mark();
  }
  const resize=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(layout);};
- return{resize,go,get activeZone(){return active;},mount(){if(mounted)return;mounted=true;widthProbe=node('div','training-width-probe');widthProbe.setAttribute('aria-hidden','true');root.before(widthProbe);root.classList.add('training-three-zones','training-shell-main');doc.body.classList.add('play12-training-shell','play12-three-zones');
+ return{resize,layoutNow(){cancelAnimationFrame(frame);layout();},go,get activeZone(){return active;},mount(){if(mounted)return;mounted=true;widthProbe=node('div','training-width-probe');widthProbe.setAttribute('aria-hidden','true');root.before(widthProbe);root.classList.add('training-three-zones','training-shell-main');doc.body.classList.add('play12-training-shell','play12-three-zones');
   remember(footer);for(const n of [runtime.stage,doc.getElementById('playline'),runtime.pianoView.mount,doc.getElementById('metronome-board'),doc.getElementById('practice-board'),doc.getElementById('round-loop-board'),doc.getElementById('onboarding-choose-zero')])remember(n);
   if(right.classList.contains('main-skill')){skillCard=node('section','main-skill training-skill-card');while(right.firstChild)skillCard.append(right.firstChild);right.classList.remove('main-skill');right.append(skillCard);}
   left.classList.add('training-zone','training-zone-left');center.classList.add('training-zone','training-zone-center');right.classList.add('training-zone','training-zone-right');

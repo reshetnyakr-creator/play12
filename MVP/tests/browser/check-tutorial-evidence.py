@@ -8,6 +8,7 @@ for name in ['spotlights','spotlights-early']:
     failures.extend(data['errors'])
     for case in data['results']:
         total+=1;w,h=case['width'],case['height'];label=f"{w}x{h}:{case['guide']}"
+        if not case['records']:failures.append(label+': no visible instructional card recorded')
         scroll=case['scroll']
         if scroll['w']>w+2 or scroll['h']>h+2:failures.append(label+': document overflow')
         for record in case['records']:

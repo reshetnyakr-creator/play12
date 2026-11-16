@@ -2,6 +2,20 @@
   'use strict';
 
   const ru = {
+    "Listen to how the melody sounds. Press Play or the P key.":"Послушай, как звучит мелодия. Нажми Play или клавишу P",
+    "You can choose a comfortable reference key — your own 0. You can change it whenever you need.":"Ты можешь выбрать удобную опорную клавишу — свой ноль. Его можно изменить в любой момент",
+    "Press the 0 button to choose your reference key.":"Нажми кнопку «0», чтобы выбрать свою опорную клавишу",
+    "Now press a comfortable key on your instrument or choose it with your mouse on the on-screen keyboard.":"Теперь нажми удобную клавишу на инструменте или выбери её мышью на экранной клавиатуре",
+    "This is the Practice panel. Here you can choose which hand to train: right, left, or both.":"Это панель Practice. Здесь можно выбрать, какую руку тренировать: правую, левую или обе",
+    "Now turn on Practice.":"Теперь включи Practice",
+    "Let’s play with your right hand. Turn off Left Hand.":"Давай сыграем правой рукой. Выключи левую руку",
+    "Now press Play and try to play the melody with your right hand.":"Теперь нажми Play и попробуй сыграть мелодию правой рукой",
+    "Here you can change the tempo to learn at a comfortable speed. The metronome helps you keep the rhythm.":"Здесь можно изменить темп, чтобы учиться на удобной скорости. Метроном помогает держать ритм",
+    "Change the speed using the buttons beside BPM.":"Меняй скорость кнопками рядом с BPM",
+    "Try turning on the metronome.":"Попробуй включить метроном",
+    "You do not have to learn the whole piece at once. Choose a section and practise just that part.":"Не обязательно учить всё произведение сразу. Выбери участок и потренируй только его",
+    "Choose the section you want to practise.":"Выбери участок, который хочешь потренировать",
+
     'OK12':'OK12','BPM':'BPM','Skip':'Пропустить','Start':'Начать','Continue':'Продолжить','Start fresh':'Начать заново',
     'Continue with saved setup':'Продолжить с сохранёнными настройками',
     'Connect your piano':'Подключи пианино','Already connected':'Уже подключено','How to connect?':'Как подключить?',
