@@ -48,10 +48,10 @@ test('physical range update waits for consumed function keys and completes on re
 });
 
 test('range warning follows composition and input without overwriting an independent zero warning',()=>{
- const m=midiFixture(),t=setup(1440,m);t.shell.mount();t.flush();assert.equal(t.warning.hidden,false);assert.match(t.warning.textContent,/outside/);
+ const m=midiFixture(),t=setup(1440,m);t.shell.mount();t.flush();assert.equal(t.warning.hidden,false);assert.match(t.warning.textContent,/за пределами/);
  t.playback.events=[{midi:60}];t.emit();assert.equal(t.warning.hidden,true);
  t.warning.textContent='Физическая транспозиция: проверьте аппликатуру.';t.warning.hidden=false;
- t.playback.events=[{midi:28}];t.emit();assert.match(t.warning.textContent,/Физическая транспозиция/);assert.match(t.warning.textContent,/outside/);
+ t.playback.events=[{midi:28}];t.emit();assert.match(t.warning.textContent,/Физическая транспозиция/);assert.match(t.warning.textContent,/за пределами/);
  m.inputHandlers.delete('A');m.status();t.flush();assert.equal(t.warning.textContent,'Физическая транспозиция: проверьте аппликатуру.');
  m.c={...m.c,leftMidi:20};m.complete();t.flush();assert.match(t.warning.textContent,/21–108/);assert.equal(t.rangeCalls.at(-1),null);assert.equal(m.c.leftMidi,20);
 });

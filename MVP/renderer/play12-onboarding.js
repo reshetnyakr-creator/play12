@@ -1322,6 +1322,7 @@
         if (state.onboardingStep === 'CHOOSE_ZERO' && ['select','confirm'].includes(state.zeroSetupStage)) global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
         recoverMidi();
       }
+      if(global.__PLAY12_TUTORIAL_LOCALE_RESUME__){global.__PLAY12_TUTORIAL_LOCALE_RESUME__=false;continueSession();}
       // Restored lesson progress is data, not the visible screen. Do not mount
       // TrainingZones or its dock while the user is still choosing Start/Continue.
       if (visibleStep === 'MIDI_CONNECT') movePianoToOnboarding();

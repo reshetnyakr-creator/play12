@@ -116,8 +116,7 @@
     'First {count} measures in Play12 notation':'Первые {count} тактов в нотации Play12'
   };
 
-  const locale = global.__PLAY12_LOCALE__ === 'ru' || document.documentElement.lang === 'ru' ||
-    new URLSearchParams(location.search).get('lang') === 'ru' ? 'ru' : 'en';
+  const locale = global.__PLAY12_LOCALE__ || (document.documentElement.lang === 'ru' || new URLSearchParams(location.search).get('lang') === 'ru' ? 'ru' : 'en');
   document.documentElement.lang = locale;
   const interpolate = (value, params={}) => String(value).replace(/\{(\w+)\}/g, (_, key) => params[key] ?? `{${key}}`);
   const t = (key, params) => interpolate(locale === 'ru' ? (ru[key] || key) : key, params);
@@ -147,7 +146,7 @@
     if(root.nodeType===Node.ELEMENT_NODE) translateElement(root);
     root.querySelectorAll?.('*').forEach(translateElement);
     const language=root.querySelector?.('.mvp-language-switch');
-    if(language) language.innerHTML='<a href="/MVP/" lang="en">EN</a><span aria-hidden="true">/</span><span class="mvp-active-language" aria-current="page">RU</span>';
+    if(language&&global.Play12Routes)global.Play12Routes.languages(language,global.__PLAY12_MAIN__?'main':'tutorial');
   };
   const observer = new MutationObserver(records => records.forEach(record => record.addedNodes.forEach(apply)));
   const start = () => { apply(document); observer.observe(document.body,{childList:true,subtree:true,characterData:true}); };

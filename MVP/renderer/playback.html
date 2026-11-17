@@ -27,7 +27,7 @@
         <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
         <a href="https://x.com/play12_official">X</a>
         <span class="mvp-language-switch" aria-label="Language selection">
-          <span class="mvp-active-language" aria-current="page">EN</span><span aria-hidden="true">/</span><a href="/MVP/ru/" lang="ru">RU</a>
+          <span class="mvp-active-language" aria-current="page">EN</span><span aria-hidden="true">/</span><a href="/ru/MVP/tutorial/" lang="ru">RU</a>
         </span>
       </nav>
     </header>
@@ -182,7 +182,7 @@
               </div>
               <aside id="onboarding-completion" class="mvp-completion-card" role="status" aria-live="polite" hidden>
                 <h2 id="onboarding-completion-title">Congratulations!</h2>
-                <a class="mvp-button mvp-button-primary" href="/ru/MVP/main/">Go to Play12</a><p id="onboarding-completion-message">You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.</p>
+                <a class="mvp-button mvp-button-primary" href="/ru/MVP/main/" id="tutorial-main-link">Go to Play12</a><p id="onboarding-completion-message">You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.</p>
               </aside>
               <div id="round-ok12" class="mvp-ok12-toast" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span> OK12</div>
               <div id="onboarding-confetti" class="mvp-confetti" aria-hidden="true"></div>
@@ -329,23 +329,24 @@
       </section>
     </section>
   </main>
-  <script src="play12-i18n.js?v=ru-en-rounds-1"></script>
+  <script>if(window.Play12Routes){Play12Routes.languages(document.querySelector('.mvp-language-switch'),window.__PLAY12_MAIN__?'main':'tutorial');const mainLink=document.getElementById('tutorial-main-link');if(mainLink)mainLink.href=Play12Routes.path('main');}</script>
+  <script src="play12-i18n.js?v=en-routes-1"></script>
   <script src="../editor/core.js?v=editor-03"></script>
-  <script src="play12-renderer.js?v=ru-en-rounds-1"></script>
+  <script src="play12-renderer.js?v=en-routes-1"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=physical-midi-1"></script>
   <script src="play12-precount-view.js?v=round-final-01"></script>
-  <script src="play12-round-board.js?v=ru-en-rounds-1"></script>
-  <script src="play12-playback.js?v=ru-en-rounds-1"></script>
-  <script src="web-midi-diagnostic.js?v=physical-midi-1"></script>
+  <script src="play12-round-board.js?v=en-routes-1"></script>
+  <script src="play12-playback.js?v=en-routes-1"></script>
+  <script src="web-midi-diagnostic.js?v=en-routes-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=alignment-1-round-final-01"></script>
   <script src="training-shell.js?v=1.4"></script>
-  <script src="training-zones.js?v=ru-en-rounds-1"></script>
-  <script src="tutorial-layout.js?v=ru-en-rounds-1"></script>
-  <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=1.4.3','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=ru-en-rounds-1'])document.write('<link rel="stylesheet" href="'+href+'">');}</script>
-  <script src="play12-onboarding.js?v=ru-en-rounds-1"></script>
+  <script src="training-zones.js?v=en-routes-1"></script>
+  <script src="tutorial-layout.js?v=en-routes-1"></script>
+  <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=1.4.3','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=en-routes-1'])document.write('<link rel="stylesheet" href="'+href+'">');}</script>
+  <script src="play12-onboarding.js?v=en-routes-1"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     window.addEventListener('unhandledrejection', event => { if (new URLSearchParams(location.search).has('composition')) { const msg = document.createElement('p'); msg.textContent = 'Не удалось открыть композицию: ' + (event.reason?.message || event.reason); document.body.prepend(msg); } });
@@ -420,22 +421,24 @@
       const repetitionSegments = Play12Repetitions.detect(score);
       const render = resolution => Play12Renderer.render(score, scoreRoot, {
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
-        segments: repetitionSegments, roundMarkerPlacement: !savedCompositionId && !compositionReviewMode ? 'top-center' : 'side',
+        segments: repetitionSegments, roundMarkerPlacement: mainMode || !compositionReviewMode ? 'left-top' : 'side',
         onboardingLayout: !savedCompositionId, editorTimeline: !!savedCompositionId, unassignedDisplay: !!savedCompositionId, wrapCycles: !!savedCompositionId, noteSelectionEnabled: saintsReviewMode || mainMode,
         selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => { if(mainMode) window.play12Main?.select(eventId); else reviewController?.select(eventId); },
         zeroNote: score.play12.zero_pitch_class,
-        countWords: saintsReviewMode ? Play12Renderer.defaults.countWords : { 1: 'ONE', 2: 'TWO', 3: 'THREE', 4: 'FOUR' },
-        countAnd: saintsReviewMode ? Play12Renderer.defaults.countAnd : 'AND'
+        countWords: window.Play12I18n.isRu()?{1:'РАЗ',2:'ДВА',3:'ТРИ',4:'ЧЕ'}:{1:'ONE',2:'TWO',3:'THREE',4:'FOUR'},
+        countAnd: window.Play12I18n.isRu()?'И':'AND'
       });
       const gridOptions = ['1/4', '1/8', '1/16', '1/32', '1/64'];
       const gridMetadata = score.play12.recommended_grid || score.play12.default_grid;
       // Without per-composition metadata retain the established configured display default.
       const recommendedGrid = gridOptions.includes(gridMetadata) ? gridMetadata : reviewGrid.value;
-      if(mainMode){for(const option of [...reviewGrid.options])if(option.value==='1/64')option.remove();reviewGrid.value='1/4';}
+      const unifiedGrid=mainMode||!compositionReviewMode;
+      const gridStorageKey='play12.display-grid.v1:'+(savedCompositionId||'tutorial');
+      if(unifiedGrid){for(const option of [...reviewGrid.options])if(option.value==='1/64')option.remove();const saved=localStorage.getItem(gridStorageKey);reviewGrid.value=['1/4','1/8','1/16','1/32'].includes(saved)?saved:'1/4';}
       else if (!compositionReviewMode) reviewGrid.value = recommendedGrid;
       const gridButton = document.getElementById('playback-grid');
       const syncGridButton = () => {
-        gridButton.textContent = `×${mainMode?Play12Playback.mainGridState(reviewGrid.value).multiplier:reviewGrid.value.split('/')[1]}`;
+        gridButton.textContent = `×${unifiedGrid?Play12Playback.mainGridState(reviewGrid.value).multiplier:reviewGrid.value.split('/')[1]}`;
         gridButton.setAttribute('aria-label', window.Play12I18n.t('Display grid {grid}; click to subdivide', {grid:reviewGrid.value}));
       };
       syncGridButton();
@@ -659,8 +662,9 @@
         window.play12Playback.replaceSvg(render(event.target.value));
         syncGridButton();
       });
+      if(unifiedGrid)reviewGrid.addEventListener('change',()=>localStorage.setItem(gridStorageKey,reviewGrid.value));
       gridButton.addEventListener('click', () => {
-        reviewGrid.value = mainMode?Play12Playback.mainGridState(reviewGrid.value).next:Play12Playback.nextGridResolution(reviewGrid.value, recommendedGrid);
+        reviewGrid.value = unifiedGrid?Play12Playback.mainGridState(reviewGrid.value).next:Play12Playback.nextGridResolution(reviewGrid.value, recommendedGrid);
         reviewGrid.dispatchEvent(new Event('change'));
       });
       window.play12Playback.stage.dataset.recommendedGrid = recommendedGrid;

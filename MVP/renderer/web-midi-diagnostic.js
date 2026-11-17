@@ -73,7 +73,7 @@
       });
       if (!("requestMIDIAccess" in navigator)) {
         enableButton.disabled = true;
-        this.fields.message.textContent = "Web MIDI API недоступен в этом браузере.";
+        this.fields.message.textContent = (global.Play12UI?.t?.("Web MIDI API недоступен в этом браузере.") || "Web MIDI API недоступен в этом браузере.");
         this.setStatus("unavailable", { safari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent) });
       }
       this.pianoView.setCommandRouter?.({
@@ -197,14 +197,14 @@
       }
       if (this.enablePromise) return this.enablePromise;
       this.enableButton.disabled = true;
-      this.fields.message.textContent = "Запрашивается доступ к MIDI input…";
+      this.fields.message.textContent = (global.Play12UI?.t?.("Запрашивается доступ к MIDI input…") || "Запрашивается доступ к MIDI input…");
       this.setStatus("requesting");
       this.enablePromise = navigator.requestMIDIAccess({ sysex: false, software: false })
         .then(access => {
           this.access = access;
           this.access.addEventListener("statechange", this.handleStateChange);
           this.refreshInputs();
-          this.fields.message.textContent = "MIDI input включён. Нажмите клавишу на подключённом MIDI-устройстве.";
+          this.fields.message.textContent = (global.Play12UI?.t?.("MIDI input включён. Нажмите клавишу на подключённом MIDI-устройстве.") || "MIDI input включён. Нажмите клавишу на подключённом MIDI-устройстве.");
           return access;
         })
         .catch(error => {

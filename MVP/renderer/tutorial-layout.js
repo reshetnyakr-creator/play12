@@ -9,7 +9,7 @@ function create({runtime,root}){
  const overlays=['onboarding-listen-coach','zero-chooser','onboarding-completion','round-ok12','onboarding-confetti','returning-midi'];
  function mount(){if(shell){shell.layoutNow();return;}
   runtime.playback.tutorialProgress=true;
-  for(const n of runtime.playback.svg.querySelectorAll('[data-round-marker]')){markerHomes.push([n,n.getAttribute('transform')]);n.setAttribute('transform',`translate(${n.dataset.roundTopX} ${n.dataset.roundTopY})`);}
+  for(const n of runtime.playback.svg.querySelectorAll('[data-round-marker]')){markerHomes.push([n,n.getAttribute('transform')]);n.setAttribute('transform',`translate(${n.dataset.roundLeftX} ${n.dataset.roundTopY})`);}
   const rail=doc.getElementById('round-training-progress');if(rail){progressHome={n:rail,parent:rail.parentElement,next:rail.nextSibling};rail.remove();}
   [header,progress,song,steps,host,pianoHost,runtime.stage,doc.getElementById('playline'),runtime.pianoView.mount,...overlays.map(id=>doc.getElementById(id))].filter(Boolean).forEach(keep);
   body.prepend(header);body.classList.add('tutorial-main-aligned','play12-main');root.classList.add('tutorial-aligned-root');page.classList.add('tutorial-aligned-page');view.classList.add('tutorial-aligned-view');

@@ -25,7 +25,7 @@
     dynamicsOpacity: { pp: 0.5, p: 0.6, mp: 0.7, mf: 0.8, f: 0.9, ff: 1 },
     metricOpacity: { primary: 0.36, secondary: 0.24, weak: 0.12 },
     metricMaps: { "3/8": ["primary", "weak", "weak"], "4/4": ["primary", "weak", "secondary", "weak"] },
-    countWords: { 1: "РАЗ", 2: "ДВА", 3: "ТРИ", 4: "ЧЕТЫРЕ" },
+    countWords: { 1: "РАЗ", 2: "ДВА", 3: "ТРИ", 4: "ЧЕ" },
     countAnd: "И",
   };
 
@@ -208,9 +208,10 @@
       const marker = global.document.createElementNS(svgNS, "g");
       marker.setAttribute("class", "play12-round-marker");
       marker.setAttribute("data-round-marker", String(index + 1));
+      marker.setAttribute("data-round-left-x",String(centerX));
       marker.setAttribute("data-round-top-x", String(noteFieldLeft + noteFieldWidth / 2));
       marker.setAttribute("data-round-top-y", String((steps - (roundStart + length - startQ) / stepQ) * height));
-      marker.setAttribute("transform", cfg.roundMarkerPlacement==='top-center'?`translate(${marker.getAttribute("data-round-top-x")} ${marker.getAttribute("data-round-top-y")})`:`translate(${centerX} ${centerY})`);
+      marker.setAttribute("transform", cfg.roundMarkerPlacement==='left-top'?`translate(${centerX} ${marker.getAttribute("data-round-top-y")})`:cfg.roundMarkerPlacement==='top-center'?`translate(${marker.getAttribute("data-round-top-x")} ${marker.getAttribute("data-round-top-y")})`:`translate(${centerX} ${centerY})`);
       const circle = global.document.createElementNS(svgNS, "circle");
       circle.setAttribute("r", String(markerDiameter / 2)); circle.setAttribute("class", "play12-round-marker-circle");
       const number = global.document.createElementNS(svgNS, "text");

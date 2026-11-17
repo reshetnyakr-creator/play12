@@ -7,7 +7,7 @@ function fixture(absent=false){
  if(absent)nodes.delete('zero-chooser');else nodes.set('zero-chooser',chooser);
  const root={getElementById:id=>nodes.get(id)||null,body:{append(n){n.parentElement=this;}}};
  const center={querySelector:()=>({remove(){}}),prepend(){}};
- const context={};vm.createContext(context);vm.runInContext(body,context);
+ const context={t:s=>s};vm.createContext(context);vm.runInContext(body,context);
  return {root,chooser,run:()=>context.preparePlaybackDOM(center,root)};
 }
 test('zero portal preserves both original stages, handlers and selection state',()=>{

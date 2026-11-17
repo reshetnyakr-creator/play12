@@ -1,7 +1,7 @@
 /* External three-zone layout. One existing runtime; navigation never changes music state. */
 (function(G){'use strict';
 const gap=10,zoneGap=18;
-const local=(ru,en)=>G.__PLAY12_MAIN__||G.Play12I18n?.isRu?.()?ru:en;
+const local=(ru,en)=>G.Play12I18n?.isRu?.()??true?ru:en;
 function fit(width,available){return Math.min(1,Math.max(0,available)/Math.max(1,width));}
 function metrics(available,left,music,right){const minimum=Math.max(left,music,right),unscaledThreshold=3*minimum+2*zoneGap;
  // A fit threshold for unscaled panels is not a desktop/mobile breakpoint.
