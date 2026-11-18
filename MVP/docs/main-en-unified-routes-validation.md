@@ -1,3 +1,5 @@
+> Historical implementation report. Fresh release acceptance: [2026-11-18 report](tutorial-en-final-acceptance-20261118.md).
+
 # Play12 — Main EN, Unified Routes, Grab, Round Markers & Count Localization v1.0
 
 Date: 2026-11-16. Baseline/main rechecked before publishing: `e64afb5c4fa86c8ad8ed991386bb4b5b4eceddca`.

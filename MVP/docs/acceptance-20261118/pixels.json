@@ -1,0 +1,32 @@
+[
+  {
+    "width": 1920,
+    "changed": 4033,
+    "outsideNoteViewport": 9,
+    "outsideOver4": 0
+  },
+  {
+    "width": 1440,
+    "changed": 3242,
+    "outsideNoteViewport": 9,
+    "outsideOver4": 0
+  },
+  {
+    "width": 1280,
+    "changed": 2567,
+    "outsideNoteViewport": 0,
+    "outsideOver4": 0
+  },
+  {
+    "width": 1024,
+    "changed": 2686,
+    "outsideNoteViewport": 0,
+    "outsideOver4": 0
+  },
+  {
+    "width": 375,
+    "changed": 1190,
+    "outsideNoteViewport": 0,
+    "outsideOver4": 0
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "hover does not load; title click activates selected score",
+    "manual Repeat range, Repeat and Pre-count survive native language switch",
+    "native backup download, named delete confirmation, selected-only deletion, backup restore preserve identity/other score"
+  ],
+  "range": {
+    "from": "1",
+    "to": "2",
+    "repeat": true,
+    "precount": true
+  },
+  "prompts": [
+    "Delete melody “first”?"
+  ],
+  "errors": []
+}

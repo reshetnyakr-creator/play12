@@ -1,0 +1,7505 @@
+{
+  "results": [
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "ru",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "ru",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "ru",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 213.91104125976562,
+        "y": 546.1778564453125,
+        "width": 343.5890808105469,
+        "height": 41.9803466796875,
+        "top": 546.1778564453125,
+        "right": 557.5001220703125,
+        "bottom": 588.158203125,
+        "left": 213.91104125976562
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "ru",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 213.91104125976562,
+        "y": 546.1778564453125,
+        "width": 343.5890808105469,
+        "height": 41.9803466796875,
+        "top": 546.1778564453125,
+        "right": 557.5001220703125,
+        "bottom": 588.158203125,
+        "left": 213.91104125976562
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "ru",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 213.91104125976562,
+        "y": 546.1778564453125,
+        "width": 343.5890808105469,
+        "height": 41.9803466796875,
+        "top": 546.1778564453125,
+        "right": 557.5001220703125,
+        "bottom": 588.158203125,
+        "left": 213.91104125976562
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "ru",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 213.91104125976562,
+        "y": 546.1778564453125,
+        "width": 343.5890808105469,
+        "height": 41.9803466796875,
+        "top": 546.1778564453125,
+        "right": 557.5001220703125,
+        "bottom": 588.158203125,
+        "left": 213.91104125976562
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "en",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "en",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "en",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 213.91104125976562,
+        "y": 546.1778564453125,
+        "width": 343.5890808105469,
+        "height": 41.9803466796875,
+        "top": 546.1778564453125,
+        "right": 557.5001220703125,
+        "bottom": 588.158203125,
+        "left": 213.91104125976562
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "en",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 213.91104125976562,
+        "y": 546.1778564453125,
+        "width": 343.5890808105469,
+        "height": 41.9803466796875,
+        "top": 546.1778564453125,
+        "right": 557.5001220703125,
+        "bottom": 588.158203125,
+        "left": 213.91104125976562
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "en",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 213.91104125976562,
+        "y": 546.1778564453125,
+        "width": 343.5890808105469,
+        "height": 41.9803466796875,
+        "top": 546.1778564453125,
+        "right": 557.5001220703125,
+        "bottom": 588.158203125,
+        "left": 213.91104125976562
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "locale": "en",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 530,
+            "y": 418,
+            "width": 380,
+            "height": 64,
+            "top": 418,
+            "right": 910,
+            "bottom": 482,
+            "left": 530
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 530,
+            "y": 504,
+            "width": 380,
+            "height": 64,
+            "top": 504,
+            "right": 910,
+            "bottom": 568,
+            "left": 530
+          }
+        }
+      ],
+      "practice": {
+        "x": 213.91104125976562,
+        "y": 546.1778564453125,
+        "width": 343.5890808105469,
+        "height": 41.9803466796875,
+        "top": 546.1778564453125,
+        "right": 557.5001220703125,
+        "bottom": 588.158203125,
+        "left": 213.91104125976562
+      },
+      "piano": {
+        "x": 12,
+        "y": 611.15625,
+        "width": 1416,
+        "height": 247.84375,
+        "top": 611.15625,
+        "right": 1428,
+        "bottom": 859,
+        "left": 12
+      },
+      "line": {
+        "x": 567.75,
+        "y": 546.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 546.15625,
+        "right": 872.25,
+        "bottom": 588.15625,
+        "left": 567.75
+      },
+      "scroll": [
+        1440,
+        900
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "ru",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "ru",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "ru",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 193.03829956054688,
+        "y": 478.79248046875,
+        "width": 284.6960754394531,
+        "height": 37.3663330078125,
+        "top": 478.79248046875,
+        "right": 477.734375,
+        "bottom": 516.1588134765625,
+        "left": 193.03829956054688
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "ru",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 193.03829956054688,
+        "y": 478.79248046875,
+        "width": 284.6960754394531,
+        "height": 37.3663330078125,
+        "top": 478.79248046875,
+        "right": 477.734375,
+        "bottom": 516.1588134765625,
+        "left": 193.03829956054688
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "ru",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 193.03829956054688,
+        "y": 478.79248046875,
+        "width": 284.6960754394531,
+        "height": 37.3663330078125,
+        "top": 478.79248046875,
+        "right": 477.734375,
+        "bottom": 516.1588134765625,
+        "left": 193.03829956054688
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "ru",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 193.03829956054688,
+        "y": 478.79248046875,
+        "width": 284.6960754394531,
+        "height": 37.3663330078125,
+        "top": 478.79248046875,
+        "right": 477.734375,
+        "bottom": 516.1588134765625,
+        "left": 193.03829956054688
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "en",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "en",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "en",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 193.03829956054688,
+        "y": 478.79248046875,
+        "width": 284.6960754394531,
+        "height": 37.3663330078125,
+        "top": 478.79248046875,
+        "right": 477.734375,
+        "bottom": 516.1588134765625,
+        "left": 193.03829956054688
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "en",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 193.03829956054688,
+        "y": 478.79248046875,
+        "width": 284.6960754394531,
+        "height": 37.3663330078125,
+        "top": 478.79248046875,
+        "right": 477.734375,
+        "bottom": 516.1588134765625,
+        "left": 193.03829956054688
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "en",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 193.03829956054688,
+        "y": 478.79248046875,
+        "width": 284.6960754394531,
+        "height": 37.3663330078125,
+        "top": 478.79248046875,
+        "right": 477.734375,
+        "bottom": 516.1588134765625,
+        "left": 193.03829956054688
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1280,
+      "h": 800,
+      "locale": "en",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 450,
+            "y": 368,
+            "width": 380,
+            "height": 64,
+            "top": 368,
+            "right": 830,
+            "bottom": 432,
+            "left": 450
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 450,
+            "y": 454,
+            "width": 380,
+            "height": 64,
+            "top": 454,
+            "right": 830,
+            "bottom": 518,
+            "left": 450
+          }
+        }
+      ],
+      "practice": {
+        "x": 193.03829956054688,
+        "y": 478.79248046875,
+        "width": 284.6960754394531,
+        "height": 37.3663330078125,
+        "top": 478.79248046875,
+        "right": 477.734375,
+        "bottom": 516.1588134765625,
+        "left": 193.03829956054688
+      },
+      "piano": {
+        "x": 12,
+        "y": 539.15625,
+        "width": 1256,
+        "height": 219.84375,
+        "top": 539.15625,
+        "right": 1268,
+        "bottom": 759,
+        "left": 12
+      },
+      "line": {
+        "x": 487.734375,
+        "y": 474.15625,
+        "width": 304.5,
+        "height": 42,
+        "top": 474.15625,
+        "right": 792.234375,
+        "bottom": 516.15625,
+        "left": 487.734375
+      },
+      "scroll": [
+        1280,
+        800
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "ru",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "ru",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "ru",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 145.35202026367188,
+        "y": 502.1457824707031,
+        "width": 204.38235473632812,
+        "height": 26.825164794921875,
+        "top": 502.1457824707031,
+        "right": 349.734375,
+        "bottom": 528.970947265625,
+        "left": 145.35202026367188
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "ru",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 145.35202026367188,
+        "y": 502.1457824707031,
+        "width": 204.38235473632812,
+        "height": 26.825164794921875,
+        "top": 502.1457824707031,
+        "right": 349.734375,
+        "bottom": 528.970947265625,
+        "left": 145.35202026367188
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "ru",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 145.35202026367188,
+        "y": 502.1457824707031,
+        "width": 204.38235473632812,
+        "height": 26.825164794921875,
+        "top": 502.1457824707031,
+        "right": 349.734375,
+        "bottom": 528.970947265625,
+        "left": 145.35202026367188
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "ru",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 145.35202026367188,
+        "y": 502.1457824707031,
+        "width": 204.38235473632812,
+        "height": 26.825164794921875,
+        "top": 502.1457824707031,
+        "right": 349.734375,
+        "bottom": 528.970947265625,
+        "left": 145.35202026367188
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "en",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "en",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "en",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 145.35202026367188,
+        "y": 502.1457824707031,
+        "width": 204.38235473632812,
+        "height": 26.825164794921875,
+        "top": 502.1457824707031,
+        "right": 349.734375,
+        "bottom": 528.970947265625,
+        "left": 145.35202026367188
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "en",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 145.35202026367188,
+        "y": 502.1457824707031,
+        "width": 204.38235473632812,
+        "height": 26.825164794921875,
+        "top": 502.1457824707031,
+        "right": 349.734375,
+        "bottom": 528.970947265625,
+        "left": 145.35202026367188
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "en",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 145.35202026367188,
+        "y": 502.1457824707031,
+        "width": 204.38235473632812,
+        "height": 26.825164794921875,
+        "top": 502.1457824707031,
+        "right": 349.734375,
+        "bottom": 528.970947265625,
+        "left": 145.35202026367188
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 1024,
+      "h": 768,
+      "locale": "en",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 322,
+            "y": 352,
+            "width": 380,
+            "height": 64,
+            "top": 352,
+            "right": 702,
+            "bottom": 416,
+            "left": 322
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 322,
+            "y": 438,
+            "width": 380,
+            "height": 64,
+            "top": 438,
+            "right": 702,
+            "bottom": 502,
+            "left": 322
+          }
+        }
+      ],
+      "practice": {
+        "x": 145.35202026367188,
+        "y": 502.1457824707031,
+        "width": 204.38235473632812,
+        "height": 26.825164794921875,
+        "top": 502.1457824707031,
+        "right": 349.734375,
+        "bottom": 528.970947265625,
+        "left": 145.35202026367188
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "line": {
+        "x": 359.734375,
+        "y": 487,
+        "width": 304.5,
+        "height": 42,
+        "top": 487,
+        "right": 664.234375,
+        "bottom": 529,
+        "left": 359.734375
+      },
+      "scroll": [
+        1024,
+        768
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "ru",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 42.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 347.25,
+        "bottom": 583,
+        "left": 42.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "ru",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 42.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 347.25,
+        "bottom": 583,
+        "left": 42.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "ru",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 180.37771606445312,
+        "y": 545.792236328125,
+        "width": 190.53268432617188,
+        "height": 37.2203369140625,
+        "top": 545.792236328125,
+        "right": 370.910400390625,
+        "bottom": 583.0125732421875,
+        "left": 180.37771606445312
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 408.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 713.25,
+        "bottom": 583,
+        "left": 408.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "ru",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 180.37771606445312,
+        "y": 545.792236328125,
+        "width": 190.53268432617188,
+        "height": 37.2203369140625,
+        "top": 545.792236328125,
+        "right": 370.910400390625,
+        "bottom": 583.0125732421875,
+        "left": 180.37771606445312
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 408.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 713.25,
+        "bottom": 583,
+        "left": 408.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "ru",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": -185.62228393554688,
+        "y": 545.792236328125,
+        "width": 190.53268432617188,
+        "height": 37.2203369140625,
+        "top": 545.792236328125,
+        "right": 4.910400390625,
+        "bottom": 583.0125732421875,
+        "left": -185.62228393554688
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 42.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 347.25,
+        "bottom": 583,
+        "left": 42.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "ru",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": -185.62228393554688,
+        "y": 545.792236328125,
+        "width": 190.53268432617188,
+        "height": 37.2203369140625,
+        "top": 545.792236328125,
+        "right": 4.910400390625,
+        "bottom": 583.0125732421875,
+        "left": -185.62228393554688
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 42.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 347.25,
+        "bottom": 583,
+        "left": 42.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "en",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 42.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 347.25,
+        "bottom": 583,
+        "left": 42.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "en",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 42.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 347.25,
+        "bottom": 583,
+        "left": 42.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "en",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 183.70370483398438,
+        "y": 545.0499877929688,
+        "width": 194.29629516601562,
+        "height": 37.95556640625,
+        "top": 545.0499877929688,
+        "right": 378,
+        "bottom": 583.0055541992188,
+        "left": 183.70370483398438
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 408.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 713.25,
+        "bottom": 583,
+        "left": 408.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "en",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 183.70370483398438,
+        "y": 545.0499877929688,
+        "width": 194.29629516601562,
+        "height": 37.95556640625,
+        "top": 545.0499877929688,
+        "right": 378,
+        "bottom": 583.0055541992188,
+        "left": 183.70370483398438
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 408.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 713.25,
+        "bottom": 583,
+        "left": 408.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "en",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": -182.29629516601562,
+        "y": 545.0499877929688,
+        "width": 194.29629516601562,
+        "height": 37.95556640625,
+        "top": 545.0499877929688,
+        "right": 12,
+        "bottom": 583.0055541992188,
+        "left": -182.29629516601562
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 42.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 347.25,
+        "bottom": 583,
+        "left": 42.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "locale": "en",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 386,
+            "width": 346,
+            "height": 64,
+            "top": 386,
+            "right": 368,
+            "bottom": 450,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 472,
+            "width": 346,
+            "height": 64,
+            "top": 472,
+            "right": 368,
+            "bottom": 536,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": -182.29629516601562,
+        "y": 545.0499877929688,
+        "width": 194.29629516601562,
+        "height": 37.95556640625,
+        "top": 545.0499877929688,
+        "right": 12,
+        "bottom": 583.0055541992188,
+        "left": -182.29629516601562
+      },
+      "piano": {
+        "x": 12,
+        "y": 636,
+        "width": 366,
+        "height": 167,
+        "top": 636,
+        "right": 378,
+        "bottom": 803,
+        "left": 12
+      },
+      "line": {
+        "x": 42.75,
+        "y": 541,
+        "width": 304.5,
+        "height": 42,
+        "top": 541,
+        "right": 347.25,
+        "bottom": 583,
+        "left": 42.75
+      },
+      "scroll": [
+        390,
+        844
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "ru",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 35.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 339.75,
+        "bottom": 413,
+        "left": 35.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "ru",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 35.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 339.75,
+        "bottom": 413,
+        "left": 35.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "ru",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 173.47698974609375,
+        "y": 377.1590881347656,
+        "width": 182.72396850585938,
+        "height": 35.694915771484375,
+        "top": 377.1590881347656,
+        "right": 356.2009582519531,
+        "bottom": 412.85400390625,
+        "left": 173.47698974609375
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 386.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 690.75,
+        "bottom": 413,
+        "left": 386.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "ru",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 173.47698974609375,
+        "y": 377.1590881347656,
+        "width": 182.72396850585938,
+        "height": 35.694915771484375,
+        "top": 377.1590881347656,
+        "right": 356.2009582519531,
+        "bottom": 412.85400390625,
+        "left": 173.47698974609375
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 386.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 690.75,
+        "bottom": 413,
+        "left": 386.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "ru",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": -177.52301025390625,
+        "y": 377.1590881347656,
+        "width": 182.72396850585938,
+        "height": 35.694915771484375,
+        "top": 377.1590881347656,
+        "right": 5.200958251953125,
+        "bottom": 412.85400390625,
+        "left": -177.52301025390625
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 35.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 339.75,
+        "bottom": 413,
+        "left": 35.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "ru",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Начать заново",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Продолжить",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": -177.52301025390625,
+        "y": 377.1590881347656,
+        "width": 182.72396850585938,
+        "height": 35.694915771484375,
+        "top": 377.1590881347656,
+        "right": 5.200958251953125,
+        "bottom": 412.85400390625,
+        "left": -177.52301025390625
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 35.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 339.75,
+        "bottom": 413,
+        "left": 35.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "en",
+      "stage": 1,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 35.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 339.75,
+        "bottom": 413,
+        "left": 35.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "en",
+      "stage": 2,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 35.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 339.75,
+        "bottom": 413,
+        "left": 35.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "en",
+      "stage": 3,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 176.6666717529297,
+        "y": 376.45623779296875,
+        "width": 186.3333282470703,
+        "height": 36.4000244140625,
+        "top": 376.45623779296875,
+        "right": 363,
+        "bottom": 412.85626220703125,
+        "left": 176.6666717529297
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 386.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 690.75,
+        "bottom": 413,
+        "left": 386.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "en",
+      "stage": 4,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": 176.6666717529297,
+        "y": 376.45623779296875,
+        "width": 186.3333282470703,
+        "height": 36.4000244140625,
+        "top": 376.45623779296875,
+        "right": 363,
+        "bottom": 412.85626220703125,
+        "left": 176.6666717529297
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 386.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 690.75,
+        "bottom": 413,
+        "left": 386.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "en",
+      "stage": 5,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": -174.3333282470703,
+        "y": 376.45623779296875,
+        "width": 186.3333282470703,
+        "height": 36.4000244140625,
+        "top": 376.45623779296875,
+        "right": 12,
+        "bottom": 412.85626220703125,
+        "left": -174.3333282470703
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 35.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 339.75,
+        "bottom": 413,
+        "left": 35.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    },
+    {
+      "w": 375,
+      "h": 667,
+      "locale": "en",
+      "stage": 6,
+      "buttons": [
+        {
+          "text": "Start over",
+          "r": {
+            "x": 22,
+            "y": 297.5,
+            "width": 331,
+            "height": 64,
+            "top": 297.5,
+            "right": 353,
+            "bottom": 361.5,
+            "left": 22
+          }
+        },
+        {
+          "text": "Continue",
+          "r": {
+            "x": 22,
+            "y": 383.5,
+            "width": 331,
+            "height": 64,
+            "top": 383.5,
+            "right": 353,
+            "bottom": 447.5,
+            "left": 22
+          }
+        }
+      ],
+      "practice": {
+        "x": -174.3333282470703,
+        "y": 376.45623779296875,
+        "width": 186.3333282470703,
+        "height": 36.4000244140625,
+        "top": 376.45623779296875,
+        "right": 12,
+        "bottom": 412.85626220703125,
+        "left": -174.3333282470703
+      },
+      "piano": {
+        "x": 12,
+        "y": 465.84375,
+        "width": 351,
+        "height": 160.15625,
+        "top": 465.84375,
+        "right": 363,
+        "bottom": 626,
+        "left": 12
+      },
+      "line": {
+        "x": 35.25,
+        "y": 371,
+        "width": 304.5,
+        "height": 42,
+        "top": 371,
+        "right": 339.75,
+        "bottom": 413,
+        "left": 35.25
+      },
+      "scroll": [
+        375,
+        667
+      ],
+      "rail": 0,
+      "markers": [
+        {
+          "round": "1",
+          "transform": "translate(-34.25 1024)",
+          "x": "-34.25",
+          "y": "1024"
+        },
+        {
+          "round": "2",
+          "transform": "translate(-34.25 896)",
+          "x": "-34.25",
+          "y": "896"
+        },
+        {
+          "round": "3",
+          "transform": "translate(-34.25 768)",
+          "x": "-34.25",
+          "y": "768"
+        },
+        {
+          "round": "4",
+          "transform": "translate(-34.25 640)",
+          "x": "-34.25",
+          "y": "640"
+        },
+        {
+          "round": "5",
+          "transform": "translate(-34.25 512)",
+          "x": "-34.25",
+          "y": "512"
+        },
+        {
+          "round": "6",
+          "transform": "translate(-34.25 384)",
+          "x": "-34.25",
+          "y": "384"
+        },
+        {
+          "round": "7",
+          "transform": "translate(-34.25 256)",
+          "x": "-34.25",
+          "y": "256"
+        },
+        {
+          "round": "8",
+          "transform": "translate(-34.25 128)",
+          "x": "-34.25",
+          "y": "128"
+        },
+        {
+          "round": "9",
+          "transform": "translate(-34.25 0)",
+          "x": "-34.25",
+          "y": "0"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

@@ -1,3 +1,5 @@
+> Superseded by [fresh final acceptance on 2026-11-18](tutorial-en-final-acceptance-20261118.md). The content below is the historical interrupted recovery status, not the current acceptance result.
+
 # Recovery checkpoint — 2026-11-17
 
 **Release status: NOT ACCEPTED / NOT PUBLISHED.** This status supersedes any acceptance wording in `main-en-unified-routes-validation.md`, which was recovered from the earlier interrupted working copy. That document describes the implementation and earlier measurements; it is not evidence that this recovery has completed release acceptance.
@@ -57,3 +59,4 @@ The executor and Node tool transport closed during final verification; platform 
 7. Persist the new screenshots/measurements/report. Local evidence directories were `/tmp/play12-main-en/recovery` and `/tmp/play12-main-en/recovery-http`; their survival is currently unconfirmed. Do not claim their screenshots are delivered.
 
 Hardware MIDI, Safari, Firefox and physical touch devices remain untested. Publication authorization is already granted; do not request it again.
+
