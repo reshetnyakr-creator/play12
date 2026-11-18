@@ -1,0 +1,40 @@
+{
+  "checks": [
+    "English MusicXML upload -> existing engine -> save -> English Main",
+    "real display-grid factors 1/2/4/8 verified by cellHeight/stepQuarters",
+    "Main fingering edit + real Undo/Redo",
+    "language switch atomically saved pending edit and preserved document, identity, mode, Practice/BPM/grid",
+    "EN reload keeps saved fingering and English interface"
+  ],
+  "errors": [],
+  "missing": [],
+  "grids": [
+    {
+      "text": "×1",
+      "q": 1,
+      "scale": 32
+    },
+    {
+      "text": "×2",
+      "q": 0.5,
+      "scale": 64
+    },
+    {
+      "text": "×4",
+      "q": 0.25,
+      "scale": 128
+    },
+    {
+      "text": "×8",
+      "q": 0.125,
+      "scale": 256
+    },
+    {
+      "text": "×1",
+      "q": 1,
+      "scale": 32
+    }
+  ],
+  "id": "cf618ccc-f49d-418a-9c99-639b5a50f4b0",
+  "user": "946daff4-666e-48c8-b430-9715c67c5ab8"
+}

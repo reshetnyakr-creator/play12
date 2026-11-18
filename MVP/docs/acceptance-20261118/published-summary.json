@@ -1,0 +1,17 @@
+[
+  {
+    "name": "routes",
+    "code": 0,
+    "log": "Published routes 8 aliases 4 errors 0 missing 0\n"
+  },
+  {
+    "name": "workspace",
+    "code": 0,
+    "log": "[\n  'English MusicXML upload -> existing engine -> save -> English Main',\n  'real display-grid factors 1/2/4/8 verified by cellHeight/stepQuarters',\n  'Main fingering edit + real Undo/Redo',\n  'language switch atomically saved pending edit and preserved document, identity, mode, Practice/BPM/grid',\n  'EN reload keeps saved fingering and English interface'\n]\n"
+  },
+  {
+    "name": "readiness",
+    "code": 0,
+    "log": "[\n  {\n    lang: 'en',\n    disabledBeforeConfig: true,\n    readyAfterConfig: true,\n    fileParsed: true\n  },\n  {\n    lang: 'ru',\n    disabledBeforeConfig: true,\n    readyAfterConfig: true,\n    fileParsed: true\n  }\n]\n"
+  }
+]

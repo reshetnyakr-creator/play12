@@ -1,0 +1,74 @@
+{
+  "results": [
+    {
+      "path": "/MVP/menu/",
+      "status": 200,
+      "lang": "en",
+      "link": "/ru/MVP/menu/?acceptance=en-routes-1"
+    },
+    {
+      "path": "/MVP/tutorial/",
+      "status": 200,
+      "lang": "en",
+      "link": "/ru/MVP/tutorial/?acceptance=en-routes-1"
+    },
+    {
+      "path": "/MVP/main/",
+      "status": 200,
+      "lang": "en",
+      "link": "/ru/MVP/main/?acceptance=en-routes-1"
+    },
+    {
+      "path": "/MVP/import/",
+      "status": 200,
+      "lang": "en",
+      "link": "/ru/MVP/import/?acceptance=en-routes-1"
+    },
+    {
+      "path": "/ru/MVP/menu/",
+      "status": 200,
+      "lang": "ru",
+      "link": "/MVP/menu/?acceptance=en-routes-1"
+    },
+    {
+      "path": "/ru/MVP/tutorial/",
+      "status": 200,
+      "lang": "ru",
+      "link": "/MVP/tutorial/?acceptance=en-routes-1"
+    },
+    {
+      "path": "/ru/MVP/main/",
+      "status": 200,
+      "lang": "ru",
+      "link": "/MVP/main/?acceptance=en-routes-1"
+    },
+    {
+      "path": "/ru/MVP/import/",
+      "status": 200,
+      "lang": "ru",
+      "link": "/MVP/import/?acceptance=en-routes-1"
+    }
+  ],
+  "aliases": [
+    {
+      "from": "/MVP/",
+      "to": "/MVP/tutorial/"
+    },
+    {
+      "from": "/MVP/ru/",
+      "to": "/ru/MVP/tutorial/"
+    },
+    {
+      "from": "/MVP/editor/",
+      "to": "/MVP/import/"
+    },
+    {
+      "from": "/ru/MVP/editor/",
+      "to": "/ru/MVP/import/"
+    }
+  ],
+  "errors": [],
+  "missing": [],
+  "thirdPartyBlocked": true,
+  "hardware": false
+}
