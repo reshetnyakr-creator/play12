@@ -233,7 +233,7 @@
           ? Math.max(0,global.innerWidth-24)
           : Math.max(0,parent.clientWidth);
         if(this.desktopWindow){const scale=availableWidth/PIANO_WIDTH;this.mount.style.width=`${(this.workspaceRange?this.cropWidth:PIANO_WIDTH)*scale}px`;this.mount.style.height=`${VIEW_HEIGHT*scale}px`;return;}
-        if(this.visualWindow){const visualWidth=Math.min(availableWidth,Math.max(36,this.cropWidth*.5),Math.max(72,Math.min(180,(global.visualViewport?.height||global.innerHeight)*.25))*this.cropWidth/VIEW_HEIGHT);this.mount.style.width=`${visualWidth}px`;this.mount.style.height=`${visualWidth*VIEW_HEIGHT/this.cropWidth}px`;return;}
+        if(this.visualWindow){const visualWidth=Math.min(availableWidth,Math.max(36,this.cropWidth*.5),Math.max(72,Math.min(global.Play12Responsive?.state==="tablet-portrait"?300:180,(global.visualViewport?.height||global.innerHeight)*.25))*this.cropWidth/VIEW_HEIGHT);this.mount.style.width=`${visualWidth}px`;this.mount.style.height=`${visualWidth*VIEW_HEIGHT/this.cropWidth}px`;return;}
         const fullWidth=Math.max(1100,availableWidth);
         this.mount.style.width=`${fullWidth*this.cropWidth/PIANO_WIDTH}px`;
         this.mount.style.height=`${fullWidth*VIEW_HEIGHT/PIANO_WIDTH}px`;
