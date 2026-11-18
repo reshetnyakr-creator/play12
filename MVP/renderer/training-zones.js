@@ -21,7 +21,7 @@ function physicalKeyboard(midi){
  return{range:midi.currentStatus?.status==='connected'&&input?.state==='connected'?{min:c.leftMidi,max:c.rightMidi}:null,reason:''};
 }
 function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
- let mounted=false,frame=0,observer,active=1,wide=false,initial=true,pendingRange=null,lastRange='',scrollFrame=0,desktopLeft=0,desktopRight=0,cachedEvents=null,cachedCount=-1,cachedZero=null,cachedRange=null;const off=[],homes=[];
+ let mounted=false,frame=0,observer,active=1,wide=false,initial=true,pendingRange=null,lastRange='',scrollFrame=0,desktopLeft=0,desktopRight=0,cachedEvents=null,cachedCount=-1,cachedZero=null,cachedRange=null;let motionTimer=0,hintTimer=0,transitioning=false,swipeHint=null,swipeShown=false;const off=[],homes=[];
  const {left,center,right}=zones,doc=root.ownerDocument||document;
  const node=(tag,cls)=>{const n=doc.createElement(tag);n.className=cls;return n;};
  const remember=n=>homes.push({n,parent:n.parentElement,next:n.nextSibling});
@@ -31,7 +31,10 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
  const popupOpen=()=>!!doc.querySelector('#main-fingers:not([hidden]),dialog[open],.zero-chooser:not([hidden])');
  const hidePopup=()=>{G.play12Main?.closePicker?.();const p=doc.getElementById('main-fingers');if(p)p.hidden=true;};
  const mark=()=>{[...nav.querySelectorAll('[data-zone-tab]')].forEach((b,i)=>b.setAttribute('aria-current',String(i===active)));root.dataset.activeZone=['left','center','right'][active];const arrows=nav.querySelectorAll('[data-zone-arrow]');if(arrows.length){arrows[0].disabled=active===0;arrows[1].disabled=active===2;}};
- function go(index){active=Math.max(0,Math.min(2,index));hidePopup();root.scrollTo({left:wide?0:root.clientWidth*active,behavior:'auto'});mark();}
+ function go(index,options={}){const next=Math.max(0,Math.min(2,index)),move=options.tutorial&&!wide&&next!==active,reduced=G.matchMedia?.('(prefers-reduced-motion: reduce)').matches;active=next;hidePopup();G.clearTimeout(motionTimer);transitioning=move&&!reduced;
+  if(move&&!swipeShown){swipeShown=true;swipeHint=node('p','training-swipe-hint');swipeHint.textContent=local('Проведите пальцем влево или вправо, чтобы переключаться между экранами','Swipe left or right to switch between screens.');swipeHint.setAttribute('role','status');footer.prepend(swipeHint);hintTimer=G.setTimeout(()=>{swipeHint?.remove();swipeHint=null;resize();},3500);}
+  root.scrollTo({left:wide?0:root.clientWidth*active,behavior:transitioning?'smooth':'auto'});mark();if(transitioning)motionTimer=G.setTimeout(()=>{transitioning=false;root.scrollTo({left:root.clientWidth*active,behavior:'auto'});mark();},400);
+ }
  function scaleSlot(slot,content,width){const parent=slot.parentElement,style=getComputedStyle(parent),available=parent.clientWidth-parseFloat(style.paddingLeft||0)-parseFloat(style.paddingRight||0),s=fit(width,available);content.style.transform=`scale(${s})`;content.style.transformOrigin='top left';slot.style.width=`${width*s}px`;slot.style.height=`${content.offsetHeight*s}px`;slot.dataset.scale=String(s);return s;}
  function layoutCorridors(){
   if(!wide){left.style.paddingBottom='';leftSlot.style.left='';rightSlot.style.right='';right.style.paddingBottom='';if(skillCard)skillCard.style.height='';leftControls.children[1].style.width='';rightControls.children[0].style.width='';return;}
@@ -64,7 +67,7 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   if(initial||changed){initial=false;go(active);}mark();
  }
  const resize=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(layout);};
- return{resize,layoutNow(){cancelAnimationFrame(frame);layout();},go,get activeZone(){return active;},mount(){if(mounted)return;mounted=true;widthProbe=node('div','training-width-probe');widthProbe.setAttribute('aria-hidden','true');root.before(widthProbe);root.classList.add('training-three-zones','training-shell-main');doc.body.classList.add('play12-training-shell','play12-three-zones');
+ return{resize,layoutNow(){cancelAnimationFrame(frame);layout();},go,get activeZone(){return active;},get transitioning(){return transitioning;},mount(){if(mounted)return;mounted=true;widthProbe=node('div','training-width-probe');widthProbe.setAttribute('aria-hidden','true');root.before(widthProbe);root.classList.add('training-three-zones','training-shell-main');doc.body.classList.add('play12-training-shell','play12-three-zones');
   remember(footer);for(const n of [runtime.stage,doc.getElementById('playline'),runtime.pianoView.mount,doc.getElementById('metronome-board'),doc.getElementById('practice-board'),doc.getElementById('round-loop-board'),doc.getElementById('onboarding-choose-zero')])remember(n);
   if(right.classList.contains('main-skill')){skillCard=node('section','main-skill training-skill-card');while(right.firstChild)skillCard.append(right.firstChild);right.classList.remove('main-skill');right.append(skillCard);}
   left.classList.add('training-zone','training-zone-left');center.classList.add('training-zone','training-zone-center');right.classList.add('training-zone','training-zone-right');
@@ -80,11 +83,11 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   if(midi){off.push(midi.addStatusListener(resize),midi.addCalibrationListener(resize));if(midi.addInputStateListener)off.push(midi.addInputStateListener(()=>{if(mounted)updateKeyboard();}));}
   for(const type of ['pointerup','pointercancel','blur'])listen(G,type,resize);
   for(const type of ['pointerleave','lostpointercapture'])listen(runtime.pianoView.mount,type,resize);
-  listen(root,'scroll',()=>{cancelAnimationFrame(scrollFrame);scrollFrame=requestAnimationFrame(()=>{if(!wide){active=Math.round(root.scrollLeft/Math.max(1,root.clientWidth));active=Math.max(0,Math.min(2,active));hidePopup();mark();}});},{passive:true});
+  listen(root,'scroll',()=>{cancelAnimationFrame(scrollFrame);scrollFrame=requestAnimationFrame(()=>{if(!wide&&!transitioning){active=Math.round(root.scrollLeft/Math.max(1,root.clientWidth));active=Math.max(0,Math.min(2,active));hidePopup();mark();}});},{passive:true});
   listen(root,'keydown',e=>{if(e.target!==root&&![left,center,right].includes(e.target))return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();go(active+(e.key==='ArrowLeft'?-1:1));}});
   listen(root,'touchstart',e=>{if(popupOpen())return;const interactive=e.target.closest('button,input,select,a,[role="dialog"],.mvp-round-loop-board,.mvp-practice-board,.mvp-metronome-board');if(interactive)e.stopPropagation();},{passive:true});
   observer=new ResizeObserver(resize);[root,footer,leftControls,rightControls,widthProbe].forEach(n=>observer.observe(n));listen(G,'resize',resize);listen(G,'play12:responsive-layout',resize);if(doc.fonts){doc.fonts.ready?.then(resize);if(doc.fonts.addEventListener)listen(doc.fonts,'loadingdone',resize);}if(G.visualViewport){listen(G.visualViewport,'resize',resize);listen(G.visualViewport,'scroll',resize);}resize();
- },dispose(){if(!mounted)return;mounted=false;observer?.disconnect();cancelAnimationFrame(frame);cancelAnimationFrame(scrollFrame);off.splice(0).forEach(f=>f());for(const h of homes.reverse()){if(h.next?.parentElement===h.parent)h.parent.insertBefore(h.n,h.next);else h.parent.appendChild(h.n);}leftSlot.remove();rightSlot.remove();musicSlot.remove();nav.remove();warning.remove();widthProbe.remove();root.classList.remove('training-three-zones','training-shell-main','is-three-wide','is-three-narrow');doc.body.classList.remove('play12-three-zones','play12-training-shell');}};
+ },dispose(){if(!mounted)return;mounted=false;G.clearTimeout(motionTimer);G.clearTimeout(hintTimer);swipeHint?.remove();observer?.disconnect();cancelAnimationFrame(frame);cancelAnimationFrame(scrollFrame);off.splice(0).forEach(f=>f());for(const h of homes.reverse()){if(h.next?.parentElement===h.parent)h.parent.insertBefore(h.n,h.next);else h.parent.appendChild(h.n);}leftSlot.remove();rightSlot.remove();musicSlot.remove();nav.remove();warning.remove();widthProbe.remove();root.classList.remove('training-three-zones','training-shell-main','is-three-wide','is-three-narrow');doc.body.classList.remove('play12-three-zones','play12-training-shell');}};
 }
 G.Play12TrainingZones={fit,metrics,corridors,fieldBudget,compositionRange,physicalKeyboard,create};if(typeof module!=='undefined')module.exports=G.Play12TrainingZones;
 })(typeof window!=='undefined'?window:globalThis);

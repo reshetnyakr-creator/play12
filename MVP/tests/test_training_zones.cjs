@@ -10,7 +10,7 @@ function setup(viewport=1440,midiDiagnostic){
  const callbacks=new Set(),rangeCalls=[];const playback={events:[{midi:28},{midi:103}],clock:{position:12,running:true},layoutCoreGeometry(){},addStateListener(f){subscriptions++;callbacks.add(f);f();return()=>{callbacks.delete(f);disposed++;};}};
  const pianoView={mount:piano,virtualPointers:new Map(),activeBySource:new Map([['midi',new Set()]]),setVisualWindow:r=>rangeCalls.push(r),syncContainer(){},windowReadabilityLimited:()=>false};
  const helpers={placePiano:(n,h)=>h.append(n),mountWorkspace(s,h,t){const w=new N();w.className='music-workspace';h.append(w);w.append(s,t);return w;},bindPractice(){subscriptions++;return()=>disposed++;},trackSuccess(){subscriptions++;return()=>disposed++;}};
- const win={innerHeight:900,addEventListener(t,f){if(!events.has(t))events.set(t,new Set());events.get(t).add(f);},removeEventListener(t,f){events.get(t)?.delete(f);}};
+ const win={innerHeight:900,setTimeout,clearTimeout,addEventListener(t,f){if(!events.has(t))events.set(t,new Set());events.get(t).add(f);},removeEventListener(t,f){events.get(t)?.delete(f);}};
  const context={window:win,document:doc,getComputedStyle:()=>({paddingLeft:'0',paddingRight:'0'}),requestAnimationFrame:f=>{frames.set(++ticket,f);return ticket;},cancelAnimationFrame:id=>frames.delete(id),ResizeObserver:class{constructor(){observerCount++;}observe(){}disconnect(){}}};vm.createContext(context);vm.runInContext(source,context);
  const shell=win.Play12TrainingZones.create({runtime:{stage,pianoView,playback,midiDiagnostic},root,playbackHost:host,pianoHost,footer,zones:{left,center,right},helpers});
  const flush=()=>{for(const[id,f]of [...frames]){frames.delete(id);f();}};

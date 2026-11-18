@@ -13,7 +13,7 @@ class Element {
 function fixture(){
   const timers=new Map(),frames=new Map();let id=0;
   const window={innerWidth:1280,innerHeight:720,setTimeout:(fn,delay)=>{timers.set(++id,{fn,delay});return id;},clearTimeout:i=>timers.delete(i),requestAnimationFrame:fn=>{frames.set(++id,fn);return id;},cancelAnimationFrame:i=>frames.delete(i)};
-  const root=new Element();vm.runInNewContext(readFileSync(path.join(__dirname,'../renderer/play12-coach.js'),'utf8'),{window,document:{createElementNS:()=>new Element()}});
+  const root=new Element();vm.runInNewContext(readFileSync(path.join(__dirname,'../renderer/play12-coach.js'),'utf8'),{window,document:{createElementNS:(_,tag)=>{const n=new Element();if(tag==='svg')n.getBoundingClientRect=()=>({left:0,top:0,width:window.innerWidth,height:window.innerHeight});return n;}}});
   return {coach:window.Play12Coach.create(root),root,timers,frames,window};
 }
 test('Spotlight ends at 5s, leaving card visible; padding follows actual resized targets',()=>{
@@ -46,8 +46,10 @@ test('Spotlight follows card nodes rebuilt asynchronously after a runtime zero c
 
 test('Tutorial can use an unclipped viewport portal and reveal live mobile targets',()=>{
  const timers=new Map(),frames=new Map();let ticket=0,reveals=0;const body=new Element(),root=new Element(),window={innerWidth:390,innerHeight:844,setTimeout:(fn,delay)=>{timers.set(++ticket,{fn,delay});return ticket;},clearTimeout:i=>timers.delete(i),requestAnimationFrame:fn=>{frames.set(++ticket,fn);return ticket;},cancelAnimationFrame:i=>frames.delete(i)};
- vm.runInNewContext(readFileSync(path.join(__dirname,'../renderer/play12-coach.js'),'utf8'),{window,document:{body,createElementNS:()=>new Element()}});
+ vm.runInNewContext(readFileSync(path.join(__dirname,'../renderer/play12-coach.js'),'utf8'),{window,document:{body,createElementNS:(_,tag)=>{const n=new Element();if(tag==='svg')n.getBoundingClientRect=()=>({left:0,top:0,width:window.innerWidth,height:window.innerHeight});return n;}}});
  const card=new Element(),target=new Element(),coach=window.Play12Coach.create(root,{padding:3,feather:3,portal:true,reveal:n=>{assert.equal(n,target);reveals++;target.rect.left=12;}});
  coach.show(card,()=>[target]);assert.equal(root.children.length,0);assert.equal(body.children.length,1);assert.equal(reveals,1);
  const holes=body.children[0].children[0].children[0].children[1];assert.equal(holes.children[0].attrs.x,9);assert.equal(holes.children[0].attrs.width,206);assert.equal([...timers.values()][0].delay,5000);coach.stop();assert.equal(frames.size,0);
 });
+
+test('Spotlight uses the overlay coordinate system after visual viewport shifts',()=>{const h=fixture(),card=new Element(),target=new Element();h.root.children[0].getBoundingClientRect=()=>({left:20,top:40,width:1260,height:680});h.coach.show(card,[target]);const hole=h.root.children[0].children[0].children[0].children[1].children[0];assert.equal(hole.attrs.x,64);assert.equal(hole.attrs.y,64);h.coach.stop();});

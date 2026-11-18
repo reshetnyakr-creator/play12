@@ -23,7 +23,7 @@
     function stop(card) {
       if (card && card !== owner) return;
       global.clearTimeout(timer); global.cancelAnimationFrame(frame);
-      timer = frame = 0; owner = null;
+      timer = frame = 0;if(owner)owner.style.visibility='';owner = null;
       overlay.style.display = 'none';
       pulse?.classList.remove('is-coach-pulsing'); pulse = null;
     }
@@ -34,7 +34,8 @@
       overlay.classList.add('is-active');
       if (pulse) { void pulse.getBoundingClientRect(); pulse.classList.add('is-coach-pulsing'); }
       const update = () => {
-        overlay.setAttribute('viewBox', `0 0 ${global.innerWidth} ${global.innerHeight}`);
+        const origin=overlay.getBoundingClientRect(),width=origin.width||global.innerWidth,height=origin.height||global.innerHeight;
+        overlay.setAttribute('viewBox', `0 0 ${width} ${height}`);
         softEdge.setAttribute('width', global.innerWidth + 96); softEdge.setAttribute('height', global.innerHeight + 96);
         mask.setAttribute('width', global.innerWidth); mask.setAttribute('height', global.innerHeight);
         if (card.id === 'onboarding-listen-coach' || card.id === 'zero-chooser') {
@@ -45,14 +46,14 @@
         const seen = new Set();
         // Zero changes rebuild Piano View asynchronously; follow the current elements.
         const currentTargets = typeof targets === 'function' ? targets() : targets;
-        options.reveal?.(currentTargets.find(Boolean));
+        if(options.reveal?.(currentTargets.find(Boolean))===false){overlay.style.visibility='hidden';card.style.visibility='hidden';frame=global.requestAnimationFrame(update);return;}overlay.style.visibility='';card.style.visibility='';
         for (const element of currentTargets.filter(Boolean)) {
           const r = element.getBoundingClientRect();
           if (r.width <= 0 || r.height <= 0) continue;
           const bounds = `${r.left},${r.top},${r.width},${r.height}`;
           if (seen.has(bounds)) continue;
           seen.add(bounds);
-          holes.appendChild(node('rect', {x: r.left - padding, y: r.top - padding, width: r.width + padding * 2, height: r.height + padding * 2, rx: Math.min(28, r.height / 2 + padding), filter: 'url(#play12-coach-feather)'}));
+          holes.appendChild(node('rect', {x: r.left - origin.left - padding, y: r.top - origin.top - padding, width: r.width + padding * 2, height: r.height + padding * 2, rx: Math.min(28, r.height / 2 + padding), filter: 'url(#play12-coach-feather)'}));
         }
         frame = global.requestAnimationFrame(update);
       };
