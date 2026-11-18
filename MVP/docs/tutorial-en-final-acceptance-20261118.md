@@ -45,3 +45,7 @@ Legacy `/MVP/`, `/MVP/ru/`, `/MVP/editor/`, `/ru/MVP/editor/` redirect to their 
 Headless narrow-viewport testing does not certify Safari, Firefox or real touch devices. Physical MIDI hardware/driver timing is untested; mock success is not hardware acceptance. These checks do not certify availability through Russian operators. Playback is not automatically resumed across language navigation. Import still requires an unambiguous piano hand/staff structure; no inference algorithm was changed.
 
 The final release commit and published-HTTPS verification are provided in the delivery report. All current local matrix validators passed; publication is authorized. No DNS or hosting-provider migration is part of this release.
+
+## Post-deployment Import readiness correction
+
+The production smoke identified a UI initialization race: the file input appeared before the asynchronous beginner configuration fetch had finished binding its change handler. Fast automation/file selection could be ignored. The input now starts disabled and is enabled after all original handlers are bound. No parser, worker, music or Tutorial behavior changed. A real Chromium regression delays configuration by 1200 ms in RU and EN, verifies the input is disabled during that window, then enabled with its real handler, and verifies successful file parsing. Import/workspace tests wait for the same native ready state. This correction supersedes the earlier statement that there were no application changes after recovery.
