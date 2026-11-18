@@ -1,0 +1,14 @@
+test_bad_container_shapes_do_not_crash (__main__.ValidationTests.test_bad_container_shapes_do_not_crash) ... ok
+test_bad_json_and_unreadable_input (__main__.ValidationTests.test_bad_json_and_unreadable_input) ... ok
+test_basic_event_constraints (__main__.ValidationTests.test_basic_event_constraints) ... ok
+test_deliberately_invalid_fixtures_cli (__main__.ValidationTests.test_deliberately_invalid_fixtures_cli) ... ok
+test_exact_rationals_and_timing_warning (__main__.ValidationTests.test_exact_rationals_and_timing_warning) ... ok
+test_extensions_and_deferred_constraints_warn (__main__.ValidationTests.test_extensions_and_deferred_constraints_warn) ... ok
+test_readable_cli (__main__.ValidationTests.test_readable_cli) ... ok
+test_references_and_no_writes (__main__.ValidationTests.test_references_and_no_writes) ... ok
+test_zero_duration_and_grace (__main__.ValidationTests.test_zero_duration_and_grace) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.545s
+
+OK

@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "Workspace backup, 0/1/many library, named delete, edit Undo/Redo and actual Grab",
+      "identity": "c080f28a-345d-4515-b6ec-23e08b1ddda6",
+      "documents": 13,
+      "steps": [
+        {
+          "label": "×1",
+          "step": 1
+        },
+        {
+          "label": "×2",
+          "step": 0.5
+        },
+        {
+          "label": "×4",
+          "step": 0.25
+        },
+        {
+          "label": "×8",
+          "step": 0.125
+        },
+        {
+          "label": "×1",
+          "step": 1
+        }
+      ]
+    }
+  ]
+}
