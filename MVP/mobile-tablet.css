@@ -12,3 +12,19 @@ html[data-device-mode="phone-landscape"] body.play12-main>*:not(.play12-rotate-p
 .training-swipe-hint{margin:0 8px 8px;text-align:center;font:12px/1.3 Inter,Arial,sans-serif;color:#111}
 
 @media(min-width:768px)and(max-width:1279px){.mvp-site-logo,.logo-img{width:110px!important;height:110px!important;max-height:none!important;object-fit:contain}.mvp-logo-link,.logo-link{height:56px;overflow:hidden;display:flex;align-items:center}.hero .buttons{display:grid;grid-template-columns:max-content;justify-content:center}}
+
+/* Reserve room for two readable rounds before reducing the score itself. */
+@media(max-width:767px){.mvp-site-header,body>header{height:64px!important}.mvp-site-logo,.logo-img{width:100px!important;height:100px!important}.mvp-logo-link,.logo-link{height:50px}body.play12-three-zones .is-three-narrow .main-tools{margin-bottom:0}body.play12-three-zones .training-persistent-footer{padding-top:4px;padding-bottom:max(4px,env(safe-area-inset-bottom))}body.play12-three-zones .training-zone-navigation{margin-bottom:6px}}
+body.play12-three-zones .is-three-narrow .playback-stage{touch-action:pan-x}
+/* Portrait panels share the actual, unmodified score frame's external grid. */
+body.play12-three-zones .is-three-narrow .main-profile,
+body.play12-three-zones .is-three-narrow .main-library-card,
+body.play12-three-zones .is-three-narrow .training-skill-card,
+body.play12-three-zones .is-three-narrow .training-panel-slot{width:min(100%,var(--training-music-width));align-self:center}
+body.play12-three-zones .is-three-narrow .main-library-heading h2{font-size:18px}
+body.play12-three-zones .is-three-narrow .training-left-controls{width:min(100%,var(--training-music-width));height:auto;flex-wrap:wrap;justify-content:center;gap:8px}
+body.play12-three-zones .is-three-narrow .training-right-controls{width:min(100%,var(--training-music-width));display:grid;grid-template-columns:minmax(0,1fr) 36px;align-items:end}
+body.play12-three-zones .is-three-narrow .training-right-controls>.mvp-round-loop-board{width:100%;min-width:0}
+body.play12-three-zones .training-zone-navigation{display:grid;grid-template-columns:28px repeat(3,minmax(0,1fr)) 28px;width:100%;box-sizing:border-box}
+body.play12-three-zones .training-zone-navigation button{min-width:0;padding-inline:2px}
+body.play12-three-zones .training-zone-navigation[hidden]{display:none!important}
