@@ -57,3 +57,20 @@ Baseline Cloud Browser navigation check opened Home, Manual, Manifesto, Menu, Ma
 - Before fixing timing, Desktop 1366×768 passed 34 target/locale geometry cases and landscape tablet RU 1024×768 passed all 17. Phone RU 375×667 and portrait tablet EN 768×1024 each passed the first 16 and timed out on the final instruction. Standalone retries reproduced both delays. An instrumented test showed roughly one frame per second during docking/reveal and the existing six-second card timer started before reveal. The browser does not expose the requested visible-tab capability.
 - Application checkpoint `8600b8be681fa03ef8df4e2dcc2cea84807ad527` starts the timed Tutorial card's six seconds when the mask is visible and layout has settled. Existing lesson transitions and musical input remain the same. Unit checks passed 274/274, including a regression test for a single reveal callback after stabilization.
 - On the fixed application, standalone final-instruction checks for RU phone 375×667 and EN portrait tablet 768×1024 passed bounds, matching holes, and no card overlap. Harness checkpoint `473dd3c` allows 6.5 seconds for cloud geometry settlement. Final-device acceptance remains open.
+
+## Cloud Browser acceptance summary
+
+Application checkpoint `8600b8be681fa03ef8df4e2dcc2cea84807ad527`, served in the managed static preview. Production release status: NOT PUBLISHED.
+
+| Check | Observed result |
+| --- | --- |
+| Main RU/EN | 20/20 on the final application across 10 viewports. All have zero page overflow. At 375×667, the sample has 2 full rounds EN and 1 RU. [Matrix](acceptance-mobile-20261119/cloud-main-matrix.json) |
+| Spotlight geometry | 136/136 fixture cases on the final application. 34 phone at 375×667, 68 tablet at 768×1024 and 1024×768, 34 Desktop at 1366×768. Both languages. These cover the 17 Practice-through-finale fixtures per device configuration. [Phone](acceptance-mobile-20261119/cloud-phone-spotlights.json), [Tablet](acceptance-mobile-20261119/cloud-tablet-spotlights.json), [Desktop](acceptance-mobile-20261119/cloud-desktop-spotlights.json) |
+| Six-stage Tutorial | Six completed runs with two round passes each on the recorded checkpoints: Phone and Desktop both locales, tablet EN portrait and RU landscape. The full portrait tablet EN course passed again after the timer change. [Course results and checkpoints](acceptance-mobile-20261119/cloud-courses.json), [post-fix screenshot](acceptance-mobile-20261119/cloud-tablet-en-after-spotlight-fix.jpg) |
+| Shared headers and CTA | Verified Home, Manual, Manifesto and Import in both locales at two tablet viewports after the CSS correction. |
+| Navigation | Phone arrows and tab selection passed. Canonical routes and all four legacy redirects passed, including query and fragment preservation. |
+| My melodies, Backup, edit, persistence | Serial Chrome runner passed 0/1/13, Backup export and restore via the production handler, named delete/cancel, Undo/Redo, Grab ×1/2/4/8, and RU/EN, orientation and reload persistence for Main. |
+| MusicXML | 2 clipboard cases, 4 file transport cases and 1 denial, size and escaped-text case passed. File/Backup restore used File and DataTransfer, so the OS chooser remains a separate check. |
+| MIDI | Mock calibrated range, disconnect and reconnect passed on the final application. Requires real hardware for physical MIDI acceptance. |
+
+Remaining before release: hands-on Safari on iPhone/iPad, physical touch and MIDI, real file/backup picker, independent visual review of the early Tutorial spotlights and dialogs, Tutorial session reload and language switching, and full course reruns for the remaining locale/orientation combinations on the final application. Cloud Browser uses fixture viewport and pointer inputs; middle/late Spotlight fixture results verify geometry, not physical touch or Safari rendering. See the [independent acceptance procedure](mobile-tablet-browser-acceptance.md). No production deploy was attempted.
