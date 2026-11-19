@@ -47,13 +47,24 @@
         // Zero changes rebuild Piano View asynchronously; follow the current elements.
         const currentTargets = typeof targets === 'function' ? targets() : targets;
         if(options.reveal?.(currentTargets.find(Boolean))===false){overlay.style.visibility='hidden';card.style.visibility='hidden';frame=global.requestAnimationFrame(update);return;}overlay.style.visibility='';card.style.visibility='';
+        const targetRects=[];
         for (const element of currentTargets.filter(Boolean)) {
           const r = element.getBoundingClientRect();
-          if (r.width <= 0 || r.height <= 0) continue;
+          if (r.width <= 0 || r.height <= 0) continue;targetRects.push(r);
           const bounds = `${r.left},${r.top},${r.width},${r.height}`;
           if (seen.has(bounds)) continue;
           seen.add(bounds);
           holes.appendChild(node('rect', {x: r.left - origin.left - padding, y: r.top - origin.top - padding, width: r.width + padding * 2, height: r.height + padding * 2, rx: Math.min(28, r.height / 2 + padding), filter: 'url(#play12-coach-feather)'}));
+        }
+        if(options.avoidTargets && (card.id==='onboarding-listen-coach'||card.id==='zero-chooser')){
+          const c=card.getBoundingClientRect(),top=(global.visualViewport?.offsetTop||0)+8,bottom=top+(global.visualViewport?.height||global.innerHeight)-16,height=c.height;
+          const field=cardAnchor?.getBoundingClientRect(),preferred=field?.height?field.top+field.height/2:(c.top+c.height/2);
+          const intervals=targetRects.filter(r=>r.left<c.right+8&&r.right>c.left-8&&r.bottom>top&&r.top<bottom).map(r=>[Math.max(top,r.top-10),Math.min(bottom,r.bottom+10)]).sort((a,b)=>a[0]-b[0]);
+          const gaps=[];let cursor=top;for(const [a,b]of intervals){if(a>cursor)gaps.push([cursor,a]);cursor=Math.max(cursor,b);}if(cursor<bottom)gaps.push([cursor,bottom]);
+          const choices=gaps.filter(([a,b])=>b-a>=height).map(([a,b])=>Math.max(a+height/2,Math.min(b-height/2,preferred))).sort((a,b)=>Math.abs(a-preferred)-Math.abs(b-preferred));
+          if(choices.length)card.style.setProperty('--mvp-coach-y',`${choices[0]}px`);
+          else if(options.dock?.(card)){overlay.style.visibility='hidden';card.style.visibility='hidden';frame=global.requestAnimationFrame(update);return;}
+          else card.style.setProperty('--mvp-coach-y',`${Math.max(top+height/2,Math.min(bottom-height/2,preferred))}px`);
         }
         frame = global.requestAnimationFrame(update);
       };

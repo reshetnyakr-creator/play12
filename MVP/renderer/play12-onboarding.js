@@ -151,7 +151,7 @@
     let midiConnectState = 'choice';
     let listenPosition = 0;
     let listenPlaybackState = 'paused';
-    const spotlight = global.Play12Coach.create(root,{padding:3,feather:3,portal:true,reveal:target=>alignedLayout?.reveal(target)});
+    const spotlight = global.Play12Coach.create(root,{padding:3,feather:3,portal:true,avoidTargets:true,dock:card=>card.id==='onboarding-listen-coach'&&alignedLayout?.dockCoach(card),reveal:target=>alignedLayout?.reveal(target)});
     // Targets describe WHERE for each instruction; card positioning is independent.
     const targetsFor = instruction => {
       const element = id => document.getElementById(id);
@@ -175,6 +175,7 @@
     const hintKeys = new Map();
     const dismissedHints = new Set();
     const hideHint = element => {
+      if(element===listenCoach)alignedLayout?.dockCoach?.(null);
       spotlight.stop(element);
       clearTimeout(hintTimers.get(element));
       hintTimers.delete(element);

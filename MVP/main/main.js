@@ -6,7 +6,7 @@ const button=(text,fn)=>{const b=element('button',text,{type:'button'});b.onclic
 function error(e){$('main-status').textContent=uiError(e.message||String(e));$('main-status').setAttribute('role','alert');}
 function download(name,value){const u=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'})),a=element('a',null,{href:u,download:name});a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 function position(){return controller?.playback.clock.position||0;}
-function remember(){if(doc)sessionStorage.setItem('play12.main.position:'+doc.id,String(position()));}
+function remember(){if(!doc)return;sessionStorage.setItem('play12.main.position:'+doc.id,String(position()));if(controller)sessionStorage.setItem('play12.main.locale-state:'+doc.id,JSON.stringify({practice:controller.playback.getPracticeSettings(),metronome:controller.playback.metronomeInput.checked,music:controller.playback.musicAudioInput.checked,selected}));}
 function leave(){if(dirty&&!confirm(t('Есть несохранённые изменения. Выйти без сохранения?')))return false;remember();return true;}
 function open(id,mode='train'){if(!leave())return;D.activate(id,true);location.href=Play12Routes.path('main')+'?composition='+encodeURIComponent(id)+(mode==='edit'?'&mode=edit':'');}
 await new Promise(resolve=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',resolve,{once:true}):resolve());

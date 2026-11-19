@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "Clipboard refusal, 8 MiB limit and escaped title",
+      "manual": true,
+      "limit": true,
+      "noHtml": true
+    }
+  ]
+}

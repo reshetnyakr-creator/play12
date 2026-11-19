@@ -28,3 +28,5 @@ body.play12-three-zones .is-three-narrow .training-right-controls>.mvp-round-loo
 body.play12-three-zones .training-zone-navigation{display:grid;grid-template-columns:28px repeat(3,minmax(0,1fr)) 28px;width:100%;box-sizing:border-box}
 body.play12-three-zones .training-zone-navigation button{min-width:0;padding-inline:2px}
 body.play12-three-zones .training-zone-navigation[hidden]{display:none!important}
+/* Override the old full-slot rule as well as inline measurements. */
+body.play12-three-zones .is-three-narrow .training-zone-right>.training-panel-slot{width:min(100%,var(--training-music-width))!important}

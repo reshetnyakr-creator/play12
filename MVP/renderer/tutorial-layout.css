@@ -51,3 +51,9 @@ body.tutorial-main-aligned .training-left-controls>#metronome-board[hidden]{disp
 #tutorial-pass-caption{position:absolute;bottom:100%;right:8px;font:600 11px/1.4 Inter,sans-serif;color:#333;white-space:nowrap}
 /* Match Main's compact profile padding before measuring the narrow left zone. */
 .tutorial-main-aligned .is-three-narrow .tutorial-identity{padding-block:10px}
+
+/* Reuse the instructional card in flow only when no clear floating position exists. */
+.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-inline{position:relative!important;inset:auto!important;transform:none!important;animation:none!important;align-self:center;width:min(560px,calc(100% - 16px));max-width:100%;margin:0;flex:none;box-sizing:border-box;z-index:10004}
+
+.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-side{left:var(--tutorial-coach-x)!important;width:var(--tutorial-coach-width)!important;max-width:none!important}
+@media(max-width:767px){.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-inline{padding:12px 14px}.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-inline p{font-size:15px;line-height:1.35}.tutorial-main-aligned .has-inline-coach>.main-tools{display:none!important}}

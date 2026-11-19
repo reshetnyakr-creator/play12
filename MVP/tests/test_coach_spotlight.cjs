@@ -10,11 +10,11 @@ class Element {
   replaceChildren(){this.children=[];}
   getBoundingClientRect(){return this.rect;}
 }
-function fixture(){
+function fixture(options={}){
   const timers=new Map(),frames=new Map();let id=0;
   const window={innerWidth:1280,innerHeight:720,setTimeout:(fn,delay)=>{timers.set(++id,{fn,delay});return id;},clearTimeout:i=>timers.delete(i),requestAnimationFrame:fn=>{frames.set(++id,fn);return id;},cancelAnimationFrame:i=>frames.delete(i)};
   const root=new Element();vm.runInNewContext(readFileSync(path.join(__dirname,'../renderer/play12-coach.js'),'utf8'),{window,document:{createElementNS:(_,tag)=>{const n=new Element();if(tag==='svg')n.getBoundingClientRect=()=>({left:0,top:0,width:window.innerWidth,height:window.innerHeight});return n;}}});
-  return {coach:window.Play12Coach.create(root),root,timers,frames,window};
+  return {coach:window.Play12Coach.create(root,options),root,timers,frames,window};
 }
 test('Spotlight ends at 5s, leaving card visible; padding follows actual resized targets',()=>{
   const h=fixture(),card=new Element('onboarding-listen-coach'),field=new Element(),piano=new Element();
@@ -53,3 +53,6 @@ test('Tutorial can use an unclipped viewport portal and reveal live mobile targe
 });
 
 test('Spotlight uses the overlay coordinate system after visual viewport shifts',()=>{const h=fixture(),card=new Element(),target=new Element();h.root.children[0].getBoundingClientRect=()=>({left:20,top:40,width:1260,height:680});h.coach.show(card,[target]);const hole=h.root.children[0].children[0].children[0].children[1].children[0];assert.equal(hole.attrs.x,64);assert.equal(hole.attrs.y,64);h.coach.stop();});
+
+test('Instructional card chooses a free viewport interval beside the highlighted control',()=>{const h=fixture({avoidTargets:true}),card=new Element('onboarding-listen-coach'),target=new Element();card.rect={left:100,top:120,width:200,height:80,right:300,bottom:200};target.rect={left:100,top:100,width:200,height:100,right:300,bottom:200};h.coach.show(card,[target],null,target);const y=parseFloat(card.style['--mvp-coach-y']);assert(y-40>=210||y+40<=90);assert(y-40>=8&&y+40<=712);h.coach.stop();});
+test('A card without a free floating interval requests existing in-flow placement before showing',()=>{let docked=0;const h=fixture({avoidTargets:true,dock:()=>{docked++;return true;}}),card=new Element('onboarding-listen-coach'),target=new Element();card.rect={left:100,top:0,width:200,height:1000,right:300,bottom:1000};h.coach.show(card,[target],null,target);assert.equal(docked,1);assert.equal(card.style.visibility,'hidden');h.coach.stop();assert.equal(h.frames.size,0);});
