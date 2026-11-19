@@ -27,3 +27,9 @@ Historical runs are in acceptance-mobile-20261119 and apply to the earlier recor
 The managed static preview works using an untracked scratch directory with `git archive` output under `site/` and a scratch-only `.openai/hosting.json` containing `{"static":{"directory":"site"}}`. Run `sites-preview start <scratch-directory>` and open its exact loopback URL in Cloud Browser. No production configuration is involved.
 
 Initial Chromium results: clipboard 2 cases, file transport 4 cases, security 1 case passed. Concurrent tabs shared same-origin storage, so Workspace, persistence and Spotlight failures from that run must be reproduced serially. The course runner waits for a real Play click in its iframe. Full acceptance remains open.
+
+### Serial browser evidence
+
+- EN Tutorial, 390×844 phone policy: passed all six stages after clearing disposable preview storage. Real Play clicks were used for Listen and Practice. The runner used the original pointer and note-input paths for subsequent musical actions. Completed flag true, two round passes, horizontal overflow 0. The final tutorial screen had one fully visible round; this is not a normal Main score-height measurement.
+- Spotlight, EN 375×667, Left Hand: passed targeted serial retest. Target x=128.75, y=380, w=50.5, h=32; spotlight hole x=125.75, y=377, w=56.5, h=38. Card bottom was 292.19. The initial parallel-run failure was not reproduced.
+- Independent instructions are in mobile-tablet-browser-acceptance.md.
