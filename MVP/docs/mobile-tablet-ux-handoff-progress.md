@@ -33,3 +33,8 @@ Initial Chromium results: clipboard 2 cases, file transport 4 cases, security 1 
 - EN Tutorial, 390×844 phone policy: passed all six stages after clearing disposable preview storage. Real Play clicks were used for Listen and Practice. The runner used the original pointer and note-input paths for subsequent musical actions. Completed flag true, two round passes, horizontal overflow 0. The final tutorial screen had one fully visible round; this is not a normal Main score-height measurement.
 - Spotlight, EN 375×667, Left Hand: passed targeted serial retest. Target x=128.75, y=380, w=50.5, h=32; spotlight hole x=125.75, y=377, w=56.5, h=38. Card bottom was 292.19. The initial parallel-run failure was not reproduced.
 - Independent instructions are in mobile-tablet-browser-acceptance.md.
+
+- RU Tutorial, 390×844 phone policy: passed all six stages, including two round passes. The first Practice click did not start playback in the runner; the subsequent visible Play click started it and showed OK12.
+- Workspace serial rerun passed library 0/1/13, Backup via existing handler, delete/cancel, edit Undo/Redo and the full Grab cycle. Phone English UI also exposed Download and Restore Backup. Arrow/tab sequence verified Music → My melodies → Music → Rounds.
+- Persistence serial rerun passed across locale, rotation and reload.
+- Main passed 20 viewport/locale geometry checks. See acceptance-mobile-20261119/cloud-main-matrix.json. The 375×667 RU case displayed one full round, compared with two in EN. One test score at 390×844 and 430×932 displayed three in both languages.
