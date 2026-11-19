@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "English Main reuses original MIDI calibration UI and actual 61-key range",
+    "RU language switch auto-restores granted same-device access and calibration without another calibration",
+    "disconnect 88-key fallback / same-device reconnect 61",
+    "English denied-permission state is honest and reconnect remains available"
+  ],
+  "errors": [],
+  "hardware": false
+}

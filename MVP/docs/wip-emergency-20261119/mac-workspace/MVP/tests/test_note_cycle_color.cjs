@@ -1,0 +1,61 @@
+const {test} = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+class Element {
+  constructor(tag) { this.tag = tag; this.attrs = {}; this.children = []; this.style = {}; this.dataset = {}; this.classList = {add(){}}; }
+  setAttribute(k,v) { this.attrs[k] = String(v); }
+  appendChild(e) { this.children.push(e); }
+  replaceChildren(...children) { this.children = children; }
+  addEventListener() {}
+}
+const window = {document:{createElementNS:(_,tag)=>new Element(tag)}};
+const context = vm.createContext({window});
+for (const file of ['play12-renderer.js','piano-view.js','play12-playback.js']) vm.runInContext(fs.readFileSync(path.join(__dirname,'../renderer',file),'utf8'),context);
+const score = JSON.parse(fs.readFileSync(path.join(__dirname,'../examples/when_the_saints_manual.play12.json')));
+const notes = score.score.parts[0].measures.flatMap(m=>m.events).filter(e=>e.kind==='note');
+function render(){return window.Play12Renderer.render(score,new Element('div'),{zeroNote:'C',measureCount:9,gridResolution:'1/4',dynamicsOpacity:{mf:1}});}
+const blocks = render().children.filter(e=>e.attrs['data-event-id']);
+function color(id){return blocks.find(e=>e.attrs['data-event-id']===id).children.find(e=>e.tag==='rect').attrs.fill.toUpperCase();}
+test('Second LH chord is yellow / yellow / green, with original physical MIDI',()=>{
+  assert.equal(color('manual.m1.e7'),'#FBD12C');
+  assert.equal(color('manual.m1.e8'),'#FBD12C');
+  assert.equal(color('manual.m1.e9'),'#009640');
+  assert.equal(blocks.find(e=>e.attrs['data-event-id']==='manual.m1.e8').attrs['data-midi'],'57');
+  assert.equal(blocks.find(e=>e.attrs['data-event-id']==='manual.m1.e9').attrs['data-midi'],'60');
+});
+test('All rendered LH/RH notes agree with Piano View at all 12 runtime zero pitch classes',()=>{
+  const colors=window.Play12Renderer.defaults.colors;
+  for(let pitchClass=0;pitchClass<12;pitchClass++){
+    const runtimeZero=window.Play12PianoView.layoutZeroForMidi(pitchClass,21);
+    for(const note of notes){
+      const effective=window.Play12Playback.effectiveMidiPitch(note.pitch.midi,score.play12.reference_zero_midi,runtimeZero);
+      const mapping=window.Play12PianoView.mappingForMidi(effective,runtimeZero,colors);
+      assert.equal(color(note.id),mapping.color.toUpperCase(),`${note.id}, zero=${runtimeZero}`);
+      assert.equal(mapping.symbol,note.play12_symbol.value);
+    }
+  }
+});
+test('Penultimate Y uses orange B2, with LH finger 5 preserved',()=>{
+  const note=notes.find(e=>e.id==='manual.m7.e52');
+  assert.equal(note.pitch.midi,47);assert.equal(note.pitch.octave,2);
+  assert.equal(note.play12_symbol.value,'Y');assert.equal(note.method.finger,5);assert.equal(note.source_fingering,5);
+  assert.equal(color(note.id),'#FC7B00');
+});
+test('Display grid cycles subdivisions and returns to composition minimum',()=>{
+  const next=window.Play12Playback.nextGridResolution;
+  let grid='1/4';
+  for(const expected of ['1/8','1/16','1/32','1/64','1/4']){grid=next(grid,'1/4');assert.equal(grid,expected);}
+  assert.equal(next('1/64','1/8'),'1/8');
+  assert.equal(next('1/64','1/16'),'1/16');
+  assert.equal(next('1/64','invalid'),'1/4');
+});
+test('Renderer adds one left-side Round marker per runtime Round and includes it in combined width',()=>{
+  const svg=render(),markers=svg.children.filter(e=>e.attrs['data-round-marker']);
+  assert.equal(markers.length,9);assert.deepEqual(markers.map(e=>e.attrs['data-round-marker']),['1','2','3','4','5','6','7','8','9']);
+  assert(markers.every(marker=>marker.children[0].tag==='circle'));
+  assert.equal(Number(svg.dataset.roundMarkerDiameter),22);assert.equal(Number(svg.dataset.roundMarkerGap),10);
+  assert.equal(Number(svg.style.width.replace('px','')),Number(svg.dataset.noteFieldWidth)+32);
+  assert(markers.every(marker=>Number(marker.attrs.transform.match(/translate\(([-\d.]+)/)[1])<0));
+});

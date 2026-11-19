@@ -1,0 +1,1763 @@
+{
+  "format": "play12-fingering-benchmark",
+  "version": "1",
+  "name": "Für Elise — first 8 measures",
+  "measure_count": 8,
+  "zero_note": "A",
+  "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+  "provenance": {
+    "candidate_source_sha256": "be9bf43b8cd7a39479f2b7eff931e5d1667c3ab8977eb25c2bf815bf516a5171",
+    "review_source_sha256": "11170d359187d15fba44489790cb40e5720bf53da05923a28c32ac1de48a9442",
+    "review_import_policy": "nine explicit corrections; 32 omitted candidates accepted by user declaration",
+    "methodist_assignments_preserved": true
+  },
+  "summary": {
+    "total_events": 49,
+    "methodist": 8,
+    "reviewed_candidates": 41,
+    "accepted": 32,
+    "corrected": 9,
+    "pending": 0
+  },
+  "events": [
+    {
+      "event_id": "P1.m0.e0",
+      "pitch": "E5",
+      "hand": "R",
+      "measure_index": 0,
+      "measure_number": "0",
+      "start_quarters": "0",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "methodist",
+      "review_status": "methodist",
+      "original_candidate_finger": null
+    },
+    {
+      "event_id": "P1.m0.e1",
+      "pitch": "D#5",
+      "hand": "R",
+      "measure_index": 0,
+      "measure_number": "0",
+      "start_quarters": "1/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "methodist",
+      "review_status": "methodist",
+      "original_candidate_finger": null
+    },
+    {
+      "event_id": "P1.m1.e0",
+      "pitch": "E5",
+      "hand": "R",
+      "measure_index": 1,
+      "measure_number": "1",
+      "start_quarters": "0",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "methodist",
+      "review_status": "methodist",
+      "original_candidate_finger": null
+    },
+    {
+      "event_id": "P1.m1.e1",
+      "pitch": "D#5",
+      "hand": "R",
+      "measure_index": 1,
+      "measure_number": "1",
+      "start_quarters": "1/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "methodist",
+      "review_status": "methodist",
+      "original_candidate_finger": null
+    },
+    {
+      "event_id": "P1.m1.e2",
+      "pitch": "E5",
+      "hand": "R",
+      "measure_index": 1,
+      "measure_number": "1",
+      "start_quarters": "1/2",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "methodist",
+      "review_status": "methodist",
+      "original_candidate_finger": null
+    },
+    {
+      "event_id": "P1.m1.e3",
+      "pitch": "B4",
+      "hand": "R",
+      "measure_index": 1,
+      "measure_number": "1",
+      "start_quarters": "3/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "methodist",
+      "review_status": "methodist",
+      "original_candidate_finger": null
+    },
+    {
+      "event_id": "P1.m1.e4",
+      "pitch": "D5",
+      "hand": "R",
+      "measure_index": 1,
+      "measure_number": "1",
+      "start_quarters": "1",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "methodist",
+      "review_status": "methodist",
+      "original_candidate_finger": null
+    },
+    {
+      "event_id": "P1.m1.e5",
+      "pitch": "C5",
+      "hand": "R",
+      "measure_index": 1,
+      "measure_number": "1",
+      "start_quarters": "5/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 3,
+      "origin": "methodist",
+      "review_status": "methodist",
+      "original_candidate_finger": null
+    },
+    {
+      "event_id": "P1.m2.e0",
+      "pitch": "A4",
+      "hand": "R",
+      "measure_index": 2,
+      "measure_number": "2",
+      "start_quarters": "0",
+      "duration_quarters": "1/2",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 2,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 4,
+          "midi": 69
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 40
+        },
+        "previous_context": {
+          "event_id": "P1.m1.e5",
+          "pitch": {
+            "step": "C",
+            "alter": 0,
+            "octave": 5,
+            "midi": 72
+          },
+          "measure_index": 1,
+          "start_quarters": "5/4",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m2.e2",
+          "pitch": {
+            "step": "C",
+            "alter": 0,
+            "octave": 4,
+            "midi": 60
+          },
+          "measure_index": 2,
+          "start_quarters": "3/4",
+          "duration_quarters": "1/4"
+        },
+        "simultaneous_notes": [
+          {
+            "event_id": "P1.m2.e5",
+            "pitch": {
+              "step": "A",
+              "alter": 0,
+              "octave": 2,
+              "midi": 45
+            },
+            "measure_index": 2,
+            "start_quarters": "0",
+            "duration_quarters": "1/4"
+          }
+        ],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.264
+        }
+      }
+    },
+    {
+      "event_id": "P1.m2.e2",
+      "pitch": "C4",
+      "hand": "R",
+      "measure_index": 2,
+      "measure_number": "2",
+      "start_quarters": "3/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 1,
+      "original_candidate_confidence": 0.638,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "C",
+          "alter": 0,
+          "octave": 4,
+          "midi": 60
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 35.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.984
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m2.e3",
+      "pitch": "E4",
+      "hand": "R",
+      "measure_index": 2,
+      "measure_number": "2",
+      "start_quarters": "1",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 2,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 4,
+          "midi": 64
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 37.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.264
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m2.e4",
+      "pitch": "A4",
+      "hand": "R",
+      "measure_index": 2,
+      "measure_number": "2",
+      "start_quarters": "5/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 4,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 4,
+          "midi": 69
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 40.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.288
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m2.e5",
+      "pitch": "A2",
+      "hand": "L",
+      "measure_index": 2,
+      "measure_number": "2",
+      "start_quarters": "0",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 2,
+          "midi": 45
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 26.0
+        },
+        "main_cost": {
+          "name": "крайний палец",
+          "value": 0.08
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m2.e6",
+      "pitch": "E3",
+      "hand": "L",
+      "measure_index": 2,
+      "measure_number": "2",
+      "start_quarters": "1/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 3,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 3,
+          "midi": 52
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 30
+        },
+        "previous_context": {
+          "event_id": "P1.m2.e5",
+          "pitch": {
+            "step": "A",
+            "alter": 0,
+            "octave": 2,
+            "midi": 45
+          },
+          "measure_index": 2,
+          "start_quarters": "0",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m2.e7",
+          "pitch": {
+            "step": "A",
+            "alter": 0,
+            "octave": 3,
+            "midi": 57
+          },
+          "measure_index": 2,
+          "start_quarters": "1/2",
+          "duration_quarters": "1/4"
+        },
+        "simultaneous_notes": [],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.528
+        }
+      }
+    },
+    {
+      "event_id": "P1.m2.e7",
+      "pitch": "A3",
+      "hand": "L",
+      "measure_index": 2,
+      "measure_number": "2",
+      "start_quarters": "1/2",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 1,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 3,
+          "midi": 57
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 33.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.288
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m3.e0",
+      "pitch": "B4",
+      "hand": "R",
+      "measure_index": 3,
+      "measure_number": "3",
+      "start_quarters": "0",
+      "duration_quarters": "1/2",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "B",
+          "alter": 0,
+          "octave": 4,
+          "midi": 71
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 41.0
+        },
+        "main_cost": {
+          "name": "крайний палец",
+          "value": 0.08
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m3.e2",
+      "pitch": "E4",
+      "hand": "R",
+      "measure_index": 3,
+      "measure_number": "3",
+      "start_quarters": "3/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 1,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 4,
+          "midi": 64
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 37.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.096
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m3.e3",
+      "pitch": "G#4",
+      "hand": "R",
+      "measure_index": 3,
+      "measure_number": "3",
+      "start_quarters": "1",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 3,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "G",
+          "alter": 1,
+          "octave": 4,
+          "midi": 68
+        },
+        "key_geometry": {
+          "kind": "black",
+          "x": 39.58
+        },
+        "previous_context": {
+          "event_id": "P1.m3.e2",
+          "pitch": {
+            "step": "E",
+            "alter": 0,
+            "octave": 4,
+            "midi": 64
+          },
+          "measure_index": 3,
+          "start_quarters": "3/4",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m3.e4",
+          "pitch": {
+            "step": "B",
+            "alter": 0,
+            "octave": 4,
+            "midi": 71
+          },
+          "measure_index": 3,
+          "start_quarters": "5/4",
+          "duration_quarters": "1/4"
+        },
+        "simultaneous_notes": [],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.187
+        }
+      }
+    },
+    {
+      "event_id": "P1.m3.e4",
+      "pitch": "B4",
+      "hand": "R",
+      "measure_index": 3,
+      "measure_number": "3",
+      "start_quarters": "5/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 3,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 4,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "B",
+          "alter": 0,
+          "octave": 4,
+          "midi": 71
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 41
+        },
+        "previous_context": {
+          "event_id": "P1.m3.e3",
+          "pitch": {
+            "step": "G",
+            "alter": 1,
+            "octave": 4,
+            "midi": 68
+          },
+          "measure_index": 3,
+          "start_quarters": "1",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m4.e0",
+          "pitch": {
+            "step": "C",
+            "alter": 0,
+            "octave": 5,
+            "midi": 72
+          },
+          "measure_index": 4,
+          "start_quarters": "0",
+          "duration_quarters": "1/2"
+        },
+        "simultaneous_notes": [],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.125
+        }
+      }
+    },
+    {
+      "event_id": "P1.m3.e5",
+      "pitch": "E2",
+      "hand": "L",
+      "measure_index": 3,
+      "measure_number": "3",
+      "start_quarters": "0",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 2,
+          "midi": 40
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 23.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 1.536
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m3.e6",
+      "pitch": "E3",
+      "hand": "L",
+      "measure_index": 3,
+      "measure_number": "3",
+      "start_quarters": "1/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 3,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 3,
+          "midi": 52
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 30
+        },
+        "previous_context": {
+          "event_id": "P1.m3.e5",
+          "pitch": {
+            "step": "E",
+            "alter": 0,
+            "octave": 2,
+            "midi": 40
+          },
+          "measure_index": 3,
+          "start_quarters": "0",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m3.e7",
+          "pitch": {
+            "step": "G",
+            "alter": 1,
+            "octave": 3,
+            "midi": 56
+          },
+          "measure_index": 3,
+          "start_quarters": "1/2",
+          "duration_quarters": "1/4"
+        },
+        "simultaneous_notes": [],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 1.248
+        }
+      }
+    },
+    {
+      "event_id": "P1.m3.e7",
+      "pitch": "G#3",
+      "hand": "L",
+      "measure_index": 3,
+      "measure_number": "3",
+      "start_quarters": "1/2",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 2,
+      "original_candidate_confidence": 0.589,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "G",
+          "alter": 1,
+          "octave": 3,
+          "midi": 56
+        },
+        "key_geometry": {
+          "kind": "black",
+          "x": 32.58
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.403
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m4.e0",
+      "pitch": "C5",
+      "hand": "R",
+      "measure_index": 4,
+      "measure_number": "4",
+      "start_quarters": "0",
+      "duration_quarters": "1/2",
+      "benchmark_finger": 4,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "C",
+          "alter": 0,
+          "octave": 5,
+          "midi": 72
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 42
+        },
+        "previous_context": {
+          "event_id": "P1.m3.e4",
+          "pitch": {
+            "step": "B",
+            "alter": 0,
+            "octave": 4,
+            "midi": 71
+          },
+          "measure_index": 3,
+          "start_quarters": "5/4",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m4.e2",
+          "pitch": {
+            "step": "E",
+            "alter": 0,
+            "octave": 4,
+            "midi": 64
+          },
+          "measure_index": 4,
+          "start_quarters": "3/4",
+          "duration_quarters": "1/4"
+        },
+        "simultaneous_notes": [
+          {
+            "event_id": "P1.m4.e5",
+            "pitch": {
+              "step": "A",
+              "alter": 0,
+              "octave": 2,
+              "midi": 45
+            },
+            "measure_index": 4,
+            "start_quarters": "0",
+            "duration_quarters": "1/4"
+          }
+        ],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "крайний палец",
+          "value": 0.08
+        }
+      }
+    },
+    {
+      "event_id": "P1.m4.e2",
+      "pitch": "E4",
+      "hand": "R",
+      "measure_index": 4,
+      "measure_number": "4",
+      "start_quarters": "3/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 1,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 4,
+          "midi": 64
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 37.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.336
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m4.e3",
+      "pitch": "E5",
+      "hand": "R",
+      "measure_index": 4,
+      "measure_number": "4",
+      "start_quarters": "1",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 5,
+          "midi": 76
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 44.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.816
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m4.e4",
+      "pitch": "D#5",
+      "hand": "R",
+      "measure_index": 4,
+      "measure_number": "4",
+      "start_quarters": "5/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 4,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "D",
+          "alter": 1,
+          "octave": 5,
+          "midi": 75
+        },
+        "key_geometry": {
+          "kind": "black",
+          "x": 43.58
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.115
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m4.e5",
+      "pitch": "A2",
+      "hand": "L",
+      "measure_index": 4,
+      "measure_number": "4",
+      "start_quarters": "0",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 2,
+          "midi": 45
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 26.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.931
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m4.e6",
+      "pitch": "E3",
+      "hand": "L",
+      "measure_index": 4,
+      "measure_number": "4",
+      "start_quarters": "1/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 3,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 3,
+          "midi": 52
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 30
+        },
+        "previous_context": {
+          "event_id": "P1.m4.e5",
+          "pitch": {
+            "step": "A",
+            "alter": 0,
+            "octave": 2,
+            "midi": 45
+          },
+          "measure_index": 4,
+          "start_quarters": "0",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m4.e7",
+          "pitch": {
+            "step": "A",
+            "alter": 0,
+            "octave": 3,
+            "midi": 57
+          },
+          "measure_index": 4,
+          "start_quarters": "1/2",
+          "duration_quarters": "1/4"
+        },
+        "simultaneous_notes": [],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.528
+        }
+      }
+    },
+    {
+      "event_id": "P1.m4.e7",
+      "pitch": "A3",
+      "hand": "L",
+      "measure_index": 4,
+      "measure_number": "4",
+      "start_quarters": "1/2",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 1,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 3,
+          "midi": 57
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 33.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.288
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m5.e0",
+      "pitch": "E5",
+      "hand": "R",
+      "measure_index": 5,
+      "measure_number": "5",
+      "start_quarters": "0",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.561,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 5,
+          "midi": 76
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 44.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.115
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m5.e1",
+      "pitch": "D#5",
+      "hand": "R",
+      "measure_index": 5,
+      "measure_number": "5",
+      "start_quarters": "1/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 4,
+      "original_candidate_confidence": 0.561,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "D",
+          "alter": 1,
+          "octave": 5,
+          "midi": 75
+        },
+        "key_geometry": {
+          "kind": "black",
+          "x": 43.58
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.115
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m5.e2",
+      "pitch": "E5",
+      "hand": "R",
+      "measure_index": 5,
+      "measure_number": "5",
+      "start_quarters": "1/2",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 5,
+          "midi": 76
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 44.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.115
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m5.e3",
+      "pitch": "B4",
+      "hand": "R",
+      "measure_index": 5,
+      "measure_number": "5",
+      "start_quarters": "3/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 2,
+      "original_candidate_confidence": 0.561,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "B",
+          "alter": 0,
+          "octave": 4,
+          "midi": 71
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 41.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.072
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m5.e4",
+      "pitch": "D5",
+      "hand": "R",
+      "measure_index": 5,
+      "measure_number": "5",
+      "start_quarters": "1",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "D",
+          "alter": 0,
+          "octave": 5,
+          "midi": 74
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 43.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.168
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m5.e5",
+      "pitch": "C5",
+      "hand": "R",
+      "measure_index": 5,
+      "measure_number": "5",
+      "start_quarters": "5/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 4,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "C",
+          "alter": 0,
+          "octave": 5,
+          "midi": 72
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 42.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.024
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m6.e0",
+      "pitch": "A4",
+      "hand": "R",
+      "measure_index": 6,
+      "measure_number": "6",
+      "start_quarters": "0",
+      "duration_quarters": "1/2",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 2,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 4,
+          "midi": 69
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 40
+        },
+        "previous_context": {
+          "event_id": "P1.m5.e5",
+          "pitch": {
+            "step": "C",
+            "alter": 0,
+            "octave": 5,
+            "midi": 72
+          },
+          "measure_index": 5,
+          "start_quarters": "5/4",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m6.e2",
+          "pitch": {
+            "step": "C",
+            "alter": 0,
+            "octave": 4,
+            "midi": 60
+          },
+          "measure_index": 6,
+          "start_quarters": "3/4",
+          "duration_quarters": "1/4"
+        },
+        "simultaneous_notes": [
+          {
+            "event_id": "P1.m6.e5",
+            "pitch": {
+              "step": "A",
+              "alter": 0,
+              "octave": 2,
+              "midi": 45
+            },
+            "measure_index": 6,
+            "start_quarters": "0",
+            "duration_quarters": "1/4"
+          }
+        ],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.048
+        }
+      }
+    },
+    {
+      "event_id": "P1.m6.e2",
+      "pitch": "C4",
+      "hand": "R",
+      "measure_index": 6,
+      "measure_number": "6",
+      "start_quarters": "3/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 1,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "C",
+          "alter": 0,
+          "octave": 4,
+          "midi": 60
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 35.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.984
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m6.e3",
+      "pitch": "E4",
+      "hand": "R",
+      "measure_index": 6,
+      "measure_number": "6",
+      "start_quarters": "1",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 2,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 4,
+          "midi": 64
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 37.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.264
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m6.e4",
+      "pitch": "A4",
+      "hand": "R",
+      "measure_index": 6,
+      "measure_number": "6",
+      "start_quarters": "5/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 4,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 4,
+          "midi": 69
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 40.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.288
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m6.e5",
+      "pitch": "A2",
+      "hand": "L",
+      "measure_index": 6,
+      "measure_number": "6",
+      "start_quarters": "0",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 2,
+          "midi": 45
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 26.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.816
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m6.e6",
+      "pitch": "E3",
+      "hand": "L",
+      "measure_index": 6,
+      "measure_number": "6",
+      "start_quarters": "1/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 2,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 3,
+          "midi": 52
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 30.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.312
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m6.e7",
+      "pitch": "A3",
+      "hand": "L",
+      "measure_index": 6,
+      "measure_number": "6",
+      "start_quarters": "1/2",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 1,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "A",
+          "alter": 0,
+          "octave": 3,
+          "midi": 57
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 33.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.504
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m7.e0",
+      "pitch": "B4",
+      "hand": "R",
+      "measure_index": 7,
+      "measure_number": "7",
+      "start_quarters": "0",
+      "duration_quarters": "1/2",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "B",
+          "alter": 0,
+          "octave": 4,
+          "midi": 71
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 41.0
+        },
+        "main_cost": {
+          "name": "крайний палец",
+          "value": 0.08
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m7.e2",
+      "pitch": "D4",
+      "hand": "R",
+      "measure_index": 7,
+      "measure_number": "7",
+      "start_quarters": "3/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 1,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "D",
+          "alter": 0,
+          "octave": 4,
+          "midi": 62
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 36.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.336
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m7.e3",
+      "pitch": "C5",
+      "hand": "R",
+      "measure_index": 7,
+      "measure_number": "7",
+      "start_quarters": "1",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "C",
+          "alter": 0,
+          "octave": 5,
+          "midi": 72
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 42.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.576
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m7.e4",
+      "pitch": "B4",
+      "hand": "R",
+      "measure_index": 7,
+      "measure_number": "7",
+      "start_quarters": "5/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 4,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 4,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "R",
+        "pitch": {
+          "step": "B",
+          "alter": 0,
+          "octave": 4,
+          "midi": 71
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 41.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.024
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m7.e5",
+      "pitch": "E2",
+      "hand": "L",
+      "measure_index": 7,
+      "measure_number": "7",
+      "start_quarters": "0",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 5,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 5,
+      "original_candidate_confidence": 0.575,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 2,
+          "midi": 40
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 23.0
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 1.536
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    },
+    {
+      "event_id": "P1.m7.e6",
+      "pitch": "E3",
+      "hand": "L",
+      "measure_index": 7,
+      "measure_number": "7",
+      "start_quarters": "1/4",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 1,
+      "origin": "reviewed_candidate",
+      "review_status": "corrected",
+      "original_candidate_finger": 3,
+      "original_candidate_confidence": 0.55,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "E",
+          "alter": 0,
+          "octave": 3,
+          "midi": 52
+        },
+        "key_geometry": {
+          "kind": "white",
+          "x": 30
+        },
+        "previous_context": {
+          "event_id": "P1.m7.e5",
+          "pitch": {
+            "step": "E",
+            "alter": 0,
+            "octave": 2,
+            "midi": 40
+          },
+          "measure_index": 7,
+          "start_quarters": "0",
+          "duration_quarters": "1/4"
+        },
+        "next_context": {
+          "event_id": "P1.m7.e7",
+          "pitch": {
+            "step": "G",
+            "alter": 1,
+            "octave": 3,
+            "midi": 56
+          },
+          "measure_index": 7,
+          "start_quarters": "1/2",
+          "duration_quarters": "1/4"
+        },
+        "simultaneous_notes": [],
+        "held_notes": [],
+        "hand_calibration_profile": null,
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48",
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 1.248
+        }
+      }
+    },
+    {
+      "event_id": "P1.m7.e7",
+      "pitch": "G#3",
+      "hand": "L",
+      "measure_index": 7,
+      "measure_number": "7",
+      "start_quarters": "1/2",
+      "duration_quarters": "1/4",
+      "benchmark_finger": 2,
+      "origin": "reviewed_candidate",
+      "review_status": "accepted",
+      "original_candidate_finger": 2,
+      "original_candidate_confidence": 0.589,
+      "context": {
+        "hand": "L",
+        "pitch": {
+          "step": "G",
+          "alter": 1,
+          "octave": 3,
+          "midi": 56
+        },
+        "key_geometry": {
+          "kind": "black",
+          "x": 32.58
+        },
+        "main_cost": {
+          "name": "перемещение позиции",
+          "value": 0.403
+        },
+        "zero_note": "A",
+        "layout_fingerprint": "bd216fc4281229b6023907518cbf2e359ba6834d053b2bc77c38762c2c038b48"
+      }
+    }
+  ]
+}

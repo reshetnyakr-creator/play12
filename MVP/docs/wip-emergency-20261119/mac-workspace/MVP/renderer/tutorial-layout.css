@@ -1,0 +1,53 @@
+/* Only Tutorial differences. Geometry and components come from Main's contracts. */
+body.tutorial-main-aligned{background:#faf9fc}
+.tutorial-main-aligned #play12-onboarding.tutorial-aligned-root{position:relative;inset:auto;z-index:auto;overflow:visible;min-height:0;height:100%;background:transparent;grid-row:2}
+.tutorial-main-aligned .tutorial-aligned-page{display:block;padding:0;min-height:0;height:100%;width:100%}
+.tutorial-main-aligned .tutorial-aligned-view{display:block;width:100%;height:100%;padding:0;max-width:none;position:relative}
+.tutorial-main-aligned .tutorial-training-layout{height:100%;max-height:100%;min-height:0;box-sizing:border-box}
+.tutorial-main-aligned .tutorial-center{padding:0;min-width:0}
+.tutorial-main-aligned .mvp-playback-host{position:relative;inset:auto;width:auto;max-width:none;margin:0;margin-top:auto;overflow:visible}
+.tutorial-main-aligned .tutorial-identity{display:block;padding:16px}
+.tutorial-main-aligned .mvp-song-card{position:relative;inset:auto;width:100%;max-width:100%;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.tutorial-main-aligned .mvp-song-copy{min-width:0;max-width:100%}
+.tutorial-main-aligned .mvp-song-title-viewport{width:100%;min-width:0;max-width:100%;overflow:hidden}
+.tutorial-main-aligned .mvp-song-title-track{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:none!important;transform:none!important}
+.tutorial-main-aligned #onboarding-song-step{position:static;white-space:nowrap;justify-self:start}
+.tutorial-main-aligned .tutorial-progress-card{overflow:auto;min-height:0;padding:16px}
+.tutorial-main-aligned .tutorial-progress-card ol{list-style:none;padding:0;margin:0;display:grid;gap:20px}
+.tutorial-main-aligned .tutorial-progress-card li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:center;font-size:15px}
+.tutorial-main-aligned .tutorial-progress-card li span{border-radius:50%;width:34px;height:34px;display:grid;place-items:center;background:#eee;border:1px solid #ddd}
+.tutorial-main-aligned .tutorial-progress-card li.is-active span,.tutorial-main-aligned .tutorial-progress-card li.is-complete span{background:#CEF932}
+.tutorial-main-aligned #onboarding-skip{position:relative;inset:auto;align-self:flex-end;z-index:21}
+.tutorial-main-aligned .mvp-control-row{display:none!important}
+.tutorial-main-aligned .mvp-listen-complete-action{position:fixed;bottom:calc(var(--training-footer-height,260px) + 16px);right:24px;z-index:10005}
+.tutorial-main-aligned .tutorial-portal{z-index:10004}
+.tutorial-main-aligned #zero-chooser:not([hidden]){display:block!important}
+.tutorial-main-aligned .mvp-coach-spotlight{z-index:10002}
+.tutorial-main-aligned .mvp-listen-coach,.tutorial-main-aligned #zero-chooser{position:fixed;left:50%;top:var(--mvp-coach-y,35vh);bottom:auto;transform:translate(-50%,-50%);max-width:calc(100vw - 32px);box-sizing:border-box}
+.tutorial-main-aligned .mvp-ok12-toast{position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:10006;pointer-events:none}
+.tutorial-main-aligned .mvp-completion-card,.tutorial-main-aligned .mvp-midi-reconnect{position:fixed;left:50%;top:35%;transform:translate(-50%,-50%);max-width:calc(100vw - 32px)}
+.tutorial-main-aligned .mvp-piano-host{position:relative;inset:auto;width:100%;height:auto;display:flex;justify-content:center}
+.tutorial-main-aligned .mvp-piano-host .play12-piano-view{position:relative;inset:auto;left:auto;top:auto;transform:none;min-height:0;margin-inline:auto}
+.tutorial-main-aligned .mvp-listen .music-workspace .playback-zone{position:relative;inset:auto;transform:none}
+.tutorial-main-aligned .training-zone-controls>[hidden]{display:none!important}
+.tutorial-main-aligned .music-workspace .playback-progress-head{top:auto;bottom:1px;transform:translateX(-50%)}
+body.tutorial-main-aligned{font-family:Inter,sans-serif}
+body.tutorial-main-aligned>main.playback-page{display:none}
+.tutorial-main-aligned .tutorial-portal[hidden],.tutorial-main-aligned .tutorial-portal [hidden]{display:none!important}
+body.tutorial-main-aligned{grid-template-columns:minmax(0,1fr)}
+.tutorial-main-aligned #play12-onboarding.tutorial-aligned-root{min-width:0;width:100%;max-width:100%}
+.tutorial-main-aligned .mvp-player-layout{display:none}
+.tutorial-main-aligned .training-shell-main .mvp-playback-host .playback-stage{min-height:0}
+
+.tutorial-main-aligned .tutorial-midi-status{min-height:29px}
+
+/* The Main ID rule is lower than the Tutorial mask unless explicitly overridden. */
+body.tutorial-main-aligned > #zero-chooser{z-index:10004}
+
+/* Welcome is the same vertical action group in both locales. */
+#play12-onboarding [data-onboarding-view="WELCOME"] .mvp-actions{display:flex;flex-direction:column;align-items:stretch;width:min(380px,100%);margin-inline:auto;gap:22px}
+#play12-onboarding [data-onboarding-view="WELCOME"] .mvp-actions>.mvp-button{width:100%;min-width:0;min-height:62px;box-sizing:border-box;font:700 20px/1.2 Inter,sans-serif;padding:18px 24px;white-space:normal}
+body.tutorial-main-aligned .training-left-controls>#metronome-board[hidden]{display:flex!important;visibility:hidden;pointer-events:none}
+#tutorial-pass-caption{position:absolute;bottom:100%;right:8px;font:600 11px/1.4 Inter,sans-serif;color:#333;white-space:nowrap}
+/* Match Main's compact profile padding before measuring the narrow left zone. */
+.tutorial-main-aligned .is-three-narrow .tutorial-identity{padding-block:10px}

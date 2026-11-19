@@ -1,0 +1,8 @@
+/* Entry screen uses the existing Play12 button foundation and brand tokens. */
+body.play12-entry-menu{margin:0;min-height:100svh;min-height:100dvh;box-sizing:border-box;padding:24px;display:grid;place-items:center;background:var(--play12-site-bg);color:var(--play12-site-text);font-family:Inter,Arial,sans-serif}
+.entry-menu-actions{display:grid;gap:18px;width:min(320px,100%)}
+.entry-menu-actions .mvp-button{width:100%;min-width:0;min-height:64px;text-decoration:none;text-align:center;line-height:1.25}
+.entry-menu-actions .mvp-button:focus-visible{outline:3px solid var(--play12-site-action-hover);outline-offset:4px}
+.entry-menu-actions .mvp-button:disabled{color:#626262;background:#ededed;border-color:#b9b9b9;cursor:not-allowed}
+
+.entry-menu-language{position:fixed;top:20px;right:24px;display:flex;gap:8px;font:700 13px Inter,Arial,sans-serif}.entry-menu-language a{color:#111;text-decoration:none}.entry-menu-language .active-language{color:#E96E40}

@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play12 — When the Saints Go Marching In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
+  <link rel="stylesheet" href="play12-playback.css?v=dynamic-piano-01">
+  <link rel="stylesheet" href="play12-onboarding.css?v=shell-13">
+  <link rel="stylesheet" href="music-workspace.css?v=1.4">
+<link rel="stylesheet" href="/MVP/mobile-tablet.css?v=mobile-1"><script src="/MVP/mobile-tablet.js?v=mobile-1"></script></head>
+<body class="play12-onboarding-boot">
+  <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
+    <button id="onboarding-skip" class="mvp-choose-zero-control mvp-skip-control" type="button" hidden>Skip</button>
+    <header class="mvp-site-header">
+      <a class="mvp-logo-link" href="/" aria-label="Play12 homepage">
+        <img class="mvp-site-logo" src="../../P12%20logo.png" alt="Play12 logo">
+      </a>
+      <nav class="mvp-site-nav" aria-label="Play12 navigation">
+        <a href="/manual.html">Manual</a>
+        <a href="/manifesto.html">Manifesto</a>
+        <a href="https://www.youtube.com/@Play12_Official">YouTube</a>
+        <a href="https://www.instagram.com/play12_official/">Instagram</a>
+        <a href="https://www.tiktok.com/@p12piano?lang=ru-RU">TikTok</a>
+        <a href="https://x.com/play12_official">X</a>
+        <span class="mvp-language-switch" aria-label="Language selection">
+          <span class="mvp-active-language" aria-current="page">EN</span><span aria-hidden="true">/</span><a href="/ru/MVP/tutorial/" lang="ru">RU</a>
+        </span>
+      </nav>
+    </header>
+    <main class="mvp-page">
+      <div class="mvp-content" data-onboarding-view="WELCOME">
+        <div class="mvp-actions">
+          <button id="onboarding-start" class="mvp-button mvp-button-primary" type="button">Start</button>
+          <button id="onboarding-continue" class="mvp-button mvp-button-secondary" type="button" hidden>Continue</button>
+        </div>
+      </div>
+      <section class="mvp-midi-connect" data-onboarding-view="MIDI_CONNECT" hidden aria-labelledby="midi-connect-title">
+        <div class="mvp-midi-copy">
+          <div data-midi-connect-state="choice">
+            <h1 id="midi-connect-title" class="mvp-step-heading">Connect your piano</h1>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-ready" class="mvp-button mvp-button-primary" type="button">Already connected</button>
+              <button id="onboarding-midi-guide" class="mvp-button mvp-button-secondary" type="button">How to connect?</button>
+              <button id="onboarding-demo" class="mvp-button mvp-button-tertiary" type="button">I don’t have a piano yet — view demo</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="guide" hidden>
+            <h1 class="mvp-step-heading">How to connect</h1>
+            <svg class="mvp-midi-guide-image" viewBox="0 235 1774 370" role="img" aria-label="Digital piano connected to a computer with a USB cable"><image href="assets/midi-connection-guide.png" width="1774" height="887" /></svg>
+            <ol class="mvp-midi-guide-steps">
+              <li>Find the USB TO HOST or USB COMPUTER port on your piano.</li>
+              <li>Connect your piano to the computer with a USB cable.</li>
+              <li>Turn your piano on.</li>
+            </ol>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-check" class="mvp-button mvp-button-primary" type="button">Check connection</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="test" hidden>
+            <h1 class="mvp-step-heading">Let’s check the connection</h1>
+            <p class="mvp-step-message">Press any key on your piano</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-browser-help" class="mvp-button mvp-button-secondary" type="button">Not working? Check browser settings</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="success" hidden>
+            <h1 class="mvp-step-heading">Ready</h1>
+            <p class="mvp-step-message mvp-step-success">Your computer is receiving a signal from the piano ✓</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-continue" class="mvp-button mvp-button-primary" type="button">Continue</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="calibrate-left" hidden>
+            <h1 class="mvp-step-heading">Keyboard calibration</h1>
+            <p class="mvp-step-message">Press the leftmost key on your keyboard</p>
+          </div>
+          <div data-midi-connect-state="calibrate-right" hidden>
+            <h1 class="mvp-step-heading">Keyboard calibration</h1>
+            <p class="mvp-step-message">Now press the rightmost key</p>
+          </div>
+          <div data-midi-connect-state="calibrate-invalid" hidden>
+            <h1 class="mvp-step-heading">Try again</h1>
+            <p class="mvp-step-message">The right key must be above the left key and on the same MIDI keyboard.</p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibrate-invalid-retry" class="mvp-button mvp-button-primary" type="button">Try again</button></div>
+          </div>
+          <div data-midi-connect-state="calibrate-unusual" hidden>
+            <h1 id="onboarding-midi-unusual-count" class="mvp-step-heading">We detected your keyboard.</h1>
+            <p class="mvp-step-message">Does this match your keyboard?</p>
+            <p class="mvp-step-message">Make sure you pressed the leftmost and rightmost keys.</p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibrate-unusual-retry" class="mvp-button mvp-button-secondary" type="button">Try again</button><button id="onboarding-midi-use-range" class="mvp-button mvp-button-primary" type="button">Use this keyboard</button></div>
+          </div>
+          <div data-midi-connect-state="calibrate-confirm" hidden>
+            <h1 id="onboarding-midi-key-count" class="mvp-step-heading">We detected your keyboard.</h1>
+            <p class="mvp-step-message">Does this match your keyboard?</p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibrate-retry" class="mvp-button mvp-button-secondary" type="button">Try again</button><button id="onboarding-midi-calibrate-confirm" class="mvp-button mvp-button-primary" type="button">Use this keyboard</button></div>
+          </div>
+          <div data-midi-connect-state="function-verify" hidden>
+            <h1 class="mvp-step-heading">Function key</h1>
+            <p class="mvp-step-message">Press the rightmost key again</p>
+          </div>
+          <div data-midi-connect-state="function-retry" hidden>
+            <h1 class="mvp-step-heading">That was not the rightmost key</h1>
+            <p class="mvp-step-message">Press the rightmost key again, or recalibrate the keyboard.</p>
+            <div class="mvp-actions"><button id="onboarding-midi-function-retry" class="mvp-button mvp-button-primary" type="button">Try again</button><button id="onboarding-midi-function-recalibrate" class="mvp-button mvp-button-secondary" type="button">Recalibrate</button></div>
+          </div>
+          <div data-midi-connect-state="calibration-complete" hidden>
+            <h1 class="mvp-step-heading">Function is ready</h1>
+            <p class="mvp-step-message mvp-step-success">Hold the rightmost key to use piano controls ✓</p>
+            <div class="mvp-actions"><button id="onboarding-midi-calibration-continue" class="mvp-button mvp-button-primary" type="button">Continue</button></div>
+          </div>
+          <div data-midi-connect-state="recalibrate" hidden>
+            <h1 class="mvp-step-heading">MIDI keyboard range has changed.</h1>
+            <p class="mvp-step-message">Recalibrate?</p>
+            <div class="mvp-actions"><button id="onboarding-midi-recalibrate" class="mvp-button mvp-button-primary" type="button">Recalibrate</button><button id="onboarding-midi-keep-range" class="mvp-button mvp-button-secondary" type="button">Keep current range</button></div>
+          </div>
+          <div data-midi-connect-state="permission-help" hidden>
+            <h1 class="mvp-step-heading">Allow browser access to MIDI</h1>
+            <p class="mvp-step-message">When you connect for the first time, your browser may ask for permission to use MIDI devices. Choose Allow.</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-request-access" class="mvp-button mvp-button-primary" type="button">Request MIDI access</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="permission-denied" hidden>
+            <h1 class="mvp-step-heading">MIDI access is blocked</h1>
+            <p class="mvp-step-message">Allow MIDI access for play12.pro in your browser settings, then try again.</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-retry" class="mvp-button mvp-button-primary" type="button">Check again</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="device-not-found" hidden>
+            <h1 class="mvp-step-heading">MIDI keyboard not found</h1>
+            <p class="mvp-step-message">Check the USB connection and make sure your piano is turned on.</p>
+            <div class="mvp-actions">
+              <button id="onboarding-midi-show-guide" class="mvp-button mvp-button-secondary" type="button">Show connection diagram</button>
+              <button id="onboarding-midi-refresh" class="mvp-button mvp-button-primary" type="button">Refresh connection</button>
+            </div>
+          </div>
+          <div data-midi-connect-state="unsupported-safari" hidden>
+            <h1 class="mvp-step-heading">Safari does not support Web MIDI</h1>
+            <p class="mvp-step-message">Open Play12 in Chrome, Edge, Yandex Browser, or another Chromium browser to connect your piano.</p>
+          </div>
+          <div data-midi-connect-state="unsupported" hidden>
+            <h1 class="mvp-step-heading">MIDI connection is not supported</h1>
+            <p class="mvp-step-message">This browser cannot connect to a MIDI keyboard. Open Play12 in a browser that supports Web MIDI.</p>
+          </div>
+        </div>
+        <div id="onboarding-piano-host" class="mvp-piano-host" aria-label="Playable on-screen piano"></div>
+      </section>
+      <section class="mvp-listen" data-onboarding-view="LISTEN_AND_CONTROL" hidden aria-labelledby="listen-title">
+        <h1 id="listen-title" class="mvp-visually-hidden">Listen to When the Saints Go Marching In</h1>
+        <div class="mvp-player-layout">
+          <aside class="mvp-onboarding-progress" aria-label="Onboarding progress">
+            <aside class="mvp-song-card">
+              <div class="mvp-song-copy">
+                <span>Now playing</span>
+                <div id="onboarding-song-title-viewport" class="mvp-song-title-viewport">
+                  <strong id="onboarding-song-title" class="mvp-song-title-track">When the Saints Go Marching In</strong>
+                </div>
+                <p>Play12 Learning Version</p>
+              </div>
+                <small id="onboarding-song-step">Step 1 of 6</small>
+            </aside>
+            <ol>
+              <li data-progress-step="1" class="is-active" aria-current="step"><span>1</span><strong>Listen</strong></li>
+              <li data-progress-step="2"><span>2</span><strong>Choose your 0</strong></li>
+              <li data-progress-step="3"><span>3</span><strong>Play</strong></li>
+              <li data-progress-step="4"><span>4</span><strong>Metronome</strong></li>
+              <li data-progress-step="5"><span>5</span><strong>Round &amp; Loop</strong></li>
+              <li data-progress-step="6"><span>6</span><strong>You can do it!</strong></li>
+            </ol>
+          </aside>
+          <div class="mvp-player-column">
+            <div class="mvp-player-stage-wrap">
+              <div id="onboarding-playback-host" class="mvp-playback-host"></div>
+              <div id="onboarding-listen-coach" class="mvp-listen-coach" role="status" aria-live="polite">
+                <p id="onboarding-listen-prompt">Listen to how the melody sounds<br>Press Play or P</p>
+                <button id="cards-ready" class="mvp-button mvp-button-primary" type="button" hidden>Ready</button>
+              </div>
+              <aside id="onboarding-completion" class="mvp-completion-card" role="status" aria-live="polite" hidden>
+                <h2 id="onboarding-completion-title">Congratulations!</h2>
+                <a class="mvp-button mvp-button-primary" href="/ru/MVP/main/" id="tutorial-main-link">Go to Play12</a><p id="onboarding-completion-message">You've completed the Play12 tutorial.<br><br>Now you can practise your skills and learn your favourite melodies on your own.</p>
+              </aside>
+              <div id="round-ok12" class="mvp-ok12-toast" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span> OK12</div>
+              <div id="onboarding-confetti" class="mvp-confetti" aria-hidden="true"></div>
+              <aside id="returning-midi" class="mvp-midi-reconnect" role="status" aria-live="polite" hidden><span id="returning-midi-message">MIDI keyboard connection lost.<br>Reconnect your instrument or continue playing with your mouse.</span><button id="returning-midi-retry" type="button">Reconnect MIDI</button></aside>
+            </div>
+            <div class="mvp-actions mvp-listen-complete-action">
+              <button id="onboarding-listen-continue" class="mvp-button mvp-button-primary" type="button" hidden>Continue</button>
+            </div>
+          </div>
+        </div>
+        <div id="onboarding-listen-piano-host" class="mvp-piano-host mvp-listen-piano-host" aria-label="Playable on-screen piano"></div>
+        <div id="onboarding-control-row" class="mvp-control-row">
+        <div class="mvp-control-column">
+        <section id="metronome-board" class="mvp-metronome-board" aria-label="Metronome Board" hidden>
+          <button id="metronome-toggle" type="button" aria-pressed="false" aria-label="Metronome"><span id="metronome-beat-lamp" class="metronome-beat-lamp" aria-hidden="true"></span><span>BPM</span></button>
+          <div id="metronome-tempo-controls" class="mvp-tempo-controls" role="group" aria-label="Tempo">
+            <button id="bpm-minus" type="button" aria-label="Decrease tempo by 10 BPM">−</button>
+            <input id="bpm" type="text" inputmode="numeric" pattern="[0-9]*" aria-label="BPM" autocomplete="off">
+            <button id="bpm-plus" type="button" aria-label="Increase tempo by 10 BPM">+</button>
+          </div>
+        </section>
+        <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden aria-label="Choose Your 0">0</button>
+        </div>
+        <aside id="keyboard-range-warning" class="mvp-range-warning" hidden><span>This piece uses notes outside your keyboard range.</span></aside>
+        <section id="practice-board" class="mvp-practice-board" aria-label="Practice Board" hidden>
+          <button id="practice-board-mode" type="button" aria-pressed="false">Practice</button>
+          <button id="practice-left-hand" type="button" aria-pressed="true">Left Hand</button>
+          <button id="practice-right-hand" type="button" aria-pressed="true">Right Hand</button>
+          <button id="practice-one-skill" type="button" disabled title="Coming later">One Skill</button>
+        </section>
+        </div>
+      </section>
+    </main>
+  </section>
+  <main class="playback-page">
+    <header class="playback-header">
+      <div><h1>When the Saints Go Marching In — Play12 Manual</h1><p>Approved onboarding fragment · audio clock</p></div>
+      <output id="position" class="playback-position" aria-live="off"></output>
+    </header>
+    <section id="playback-stage" class="playback-stage" aria-label="Moving Play12 Note Field">
+        <section id="round-loop-module" class="playback-service-panel round-loop-control">
+          <div class="playback-service-panel-heading">Round / Loop Control</div>
+          <div class="playback-service-panel-body">
+            <div class="round-navigation"><button id="previous-round" type="button" aria-label="Previous round">←</button><button id="next-round" type="button" aria-label="Next round">→</button></div>
+            <label class="module-toggle"><input id="loop" type="checkbox"> Loop</label>
+            <label>Gap <select id="loop-gap"><option value="direct">Direct</option><option value="empty-round">Empty round</option></select></label>
+            <label>From <select id="loop-start"></select></label>
+            <span aria-hidden="true">→</span>
+            <label>To <select id="loop-end"></select></label>
+          </div>
+        </section>
+        <section id="settings-module" class="playback-service-panel settings-control">
+          <div class="playback-service-panel-heading">Settings</div>
+          <div class="playback-service-panel-body settings-panel-body">
+            <button id="choose-zero" type="button">Choose your 0</button>
+            <label>Grid <select id="grid-resolution"><option selected>1/4</option><option>1/8</option><option>1/16</option><option>1/32</option><option>1/64</option></select></label>
+            <label class="module-toggle"><input id="count-in" type="checkbox" checked> Count-in</label>
+            <label class="module-toggle"><input id="music-audio" type="checkbox" checked> Music Audio</label>
+            <label class="module-toggle"><input id="practice-mode" type="checkbox"> Practice</label>
+          </div>
+        </section>
+      <section id="metronome-module" class="metronome-mode" aria-label="Metronome Mode">
+        <label class="module-toggle"><input id="metronome" type="checkbox" checked> Metronome</label>
+        <label>Volume <select id="metronome-volume"><option>0</option><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
+      </section>
+      <div id="round-training-progress" class="round-training-progress" hidden aria-label="Clean Round progress"><div id="round-success-track" class="round-success-track"></div></div>
+      <div id="unified-playback-block" class="unified-playback-block">
+        <section id="round-loop-board" class="mvp-round-loop-board" aria-label="Round controls" hidden>
+          <div id="round-timeline" class="round-timeline" aria-label="Composition rounds"><div id="round-strip" class="round-strip"><div id="round-loop-frame" class="round-loop-frame" hidden></div></div><span id="round-playhead" class="round-playhead" aria-hidden="true"></span></div>
+          <div class="round-controls">
+            <div id="round-navigation" class="round-navigation"><button id="round-previous" aria-label="Previous round" type="button">▼</button><output id="current-round" aria-label="Current round">1</output><button id="round-next" aria-label="Next round" type="button">▲</button></div>
+            <button id="round-loop-toggle" type="button" aria-pressed="false">Loop</button>
+            <div id="round-range-controls" class="round-range-controls">
+              <div class="round-stepper"><span>From</span><button id="round-from-minus" type="button" aria-label="Decrease From round">−</button><output id="round-from">1</output><button id="round-from-plus" type="button" aria-label="Increase From round">+</button></div>
+              <div class="round-stepper"><span>To</span><button id="round-to-minus" type="button" aria-label="Decrease To round">−</button><output id="round-to">1</output><button id="round-to-plus" type="button" aria-label="Increase To round">+</button></div>
+            </div>
+            <button id="round-precount-toggle" type="button" aria-pressed="false">Pre-count</button>
+          </div>
+        </section>
+        <div id="playline" class="playback-zone" aria-label="Playback Zone">
+          <span id="timecode" class="playback-timecode">00:00 / 00:00</span>
+          <div class="playback-zone-transport" aria-label="Playback controls">
+            <button id="play" type="button">Play</button>
+            <button id="pause" type="button">Pause</button>
+            <button id="restart" type="button">Restart</button>
+          </div>
+          <span id="progress-head" class="playback-progress-head" aria-hidden="true"></span>
+          <button id="playback-grid" class="playback-grid-control" type="button" aria-label="Change display grid">×4</button>
+        </div>
+        <div id="grid-pulse" class="playback-grid-pulse" aria-hidden="true"></div>
+        <div id="play12-score" class="play12-render-root playback-score"></div>
+      </div>
+      <div id="piano-view" class="play12-piano-view" aria-label="Piano View"></div>
+      <section id="zero-chooser" class="zero-chooser mvp-zero-chooser-card" hidden aria-label="Choose Your 0" role="dialog" aria-modal="true">
+        <div id="zero-instruction">
+          <strong>Choose your 0</strong>
+          <p id="zero-prompt">Press any comfortable key on your piano, or choose a key with your mouse on the on-screen piano</p>
+        </div>
+        <div id="zero-confirmation" hidden>
+          <strong>Confirm your 0</strong>
+          <div class="mvp-zero-actions"><button id="use-zero" class="mvp-button mvp-button-primary" type="button">Yes</button><button id="choose-another-zero" class="mvp-button mvp-button-secondary" type="button">Choose another 0</button></div>
+        </div>
+      </section>
+      <aside id="midi-diagnostic" class="midi-diagnostic" hidden data-ui-module="midi-diagnostic" aria-label="Web MIDI Diagnostic">
+        <div class="midi-diagnostic-heading"><strong>Web MIDI Diagnostic v0.1</strong><button id="midi-recalibrate" type="button">Recalibrate keyboard</button><button id="enable-midi" type="button">Enable MIDI</button></div>
+        <dl>
+          <div><dt>MIDI status</dt><dd id="midi-status">Not connected</dd></div>
+          <div><dt>Input</dt><dd id="midi-input-name">—</dd></div>
+          <div><dt>Manufacturer</dt><dd id="midi-manufacturer">—</dd></div>
+          <div><dt>Event</dt><dd id="midi-event-type">—</dd></div>
+          <div><dt>MIDI note</dt><dd id="midi-note">—</dd></div>
+          <div><dt>Pitch</dt><dd id="midi-pitch">—</dd></div>
+          <div><dt>Velocity</dt><dd id="midi-velocity">—</dd></div>
+          <div><dt>Channel</dt><dd id="midi-channel">—</dd></div>
+          <div><dt>Active MIDI notes</dt><dd id="midi-active-notes">—</dd></div>
+        </dl>
+        <p id="midi-message" class="midi-diagnostic-message" aria-live="polite">Press Enable MIDI and allow access to your connected instrument.</p>
+      </aside>
+      <aside id="composition-review-inspector" class="composition-review-inspector" hidden aria-label="Selected note inspector">
+        <div class="composition-review-heading"><strong>Note Inspector</strong><span id="review-status">Selected</span><button id="review-close" type="button" aria-label="Close note inspector">×</button></div>
+        <dl class="composition-review-info">
+          <div><dt>Event ID</dt><dd id="review-event-id">—</dd></div>
+          <div><dt>Pitch</dt><dd><span id="review-pitch-name">—</span> · MIDI <input id="review-midi" type="number" min="21" max="108" step="1"></dd></div>
+          <div><dt>Play12</dt><dd id="review-symbol">—</dd></div>
+          <div><dt>Hand</dt><dd><select id="review-hand"><option value="R">RH</option><option value="L">LH</option></select></dd></div>
+          <div><dt>Finger</dt><dd><select id="review-finger"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></dd></div>
+          <div><dt>Finger source</dt><dd id="review-fingering-source">—</dd></div>
+          <div><dt>Start (q)</dt><dd><input id="review-start" type="number" min="0" step="any"></dd></div>
+          <div><dt>Duration (q)</dt><dd><input id="review-duration" type="number" min="0" step="any"></dd></div>
+          <div><dt>Measure</dt><dd id="review-measure">—</dd></div>
+          <div><dt>Grid</dt><dd><select id="review-grid-select"><option>1/4</option><option selected>1/8</option><option>1/16</option><option>1/32</option><option>1/64</option></select><span id="review-grid" hidden>1/8</span></dd></div>
+        </dl>
+        <div class="composition-review-actions">
+          <button id="review-save" type="button">Save edit</button>
+          <button id="review-undo" type="button">Undo last edit</button>
+          <button id="review-reset" type="button">Reset selected note</button>
+          <button id="review-delete" type="button">Delete selected note</button>
+          <button id="review-reset-all" type="button">Reset all manual edits</button>
+        </div>
+      </aside>
+      <section id="manual-review-toolbar" class="manual-review-toolbar" hidden aria-label="Manual score review controls">
+        <strong>Manual score review</strong>
+        <label>Grid <select id="manual-review-grid"><option>1/4</option><option selected>1/8</option><option>1/16</option><option>1/32</option><option>1/64</option></select></label>
+      </section>
+    </section>
+  </main>
+  <script>if(window.Play12Routes){Play12Routes.languages(document.querySelector('.mvp-language-switch'),window.__PLAY12_MAIN__?'main':'tutorial');const mainLink=document.getElementById('tutorial-main-link');if(mainLink)mainLink.href=Play12Routes.path('main');}</script>
+  <script src="play12-i18n.js?v=en-routes-1"></script>
+  <script src="../editor/core.js?v=editor-03"></script>
+  <script src="play12-renderer.js?v=en-routes-1"></script>
+  <script src="play12-repetitions.js?v=player-shell-01"></script>
+  <script src="cards-svg-theme.js?v=approved-strips-1"></script>
+  <script src="piano-view.js?v=mobile-1"></script>
+  <script src="play12-precount-view.js?v=round-final-01"></script>
+  <script src="play12-round-board.js?v=en-routes-1"></script>
+  <script src="play12-playback.js?v=en-routes-1"></script>
+  <script src="web-midi-diagnostic.js?v=en-routes-1"></script>
+  <script src="draggable-modules.js?v=fixed-core-2"></script>
+  <script src="play12-coach.js?v=mobile-1"></script>
+  <script src="training-shell.js?v=1.4"></script>
+  <script src="training-zones.js?v=mobile-1"></script>
+  <script src="tutorial-layout.js?v=mobile-1"></script>
+  <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=1.4.3','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=en-routes-1'])document.write('<link rel="stylesheet" href="'+href+'">');}</script>
+  <script src="play12-onboarding.js?v=en-routes-1"></script>
+  <script src="when-the-saints-review.js?v=editable-review-02d"></script>
+  <script>
+    window.addEventListener('unhandledrejection', event => { if (new URLSearchParams(location.search).has('composition')) { const msg = document.createElement('p'); msg.textContent = 'Не удалось открыть композицию: ' + (event.reason?.message || event.reason); document.body.prepend(msg); } });
+    const playbackParams = new URLSearchParams(location.search);
+    const saintsReviewMode = playbackParams.get('review') === 'when-the-saints';
+    const saintsManualReviewMode = playbackParams.get('review') === 'when-the-saints-manual';
+    const previewId = playbackParams.get('preview');
+    const savedCompositionId = playbackParams.get('composition') || (previewId ? 'preview:'+previewId : null);
+    const loadEditorDocument = () => { if (!previewId) return Play12Editor.Store.get(savedCompositionId); const raw=sessionStorage.getItem('play12.preview:'+previewId); if(!raw) return Promise.reject(new Error('Предпросмотр недоступен. Откройте прослушивание из редактора повторно.')); return Promise.resolve(JSON.parse(raw)); };
+    const mainMode = window.__PLAY12_MAIN__ === true;
+    const compositionReviewMode = mainMode || saintsReviewMode || saintsManualReviewMode || !!savedCompositionId;
+    if (compositionReviewMode) {
+      document.body.classList.remove('play12-onboarding-boot', 'play12-onboarding-active');
+      document.body.classList.add('play12-onboarding-dismissed', 'play12-composition-review');
+      document.getElementById('play12-onboarding').hidden = true;
+    }
+    if (saintsManualReviewMode) document.getElementById('manual-review-toolbar').hidden = false;
+    window.play12Onboarding = compositionReviewMode ? null : Play12Onboarding.create({
+      root: document.getElementById('play12-onboarding'),
+      startButton: document.getElementById('onboarding-start'),
+      continueButton: document.getElementById('onboarding-continue')
+    });
+    if (!mainMode || savedCompositionId) Promise.all([
+      savedCompositionId ? loadEditorDocument().then(doc => { if (!doc) throw new Error('Сохранённое произведение не найдено в этом браузере'); window.play12EditorDocument = doc; document.title = doc.title + ' — Play12'; return Play12Editor.effective(doc); }) : fetch(saintsReviewMode ? '../examples/when_the_saints_play12_beginner.play12.json' : '../examples/when_the_saints_manual.play12.json').then(r => r.json()),
+      Play12CardThemes.loadReadyAssets(),
+      saintsReviewMode ? fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json()) : Promise.resolve(null)
+    ]).then(([baseScore, cardTheme, seedReviewOverlay]) => {
+      let score = baseScore;
+      const originalTempo = Number(baseScore.score.parts.flatMap(part => part.measures)
+        .flatMap(measure => measure.tempo_marks || []).find(mark => Number(mark.bpm) > 0)?.bpm) || 120;
+      const tempoStorageKey = `play12.tempo.v1:${baseScore.score.title}:${originalTempo}`;
+      let savedTempo = {};
+      try { savedTempo = JSON.parse(localStorage.getItem(tempoStorageKey)) || {}; } catch (_) {}
+      const onboardingBpm = Number.isFinite(savedTempo.bpm) && savedTempo.bpm >= 30 && savedTempo.bpm <= 240 ? savedTempo.bpm : originalTempo;
+      document.getElementById('bpm').value = String(onboardingBpm);
+      // BPM persists, but every page/session starts with the metronome explicitly OFF.
+      document.getElementById('metronome').checked = false;
+      document.getElementById('count-in').checked = false;
+      document.getElementById('music-audio').checked = true;
+      document.getElementById('practice-mode').checked = false;
+      document.getElementById('loop').checked = false;
+      const savedLoopGap = localStorage.getItem('play12.loop-gap');
+      document.getElementById('loop-gap').value = savedLoopGap === 'empty-round' ? 'empty-round' : 'direct';
+      const savedMetronomeVolume = Number(localStorage.getItem('play12.metronome-volume'));
+      document.getElementById('metronome-volume').value = String(Number.isInteger(savedMetronomeVolume) && savedMetronomeVolume >= 0 && savedMetronomeVolume <= 6 ? savedMetronomeVolume : 4);
+      const scoreRoot = document.getElementById('play12-score');
+      const zeroStorageKey = 'play12.zero_note.midi';
+      const zeroPitchClassStorageKey = 'play12.zero_note.pitch_class';
+      const savedZeroMidi = localStorage.getItem(zeroStorageKey)==null?NaN:Number(localStorage.getItem(zeroStorageKey));
+      const savedPitchClass = localStorage.getItem(zeroPitchClassStorageKey)==null?NaN:Number(localStorage.getItem(zeroPitchClassStorageKey));
+      const pitchClasses = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+      const referenceZeroNote = Number.isInteger(score.play12.reference_zero_midi)
+        ? score.play12.reference_zero_midi
+        : Array.from({length: 88}, (_, index) => index + 21).find(midi => pitchClasses[midi % 12] === score.play12.zero_pitch_class);
+      if (!Number.isInteger(referenceZeroNote)) throw new Error(`Не удалось определить reference zero для ${score.play12.zero_pitch_class}`);
+      const restoredPitchClass = compositionReviewMode && !mainMode
+        ? referenceZeroNote % 12
+        : Number.isInteger(savedPitchClass) && savedPitchClass >= 0 && savedPitchClass < 12
+          ? savedPitchClass
+          : Number.isInteger(savedZeroMidi) && savedZeroMidi >= 21 && savedZeroMidi <= 108 ? savedZeroMidi % 12 : referenceZeroNote % 12;
+      const initialZeroMidi = savedCompositionId && !mainMode ? referenceZeroNote : Play12PianoView.layoutZeroForMidi(restoredPitchClass, 21);
+      const defaultZeroMidi = Play12PianoView.layoutZeroForMidi(referenceZeroNote, 21);
+      const reviewGrid = saintsReviewMode ? document.getElementById('review-grid-select') : saintsManualReviewMode ? document.getElementById('manual-review-grid') : document.getElementById('grid-resolution');
+      const reviewController = saintsReviewMode ? Play12CompositionReview.create({
+        baseDocument: baseScore,
+        seedOverlay: seedReviewOverlay,
+        root: document.getElementById('composition-review-inspector'),
+        gridSelect: reviewGrid
+      }) : null;
+      if (reviewController) score = reviewController.effective();
+      const reviewMeasureCount = score.score.parts[0].measures.length;
+      const repetitionSegments = Play12Repetitions.detect(score);
+      const render = resolution => Play12Renderer.render(score, scoreRoot, {
+        measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
+        segments: repetitionSegments, roundMarkerPlacement: mainMode || !compositionReviewMode ? 'left-top' : 'side',
+        onboardingLayout: !savedCompositionId, editorTimeline: !!savedCompositionId, unassignedDisplay: !!savedCompositionId, wrapCycles: !!savedCompositionId, noteSelectionEnabled: saintsReviewMode || mainMode,
+        selectedEventId: reviewController?.getSelectedId(), onNoteSelect: eventId => { if(mainMode) window.play12Main?.select(eventId); else reviewController?.select(eventId); },
+        zeroNote: score.play12.zero_pitch_class,
+        countWords: window.Play12I18n.isRu()?{1:'РАЗ',2:'ДВА',3:'ТРИ',4:'ЧЕ'}:{1:'ONE',2:'TWO',3:'THREE',4:'FOUR'},
+        countAnd: window.Play12I18n.isRu()?'И':'AND'
+      });
+      const gridOptions = ['1/4', '1/8', '1/16', '1/32', '1/64'];
+      const gridMetadata = score.play12.recommended_grid || score.play12.default_grid;
+      // Without per-composition metadata retain the established configured display default.
+      const recommendedGrid = gridOptions.includes(gridMetadata) ? gridMetadata : reviewGrid.value;
+      const unifiedGrid=mainMode||!compositionReviewMode;
+      const gridStorageKey='play12.display-grid.v1:'+(savedCompositionId||'tutorial');
+      if(unifiedGrid){for(const option of [...reviewGrid.options])if(option.value==='1/64')option.remove();const saved=localStorage.getItem(gridStorageKey);reviewGrid.value=['1/4','1/8','1/16','1/32'].includes(saved)?saved:'1/4';}
+      else if (!compositionReviewMode) reviewGrid.value = recommendedGrid;
+      const gridButton = document.getElementById('playback-grid');
+      const syncGridButton = () => {
+        gridButton.textContent = `×${unifiedGrid?Play12Playback.mainGridState(reviewGrid.value).multiplier:reviewGrid.value.split('/')[1]}`;
+        gridButton.setAttribute('aria-label', window.Play12I18n.t('Display grid {grid}; click to subdivide', {grid:reviewGrid.value}));
+      };
+      syncGridButton();
+      const svg = render(reviewGrid.value);
+      const pianoView = Play12PianoView.render({
+        mount: document.getElementById('piano-view'),
+        zeroMidi: initialZeroMidi,
+        colors: Play12Renderer.defaults.colors,
+        cardTheme,
+        minMidi: 21,
+        maxMidi: 108
+      });
+      const globalStarts = [...svg.querySelectorAll('g[data-event-id]')].map(node => Number(node.dataset.globalStartQuarters));
+      // The Manual transcription starts on the strong beat even though its
+      // first note enters on TWO. Preserve the empty ONE / AND lead-in.
+      const timelineOffset = saintsReviewMode ? Math.min(...globalStarts) : 0;
+      const rounds = [];
+      let globalMeasureStart = 0;
+      for (const measure of score.score.parts[0].measures.slice(0, reviewMeasureCount)) {
+        const time = measure.attributes.time;
+        const length = savedCompositionId ? Number(new Play12Editor.Q(measure.editor_duration_q)) : time.beats * 4 / time.beat_type;
+        rounds.push({
+          index: measure.index,
+          implicit: measure.implicit === true,
+          measureStart: globalMeasureStart - timelineOffset,
+          start: Math.max(0, globalMeasureStart - timelineOffset),
+          end: globalMeasureStart + length - timelineOffset,
+          beats: time.beats,
+          beatType: time.beat_type,
+          beatQuarters: 4 / time.beat_type,
+          measureQuarters: length
+        });
+        globalMeasureStart += length;
+      }
+      const loopStart = document.getElementById('loop-start');
+      const loopEnd = document.getElementById('loop-end');
+      rounds.forEach((round, index) => {
+        loopStart.add(new Option(`Round ${index + 1}`, index));
+        loopEnd.add(new Option(`Round ${index + 1}`, index));
+      });
+      loopEnd.value = rounds.length > 1 ? '1' : '0';
+      window.play12Playback = Play12Playback.start({
+        svg, stage: document.getElementById('playback-stage'), playline: document.getElementById('playline'),
+        playButton: document.getElementById('play'), pauseButton: document.getElementById('pause'),
+        restartButton: document.getElementById('restart'), bpmInput: document.getElementById('bpm'),
+        positionOutput: document.getElementById('position'), initialBpm: onboardingBpm, originalTempo, tempoStorageKey,
+        metronomeButton: document.getElementById('metronome-toggle'),
+        bpmMinus: document.getElementById('bpm-minus'), bpmPlus: document.getElementById('bpm-plus'),
+        metronomeInput: document.getElementById('metronome'), countInInput: document.getElementById('count-in'),
+        musicAudioInput: document.getElementById('music-audio'), practiceModeInput: document.getElementById('practice-mode'), timelineOffset, rounds,
+        previousRoundButton: document.getElementById('previous-round'), nextRoundButton: document.getElementById('next-round'),
+        loopInput: document.getElementById('loop'), loopGapInput: document.getElementById('loop-gap'), loopStartInput: loopStart, loopEndInput: loopEnd,
+        metronomeVolumeInput: document.getElementById('metronome-volume'),
+        gridResolutionInput: reviewGrid, pulse: document.getElementById('grid-pulse'),
+        progressHead: document.getElementById('progress-head'), timecode: document.getElementById('timecode'), pianoView,
+        referenceZeroNote, runtimeZeroNote: initialZeroMidi,
+        musicSchedule: savedCompositionId ? Play12Editor.contacts(score).contacts.map(c => ({id:c.id, start:Number(new Play12Editor.Q(c.start)), duration:Number(new Play12Editor.Q(c.end).sub(c.start)), hand:c.hand, sourceMidi:c.key, dynamic:'mf'})).concat(Play12Editor.events(score).filter(e => !e.editor_supported || !e.hand).filter(e => !e.grace && Number.isInteger(e.pitch.midi) && Number(new Play12Editor.Q(e.duration_quarters)) > 0).map(e => ({id:e.id,start:Number(new Play12Editor.Q(e.editor_onset_q)),duration:Number(new Play12Editor.Q(e.duration_quarters)),hand:e.hand || 'R',sourceMidi:e.pitch.midi,dynamic:'mf'}))) : null,
+        beatLamp: document.getElementById('metronome-beat-lamp')
+      });
+      if(compositionReviewMode&&!mainMode){
+        const stage=document.getElementById('playback-stage'),host=document.createElement('div'),keyboardHost=document.createElement('div');
+        host.className='mvp-playback-host';keyboardHost.className='mvp-piano-host';stage.before(host);host.after(keyboardHost);
+        Play12TrainingShell.placePiano(pianoView.mount,keyboardHost);
+        Play12TrainingShell.mountWorkspace(stage,host,document.getElementById('playline'));
+        pianoView.syncContainer();window.play12Playback.layoutCoreGeometry();
+      }
+      if (savedCompositionId && !mainMode) {
+        const bar = document.createElement('section'); bar.setAttribute('aria-label','Тренировка сохранённой композиции');
+        bar.style.cssText='display:flex;flex-wrap:wrap;gap:8px;padding:18px;justify-content:center;background:#f5f5f5;position:relative;z-index:20';
+        const label = document.createElement('strong');label.textContent = window.play12EditorDocument.title;bar.append(label);
+        const settings = {practiceModeEnabled:false,practiceLeftHandEnabled:true,practiceRightHandEnabled:true};
+        for (const [key,text] of [['practiceModeEnabled','Практика'],['practiceLeftHandEnabled','Левая рука'],['practiceRightHandEnabled','Правая рука']]) {
+          const button = document.createElement('button');button.textContent=text;button.style.cssText='padding:8px 12px;border:1px solid #aaa;border-radius:8px;background:white';
+          const paint = () => button.setAttribute('aria-pressed',String(settings[key]));paint();
+          button.addEventListener('click',()=>{ if (key!=='practiceModeEnabled' && settings[key] && !settings[key==='practiceLeftHandEnabled'?'practiceRightHandEnabled':'practiceLeftHandEnabled']) return;settings[key]=!settings[key];window.play12Playback.setPracticeSettings(settings);paint(); });bar.append(button);
+        }
+        const tempo = document.createElement('input');tempo.type='number';tempo.min='30';tempo.max='240';tempo.value=String(originalTempo);tempo.setAttribute('aria-label','Темп BPM');tempo.style.width='75px';tempo.addEventListener('change',()=>{document.getElementById('bpm').value=tempo.value;window.play12Playback.changeBpm();tempo.value=document.getElementById('bpm').value;});bar.append(tempo);
+        const back = document.createElement('a');back.href='../editor/';back.textContent='Вернуться в редактор';bar.append(back);document.querySelector('main.playback-page').prepend(bar);
+        reviewGrid.addEventListener('change',()=>{window.play12Playback.pauseImmediate();window.play12Playback.replaceSvg(render(reviewGrid.value));syncGridButton();});
+      }
+      window.play12Playback.roundBoard = Play12RoundBoard.create({root: document.getElementById('round-loop-board'), playback: window.play12Playback, repetitions: repetitionSegments, title: baseScore.score.title});
+      reviewController?.connect(effectiveScore => {
+        score = effectiveScore;
+        window.play12Playback.pauseImmediate();
+        window.play12Playback.replaceSvg(render(reviewGrid.value));
+        reviewController.syncSelection();
+      });
+      if (saintsManualReviewMode) reviewGrid.addEventListener('change', () => {
+        window.play12Playback.pauseImmediate();
+        window.play12Playback.replaceSvg(render(reviewGrid.value));
+      });
+      Object.assign(document.getElementById('playback-stage').dataset, {
+        selectedPitchClass: String(restoredPitchClass), layoutZeroNote: String(initialZeroMidi), zeroMidi: String(initialZeroMidi)
+      });
+      const zeroChooser = document.getElementById('zero-chooser');
+      const zeroPrompt = document.getElementById('zero-prompt');
+      const zeroInstruction = document.getElementById('zero-instruction');
+      const zeroConfirmation = document.getElementById('zero-confirmation');
+      const chooseZero = document.getElementById('choose-zero');
+      const onboardingChooseZero = document.getElementById('onboarding-choose-zero');
+      const useZero = document.getElementById('use-zero');
+      const chooseAnotherZero = document.getElementById('choose-another-zero');
+      let choosingZero = false;
+      let candidateZeroMidi = null;
+      let candidateZeroPitchClass = null;
+      const waitForZero = () => {
+        candidateZeroMidi = null;
+        candidateZeroPitchClass = null;
+        delete zeroChooser.dataset.candidateZeroPitchClass;
+        delete zeroChooser.dataset.candidateLayoutZeroNote;
+        zeroInstruction.hidden = false;
+        zeroConfirmation.hidden = true;
+        zeroPrompt.textContent = 'Press any comfortable key on your piano, or choose a key with your mouse on the on-screen piano';
+      };
+      const previewZero = (selectedMidiNote, source) => {
+        const midiNote = Play12PianoView.layoutZeroForMidi(selectedMidiNote, 21);
+        if (!choosingZero || !['mouse', 'midi'].includes(source) || !Number.isInteger(midiNote) || midiNote < 21 || midiNote > 108) return;
+        candidateZeroPitchClass = ((selectedMidiNote % 12) + 12) % 12;
+        candidateZeroMidi = midiNote;
+        Object.assign(zeroChooser.dataset, {
+          candidateZeroPitchClass: String(candidateZeroPitchClass), candidateLayoutZeroNote: String(candidateZeroMidi)
+        });
+        zeroInstruction.hidden = true;
+        zeroConfirmation.hidden = false;
+        window.dispatchEvent(new CustomEvent('play12:zero-ui-candidate'));
+      };
+      const beginZeroSelection = () => {
+        if (window.play12Playback.practiceEnabled()) window.play12Playback.requestPause();
+        choosingZero = true;
+        zeroChooser.dataset.choosingZero = 'true';
+        zeroChooser.hidden = false;
+        waitForZero();
+        window.dispatchEvent(new CustomEvent('play12:zero-ui-open'));
+      };
+      window.play12Playback.addNoteListener(event => {
+        if (event.type === 'note-on' && event.velocity > 0) previewZero(event.midiNote, event.source);
+      });
+      chooseZero.addEventListener('click', beginZeroSelection);
+      onboardingChooseZero?.addEventListener('click', beginZeroSelection);
+      window.addEventListener('play12:choose-zero-open', beginZeroSelection);
+      window.addEventListener('play12:choose-zero-close', () => {
+        choosingZero = false;
+        zeroChooser.dataset.choosingZero = 'false';
+        zeroChooser.hidden = true;
+      });
+      chooseAnotherZero.addEventListener('click', () => { waitForZero(); window.dispatchEvent(new CustomEvent('play12:zero-ui-open')); });
+      useZero.addEventListener('click', () => {
+        if (candidateZeroMidi == null) return;
+        pianoView.setZeroMidi(candidateZeroMidi);
+        window.play12Playback.setRuntimeZeroNote(candidateZeroMidi);
+        localStorage.setItem(zeroStorageKey, String(candidateZeroMidi));
+        localStorage.setItem(zeroPitchClassStorageKey, String(candidateZeroPitchClass));
+        choosingZero = false;
+        zeroChooser.dataset.choosingZero = 'false';
+        zeroChooser.hidden = true;
+        Object.assign(document.getElementById('playback-stage').dataset, {
+          selectedPitchClass: String(candidateZeroPitchClass), layoutZeroNote: String(candidateZeroMidi), zeroMidi: String(candidateZeroMidi)
+        });
+        if (savedCompositionId) { const warning = document.getElementById('keyboard-range-warning'); warning.hidden = false; warning.textContent = 'Физическая транспозиция: применимость аппликатуры устарела. Вернитесь в редактор для проверки.'; }
+        window.dispatchEvent(new CustomEvent('play12:zero-confirmed', { detail: {
+          selectedPitchClass: candidateZeroPitchClass, layoutZeroNote: candidateZeroMidi
+        }}));
+      });
+      if (playbackParams.get('midi') === '1' || window.Play12I18n.isRu()) document.getElementById('midi-diagnostic').hidden = false;
+      const onboardingRoot = document.getElementById('play12-onboarding');
+      const commandAvailability = action => {
+        const playbackAllowed = onboardingRoot.hidden || onboardingRoot.dataset.playbackShortcutsEnabled === 'true';
+        if (['play','pause','restart'].includes(action)) return playbackAllowed && window.play12Playback.commandAvailable(action);
+        if (['metronome','bpm-down','bpm-up'].includes(action)) return !document.getElementById('metronome-board').hidden && window.play12Playback.commandAvailable(action);
+        if (['previous-round','next-round'].includes(action)) return !document.getElementById('round-loop-board').hidden && window.play12Playback.commandAvailable(action);
+        return false;
+      };
+      window.play12MidiDiagnostic = Play12MidiDiagnostic.create({
+        root: document.getElementById('midi-diagnostic'), enableButton: document.getElementById('enable-midi'), pianoView,
+        noteEvents: window.play12Playback,
+        commandActions: {
+          available: commandAvailability,
+          run: action => window.play12Playback.runCommand(action)
+        }
+      });
+      const rangeWarning = document.getElementById('keyboard-range-warning');
+      const applyPianoRange = calibration => {
+        // Main resolves the connected input and visual policy in TrainingZones.
+        if (mainMode || !calibration?.verified) return false;
+        pianoView.setRange(calibration.leftMidi, calibration.rightMidi);
+        const outside = window.play12Playback.events.some(event => event.midi < calibration.leftMidi || event.midi > calibration.rightMidi);
+        rangeWarning.hidden = !outside;
+        return true;
+      };
+      applyPianoRange(window.play12MidiDiagnostic.getCalibration());
+      window.play12MidiDiagnostic.addCalibrationListener(event => {
+        if (event.type === 'complete') applyPianoRange(event.calibration);
+      });
+      window.addEventListener('play12:zero-confirmed', () => applyPianoRange(window.play12MidiDiagnostic.getCalibration()));
+      document.getElementById('midi-recalibrate').addEventListener('click', () => {
+        window.dispatchEvent(new CustomEvent('play12:manual-recalibrate'));
+      });
+      const roundStorageKey = `play12.round-loop.v1:${baseScore.score.title}`;
+      const resetLearningSetup = () => {
+        for (const key of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.zero_note.pitch_class',
+          tempoStorageKey,roundStorageKey,'play12.loop-gap','play12.metronome-volume']) localStorage.removeItem(key);
+        window.play12MidiDiagnostic.clearCalibration?.();
+        pianoView.setRange(21,108);pianoView.setZeroMidi(defaultZeroMidi);
+        window.play12Playback.setRuntimeZeroNote(defaultZeroMidi);
+        window.play12Playback.bpmInput.value=String(originalTempo);window.play12Playback.changeBpm();
+        window.play12Playback.setMetronome(false,false);
+        window.play12Playback.setPracticeSettings({practiceModeEnabled:false,practiceLeftHandEnabled:true,practiceRightHandEnabled:true});
+        window.play12Playback.roundBoard?.reset?.();
+        window.play12Playback.pauseImmediate(0);rangeWarning.hidden=true;
+      };
+      window.play12Onboarding?.connectRuntime({
+        pianoView,
+        noteEvents: window.play12Playback,
+        midiDiagnostic: window.play12MidiDiagnostic || null,
+        playback: window.play12Playback,
+        stage: document.getElementById('playback-stage'),
+        resetLearningSetup
+      });
+      if (!compositionReviewMode) reviewGrid.addEventListener('change', event => {
+        window.play12Playback.pauseImmediate();
+        window.play12Playback.replaceSvg(render(event.target.value));
+        syncGridButton();
+      });
+      if(unifiedGrid)reviewGrid.addEventListener('change',()=>localStorage.setItem(gridStorageKey,reviewGrid.value));
+      gridButton.addEventListener('click', () => {
+        reviewGrid.value = unifiedGrid?Play12Playback.mainGridState(reviewGrid.value).next:Play12Playback.nextGridResolution(reviewGrid.value, recommendedGrid);
+        reviewGrid.dispatchEvent(new Event('change'));
+      });
+      window.play12Playback.stage.dataset.recommendedGrid = recommendedGrid;
+      if(mainMode) {
+        window.play12MainController = {
+          document: window.play12EditorDocument, playback: window.play12Playback,
+          refresh(nextDocument) {
+            const p=window.play12Playback, position=p.clock.position;
+            p.pauseImmediate(position); score=Play12Editor.effective(nextDocument);
+            p.replaceSvg(render(reviewGrid.value)); p.pauseImmediate(position);
+          }
+        };
+        reviewGrid.addEventListener('change',()=>{reviewGrid.value=Play12Playback.mainGridState(reviewGrid.value).grid;window.play12MainController.refresh(window.play12MainController.document);syncGridButton();});
+        window.dispatchEvent(new Event('play12:main-ready'));
+      }
+      if (playbackParams.has('at')) window.play12Playback.seek(Number(playbackParams.get('at')));
+      localStorage.removeItem('play12.ui-module-position.play-mode');
+      window.play12DraggableModules = Play12DraggableModules.init({
+        boundary: document.getElementById('playback-stage'),
+        modules: [
+          ['metronome-mode', document.getElementById('metronome-module')],
+          ['round-loop-control', document.getElementById('round-loop-module')],
+          ['settings', document.getElementById('settings-module')],
+          ['midi-diagnostic', document.getElementById('midi-diagnostic')]
+        ]
+      });
+    }).catch(error => { document.getElementById('play12-score').textContent = error.message; window.dispatchEvent(new CustomEvent('play12:load-error',{detail:error.message})); });
+  </script>
+<script src="../editor/library.js"></script></body>
+</html>

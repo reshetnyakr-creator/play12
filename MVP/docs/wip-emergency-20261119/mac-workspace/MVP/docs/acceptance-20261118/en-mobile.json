@@ -1,0 +1,76 @@
+{
+  "checks": [
+    "native P -> actual musical start -> OK12",
+    "real musical pass -> metronome-info",
+    "real musical pass -> round-info",
+    "metronome completed after five accepted actions, before whole-song end",
+    "real musical pass -> final-instruction",
+    "two separately completed passes of rounds 2–4",
+    "real musical pass -> completed"
+  ],
+  "errors": [],
+  "completed": {
+    "onboardingStarted": true,
+    "onboardingStep": "ONBOARDING_COMPLETE",
+    "onboardingCompleted": true,
+    "lastSessionExists": true,
+    "midiVerified": false,
+    "inputMode": "demo",
+    "midiUsbGuideSeen": false,
+    "playLearned": true,
+    "pauseLearned": true,
+    "listenFragmentCompleted": true,
+    "chooseZeroCompleted": true,
+    "successes": {
+      "listen-play": true,
+      "zero-confirmed": true,
+      "practice-enable": true,
+      "practice-hand": true,
+      "practice-start": true,
+      "practice-song": true,
+      "metronome-on": true,
+      "metronome-song": true,
+      "round-go4": true,
+      "round-loop": true,
+      "round-range": true,
+      "round-precount": true,
+      "round-song": true,
+      "final-song": true
+    },
+    "introducedPanels": {
+      "practice": true,
+      "metronome": true,
+      "rounds": true
+    },
+    "roundPasses": 2,
+    "metronomeStreak": 5,
+    "practiceModeEnabled": true,
+    "practiceLeftHandEnabled": false,
+    "practiceRightHandEnabled": true,
+    "oneSkillMode": false,
+    "activeSkillId": null,
+    "cardsSetupCompleted": true,
+    "zeroSetupStage": null,
+    "highestUnlockedStep": 6,
+    "listenGuideStage": "listening",
+    "practiceGuideStage": "completed",
+    "metronomeUnlocked": true,
+    "roundUnlocked": true
+  },
+  "geometry": {
+    "piano": {
+      "x": 12,
+      "y": 465.84375,
+      "width": 351,
+      "height": 160.15625,
+      "top": 465.84375,
+      "right": 363,
+      "bottom": 626,
+      "left": 12
+    },
+    "w": 375,
+    "h": 667,
+    "scroll": 375
+  },
+  "input": "native mouse/P and production NoteOn/Off input for expected notes, no hardware"
+}

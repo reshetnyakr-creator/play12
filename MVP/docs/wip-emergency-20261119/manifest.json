@@ -1,0 +1,842 @@
+{
+  "status": "WIP; unverified; not published",
+  "parent": "2dffc9b79ae26560d063a5d3e1788e99a8363f2f",
+  "source": "available Mac work/mobile-tablet-ux; former Linux environment unavailable",
+  "files": [
+    {
+      "path": "MVP/benchmarks/fur_elise_first_8_fingering_v1.json",
+      "sha": "9c20f053e11cb2f81f988b8eabb8a00f562a92e8",
+      "size": 46864
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/checks.txt",
+      "sha": "bb242d2735360e120b8c578315c6ae777444a878",
+      "size": 221
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/contracts-summary.json",
+      "sha": "bb76cbeffac1c0721fc565b00a6333ddb0a74f52",
+      "size": 643
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/en-desktop.json",
+      "sha": "735a6e3d77ea81760357537d6fe8bc7847e72e69",
+      "size": 2058
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/en-mobile.json",
+      "sha": "5ecb71c9378f34ce164f670ae08adc80e2215565",
+      "size": 2054
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/geometry.json",
+      "sha": "64844df39ecfc6b415654f6ed8efe9d2008efe0d",
+      "size": 32928
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/import-readiness.json",
+      "sha": "2562f0465cbde8bb3f42fbb98dc44b49991a08db",
+      "size": 230
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/library.json",
+      "sha": "2b2ec7fd4cb54270493b7f2dfc8227a327ca00e8",
+      "size": 452
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/midi.json",
+      "sha": "01d3df4b9145c743297a236d9e76aeeee6288998",
+      "size": 390
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/pixels.json",
+      "sha": "f0be461acb5d29b14432640f79b3f9f0c348ecb8",
+      "size": 506
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/routes.json",
+      "sha": "540eff9a0917ab699794e7859f83bcdbd851b7a2",
+      "size": 56011
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/stages.json",
+      "sha": "9591eaec9e952f572617dc0124b1390186e6e749",
+      "size": 162403
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/tutorial-midi-en.json",
+      "sha": "cf44d42848c4ec496091a86270024926712cbbf5",
+      "size": 612
+    },
+    {
+      "path": "MVP/docs/acceptance-20261118/tutorial-midi-ru.json",
+      "sha": "cf44d42848c4ec496091a86270024926712cbbf5",
+      "size": 612
+    },
+    {
+      "path": "MVP/docs/entry-menu-tutorial-start-validation.md",
+      "sha": "46b25ca828026251746b32faaf60ee9aaf48566f",
+      "size": 7127
+    },
+    {
+      "path": "MVP/docs/main-en-recovery-status-20261117.md",
+      "sha": "0ad555ea847d330948fd89b1e9a94dc7b824397b",
+      "size": 6810
+    },
+    {
+      "path": "MVP/docs/main-en-unified-routes-validation.md",
+      "sha": "a177b3c4bceba2d3f511f4805c2c20515c4ef9a7",
+      "size": 10239
+    },
+    {
+      "path": "MVP/docs/physical-midi-range-validation.md",
+      "sha": "57ec90d7a9a105e36327f31e23d99ee373366492",
+      "size": 1712
+    },
+    {
+      "path": "MVP/docs/tutorial-en-final-acceptance-20261118.md",
+      "sha": "4e171c17035458460222fddce8561cff60ac57eb",
+      "size": 6282
+    },
+    {
+      "path": "MVP/docs/tutorial-interaction-validation.md",
+      "sha": "d75d364d548544688c0061ab680e4187df079eaa",
+      "size": 7196
+    },
+    {
+      "path": "MVP/docs/tutorial-main-alignment-validation.md",
+      "sha": "4a9c8c35ac2dea0965f6cc140caecb6c481c6f1f",
+      "size": 6051
+    },
+    {
+      "path": "MVP/docs/tutorial-ru-en-round-progress-validation.md",
+      "sha": "89db06b42d24fd2c8f776a4ca1c5ed3c4a082523",
+      "size": 20504
+    },
+    {
+      "path": "MVP/editor/README.md",
+      "sha": "a88c03e54c40a1b6d0ef9e4ad815ac6e93034de3",
+      "size": 2064
+    },
+    {
+      "path": "MVP/editor/app.js",
+      "sha": "170afbe6f00f1801ebaeeb83a656a2200cecac46",
+      "size": 15336
+    },
+    {
+      "path": "MVP/editor/beginner.json",
+      "sha": "16d5f4422171ed6cce96bfe4e8d5e4643bf23fdb",
+      "size": 733
+    },
+    {
+      "path": "MVP/editor/core.js",
+      "sha": "1784f794c6cd9e345babd3b2762de39e8a0c716c",
+      "size": 18397
+    },
+    {
+      "path": "MVP/editor/editor.css",
+      "sha": "63ec7fcc5a71d6ede484aa53579362d910d16549",
+      "size": 5241
+    },
+    {
+      "path": "MVP/editor/import.js",
+      "sha": "5bfeff83f55bccff5d484b08e75a3ffc3c5d2fb1",
+      "size": 8297
+    },
+    {
+      "path": "MVP/editor/index.html",
+      "sha": "4b8dabf63210359e81d96598b7378bc9bee57bbf",
+      "size": 283
+    },
+    {
+      "path": "MVP/editor/library.js",
+      "sha": "59f6dae840c24e9207fb91694d17882290de796b",
+      "size": 1591
+    },
+    {
+      "path": "MVP/editor/mxl.js",
+      "sha": "d63f9f1725142d0becedbdca74c6e6408f445d11",
+      "size": 2445
+    },
+    {
+      "path": "MVP/editor/worker.js",
+      "sha": "bab9c29c2f9a775cb0e80ea51922bfea3e29833d",
+      "size": 219
+    },
+    {
+      "path": "MVP/entry.js",
+      "sha": "97f7b0217c1be6dd7b519863fbb6b8aca36a4288",
+      "size": 2541
+    },
+    {
+      "path": "MVP/examples/fur_elise_first_24_measures.candidates.v0.2.play12.json",
+      "sha": "0d8d1b525e0ee92af530e2b346960125dfe283a1",
+      "size": 1488570
+    },
+    {
+      "path": "MVP/examples/when_the_saints_manual.play12.json",
+      "sha": "7b02e508603bd9b5d2a0172fe271ab5360be178c",
+      "size": 86404
+    },
+    {
+      "path": "MVP/examples/when_the_saints_play12_beginner.play12.json",
+      "sha": "c9df38f0545d03dd201f9e3cbb54869fc749f879",
+      "size": 108507
+    },
+    {
+      "path": "MVP/import/index.html",
+      "sha": "e2e704fee8f9f2b40010a7e8cada56df13692a68",
+      "size": 359
+    },
+    {
+      "path": "MVP/import/page.html",
+      "sha": "1bdadff95fcb423db05ecb7ce0e088c9eb46681b",
+      "size": 9555
+    },
+    {
+      "path": "MVP/index.html",
+      "sha": "f58e881dd098bade5902cbfaf1afd07f37e3a878",
+      "size": 289
+    },
+    {
+      "path": "MVP/main/assets/Play12_Rock_Daisy_Avatar.png",
+      "sha": "9fdba50fe7ff2a1c917ebe8e0a8c5d796a989bbf",
+      "size": 1122670
+    },
+    {
+      "path": "MVP/main/data.js",
+      "sha": "70c59b51ac6046998cd0d57a96b615c34fdb4aa4",
+      "size": 4614
+    },
+    {
+      "path": "MVP/main/editing-adapter.js",
+      "sha": "69daa79479e3a5a72839178b81cc019ac40f3b53",
+      "size": 851
+    },
+    {
+      "path": "MVP/main/index.html",
+      "sha": "16cf4418688043e7057e36a0a6fda945288b35d7",
+      "size": 357
+    },
+    {
+      "path": "MVP/main/main.css",
+      "sha": "a8ae2bc06534d26114c2e5ed222614be760fcbfb",
+      "size": 7055
+    },
+    {
+      "path": "MVP/main/main.js",
+      "sha": "ea9943233e3d1f3425226ecf550045700e0ecf8b",
+      "size": 24771
+    },
+    {
+      "path": "MVP/menu/entry-menu.css",
+      "sha": "020207cdc622365967c4f23b832c0db52768c175",
+      "size": 961
+    },
+    {
+      "path": "MVP/menu/index.html",
+      "sha": "a64fa173e338d4b62245b6a6471db994a7f0a5e6",
+      "size": 1322
+    },
+    {
+      "path": "MVP/mobile-tablet.css",
+      "sha": "4201e283f9fa7b5fa026a209b80cc48ec1e11202",
+      "size": 6498
+    },
+    {
+      "path": "MVP/mobile-tablet.js",
+      "sha": "a51f8a5b909e2c6bb7362b5ab13bbfd104e21efb",
+      "size": 2465
+    },
+    {
+      "path": "MVP/music/beginner/when_the_saints_play12_beginner.musicxml",
+      "sha": "8e18a3692ed0e9d77015211ec0872b56243b1191",
+      "size": 31637
+    },
+    {
+      "path": "MVP/renderer/assets/midi-connection-guide.png",
+      "sha": "ec1392bc9b774d02fa103d1fc5846cc3be2927ce",
+      "size": 586374
+    },
+    {
+      "path": "MVP/renderer/assets/play12-v07/Piano_Roll.svg",
+      "sha": "46be67c00b97aa65934c57f2faf4e37204d84c80",
+      "size": 65030
+    },
+    {
+      "path": "MVP/renderer/assets/play12-v07/crad_blue.svg",
+      "sha": "f8df3b5f043745435197eabcee50b5f72d0266a1",
+      "size": 65773
+    },
+    {
+      "path": "MVP/renderer/assets/play12-v07/crad_green.svg",
+      "sha": "3f24ee9d913dc004b80ced000e8843aff371e409",
+      "size": 65774
+    },
+    {
+      "path": "MVP/renderer/assets/play12-v07/crad_orange.svg",
+      "sha": "b9e71c017bd60dc065491a901eefc4a8b13c8e2c",
+      "size": 65775
+    },
+    {
+      "path": "MVP/renderer/assets/play12-v07/crad_pink.svg",
+      "sha": "2a55c1a6686d34996022daccd0123a87cea1fc2c",
+      "size": 65773
+    },
+    {
+      "path": "MVP/renderer/assets/play12-v07/crad_purpl.svg",
+      "sha": "1b2dcf954b727c0db7656455119dae85dd6673a5",
+      "size": 65774
+    },
+    {
+      "path": "MVP/renderer/assets/play12-v07/crad_red.svg",
+      "sha": "f18f9f1aa4404d0d9bcf643fcd5365f4a37f3187",
+      "size": 65829
+    },
+    {
+      "path": "MVP/renderer/assets/play12-v07/crad_yello.svg",
+      "sha": "1a8042086383ad5e38294ca92061e4ffaac81d02",
+      "size": 65774
+    },
+    {
+      "path": "MVP/renderer/cards-svg-theme.js",
+      "sha": "dce0b3db815cc69fe4494b1789c81b4b555c566c",
+      "size": 980
+    },
+    {
+      "path": "MVP/renderer/draggable-modules.js",
+      "sha": "5a4574284743b233aefa77568df316c03fd3545c",
+      "size": 4475
+    },
+    {
+      "path": "MVP/renderer/music-workspace.css",
+      "sha": "477a115029b2c7097b6f6c14bfb6402e7cbfdd9c",
+      "size": 1324
+    },
+    {
+      "path": "MVP/renderer/piano-view.js",
+      "sha": "f1edd9a916640c3db640105fe599e6660566d1cc",
+      "size": 21364
+    },
+    {
+      "path": "MVP/renderer/play12-coach.js",
+      "sha": "3c1b5c10f3a76e5efe06b428bc4934527b8df0bc",
+      "size": 4157
+    },
+    {
+      "path": "MVP/renderer/play12-i18n.js",
+      "sha": "7c3e96fa5c112038e488c681f0acf96c61b65067",
+      "size": 20587
+    },
+    {
+      "path": "MVP/renderer/play12-onboarding.css",
+      "sha": "2c30b450e6a7781dd10504539f7cf90f050aa26d",
+      "size": 44741
+    },
+    {
+      "path": "MVP/renderer/play12-onboarding.js",
+      "sha": "fca4ff0168eb0b539fa70ea114a4e3c8c80846a8",
+      "size": 88349
+    },
+    {
+      "path": "MVP/renderer/play12-playback.css",
+      "sha": "e0a6aeeda30d4a7eff936c5c73087f10388bf98e",
+      "size": 17452
+    },
+    {
+      "path": "MVP/renderer/play12-playback.js",
+      "sha": "ba8c820dbd833a02360714f7be16d9ab93e7f9e5",
+      "size": 75537
+    },
+    {
+      "path": "MVP/renderer/play12-precount-view.js",
+      "sha": "bb13534496323a946edee77c905adf5a9494d016",
+      "size": 2424
+    },
+    {
+      "path": "MVP/renderer/play12-renderer.css",
+      "sha": "edd4d7e1e7233ef39b1bffcbcca327347b4ecfcf",
+      "size": 2879
+    },
+    {
+      "path": "MVP/renderer/play12-renderer.js",
+      "sha": "4048ba7e3b0c918028c565fe02583034088fe4b0",
+      "size": 19655
+    },
+    {
+      "path": "MVP/renderer/play12-repetitions.js",
+      "sha": "52ef942e49cb129a7e4bc26cd043b4dc6c23f65e",
+      "size": 3545
+    },
+    {
+      "path": "MVP/renderer/play12-round-board.js",
+      "sha": "e5da1b40573e4f907054086540f1bf8c7b117158",
+      "size": 14803
+    },
+    {
+      "path": "MVP/renderer/playback.html",
+      "sha": "3f5af22cdc95fe5b152afad5544c746022d803c0",
+      "size": 53835
+    },
+    {
+      "path": "MVP/renderer/training-corrections.css",
+      "sha": "6d229a26b671bd35f710e6b0923861daf65b76fe",
+      "size": 2001
+    },
+    {
+      "path": "MVP/renderer/training-shell.css",
+      "sha": "1e5193f0f5bb8e1fc5467b85d89110373a24e18c",
+      "size": 2347
+    },
+    {
+      "path": "MVP/renderer/training-shell.js",
+      "sha": "b60d608c015aed7ae3857a5e1a01d002147b3bb6",
+      "size": 9234
+    },
+    {
+      "path": "MVP/renderer/training-viewport.css",
+      "sha": "ad69bbae8e83b72c5e209236fc4c39e5f87753f5",
+      "size": 2431
+    },
+    {
+      "path": "MVP/renderer/training-zones.css",
+      "sha": "fcc4a892bc0f404f275dd06e60d9ec1301ad7e0b",
+      "size": 5737
+    },
+    {
+      "path": "MVP/renderer/training-zones.js",
+      "sha": "f135320c003eaa869b595347c233fb406e28e300",
+      "size": 19805
+    },
+    {
+      "path": "MVP/renderer/tutorial-layout.css",
+      "sha": "19bea2ebfdbee6f16cda5efd4392b4522214684a",
+      "size": 5548
+    },
+    {
+      "path": "MVP/renderer/tutorial-layout.js",
+      "sha": "28345216e67dcb66fdf00ade6a8fc799b94ac134",
+      "size": 6776
+    },
+    {
+      "path": "MVP/renderer/web-midi-diagnostic.js",
+      "sha": "a0c12d693126e632ae6f3879076376f2866ca2b2",
+      "size": 18284
+    },
+    {
+      "path": "MVP/renderer/when-the-saints-review.js",
+      "sha": "3aa9c49e22f658fe60b6c0f83e2f2a2208d971a0",
+      "size": 8910
+    },
+    {
+      "path": "MVP/routes.js",
+      "sha": "80d094cb323c1f49726bf575ab2b08a08afdaef1",
+      "size": 1924
+    },
+    {
+      "path": "MVP/ru/index.html",
+      "sha": "a6c1643f1f2891dfa064dc7e53847ae5ff04fb17",
+      "size": 310
+    },
+    {
+      "path": "MVP/tests/browser/check-tutorial-evidence.py",
+      "sha": "76d995d726783d6002eb4054c542e0a2b52accb3",
+      "size": 1770
+    },
+    {
+      "path": "MVP/tests/browser/clipboard-import.cjs",
+      "sha": "40e5a1789dfec66dd3506436e57ed932bd8b8530",
+      "size": 2367
+    },
+    {
+      "path": "MVP/tests/browser/compare-main-pixels.py",
+      "sha": "987ab623bc59c2384d1b20b4a824b624df770c88",
+      "size": 1310
+    },
+    {
+      "path": "MVP/tests/browser/early-continue.cjs",
+      "sha": "7c4b337c5d16c0c601b96ae2721e476aa37e7f8d",
+      "size": 2144
+    },
+    {
+      "path": "MVP/tests/browser/entry-start-browser.cjs",
+      "sha": "9893f01dcb10465d85c6b124e4a644fce96cd25d",
+      "size": 6156
+    },
+    {
+      "path": "MVP/tests/browser/import-readiness.cjs",
+      "sha": "31f181cc53e7082b4ea88eaae48364cf3c7b5f95",
+      "size": 1429
+    },
+    {
+      "path": "MVP/tests/browser/import-route-locales.cjs",
+      "sha": "8ed1c70af2194425d5e149dce0ee557e26065490",
+      "size": 3696
+    },
+    {
+      "path": "MVP/tests/browser/local-file-transport.cjs",
+      "sha": "a794a24cb5f8d2f9037249233b79fc04d8c575bb",
+      "size": 2304
+    },
+    {
+      "path": "MVP/tests/browser/main-en-midi.cjs",
+      "sha": "1459b1e73f15989b286cf0dd344a570a5cde2b45",
+      "size": 4410
+    },
+    {
+      "path": "MVP/tests/browser/main-en-workspace.cjs",
+      "sha": "048160b7e05f6b5f8e2b5b3074f98d892834ac08",
+      "size": 5370
+    },
+    {
+      "path": "MVP/tests/browser/main-geometry-baseline.cjs",
+      "sha": "e9ab5572a4aadf3f5df5d6d30a870a9d902b7a6b",
+      "size": 2946
+    },
+    {
+      "path": "MVP/tests/browser/main-library-state.cjs",
+      "sha": "03692f1906e7fc7bee92f4ab65b18fcc6e2a127c",
+      "size": 4222
+    },
+    {
+      "path": "MVP/tests/browser/mobile-tablet-matrix.cjs",
+      "sha": "8939c30866438d418c92d5bee59c3fca9d699c6d",
+      "size": 2933
+    },
+    {
+      "path": "MVP/tests/browser/published-routes-smoke.cjs",
+      "sha": "ef89dfcf0503e6485a5bff8af7e71b2f732da018",
+      "size": 2973
+    },
+    {
+      "path": "MVP/tests/browser/storage.cjs",
+      "sha": "17986e693e8a293257d390790159f302d6a4ba09",
+      "size": 2391
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-five-note-protocol.cjs",
+      "sha": "4e185c3b13da293493ccfff284af8404301203b1",
+      "size": 3703
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-functional.cjs",
+      "sha": "9b01b607f6d4cbd28486d69575b4002e41f3a6a4",
+      "size": 5397
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-grid-locale.cjs",
+      "sha": "0428ba0f027cf1115d67c2880ce03ac1be17c054",
+      "size": 2747
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-interaction-course.cjs",
+      "sha": "df44502e66db766783d3b7f824053962c92fc193",
+      "size": 6531
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-interaction-midi-geometry.cjs",
+      "sha": "5d9e0b9ff32fc620f165f012dc52345105825c23",
+      "size": 3162
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-midi-browser.cjs",
+      "sha": "45676452e1b124df190924a56c03d70c2125a4d5",
+      "size": 5676
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-ru-en-audit.cjs",
+      "sha": "21fd88ddd205b8a9cd7a8f6df69aad5069b92f3a",
+      "size": 3595
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-spotlights-early.cjs",
+      "sha": "2e4381da7ec42f7982a79623d5a61fc55e93dbdb",
+      "size": 4709
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-spotlights.cjs",
+      "sha": "8f9e5fb31df011db6389d90beb3f4f6ff0798161",
+      "size": 3810
+    },
+    {
+      "path": "MVP/tests/browser/tutorial-two-pass-protocol.cjs",
+      "sha": "51f4de2f6c32e023284f7f54efea1cf914d27b42",
+      "size": 4654
+    },
+    {
+      "path": "MVP/tests/browser/unified-routes-matrix.cjs",
+      "sha": "da3fc6042312616d36524759eab9fe81736ae8b6",
+      "size": 4814
+    },
+    {
+      "path": "MVP/tests/editor-browser.html",
+      "sha": "c6fb56e70f2c2e730b29dbfe9abeed4be8e49ee6",
+      "size": 3600
+    },
+    {
+      "path": "MVP/tests/fixtures/invalid/duplicate-id.play12.json",
+      "sha": "382649c3ebb5e910e98236861e4e72560a1ffeb9",
+      "size": 2869
+    },
+    {
+      "path": "MVP/tests/fixtures/invalid/invalid-finger.play12.json",
+      "sha": "4283bd62e5211648e35fa31953b669c98186da2d",
+      "size": 1699
+    },
+    {
+      "path": "MVP/tests/fixtures/invalid/invalid-midi.play12.json",
+      "sha": "b657da1d54b6c3a90c3e05944447c6a97e0645fa",
+      "size": 1700
+    },
+    {
+      "path": "MVP/tests/fixtures/invalid/invalid-symbol.play12.json",
+      "sha": "f413b260fdbdb353e883b90b38a3f43ffa5ff853",
+      "size": 1699
+    },
+    {
+      "path": "MVP/tests/fixtures/invalid/malformed-fraction.play12.json",
+      "sha": "06593b74e8712730c4b46f581f03621f596ae1f1",
+      "size": 1701
+    },
+    {
+      "path": "MVP/tests/fixtures/invalid/negative-timing.play12.json",
+      "sha": "596cc96386ac39d1df27fc1026f2a78b7b38c392",
+      "size": 1701
+    },
+    {
+      "path": "MVP/tests/fixtures/invalid/unsupported-format.play12.json",
+      "sha": "6fa72b186aabe6fcc7948f6b24a058457ded8f59",
+      "size": 1696
+    },
+    {
+      "path": "MVP/tests/fixtures/invalid/unsupported-version.play12.json",
+      "sha": "7c4d60f7ede5a664d1883426f5cdabc9287c903f",
+      "size": 1699
+    },
+    {
+      "path": "MVP/tests/fixtures/minimal-valid.play12.json",
+      "sha": "3866f4e7e59203f7861f77c48cd48eee6555f785",
+      "size": 1699
+    },
+    {
+      "path": "MVP/tests/fixtures/piano-workspace.musicxml",
+      "sha": "3ff384f7df412118930ab8aa57b30da66a7582aa",
+      "size": 10053
+    },
+    {
+      "path": "MVP/tests/main-v142-dom-check.js",
+      "sha": "78b7c71fadf25c4daa885eb959395615a4f735c5",
+      "size": 3609
+    },
+    {
+      "path": "MVP/tests/real-piano-geometry.js",
+      "sha": "d86fe331209896ca81d17cd72ec64ef0a1575c7a",
+      "size": 2760
+    },
+    {
+      "path": "MVP/tests/test_coach_spotlight.cjs",
+      "sha": "5e8c26d3eb9a956d6f5fab6400b64aeaa4e28082",
+      "size": 5674
+    },
+    {
+      "path": "MVP/tests/test_dynamic_piano_view.cjs",
+      "sha": "500fda6326f591407fe205f6ecef27f8b3bd0f73",
+      "size": 10339
+    },
+    {
+      "path": "MVP/tests/test_editing_adapter.cjs",
+      "sha": "f1cf7171aad7d8273fe0e0d9bb3a8c71a35b5e18",
+      "size": 1703
+    },
+    {
+      "path": "MVP/tests/test_entry_menu.cjs",
+      "sha": "d05d967726f0ac41b78537da5f57cc1d15935cca",
+      "size": 1228
+    },
+    {
+      "path": "MVP/tests/test_fingering_editor.cjs",
+      "sha": "d348f2c6b56ff25651b2fc2777a541f93ca3b880",
+      "size": 4237
+    },
+    {
+      "path": "MVP/tests/test_function_midi_controls.cjs",
+      "sha": "f2a4b59d11445b8b796037d74840a64998dd409e",
+      "size": 8237
+    },
+    {
+      "path": "MVP/tests/test_main_data.cjs",
+      "sha": "8f367bf0644cbf0427e242a16ab1beb9eca65576",
+      "size": 3598
+    },
+    {
+      "path": "MVP/tests/test_main_dom_contract.cjs",
+      "sha": "39600113f6263488a3f23b5180232569bd3b028d",
+      "size": 2566
+    },
+    {
+      "path": "MVP/tests/test_main_header.cjs",
+      "sha": "b9a8c8787c24299d57a938eb7465b6166f4a183f",
+      "size": 1989
+    },
+    {
+      "path": "MVP/tests/test_main_layout.cjs",
+      "sha": "184e24cb08177373f44495d1f8d30af2774058cf",
+      "size": 1277
+    },
+    {
+      "path": "MVP/tests/test_main_v131.cjs",
+      "sha": "efaf7bf527ff0f6c8b232bc7a02b630c0625640f",
+      "size": 6455
+    },
+    {
+      "path": "MVP/tests/test_main_v142.cjs",
+      "sha": "4d3715137b48b38d2ea982c48ff4803733d681cd",
+      "size": 5086
+    },
+    {
+      "path": "MVP/tests/test_main_v143.cjs",
+      "sha": "95b6fa3ae8dc0e411bca126b0262f5948f358667",
+      "size": 7441
+    },
+    {
+      "path": "MVP/tests/test_mobile_tablet_policy.cjs",
+      "sha": "de1ebcff695f0bfcfe79f9eb59d5182928dba57a",
+      "size": 621
+    },
+    {
+      "path": "MVP/tests/test_note_cycle_color.cjs",
+      "sha": "de74680fc654a12be94c0488b8a3b055d619bca8",
+      "size": 3965
+    },
+    {
+      "path": "MVP/tests/test_practice_step3.cjs",
+      "sha": "5db008c563ff83bad573bd7731f2a4a9a29f57d6",
+      "size": 95424
+    },
+    {
+      "path": "MVP/tests/test_russian_i18n.cjs",
+      "sha": "012928dee26c11b68ba64f643a1ecd738e4af3ec",
+      "size": 2907
+    },
+    {
+      "path": "MVP/tests/test_training_shell.cjs",
+      "sha": "50be84b4455112d1a1f7e22765933e3d69555cb3",
+      "size": 10744
+    },
+    {
+      "path": "MVP/tests/test_training_zones.cjs",
+      "sha": "dec3d8d7488671408532b8e3adc3e74cbb8c36bb",
+      "size": 13559
+    },
+    {
+      "path": "MVP/tests/test_unified_routes_locales.cjs",
+      "sha": "d4d8e9c58ef7d7d33f0b157f1e6bc9547f762723",
+      "size": 5148
+    },
+    {
+      "path": "MVP/tests/test_validate_play12.py",
+      "sha": "2273dbed0a53aea60f87eb82b16e50e2ff11f2a3",
+      "size": 7793
+    },
+    {
+      "path": "MVP/tests/test_zero_overlay.cjs",
+      "sha": "e286807245dd87a393fc895d29fc5f55990e0599",
+      "size": 2154
+    },
+    {
+      "path": "MVP/tools/add_when_the_saints_onboarding_layout.py",
+      "sha": "6c780da9f363b755bbfbfd6d70cf43606385d98d",
+      "size": 1157
+    },
+    {
+      "path": "MVP/tools/build_when_the_saints_beginner.py",
+      "sha": "e1a0153c55b44df092095a531925f700be570dff",
+      "size": 5893
+    },
+    {
+      "path": "MVP/tools/build_when_the_saints_manual.py",
+      "sha": "4463b2b4df146d41270d227eb4a29cb6fa0888d0",
+      "size": 6207
+    },
+    {
+      "path": "MVP/tools/validate_play12.py",
+      "sha": "6f30c890be28dbdd3af16350bc525ae2b12da61b",
+      "size": 17467
+    },
+    {
+      "path": "MVP/tutorial/index.html",
+      "sha": "9c7ba54bb6c7f87dce24d2bdf9eccdf6350d6f59",
+      "size": 361
+    },
+    {
+      "path": "MVP/ui-locale.js",
+      "sha": "3baf8d1fd8a2e46b3debac8579aee360c0dd6956",
+      "size": 12867
+    },
+    {
+      "path": "P12 logo.png",
+      "sha": "153379acb7d29c46fca98e8c3e74bd64a1cf74a5",
+      "size": 29988
+    },
+    {
+      "path": "docs/main-v13-validation.md",
+      "sha": "807aa478e9babd43e89b1015ad1262f5cf068cb2",
+      "size": 6126
+    },
+    {
+      "path": "docs/main-v14-validation.md",
+      "sha": "06ef0fe1c58f4722e05a16035faca274fb5db56c",
+      "size": 6540
+    },
+    {
+      "path": "docs/main-v141-validation.md",
+      "sha": "83ddeb9fce15dfb97e3b45620a577a7b6e306822",
+      "size": 5561
+    },
+    {
+      "path": "docs/main-v142-validation.md",
+      "sha": "252bc9ea6548614aa8910d08755f52a617989ac0",
+      "size": 9802
+    },
+    {
+      "path": "docs/main-v143-validation.md",
+      "sha": "af9982f5685495b9e4e61213c6d1801cb79e6103",
+      "size": 8377
+    },
+    {
+      "path": "index.html",
+      "sha": "5e2417b320206bcbe6e82e331a40d9ddacc8e1ef",
+      "size": 13043
+    },
+    {
+      "path": "ru/MVP/editor/index.html",
+      "sha": "219a04c65e6a5ac76829d35a5a58655f629d62b5",
+      "size": 304
+    },
+    {
+      "path": "ru/MVP/import/index.html",
+      "sha": "f4316455b13a1ba0f625823f928df8c38c6a1d90",
+      "size": 371
+    },
+    {
+      "path": "ru/MVP/main/index.html",
+      "sha": "5276ea3a5b7796a6c22cf835734680f514da5202",
+      "size": 369
+    },
+    {
+      "path": "ru/MVP/menu/index.html",
+      "sha": "c8a54a0353c9054ff254edf9f67b639046be369c",
+      "size": 1365
+    },
+    {
+      "path": "ru/MVP/tutorial/index.html",
+      "sha": "603044e702f1d44b9d290afeef8eaac5416d1efb",
+      "size": 373
+    },
+    {
+      "path": "ru/index.html",
+      "sha": "4fbaeecd535cf5ffa66eefa2fae7f5e23f14865b",
+      "size": 13220
+    }
+  ]
+}

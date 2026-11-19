@@ -1,0 +1,3 @@
+const{test}=require('node:test'),assert=require('node:assert/strict'),{classify}=require('../mobile-tablet.js');
+for(const [width,height,screenShort,want]of [[390,844,390,'phone-portrait'],[932,430,430,'phone-landscape'],[768,1024,768,'tablet-portrait'],[1024,768,768,'tablet-landscape'],[1180,820,820,'tablet-landscape'],[820,500,820,'tablet-landscape']])test('touch policy '+width+'x'+height,()=>assert.equal(classify({width,height,coarse:true,touches:5,screenShort}),want));
+test('small desktop window is never orientation-blocked',()=>assert.equal(classify({width:844,height:390,coarse:false,touches:0}),'desktop'));

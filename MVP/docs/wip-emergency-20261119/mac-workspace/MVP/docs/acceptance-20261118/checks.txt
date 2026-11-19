@@ -1,0 +1,5 @@
+JavaScript 261 pass / 0 fail
+Python 9 pass / 0 fail
+Spotlight RU 135 cases, 160 target boxes, 0 failures
+Spotlight EN 135 cases, 160 target boxes, 0 failures
+Pixel comparison original 4/255 tolerance: pass at five widths

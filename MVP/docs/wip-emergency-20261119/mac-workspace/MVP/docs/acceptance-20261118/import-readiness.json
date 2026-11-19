@@ -1,0 +1,14 @@
+[
+  {
+    "lang": "en",
+    "disabledBeforeConfig": true,
+    "readyAfterConfig": true,
+    "fileParsed": true
+  },
+  {
+    "lang": "ru",
+    "disabledBeforeConfig": true,
+    "readyAfterConfig": true,
+    "fileParsed": true
+  }
+]

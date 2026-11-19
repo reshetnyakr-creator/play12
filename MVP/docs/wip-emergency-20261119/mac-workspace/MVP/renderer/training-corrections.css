@@ -1,0 +1,25 @@
+/* v1.4.2: upper thirds do not constrain the lower control corridors. */
+.is-three-wide>.training-zone{container-type:normal}
+.is-three-wide .training-panel-slot{position:absolute;bottom:0;max-width:none;margin:0;overflow:visible;z-index:21}
+.is-three-wide .training-zone-controls{height:96px;max-width:none}
+.is-three-wide .training-left-controls>.mvp-practice-board{width:320px}
+.is-three-wide .training-right-controls>.mvp-round-loop-board{width:372px}
+.is-three-wide .training-right-controls>#onboarding-choose-zero{width:42px;min-width:42px;height:42px}
+.is-three-wide .training-right-controls{--mvp-control-font-size:11px}
+.training-skill-card{width:100%;box-sizing:border-box;flex:none;margin:0;justify-content:center}
+.training-zone-right>.training-skill-card h2{margin:0 0 14px}.training-zone-right>.training-skill-card p{margin:0}
+.main-tools h1{box-sizing:border-box;overflow-wrap:anywhere}
+.training-three-zones .training-zone-controls>.mvp-metronome-board,
+.training-three-zones .training-zone-controls>.mvp-practice-board,
+.training-three-zones .training-zone-controls>.mvp-round-loop-board,
+.training-three-zones .training-zone-controls>#onboarding-choose-zero,
+.training-three-zones .training-zone-controls button,
+.play12-main .music-workspace>.playback-zone,
+.play12-main .music-workspace>.playback-zone button{box-shadow:none!important;filter:none!important}
+.training-three-zones .training-zone-controls>section::before,
+.training-three-zones .training-zone-controls>section::after,
+.play12-main .music-workspace>.playback-zone::before,
+.play12-main .music-workspace>.playback-zone::after{box-shadow:none!important;filter:none!important}
+.training-three-zones .training-zone-controls button:focus-visible,
+.music-workspace button:focus-visible{outline:2px solid #E96E40;outline-offset:2px}
+.music-workspace .playback-grid-control{width:30px;height:30px;min-width:30px;padding:0;border:1px solid #d1d3ce;border-radius:50%!important;background:#fff;appearance:none;justify-self:end}

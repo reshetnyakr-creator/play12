@@ -1,0 +1,1 @@
+importScripts('core.js');onmessage=async({data})=>{try{postMessage({id:data.id,run:Play12Editor.propose(data.score,data.config,data.locks,data.detailed)});}catch(error){postMessage({id:data.id,error:error.message});}};

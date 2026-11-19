@@ -1,0 +1,3450 @@
+{
+  "format": "play12-json",
+  "version": "0.1",
+  "source": {
+    "type": "musicxml",
+    "file_name": "when_the_saints_play12_beginner.musicxml",
+    "container_entry": null,
+    "musicxml_version": "3.1",
+    "sha256": "b23ac73a450e6a3d92b6622a53da4ea1030f9156fff9da6fe9d19f92f9fc7ba2"
+  },
+  "play12": {
+    "zero_pitch_class": "A",
+    "symbols": "0123456789XY",
+    "pitch_class_mapping": {
+      "0": "3",
+      "1": "4",
+      "2": "5",
+      "3": "6",
+      "4": "7",
+      "5": "8",
+      "6": "9",
+      "7": "X",
+      "8": "Y",
+      "9": "0",
+      "10": "1",
+      "11": "2"
+    }
+  },
+  "score": {
+    "title": "When the Saints Go Marching In — Play12 Beginner",
+    "creators": [
+      {
+        "type": "composer",
+        "name": "Trad."
+      },
+      {
+        "type": "lyricist",
+        "name": "Allegro com brio con moto"
+      }
+    ],
+    "parts": [
+      {
+        "id": "P1",
+        "name": "Right Hand",
+        "measures": [
+          {
+            "index": 0,
+            "number": "1",
+            "implicit": true,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [
+              {
+                "start_divisions": 0,
+                "start_quarters": "0",
+                "bpm": 160.0,
+                "text": null
+              }
+            ],
+            "dynamic_marks": [
+              {
+                "start_divisions": 0,
+                "start_quarters": "0",
+                "value": "mf",
+                "sound_value": 88.89,
+                "staff": null
+              }
+            ],
+            "events": [
+              {
+                "id": "P1.m0.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 1,
+                "start_quarters": "0",
+                "duration_quarters": "1/3",
+                "chord": false,
+                "grace": false,
+                "type": "eighth",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m0.e1",
+                "kind": "rest",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 1,
+                "duration_divisions": 1,
+                "start_quarters": "1/3",
+                "duration_quarters": "1/3",
+                "chord": false,
+                "grace": false,
+                "type": "eighth",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                }
+              },
+              {
+                "id": "P1.m0.e2",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 2,
+                "duration_divisions": 1,
+                "start_quarters": "2/3",
+                "duration_quarters": "1/3",
+                "chord": false,
+                "grace": false,
+                "type": "eighth",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m0.e3",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 3,
+                "duration_divisions": 3,
+                "start_quarters": "1",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m0.e4",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 3,
+                "start_quarters": "2",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "F",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 65
+                },
+                "play12_symbol": {
+                  "value": "8",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "number": "2",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [
+              {
+                "start_divisions": 0,
+                "start_quarters": "0",
+                "value": "f",
+                "sound_value": 106.67,
+                "staff": null
+              }
+            ],
+            "events": [
+              {
+                "id": "P1.m1.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 67
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "start"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "number": "3",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m2.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 67
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "stop"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m2.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 3,
+                "duration_divisions": 3,
+                "start_quarters": "1",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m2.e2",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 3,
+                "start_quarters": "2",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m2.e3",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 9,
+                "duration_divisions": 3,
+                "start_quarters": "3",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "F",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 65
+                },
+                "play12_symbol": {
+                  "value": "8",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "number": "4",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m3.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 67
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "start"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 4,
+            "number": "5",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m4.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 67
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "stop"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m4.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 3,
+                "duration_divisions": 1,
+                "start_quarters": "1",
+                "duration_quarters": "1/3",
+                "chord": false,
+                "grace": false,
+                "type": "eighth",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m4.e2",
+                "kind": "rest",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 4,
+                "duration_divisions": 1,
+                "start_quarters": "4/3",
+                "duration_quarters": "1/3",
+                "chord": false,
+                "grace": false,
+                "type": "eighth",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                }
+              },
+              {
+                "id": "P1.m4.e3",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 5,
+                "duration_divisions": 1,
+                "start_quarters": "5/3",
+                "duration_quarters": "1/3",
+                "chord": false,
+                "grace": false,
+                "type": "eighth",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m4.e4",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 3,
+                "start_quarters": "2",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m4.e5",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 9,
+                "duration_divisions": 3,
+                "start_quarters": "3",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "F",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 65
+                },
+                "play12_symbol": {
+                  "value": "8",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 5,
+            "number": "6",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m5.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 6,
+                "start_quarters": "0",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 67
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m5.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 6,
+                "start_quarters": "2",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 6,
+            "number": "7",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m6.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 6,
+                "start_quarters": "0",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m6.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 6,
+                "start_quarters": "2",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 7,
+            "number": "8",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m7.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "D",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 62
+                },
+                "play12_symbol": {
+                  "value": "5",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "start"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 3,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 8,
+            "number": "9",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m8.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "D",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 62
+                },
+                "play12_symbol": {
+                  "value": "5",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "stop"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 3,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m8.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 3,
+                "duration_divisions": 3,
+                "start_quarters": "1",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m8.e2",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 3,
+                "start_quarters": "2",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m8.e3",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 9,
+                "duration_divisions": 3,
+                "start_quarters": "3",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "D",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 62
+                },
+                "play12_symbol": {
+                  "value": "5",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 3,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 9,
+            "number": "10",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m9.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 9,
+                "start_quarters": "0",
+                "duration_quarters": "3",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 1,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m9.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 9,
+                "duration_divisions": 3,
+                "start_quarters": "3",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 10,
+            "number": "11",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m10.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 6,
+                "start_quarters": "0",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m10.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 6,
+                "start_quarters": "2",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 67
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 11,
+            "number": "12",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m11.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 67
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m11.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 3,
+                "duration_divisions": 9,
+                "start_quarters": "1",
+                "duration_quarters": "3",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 1,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "F",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 65
+                },
+                "play12_symbol": {
+                  "value": "8",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "start"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 12,
+            "number": "13",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m12.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "F",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 65
+                },
+                "play12_symbol": {
+                  "value": "8",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "stop"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m12.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 3,
+                "duration_divisions": 3,
+                "start_quarters": "1",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "F",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 65
+                },
+                "play12_symbol": {
+                  "value": "8",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m12.e2",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 3,
+                "start_quarters": "2",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m12.e3",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 9,
+                "duration_divisions": 3,
+                "start_quarters": "3",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "F",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 65
+                },
+                "play12_symbol": {
+                  "value": "8",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 13,
+            "number": "14",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m13.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 6,
+                "start_quarters": "0",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 67
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m13.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 6,
+                "start_quarters": "2",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 64
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 14,
+            "number": "15",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m14.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 6,
+                "start_quarters": "0",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              },
+              {
+                "id": "P1.m14.e1",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 6,
+                "duration_divisions": 6,
+                "start_quarters": "2",
+                "duration_quarters": "2",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "D",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 62
+                },
+                "play12_symbol": {
+                  "value": "5",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 3,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 15,
+            "number": "16",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m15.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "start"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 16,
+            "number": "17",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m16.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "stop"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 17,
+            "number": "18",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m17.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "start"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 18,
+            "number": "19",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P1.m18.e0",
+                "kind": "note",
+                "staff": 1,
+                "hand": "R",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "quarter",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 4,
+                  "midi": 60
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [
+                  "stop"
+                ],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 1,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "P2",
+        "name": "Left Hand",
+        "measures": [
+          {
+            "index": 0,
+            "number": "1",
+            "implicit": true,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m0.e0",
+                "kind": "rest",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 9,
+                "start_quarters": "0",
+                "duration_quarters": "3",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 1,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                }
+              }
+            ]
+          },
+          {
+            "index": 1,
+            "number": "2",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m1.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "number": "3",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m2.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "number": "4",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m3.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 4,
+            "number": "5",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m4.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 5,
+            "number": "6",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m5.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 6,
+            "number": "7",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m6.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 40
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 7,
+            "number": "8",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m7.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "G",
+                  "alter": 0,
+                  "octave": 1,
+                  "midi": 31
+                },
+                "play12_symbol": {
+                  "value": "X",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 8,
+            "number": "9",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m8.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "B",
+                  "alter": 0,
+                  "octave": 1,
+                  "midi": 35
+                },
+                "play12_symbol": {
+                  "value": "2",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 9,
+            "number": "10",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m9.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 10,
+            "number": "11",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m10.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "B",
+                  "alter": -1,
+                  "octave": 2,
+                  "midi": 46
+                },
+                "play12_symbol": {
+                  "value": "1",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 11,
+            "number": "12",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m11.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "A",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 45
+                },
+                "play12_symbol": {
+                  "value": "0",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 12,
+            "number": "13",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m12.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "F",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 41
+                },
+                "play12_symbol": {
+                  "value": "8",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 13,
+            "number": "14",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m13.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "E",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 40
+                },
+                "play12_symbol": {
+                  "value": "7",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 14,
+            "number": "15",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m14.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "D",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 38
+                },
+                "play12_symbol": {
+                  "value": "5",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 15,
+            "number": "16",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m15.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 16,
+            "number": "17",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m16.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 17,
+            "number": "18",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m17.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 12,
+                "start_quarters": "0",
+                "duration_quarters": "4",
+                "chord": false,
+                "grace": false,
+                "type": "whole",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          },
+          {
+            "index": 18,
+            "number": "19",
+            "implicit": false,
+            "attributes": {
+              "divisions": 3,
+              "time": {
+                "beats": 4,
+                "beat_type": 4
+              },
+              "key_fifths": 0,
+              "staves": null
+            },
+            "tempo_marks": [],
+            "dynamic_marks": [],
+            "events": [
+              {
+                "id": "P2.m18.e0",
+                "kind": "note",
+                "staff": 2,
+                "hand": "L",
+                "voice": "1",
+                "start_divisions": 0,
+                "duration_divisions": 3,
+                "start_quarters": "0",
+                "duration_quarters": "1",
+                "chord": false,
+                "grace": false,
+                "type": "half",
+                "dots": 0,
+                "method": {
+                  "finger": null,
+                  "fingering_source": null,
+                  "fingering_confidence": null,
+                  "fingering_exception_id": null,
+                  "auto_fingering_candidate": null,
+                  "fingering_history": [],
+                  "skill_ids": [],
+                  "comments": [],
+                  "exceptions": []
+                },
+                "pitch": {
+                  "step": "C",
+                  "alter": 0,
+                  "octave": 2,
+                  "midi": 36
+                },
+                "play12_symbol": {
+                  "value": "3",
+                  "origin": "play12_rule"
+                },
+                "ties": [],
+                "source_fingering": null,
+                "onboarding": {
+                  "display_finger": 5,
+                  "source": "beginner_demo_layout",
+                  "approved_fingering": false
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "method": {
+    "skill_links": [],
+    "comments": [],
+    "exceptions": []
+  }
+}

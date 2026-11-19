@@ -1,0 +1,326 @@
+/* Approved Piano View: one immutable SVG strip per 12-note color cycle. */
+(function (global) {
+  "use strict";
+  const t=key=>global.Play12I18n?.t?.(key)??key;
+  const NS = "http://www.w3.org/2000/svg", XLINK = "http://www.w3.org/1999/xlink";
+  const SYMBOLS = "0123456789XY";
+  const PITCH_CLASSES = { C:0,"C#":1,D:2,"D#":3,E:4,F:5,"F#":6,G:7,"G#":8,A:9,"A#":10,B:11 };
+  const WHITE = new Set([0,2,4,5,7,9,11]);
+  const FULL_MIN_MIDI = 21, FULL_MAX_MIDI = 108;
+  const PIANO_WIDTH = 3222.2, PIANO_HEIGHT = 436, CARD_HEIGHT = 128, VIEW_HEIGHT = 564;
+  const modulo = (value, base) => ((value % base) + base) % base;
+
+  function layoutZeroForMidi(midi, minMidi = 21) {
+    const pitchClass = modulo(midi, 12);
+    for (let candidate = minMidi; candidate < minMidi + 12; candidate++) {
+      if (modulo(candidate, 12) === pitchClass) return candidate;
+    }
+    throw new Error(`No layout zero for MIDI pitch class ${pitchClass}`);
+  }
+
+  function element(name, attrs = {}) {
+    const node = document.createElementNS(NS, name);
+    for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, String(value));
+    return node;
+  }
+
+  function mappingForMidi(midi, zeroMidi, colors) {
+    const offset = midi - zeroMidi, cycle = Math.floor(offset / 12);
+    return { symbol: SYMBOLS[modulo(offset, 12)], cycle, color: colors[modulo(cycle, colors.length)] };
+  }
+
+  class PianoView {
+    constructor(options) {
+      Object.assign(this, options);
+      this.minMidi = options.minMidi || 21;
+      this.visualWindow=null;
+      this.maxMidi = options.maxMidi || 108;
+      this.cropWidth = PIANO_WIDTH;
+      this.keys = new Map();
+      this.activeBySource = new Map([["playback",new Set()],["mouse",new Set()],["midi",new Set()]]);
+      this.virtualPointers = new Map();
+      this.bindPointerControls();
+      this.render(Number.isInteger(options.zeroMidi) ? options.zeroMidi : this.zeroMidiFor(options.zeroNote));
+      this.resizeObserver = new ResizeObserver(() => this.fitReferenceAspect());
+      this.resizeObserver.observe(this.mount.parentElement);
+    }
+
+    zeroMidiFor(zeroNote) {
+      const pitchClass = PITCH_CLASSES[zeroNote];
+      if (!Number.isInteger(pitchClass)) throw new Error(`Unsupported Piano View zero_note: ${zeroNote}`);
+      for (let midi=FULL_MIN_MIDI; midi<=FULL_MAX_MIDI; midi++) if (modulo(midi,12)===pitchClass) return midi;
+      throw new Error(`No physical ${zeroNote} key in Piano View range`);
+    }
+
+    render(zeroMidi) {
+      if (!Number.isInteger(zeroMidi) || zeroMidi < FULL_MIN_MIDI || zeroMidi > FULL_MAX_MIDI) throw new Error(`Unsupported zero MIDI note: ${zeroMidi}`);
+      this.zeroMidi = zeroMidi;
+      this.keys.clear();
+      const outer = element("svg", { viewBox:`0 0 ${PIANO_WIDTH} ${VIEW_HEIGHT}`,
+        preserveAspectRatio:"xMidYMid meet", role:"img", "aria-label":global.Play12I18n?.isRu?.()?`Фортепианная клавиатура Play12, MIDI ${zeroMidi} = 0`:`Play12 piano keyboard, MIDI ${zeroMidi} = 0` });
+      outer.classList.add("play12-piano-svg","play12-piano-composite");
+      const defs=element("defs");
+      const cardBounds=element("clipPath",{id:"play12-card-keyboard-bounds"});
+      this.cardClipRect=element("rect",{x:0,y:0,width:PIANO_WIDTH,height:CARD_HEIGHT});
+      cardBounds.appendChild(this.cardClipRect);
+      defs.appendChild(cardBounds); outer.appendChild(defs);
+      const parsed = new DOMParser().parseFromString(this.cardTheme.pianoSvgText,"image/svg+xml");
+      const keyboard = document.importNode(parsed.documentElement,true);
+      for (const [key,value] of Object.entries({x:0,y:CARD_HEIGHT,width:PIANO_WIDTH,height:PIANO_HEIGHT,
+        viewBox:`0 0 ${PIANO_WIDTH} ${PIANO_HEIGHT}`,preserveAspectRatio:"none"})) keyboard.setAttribute(key,String(value));
+      outer.appendChild(keyboard);
+      this.mount.replaceChildren(outer);
+      this.svg=outer; this.keyboardSvg=keyboard;
+      Object.assign(this.mount.dataset,{zeroNote:String(zeroMidi),zeroMidi:String(this.zeroMidi),cardTheme:this.cardTheme.id,
+        pianoSource:this.cardTheme.pianoUrl,referenceWidth:String(PIANO_WIDTH),referenceHeight:String(VIEW_HEIGHT)});
+      this.fitReferenceAspect();
+      requestAnimationFrame(() => this.bindGeometry());
+    }
+
+    bindGeometry() {
+      // Onboarding boots with the underlying playback page hidden. Geometry
+      // becomes measurable only after Piano View is moved into a visible step.
+      if (!this.mount.getClientRects().length || this.keys.size) return;
+      const faces=[...this.keyboardSvg.querySelectorAll("path")].filter(path=>!path.closest('[display="none"]'))
+        .map(path=>({path,bounds:this.boundsInPianoCoordinates(path)})).filter(item=>item.bounds.width>0&&item.bounds.height>0)
+        .sort((a,b)=>(a.bounds.left+a.bounds.width/2)-(b.bounds.left+b.bounds.width/2));
+      if(faces.length!==FULL_MAX_MIDI-FULL_MIN_MIDI+1) throw new Error(`Piano_Roll.svg: expected 88 keys, found ${faces.length}`);
+      const allAnchors=new Map(),keyAnchors=new Map(),displayMin=this.desktopWindow?(this.workspaceRange?.min??FULL_MIN_MIDI):(this.visualWindow?.min??this.minMidi),displayMax=this.desktopWindow?(this.workspaceRange?.max??FULL_MAX_MIDI):(this.desktopWindow?FULL_MAX_MIDI:(this.visualWindow?.max??this.maxMidi));
+      const indexedFaces=faces.map((face,index)=>({...face,midi:FULL_MIN_MIDI+index}));
+      if(this.visualWindow){
+        const octave=faces[12].bounds.left-faces[0].bounds.left;
+        for(let midi=displayMin;midi<=displayMax;midi++){
+          if(midi>=FULL_MIN_MIDI&&midi<=FULL_MAX_MIDI)continue;
+          let reference=midi;while(reference<FULL_MIN_MIDI)reference+=12;while(reference>FULL_MAX_MIDI)reference-=12;
+          const original=faces[reference-FULL_MIN_MIDI],shift=(midi-reference)/12*octave,path=original.path.cloneNode(true);
+          path.removeAttribute('id');path.setAttribute('transform',`translate(${shift} 0) ${path.getAttribute('transform')||''}`);original.path.parentElement.appendChild(path);
+          const b=original.bounds;indexedFaces.push({path,midi,bounds:{...b,left:b.left+shift,right:b.right+shift}});
+        }
+        this.keyboardSvg.style.overflow='visible';
+      }
+      indexedFaces.sort((a,b)=>a.midi-b.midi).forEach(({path,bounds,midi})=>{
+        const type=WHITE.has(modulo(midi,12))?"white":"black";
+        allAnchors.set(midi,{...bounds,type});
+        if(midi<displayMin||midi>displayMax){path.remove();return;}
+        const wrapper=element("g",{"data-midi":midi,"data-key-type":type});
+        wrapper.classList.add("piano-key",`piano-key-${type}`); path.classList.add("piano-key-face");
+        path.replaceWith(wrapper); wrapper.appendChild(path); this.keys.set(midi,wrapper);
+        const mapping=mappingForMidi(midi,this.zeroMidi,this.colors);
+        Object.assign(wrapper.dataset,{play12Symbol:mapping.symbol,play12Color:mapping.color,cycleIndex:String(mapping.cycle)});
+        wrapper.style.setProperty("--play12-key-color",mapping.color);
+        keyAnchors.set(midi,{...bounds,type});
+      });
+      const first=allAnchors.get(displayMin),last=allAnchors.get(displayMax);
+      if(!first||!last)throw new Error(`Unsupported Piano View range: ${this.minMidi}–${this.maxMidi}`);
+      this.cropLeft=this.visualWindow?Math.min(...[...keyAnchors.values()].map(anchor=>anchor.left)):Math.max(0,Math.min(...[...keyAnchors.values()].map(anchor=>anchor.left)));
+      this.cropRight=this.visualWindow?Math.max(...[...keyAnchors.values()].map(anchor=>anchor.right)):Math.min(PIANO_WIDTH,Math.max(...[...keyAnchors.values()].map(anchor=>anchor.right)));
+      this.cropWidth=this.cropRight-this.cropLeft;
+      this.svg.setAttribute("viewBox",`${this.cropLeft} 0 ${this.cropWidth} ${VIEW_HEIGHT}`);
+      this.mount.dataset.keyCount=String(this.keys.size);
+      Object.assign(this.mount.dataset,{minMidi:String(displayMin),maxMidi:String(displayMax),cropLeft:String(this.cropLeft),cropRight:String(this.cropRight),cropWidth:String(this.cropWidth)});
+      const penultimateKeyAnchor=allAnchors.get((this.visualWindow||this.workspaceRange?displayMax:Math.min(displayMax,FULL_MAX_MIDI-1)));
+      if(!penultimateKeyAnchor) throw new Error("Piano_Roll.svg: penultimate key geometry is missing");
+      this.cardClipRect.setAttribute("x",String(this.cropLeft));
+      this.cardClipRect.setAttribute("width",String(this.visualWindow||this.workspaceRange?this.cropWidth:Math.max(0,Math.min(this.cropRight,penultimateKeyAnchor.right)-this.cropLeft)));
+      this.mount.dataset.cardClipRight=String(penultimateKeyAnchor.right);
+      this.mount.dataset.cardClipLastVisibleMidi=String(displayMax-1);
+      this.renderStrips(allAnchors);
+      this.cardRegion=element("rect",{x:this.cropLeft,y:0,
+        width:Math.max(0,Math.min(this.cropRight,penultimateKeyAnchor.right)-this.cropLeft),height:CARD_HEIGHT,
+        fill:"transparent","pointer-events":"none","aria-hidden":"true"});
+      this.cardRegion.classList.add("piano-visible-card-region"); this.svg.appendChild(this.cardRegion);
+      this.keyAnchors=keyAnchors;
+      this.commandOverlay=element("g",{"class":"piano-command-overlay","aria-hidden":"true"});
+      this.svg.appendChild(this.commandOverlay);
+      for (const [source, midis] of this.activeBySource) this.setActiveMidis(midis,source);
+      this.fitReferenceAspect();
+    }
+
+    boundsInPianoCoordinates(path) {
+      const box=path.getBBox(), matrix=path.getCTM();
+      const points=[
+        new DOMPoint(box.x,box.y),new DOMPoint(box.x+box.width,box.y),
+        new DOMPoint(box.x,box.y+box.height),new DOMPoint(box.x+box.width,box.y+box.height)
+      ].map(point=>point.matrixTransform(matrix));
+      const xs=points.map(point=>point.x),ys=points.map(point=>point.y);
+      const left=Math.min(...xs),right=Math.max(...xs),top=Math.min(...ys),bottom=Math.max(...ys);
+      return {left,right,top,bottom,width:right-left,height:bottom-top};
+    }
+
+    renderStrips(keyAnchors) {
+      const octaveSpan=this.measureOctaveSpan(keyAnchors);
+      const blackZero=!WHITE.has(modulo(this.zeroMidi,12));
+      // A Play12 keyboard has exactly one non-repeating seven-color set.
+      // Keys before red and after pink intentionally have no card strip.
+      const firstCycle=this.visualWindow?Math.floor((this.visualWindow.min-this.zeroMidi)/12):0,lastCycle=this.visualWindow?Math.floor((this.visualWindow.max-this.zeroMidi)/12):this.cardTheme.cycleNames.length-1;
+      for(let cycle=firstCycle;cycle<=lastCycle;cycle++){
+        const cycleStartMidi=this.zeroMidi+cycle*12;
+        if(cycleStartMidi>(this.desktopWindow?FULL_MAX_MIDI:(this.visualWindow?.max??this.maxMidi))) break;
+        const yMidi=this.zeroMidi+cycle*12+11;
+        const yAnchor=this.anchorForMidi(yMidi,keyAnchors,octaveSpan);
+        const zeroAnchor=this.visualWindow?this.anchorForMidi(cycleStartMidi,keyAnchors,octaveSpan):keyAnchors.get(cycleStartMidi);
+        const colorName=this.cardTheme.cycleNames[modulo(cycle,this.cardTheme.cycleNames.length)];
+        // White zero keeps the approved Y-key bottom-right anchor. A black zero
+        // anchors every immutable strip to the actual top-left of that cycle's
+        // black zero key; no neighbouring white-key geometry participates.
+        const stripX=blackZero?zeroAnchor.left:yAnchor.right-this.cardTheme.stripWidth;
+        const stripTop=blackZero?zeroAnchor.top:yAnchor.top;
+        const stripRight=stripX+this.cardTheme.stripWidth;
+        if(stripRight<=(this.visualWindow?this.cropLeft:0)||stripX>=(this.visualWindow?this.cropRight:PIANO_WIDTH)) continue;
+        const strip=element("image",{x:stripX,y:stripTop-this.cardTheme.stripHeight,
+          width:this.cardTheme.stripWidth,height:this.cardTheme.stripHeight,
+          "data-color-cycle":colorName,"data-cycle-index":cycle,"data-y-midi":yMidi,
+          "data-zero-midi":cycleStartMidi,"data-zero-key-type":zeroAnchor.type,
+          "data-anchor":blackZero?"bottom-left-to-black-zero-key-top-left":"bottom-right-to-y-key-top-right",
+          "clip-path":"url(#play12-card-keyboard-bounds)"});
+        const url=this.cardTheme.stripUrls[colorName];
+        strip.setAttribute("href",url); strip.setAttributeNS(XLINK,"xlink:href",url);
+        strip.classList.add("piano-card-strip"); this.svg.appendChild(strip);
+      }
+    }
+
+    showFunctionOverlay(commandLabels, functionMidi) {
+      if(!this.commandOverlay||!this.keyAnchors)return false;
+      const entries=[...commandLabels.entries(),[functionMidi,t("Function")]];
+      if(entries.some(([midi])=>!this.keys.has(midi)||!this.keyAnchors.has(midi))){
+        this.hideFunctionOverlay();
+        return false;
+      }
+      this.commandOverlay.replaceChildren();
+      for(const [midi,label] of entries){
+        const bounds=this.keyAnchors.get(midi),key=this.keys.get(midi);
+        const width=Math.max(15,bounds.right-bounds.left);
+        const badge=element("g",{"class":"piano-command-badge","data-midi":midi,"data-command":label});
+        badge.classList.add(bounds.type==="black"?"is-black-key":"is-white-key");
+        const rect=element("rect",{x:bounds.left+1,y:bounds.top+1,width:Math.max(4,width-2),height:Math.max(20,bounds.height-2),rx:4});
+        const text=element("text",{x:bounds.left+width/2,y:bounds.bottom-12,"text-anchor":"start","dominant-baseline":"middle",transform:`rotate(-90 ${bounds.left+width/2} ${bounds.bottom-12})`});
+        text.textContent=label;
+        badge.append(rect,text); this.commandOverlay.appendChild(badge);
+        key.classList.add("is-function-command");
+      }
+      this.mount.dataset.functionMode="true";
+      return true;
+    }
+    setFunctionCommandPressed(midi,pressed){
+      this.commandOverlay?.querySelector(`[data-midi="${midi}"]`)?.classList.toggle("is-pressed",pressed);
+    }
+    hideFunctionOverlay(){
+      this.commandOverlay?.replaceChildren();
+      for(const key of this.keys.values())key.classList.remove("is-function-command");
+      delete this.mount.dataset.functionMode;
+    }
+
+    measureOctaveSpan(anchors) {
+      for(let midi=this.minMidi;midi+12<=this.maxMidi;midi++) if(anchors.has(midi)&&anchors.has(midi+12)) return anchors.get(midi+12).right-anchors.get(midi).right;
+      throw new Error("Piano_Roll.svg: cannot measure octave span");
+    }
+
+    anchorForMidi(midi,anchors,octaveSpan) {
+      if(anchors.has(midi)) return anchors.get(midi);
+      let reference=midi;
+      while(reference>this.maxMidi) reference-=12;
+      while(reference<this.minMidi) reference+=12;
+      const anchor=anchors.get(reference);
+      const shift=(midi-reference)/12*octaveSpan;
+      return {...anchor,left:anchor.left+shift,right:anchor.right+shift};
+    }
+
+    fitReferenceAspect() {
+      const parent=this.mount.parentElement, availableHeight=Math.max(0,parent.clientHeight*.22-42);
+
+      if(parent.classList.contains("mvp-piano-host")||this.mount.classList.contains("is-fixed-piano-view")){
+        const availableWidth=this.mount.classList.contains("is-fixed-piano-view")
+          ? Math.max(0,global.innerWidth-24)
+          : Math.max(0,parent.clientWidth);
+        if(this.desktopWindow){const scale=availableWidth/PIANO_WIDTH;this.mount.style.width=`${(this.workspaceRange?this.cropWidth:PIANO_WIDTH)*scale}px`;this.mount.style.height=`${VIEW_HEIGHT*scale}px`;return;}
+        if(this.visualWindow){const visualWidth=Math.min(availableWidth,Math.max(36,this.cropWidth*.5),Math.max(72,Math.min(global.Play12Responsive?.state==="tablet-portrait"?300:180,(global.visualViewport?.height||global.innerHeight)*.25))*this.cropWidth/VIEW_HEIGHT);this.mount.style.width=`${visualWidth}px`;this.mount.style.height=`${visualWidth*VIEW_HEIGHT/this.cropWidth}px`;return;}
+        const fullWidth=Math.max(1100,availableWidth);
+        this.mount.style.width=`${fullWidth*this.cropWidth/PIANO_WIDTH}px`;
+        this.mount.style.height=`${fullWidth*VIEW_HEIGHT/PIANO_WIDTH}px`;
+        return;
+      }
+      const fullWidth=Math.min(parent.clientWidth-2,availableHeight*PIANO_WIDTH/VIEW_HEIGHT+18);
+      this.mount.style.width=`${fullWidth*this.cropWidth/PIANO_WIDTH}px`;
+      this.mount.style.height="";
+    }
+    syncContainer(){
+      this.resizeObserver.disconnect();
+      this.resizeObserver.observe(this.mount.parentElement);
+      this.fitReferenceAspect();
+      if(!this.keys.size) requestAnimationFrame(()=>this.bindGeometry());
+    }
+    setWorkspaceKeyboard(mode,range){
+      const desktop=mode==='desktop',physical=desktop?range:null,next=desktop?null:range;
+      if(physical&&(!Number.isInteger(physical.min)||!Number.isInteger(physical.max)||physical.min<FULL_MIN_MIDI||physical.max>FULL_MAX_MIDI||physical.max<physical.min))throw new Error('Unsupported physical keyboard range');
+      if(this.desktopWindow===desktop&&JSON.stringify(next)===JSON.stringify(this.visualWindow)&&JSON.stringify(physical)===JSON.stringify(this.workspaceRange??null))return;
+      this.desktopWindow=desktop;this.workspaceRange=physical;this.visualWindow=next;this.windowOutOfRange=false;this.render(this.zeroMidi);
+      this.mount.dataset.keyboardMode=desktop?(physical?'desktop-physical':'desktop-full'):'composition-range';
+    }
+    setVisualWindow(range){
+      const next=range?{min:Math.max(0,range.min),max:Math.min(127,range.max)}:null;
+      this.windowOutOfRange=!!range&&(range.min<0||range.max>127);
+      if(next&&next.max<next.min){next.min=FULL_MIN_MIDI;next.max=FULL_MAX_MIDI;}
+      if(JSON.stringify(next)===JSON.stringify(this.visualWindow))return;
+      this.visualWindow=next;this.render(this.zeroMidi);
+    }
+    windowReadabilityLimited(){return this.windowOutOfRange||!!this.visualWindow&&this.mount.clientWidth/Math.max(1,this.cropWidth)<.18;}
+    setRange(minMidi,maxMidi){
+      if(!Number.isInteger(minMidi)||!Number.isInteger(maxMidi)||minMidi<FULL_MIN_MIDI||maxMidi>FULL_MAX_MIDI||maxMidi<minMidi)throw new Error(`Unsupported Piano View range: ${minMidi}–${maxMidi}`);
+      if(minMidi===this.minMidi&&maxMidi===this.maxMidi)return;
+      this.minMidi=minMidi;this.maxMidi=maxMidi;this.render(this.zeroMidi);
+    }
+    setZeroMidi(zeroMidi){if(zeroMidi!==this.zeroMidi)this.render(zeroMidi);}
+    setZeroNote(zeroNote){this.setZeroMidi(this.zeroMidiFor(zeroNote));}
+    midiForCard(symbol,colorIndex){
+      const color=this.colors[colorIndex];
+      if(!color)return null;
+      const matches=[...this.keys].filter(([,key])=>key.dataset.play12Symbol===symbol&&key.dataset.play12Color===color);
+      return matches.length===1?matches[0][0]:null;
+    }
+    bindPointerControls(){
+      this.mount.addEventListener("pointerdown",event=>{
+        const key=event.target.closest?.(".piano-key");
+        if(!key||!this.mount.contains(key))return;
+        event.preventDefault();
+        const midi=Number(key.dataset.midi);
+        this.releaseVirtualPointer(event.pointerId);
+        const command=this.commandRouter?.noteOn?.(midi,event.pointerId)===true;
+        this.virtualPointers.set(event.pointerId,{midi,command});
+        if(!command)this.virtualHandlers?.noteOn(midi,event.pointerId);
+        try{key.setPointerCapture?.(event.pointerId);}catch(_){}
+      });
+      const release=event=>this.releaseVirtualPointer(event.pointerId);
+      global.addEventListener("pointerup",release);
+      global.addEventListener("pointercancel",release);
+      global.addEventListener("blur",()=>{for(const pointerId of [...this.virtualPointers.keys()])this.releaseVirtualPointer(pointerId);});
+      this.mount.addEventListener("pointerleave",release);
+      this.mount.addEventListener("lostpointercapture",release);
+    }
+    releaseVirtualPointer(pointerId){
+      if(!this.virtualPointers.has(pointerId))return;
+      const {midi,command}=this.virtualPointers.get(pointerId);
+      this.virtualPointers.delete(pointerId);
+      if(command)this.commandRouter?.noteOff?.(midi,pointerId);
+      else this.virtualHandlers?.noteOff(midi,pointerId);
+    }
+    setVirtualNoteHandlers(handlers){this.virtualHandlers=handlers;}
+    setCommandRouter(router){this.commandRouter=router;}
+    setActiveMidis(midis,source="playback"){
+      if(!this.activeBySource.has(source))this.activeBySource.set(source,new Set());
+      const previous=this.activeBySource.get(source),next=new Set(midis); this.activeBySource.set(source,next);
+      for(const midi of new Set([...previous,...next])){
+        const key=this.keys.get(midi); if(!key)continue;
+        key.classList.toggle("is-sounding",this.activeBySource.get("playback")?.has(midi)||false);
+        key.classList.toggle("is-input-active",this.activeBySource.get("mouse")?.has(midi)||this.activeBySource.get("midi")?.has(midi)||false);
+      }
+      const union=new Set([...this.activeBySource.values()].flatMap(active=>[...active]));
+      this.mount.dataset.activeMidis=[...union].sort((a,b)=>a-b).join(",");
+      this.mount.dataset.playbackActiveMidis=[...(this.activeBySource.get("playback")||[])].sort((a,b)=>a-b).join(",");
+      this.mount.dataset.midiInputActiveMidis=[...(this.activeBySource.get("midi")||[])].sort((a,b)=>a-b).join(",");
+      this.mount.dataset.virtualKeyActiveMidis=[...(this.activeBySource.get("mouse")||[])].sort((a,b)=>a-b).join(",");
+    }
+    setActivePitches(pitches){this.setActiveMidis(pitches.map(pitch=>pitch.midi).filter(Number.isFinite),"playback");}
+  }
+  global.Play12PianoView={render:options=>new PianoView(options),mappingForMidi,layoutZeroForMidi};
+})(window);
+
