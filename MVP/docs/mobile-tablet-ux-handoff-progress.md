@@ -74,3 +74,11 @@ Application checkpoint `8600b8be681fa03ef8df4e2dcc2cea84807ad527`, served in the
 | MIDI | Mock calibrated range, disconnect and reconnect passed on the final application. Requires real hardware for physical MIDI acceptance. |
 
 Remaining before release: hands-on Safari on iPhone/iPad, physical touch and MIDI, real file/backup picker, independent visual review of the early Tutorial spotlights and dialogs, Tutorial session reload and language switching, and full course reruns for the remaining locale/orientation combinations on the final application. Cloud Browser uses fixture viewport and pointer inputs; middle/late Spotlight fixture results verify geometry, not physical touch or Safari rendering. See the [independent acceptance procedure](mobile-tablet-browser-acceptance.md). No production deploy was attempted.
+
+## Follow-up after 440fd8f
+
+- `0c77b9e`: observe control and status row size changes that affect the training height budget. The browser control test failed on the baseline (status did not recalculate the score) and passed with the fix. RU 375×667 recovered to a 293 px score, two complete rounds and 32 px note cells. The test is available at `mobile-acceptance.html?scope=rebound`.
+- RU portrait tablet 768×1024 completed all six Tutorial stages with two round passes on the layout checkpoint. [Browser result](acceptance-mobile-20261119/checkpoint-next-course-ru-768.json).
+- `ee14999`: isolated visual QA found the Confirm 0 overlay hole measuring its own dialog before it was repositioned. Measure internal targets after final position. In RU 375×667 the confirmed button was at (63, 222.70), 249×54 and the mask at (60, 219.70), 255×60. Both buttons were stacked and contained.
+- The isolated 375×667 RU session verified early Play, Pause and Choose 0 spotlights. The switch to Rounds called native smooth scroll with target 702 px and settled to the Rounds panel. The [Choose 0 capture](acceptance-mobile-20261119/checkpoint-next-visual-choose-0.jpg) shows the active tab and the first-swipe hint. Tutorial reload retained step 3 and the Practice enable state before resuming. Full course rerun and Desktop/EN follow-up are in progress.
+- JavaScript: 275/275 after the two fixes.
