@@ -1,0 +1,325 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "Native Play required en 768x1024",
+      "width": 768,
+      "height": 1024,
+      "mode": "tablet-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 224.25,
+        "y": 64,
+        "width": 304.5,
+        "height": 597,
+        "top": 64,
+        "right": 528.75,
+        "bottom": 661,
+        "left": 224.25
+      },
+      "piano": {
+        "x": 103.484375,
+        "y": 727,
+        "width": 561.046875,
+        "height": 256,
+        "top": 727,
+        "right": 664.53125,
+        "bottom": 983,
+        "left": 103.484375
+      },
+      "nav": [
+        {
+          "text": "Tutorial",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 4,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 768,
+            "height": 81,
+            "top": 0,
+            "right": 768,
+            "bottom": 81,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout tutorial-training-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 81,
+            "width": 744,
+            "height": 596,
+            "top": 81,
+            "right": 756,
+            "bottom": 677,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "tutorial-center training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 85,
+            "width": 744,
+            "height": 571,
+            "top": 85,
+            "right": 756,
+            "bottom": 656,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 18,
+            "width": 729,
+            "height": 30,
+            "top": 18,
+            "right": 741,
+            "bottom": 48,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 64,
+            "width": 729,
+            "height": 592,
+            "top": 64,
+            "right": 741,
+            "bottom": 656,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 224.25,
+            "y": 64,
+            "width": 304.5,
+            "height": 592,
+            "top": 64,
+            "right": 528.75,
+            "bottom": 656,
+            "left": 224.25
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 677,
+            "width": 768,
+            "height": 347,
+            "top": 677,
+            "right": 768,
+            "bottom": 1024,
+            "left": 0
+          },
+          "style": "",
+          "children": 4
+        }
+      ]
+    },
+    {
+      "name": "Native Practice Play required"
+    },
+    {
+      "name": "Tutorial course en 768x1024",
+      "geometry": {
+        "width": 768,
+        "height": 1024,
+        "mode": "tablet-portrait",
+        "wide": false,
+        "overflow": 0,
+        "stage": {
+          "x": 231.75,
+          "y": 131,
+          "width": 304.5,
+          "height": 483,
+          "top": 131,
+          "right": 536.25,
+          "bottom": 614,
+          "left": 231.75
+        },
+        "piano": {
+          "x": 103.484375,
+          "y": 727,
+          "width": 561.046875,
+          "height": 256,
+          "top": 727,
+          "right": 664.53125,
+          "bottom": 983,
+          "left": 103.484375
+        },
+        "nav": [
+          {
+            "text": "Tutorial",
+            "active": "false",
+            "color": "rgb(17, 17, 17)",
+            "background": "rgba(0, 0, 0, 0)"
+          },
+          {
+            "text": "Music",
+            "active": "true",
+            "color": "rgb(17, 17, 17)",
+            "background": "rgba(0, 0, 0, 0)"
+          },
+          {
+            "text": "Rounds",
+            "active": "false",
+            "color": "rgb(17, 17, 17)",
+            "background": "rgba(0, 0, 0, 0)"
+          }
+        ],
+        "fullRounds": 1,
+        "containers": [
+          {
+            "name": "mvp-site-header",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 768,
+              "height": 81,
+              "top": 0,
+              "right": 768,
+              "bottom": 81,
+              "left": 0
+            },
+            "style": "",
+            "children": 2
+          },
+          {
+            "name": "main-layout tutorial-training-layout training-three-zones training-shell-main is-three-narrow",
+            "rect": {
+              "x": 12,
+              "y": 81,
+              "width": 744,
+              "height": 596,
+              "top": 81,
+              "right": 756,
+              "bottom": 677,
+              "left": 12
+            },
+            "style": "",
+            "children": 3
+          },
+          {
+            "name": "tutorial-center training-zone training-zone-center",
+            "rect": {
+              "x": 12,
+              "y": 85,
+              "width": 744,
+              "height": 571,
+              "top": 85,
+              "right": 756,
+              "bottom": 656,
+              "left": 12
+            },
+            "style": "",
+            "children": 2
+          },
+          {
+            "name": "main-tools",
+            "rect": {
+              "x": 12,
+              "y": 85,
+              "width": 744,
+              "height": 30,
+              "top": 85,
+              "right": 756,
+              "bottom": 115,
+              "left": 12
+            },
+            "style": "",
+            "children": 1
+          },
+          {
+            "name": "mvp-playback-host",
+            "rect": {
+              "x": 12,
+              "y": 131,
+              "width": 744,
+              "height": 525,
+              "top": 131,
+              "right": 756,
+              "bottom": 656,
+              "left": 12
+            },
+            "style": "",
+            "children": 1
+          },
+          {
+            "name": "training-music-slot",
+            "rect": {
+              "x": 231.75,
+              "y": 131,
+              "width": 304.5,
+              "height": 525,
+              "top": 131,
+              "right": 536.25,
+              "bottom": 656,
+              "left": 231.75
+            },
+            "style": "",
+            "children": 1
+          },
+          {
+            "name": "main-footer training-persistent-footer",
+            "rect": {
+              "x": 0,
+              "y": 677,
+              "width": 768,
+              "height": 347,
+              "top": 677,
+              "right": 768,
+              "bottom": 1024,
+              "left": 0
+            },
+            "style": "",
+            "children": 4
+          }
+        ]
+      },
+      "completed": true,
+      "roundPasses": 2,
+      "input": "DOM controls, original virtual pointer and musical note input; no fabricated success events"
+    }
+  ]
+}

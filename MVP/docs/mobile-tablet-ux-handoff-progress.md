@@ -90,3 +90,18 @@ Remaining before release: hands-on Safari on iPhone/iPad, physical touch and MID
 
 - Targeted final Main regression passed all four cases. RU/EN at 375×667 both settled to a 293 px field and two full rounds. RU/EN at 1366×768 retained two full rounds and the three-column layout. All four had zero page overflow. [Measurement](acceptance-mobile-20261119/checkpoint-next-main-regression.json), [RU phone capture](acceptance-mobile-20261119/checkpoint-next-main-ru-375.jpg).
 - Full 390×844 Phone EN passed after verifying the native Play actions actually started playback. The initial harness timeout is retained with the results. Switching EN → RU after passing preserved `ONBOARDING_COMPLETE`. [Phone EN protocol](acceptance-mobile-20261119/checkpoint-next-course-en-390.json), [locale resume protocol](acceptance-mobile-20261119/checkpoint-next-tutorial-locale.json).
+
+## Final follow-up decision
+
+The application tested was `ee14999f6ac9823ace8450b2bff2867fad56fa30`. Subsequent commits in this branch contain test harness changes, browser results and documentation.
+
+| Full six-stage Tutorial in Cloud Chrome | RU | EN |
+| --- | --- | --- |
+| Phone | [375×667 passed](acceptance-mobile-20261119/checkpoint-next-visual-course.json) | [390×844 passed](acceptance-mobile-20261119/checkpoint-next-course-en-390.json) |
+| Tablet portrait 768×1024 | [Passed](acceptance-mobile-20261119/checkpoint-next-course-ru-768-final.json) | [Passed](acceptance-mobile-20261119/checkpoint-next-course-en-768.json) |
+| Tablet landscape 1024×768 | [Passed](acceptance-mobile-20261119/checkpoint-next-course-ru-1024.json) | [Passed](acceptance-mobile-20261119/checkpoint-next-course-en-1024.json) |
+| Desktop 1366×768 | [Passed](acceptance-mobile-20261119/checkpoint-next-course-ru-1366.json) | [Passed](acceptance-mobile-20261119/checkpoint-next-course-en-1366.json) |
+
+All eight finished with two round passes each. Desktop and EN received targeted post-fix coverage. After settling, Main RU/EN at 375×667 reached the same 293 px score height with two complete rounds. The test sampled an earlier 220 px state before settlement in Cloud Chrome. Confirm 0 geometry and button containment passed, and a separate run captured the open dialog. [Confirm 0](acceptance-mobile-20261119/checkpoint-next-confirm-final.jpg)
+
+Browser follow-up accepted for the measured scenarios. The device checks for Safari, physical gestures, the system file picker and MIDI remain with the project owner. No production release was attempted. [Owner checklist and reproduction](mobile-tablet-browser-acceptance.md)
