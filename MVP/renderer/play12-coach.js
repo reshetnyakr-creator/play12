@@ -27,7 +27,7 @@
       overlay.style.display = 'none';
       pulse?.classList.remove('is-coach-pulsing'); pulse = null;
     }
-    function show(card, targets = [], pulseTarget = null, cardAnchor = null) {
+    function show(card, targets = [], pulseTarget = null, cardAnchor = null, onReveal = null) {
       stop(); owner = card; pulse = pulseTarget;
       overlay.style.display = 'block';
       overlay.classList.remove('is-active'); void overlay.getBoundingClientRect();
@@ -66,7 +66,10 @@
           else if(options.dock?.(card)){overlay.style.visibility='hidden';card.style.visibility='hidden';frame=global.requestAnimationFrame(update);return;}
           else card.style.setProperty('--mvp-coach-y',`${Math.max(top+height/2,Math.min(bottom-height/2,preferred))}px`);
         }
-        if (!timer) timer = global.setTimeout(() => stop(), 5000);
+        if (!timer) {
+          timer = global.setTimeout(() => stop(), 5000);
+          onReveal?.();
+        }
         frame = global.requestAnimationFrame(update);
       };
       update();

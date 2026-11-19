@@ -163,10 +163,10 @@
       if (instruction === 'explain') return [element('play12-score'), piano];
       return instruction ? [element(instruction)] : [];
     };
-    const spotlightHint = (element, instruction, pulse = false) => {
+    const spotlightHint = (element, instruction, pulse = false, onReveal = null) => {
       alignedLayout?.reveal(targetsFor(instruction).find(Boolean));
       if (!element.hidden) spotlight.show(element, () => targetsFor(instruction), pulse ? runtime?.pianoView?.mount : null,
-        document.getElementById('play12-score'));
+        document.getElementById('play12-score'), onReveal);
     };
     let returnAfterZero = null;
     let skippingInstruction = false;
@@ -184,14 +184,17 @@
       element.hidden = true;
       element.classList.remove('has-dismiss-timer', 'is-entering', 'is-visible');
     };
-    const showHint = (element, key, afterDismiss = null) => {
+    const armHintTimer = (element, afterDismiss) => {
+      element.classList.add('has-dismiss-timer');
+      hintTimers.set(element, global.setTimeout(() => { hideHint(element); afterDismiss?.(); }, INFO_CARD_DURATION_MS));
+    };
+    const showHint = (element, key, afterDismiss = null, deferTimer = false) => {
       if (hintKeys.get(element) === key) return;
       hideHint(element);
       if (dismissedHints.has(key)) { afterDismiss?.(); return; }
       hintKeys.set(element, key);
       element.hidden = false;
-      element.classList.add('has-dismiss-timer');
-      hintTimers.set(element, global.setTimeout(() => { hideHint(element); afterDismiss?.(); }, INFO_CARD_DURATION_MS));
+      if (!deferTimer) armHintTimer(element, afterDismiss);
     };
     const clearHints = () => {
       for (const element of [listenCoach, document.getElementById('zero-chooser')]) if (element) hideHint(element);
@@ -204,8 +207,9 @@
       if (dismissedHints.has(key)) { hideHint(listenCoach); return; }
       listenCoach.dataset.copy = text;
       listenPrompt.innerHTML = text;
-      showHint(listenCoach, key, afterDismiss);
-      spotlightHint(listenCoach, control, pulse);
+      const deferTimer = Boolean(afterDismiss && alignedLayout);
+      showHint(listenCoach, key, afterDismiss, deferTimer);
+      spotlightHint(listenCoach, control, pulse, deferTimer ? () => armHintTimer(listenCoach, afterDismiss) : null);
       void listenCoach.offsetWidth;
       listenCoach.classList.add('is-entering');
     };

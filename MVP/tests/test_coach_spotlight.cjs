@@ -56,3 +56,27 @@ test('Spotlight uses the overlay coordinate system after visual viewport shifts'
 
 test('Instructional card chooses a free viewport interval beside the highlighted control',()=>{const h=fixture({avoidTargets:true}),card=new Element('onboarding-listen-coach'),target=new Element();card.rect={left:100,top:120,width:200,height:80,right:300,bottom:200};target.rect={left:100,top:100,width:200,height:100,right:300,bottom:200};h.coach.show(card,[target],null,target);const y=parseFloat(card.style['--mvp-coach-y']);assert(y-40>=210||y+40<=90);assert(y-40>=8&&y+40<=712);h.coach.stop();});
 test('A card without a free floating interval requests existing in-flow placement before showing',()=>{let docked=0;const h=fixture({avoidTargets:true,dock:()=>{docked++;return true;}}),card=new Element('onboarding-listen-coach'),target=new Element();card.rect={left:100,top:0,width:200,height:1000,right:300,bottom:1000};h.coach.show(card,[target],null,target);assert.equal(docked,1);assert.equal(card.style.visibility,'hidden');h.coach.stop();assert.equal(h.frames.size,0);});
+
+test('Reveal callback fires once after the target settles', () => {
+  let stable = false;
+  let reveals = 0;
+  const h = fixture({reveal: () => stable});
+  const card = new Element();
+  const target = new Element();
+  const tick = () => {
+    const [id, run] = [...h.frames][0];
+    h.frames.delete(id);
+    run();
+  };
+
+  h.coach.show(card, [target], null, null, () => { reveals++; });
+  tick();
+  assert.equal(reveals, 0);
+  assert.equal(h.timers.size, 0);
+  stable = true;
+  tick();
+  tick();
+  assert.equal(reveals, 1);
+  assert.equal(h.timers.size, 1);
+  h.coach.stop();
+});
