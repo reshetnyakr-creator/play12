@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "MIDI mock original calibration, disconnect and reconnect",
+      "keyCount": 61,
+      "hardware": false
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "Clipboard en",
+      "pendingText": true,
+      "validation": true,
+      "pipeline": true
+    },
+    {
+      "name": "Clipboard ru",
+      "pendingText": true,
+      "validation": true,
+      "pipeline": true
+    }
+  ]
+}

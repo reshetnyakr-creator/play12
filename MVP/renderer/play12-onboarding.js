@@ -170,7 +170,7 @@
     };
     let returnAfterZero = null;
     let skippingInstruction = false;
-    let zeroHintSequence = 0;
+    let zeroHintSequence = 0, cardGeometryFrame = 0;
     const hintTimers = new Map();
     const hintKeys = new Map();
     const dismissedHints = new Set();
@@ -756,6 +756,10 @@
     const expectedCardMidi = () => state.zeroSetupStage === 'verify-yellow'
       ? visibleCardMidi('1', 2) : state.zeroSetupStage === 'verify-green' ? visibleCardMidi('2', 3) : null;
     const showCardVerificationPrompt = (retry = false) => {
+      if(cardGeometryFrame)global.cancelAnimationFrame(cardGeometryFrame);cardGeometryFrame=0;
+      // Piano View rebuilds its key map on the next frame after a zero/range change.
+      // Defer only the visual instruction, without changing its expected note or lesson state.
+      if(runtime?.pianoView?.keys?.size===0){const stage=state.zeroSetupStage;cardGeometryFrame=global.requestAnimationFrame(()=>{if(state.zeroSetupStage===stage&&stage?.startsWith('verify-'))showCardVerificationPrompt(retry);});return;}
       const yellow = state.zeroSetupStage === 'verify-yellow';
       const target = expectedCardMidi();
       const retryCopy = retry ? `${t('Check that the cards are placed correctly and try again.')}<br>` : '';
@@ -1395,6 +1399,7 @@
       returnAfterZero=null;exposeState();const chooser=document.getElementById('zero-chooser');if(chooser)hideHint(chooser);
     });
     global.addEventListener('pagehide',()=>{
+      if(cardGeometryFrame)global.cancelAnimationFrame(cardGeometryFrame);
       document.removeEventListener?.('click',armUserPlay,true);document.removeEventListener?.('keydown',armUserPlay,true);
       spotlight.stop();alignedLayout?.dispose();
       for(const timer of hintTimers.values())global.clearTimeout(timer);

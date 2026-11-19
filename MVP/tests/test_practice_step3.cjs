@@ -848,3 +848,12 @@ test('Timing-rejected input resets the metronome series without counting it',()=
 test('One completed round pass persists across restore; only a second complete pass finishes',()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-practice',roundPasses:1,metronomeUnlocked:true,roundUnlocked:true,highestUnlockedStep:5,inputMode:'demo',practiceModeEnabled:true,practiceLeftHandEnabled:false});h.controller.continueSession();roundFixture(h);assert.equal(h.controller.getState().roundPasses,1);h.window.dispatchEvent({type:'play12:practice-interruption',detail:{action:'pause'}});assert.equal(h.controller.getState().roundPasses,1);h.window.dispatchEvent({type:'play12:musical-attempt-start',detail:{position:1}});creditRound(h,2);creditRound(h,3);assert.equal(h.node('#round-ok12').hidden,true);creditRound(h,4);assert.equal(h.controller.getState().roundPasses,2);assert.equal(h.node('#round-ok12').hidden,false);creditRound(h,4);assert.equal([...h.timers.values()].filter(t=>t.delay===950).length,1);expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');assert.equal(h.controller.getState().roundPasses,2);
 });
+
+test('Card instruction waits for asynchronous Piano View geometry without changing the verification stage',()=>{
+ const h=onboarding({onboardingStep:'CHOOSE_ZERO',onboardingStarted:true,inputMode:'demo',zeroSetupStage:'cards',listenFragmentCompleted:true,playLearned:true,pauseLearned:true});
+ const frames=new Map();let id=0;h.window.requestAnimationFrame=fn=>{frames.set(++id,fn);return id;};h.window.cancelAnimationFrame=i=>frames.delete(i);
+ h.pianoView.keys=new Map();h.pianoView.midiForCard=()=>h.pianoView.keys.size?49:null;h.controller.continueSession();h.node('#cards-ready').handlers.click();
+ assert.equal(h.controller.getState().zeroSetupStage,'verify-yellow');assert.equal(frames.size,1);
+ h.pianoView.keys.set(49,{});const [ticket,fn]=[...frames][0];frames.delete(ticket);fn();
+ assert.equal(h.controller.getState().zeroSetupStage,'verify-yellow');assert.equal(frames.size,0);assert.match(h.node('#onboarding-listen-coach').dataset.copy,/yellow.*1/);assert(!h.node('#onboarding-listen-coach').dataset.copy.includes('not visible'));
+});

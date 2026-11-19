@@ -1,0 +1,3425 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "name": "Main en 375x667",
+      "width": 375,
+      "height": 667,
+      "mode": "phone-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 35.25,
+        "y": 106,
+        "width": 304.5,
+        "height": 293,
+        "top": 106,
+        "right": 339.75,
+        "bottom": 399,
+        "left": 35.25
+      },
+      "piano": {
+        "x": 118.3125,
+        "y": 507.953125,
+        "width": 138.359375,
+        "height": 120.046875,
+        "top": 507.953125,
+        "right": 256.671875,
+        "bottom": 628,
+        "left": 118.3125
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 2,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 375,
+            "height": 64,
+            "top": 0,
+            "right": 375,
+            "bottom": 64,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 64,
+            "width": 351,
+            "height": 397.953125,
+            "top": 64,
+            "right": 363,
+            "bottom": 461.953125,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 351,
+            "height": 372.953125,
+            "top": 68,
+            "right": 363,
+            "bottom": 440.953125,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 351,
+            "height": 30,
+            "top": 68,
+            "right": 363,
+            "bottom": 98,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 106,
+            "width": 351,
+            "height": 335,
+            "top": 106,
+            "right": 363,
+            "bottom": 441,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 35.25,
+            "y": 106,
+            "width": 304.5,
+            "height": 335,
+            "top": 106,
+            "right": 339.75,
+            "bottom": 441,
+            "left": 35.25
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 461.953125,
+            "width": 375,
+            "height": 205.046875,
+            "top": 461.953125,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 375x667",
+      "width": 375,
+      "height": 667,
+      "mode": "phone-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 35.25,
+        "y": 137.953125,
+        "width": 304.5,
+        "height": 261,
+        "top": 137.953125,
+        "right": 339.75,
+        "bottom": 398.953125,
+        "left": 35.25
+      },
+      "piano": {
+        "x": 118.3125,
+        "y": 507.953125,
+        "width": 138.359375,
+        "height": 120.046875,
+        "top": 507.953125,
+        "right": 256.671875,
+        "bottom": 628,
+        "left": 118.3125
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 2,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 375,
+            "height": 64,
+            "top": 0,
+            "right": 375,
+            "bottom": 64,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 64,
+            "width": 351,
+            "height": 397.953125,
+            "top": 64,
+            "right": 363,
+            "bottom": 461.953125,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 351,
+            "height": 372.953125,
+            "top": 68,
+            "right": 363,
+            "bottom": 440.953125,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 351,
+            "height": 30,
+            "top": 68,
+            "right": 363,
+            "bottom": 98,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 137.953125,
+            "width": 351,
+            "height": 303,
+            "top": 137.953125,
+            "right": 363,
+            "bottom": 440.953125,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 35.25,
+            "y": 137.953125,
+            "width": 304.5,
+            "height": 303,
+            "top": 137.953125,
+            "right": 339.75,
+            "bottom": 440.953125,
+            "left": 35.25
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 461.953125,
+            "width": 375,
+            "height": 205.046875,
+            "top": 461.953125,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 390x844",
+      "width": 390,
+      "height": 844,
+      "mode": "phone-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 42.75,
+        "y": 138.09375,
+        "width": 304.5,
+        "height": 406,
+        "top": 138.09375,
+        "right": 347.25,
+        "bottom": 544.09375,
+        "left": 42.75
+      },
+      "piano": {
+        "x": 107.453125,
+        "y": 653.09375,
+        "width": 175.078125,
+        "height": 151.90625,
+        "top": 653.09375,
+        "right": 282.53125,
+        "bottom": 805,
+        "left": 107.453125
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 3,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 64,
+            "top": 0,
+            "right": 390,
+            "bottom": 64,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 64,
+            "width": 366,
+            "height": 543.09375,
+            "top": 64,
+            "right": 378,
+            "bottom": 607.09375,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 366,
+            "height": 518.09375,
+            "top": 68,
+            "right": 378,
+            "bottom": 586.09375,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 366,
+            "height": 30,
+            "top": 68,
+            "right": 378,
+            "bottom": 98,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 138.09375,
+            "width": 366,
+            "height": 448,
+            "top": 138.09375,
+            "right": 378,
+            "bottom": 586.09375,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 42.75,
+            "y": 138.09375,
+            "width": 304.5,
+            "height": 448,
+            "top": 138.09375,
+            "right": 347.25,
+            "bottom": 586.09375,
+            "left": 42.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 607.09375,
+            "width": 390,
+            "height": 236.90625,
+            "top": 607.09375,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 390x844",
+      "width": 390,
+      "height": 844,
+      "mode": "phone-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 42.75,
+        "y": 138.09375,
+        "width": 304.5,
+        "height": 406,
+        "top": 138.09375,
+        "right": 347.25,
+        "bottom": 544.09375,
+        "left": 42.75
+      },
+      "piano": {
+        "x": 107.453125,
+        "y": 653.09375,
+        "width": 175.078125,
+        "height": 151.90625,
+        "top": 653.09375,
+        "right": 282.53125,
+        "bottom": 805,
+        "left": 107.453125
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 3,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 64,
+            "top": 0,
+            "right": 390,
+            "bottom": 64,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 64,
+            "width": 366,
+            "height": 543.09375,
+            "top": 64,
+            "right": 378,
+            "bottom": 607.09375,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 366,
+            "height": 518.09375,
+            "top": 68,
+            "right": 378,
+            "bottom": 586.09375,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 366,
+            "height": 30,
+            "top": 68,
+            "right": 378,
+            "bottom": 98,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 138.09375,
+            "width": 366,
+            "height": 448,
+            "top": 138.09375,
+            "right": 378,
+            "bottom": 586.09375,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 42.75,
+            "y": 138.09375,
+            "width": 304.5,
+            "height": 448,
+            "top": 138.09375,
+            "right": 347.25,
+            "bottom": 586.09375,
+            "left": 42.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 607.09375,
+            "width": 390,
+            "height": 236.90625,
+            "top": 607.09375,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 430x932",
+      "width": 430,
+      "height": 932,
+      "mode": "phone-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 62.75,
+        "y": 138.25,
+        "width": 304.5,
+        "height": 478,
+        "top": 138.25,
+        "right": 367.25,
+        "bottom": 616.25,
+        "left": 62.75
+      },
+      "piano": {
+        "x": 118.328125,
+        "y": 725.25,
+        "width": 193.34375,
+        "height": 167.75,
+        "top": 725.25,
+        "right": 311.671875,
+        "bottom": 893,
+        "left": 118.328125
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 3,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 430,
+            "height": 64,
+            "top": 0,
+            "right": 430,
+            "bottom": 64,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 64,
+            "width": 406,
+            "height": 615.25,
+            "top": 64,
+            "right": 418,
+            "bottom": 679.25,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 406,
+            "height": 590.25,
+            "top": 68,
+            "right": 418,
+            "bottom": 658.25,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 406,
+            "height": 30,
+            "top": 68,
+            "right": 418,
+            "bottom": 98,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 138.25,
+            "width": 406,
+            "height": 520,
+            "top": 138.25,
+            "right": 418,
+            "bottom": 658.25,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 62.75,
+            "y": 138.25,
+            "width": 304.5,
+            "height": 520,
+            "top": 138.25,
+            "right": 367.25,
+            "bottom": 658.25,
+            "left": 62.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 679.25,
+            "width": 430,
+            "height": 252.75,
+            "top": 679.25,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 430x932",
+      "width": 430,
+      "height": 932,
+      "mode": "phone-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 62.75,
+        "y": 138.25,
+        "width": 304.5,
+        "height": 478,
+        "top": 138.25,
+        "right": 367.25,
+        "bottom": 616.25,
+        "left": 62.75
+      },
+      "piano": {
+        "x": 118.328125,
+        "y": 725.25,
+        "width": 193.34375,
+        "height": 167.75,
+        "top": 725.25,
+        "right": 311.671875,
+        "bottom": 893,
+        "left": 118.328125
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 3,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 430,
+            "height": 64,
+            "top": 0,
+            "right": 430,
+            "bottom": 64,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 64,
+            "width": 406,
+            "height": 615.25,
+            "top": 64,
+            "right": 418,
+            "bottom": 679.25,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 406,
+            "height": 590.25,
+            "top": 68,
+            "right": 418,
+            "bottom": 658.25,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 68,
+            "width": 406,
+            "height": 30,
+            "top": 68,
+            "right": 418,
+            "bottom": 98,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 138.25,
+            "width": 406,
+            "height": 520,
+            "top": 138.25,
+            "right": 418,
+            "bottom": 658.25,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 62.75,
+            "y": 138.25,
+            "width": 304.5,
+            "height": 520,
+            "top": 138.25,
+            "right": 367.25,
+            "bottom": 658.25,
+            "left": 62.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 679.25,
+            "width": 430,
+            "height": 252.75,
+            "top": 679.25,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 844x390",
+      "width": 844,
+      "height": 390,
+      "mode": "phone-landscape",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 262.25,
+        "y": 126,
+        "width": 304.5,
+        "height": 0,
+        "top": 126,
+        "right": 566.75,
+        "bottom": 126,
+        "left": 262.25
+      },
+      "piano": {
+        "x": 365.8125,
+        "y": 251.5,
+        "width": 112.359375,
+        "height": 97.5,
+        "top": 251.5,
+        "right": 478.171875,
+        "bottom": 349,
+        "left": 365.8125
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 0,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 844,
+            "height": 76,
+            "top": 0,
+            "right": 844,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 76,
+            "width": 820,
+            "height": 107.5,
+            "top": 76,
+            "right": 832,
+            "bottom": 183.5,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 820,
+            "height": 82.5,
+            "top": 80,
+            "right": 832,
+            "bottom": 162.5,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 805,
+            "height": 30,
+            "top": 80,
+            "right": 817,
+            "bottom": 110,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 126,
+            "width": 805,
+            "height": 42,
+            "top": 126,
+            "right": 817,
+            "bottom": 168,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 262.25,
+            "y": 126,
+            "width": 304.5,
+            "height": 42,
+            "top": 126,
+            "right": 566.75,
+            "bottom": 168,
+            "left": 262.25
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 183.5,
+            "width": 844,
+            "height": 206.5,
+            "top": 183.5,
+            "right": 844,
+            "bottom": 390,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 844x390",
+      "width": 844,
+      "height": 390,
+      "mode": "phone-landscape",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 262.25,
+        "y": 126,
+        "width": 304.5,
+        "height": 0,
+        "top": 126,
+        "right": 566.75,
+        "bottom": 126,
+        "left": 262.25
+      },
+      "piano": {
+        "x": 365.8125,
+        "y": 251.5,
+        "width": 112.359375,
+        "height": 97.5,
+        "top": 251.5,
+        "right": 478.171875,
+        "bottom": 349,
+        "left": 365.8125
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 0,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 844,
+            "height": 76,
+            "top": 0,
+            "right": 844,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 76,
+            "width": 820,
+            "height": 107.5,
+            "top": 76,
+            "right": 832,
+            "bottom": 183.5,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 820,
+            "height": 82.5,
+            "top": 80,
+            "right": 832,
+            "bottom": 162.5,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 805,
+            "height": 30,
+            "top": 80,
+            "right": 817,
+            "bottom": 110,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 126,
+            "width": 805,
+            "height": 42,
+            "top": 126,
+            "right": 817,
+            "bottom": 168,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 262.25,
+            "y": 126,
+            "width": 304.5,
+            "height": 42,
+            "top": 126,
+            "right": 566.75,
+            "bottom": 168,
+            "left": 262.25
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 183.5,
+            "width": 844,
+            "height": 206.5,
+            "top": 183.5,
+            "right": 844,
+            "bottom": 390,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 768x1024",
+      "width": 768,
+      "height": 1024,
+      "mode": "tablet-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 231.75,
+        "y": 126,
+        "width": 304.5,
+        "height": 488,
+        "top": 126,
+        "right": 536.25,
+        "bottom": 614,
+        "left": 231.75
+      },
+      "piano": {
+        "x": 236.484375,
+        "y": 727,
+        "width": 295.03125,
+        "height": 256,
+        "top": 727,
+        "right": 531.515625,
+        "bottom": 983,
+        "left": 236.484375
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 3,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 768,
+            "height": 76,
+            "top": 0,
+            "right": 768,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 76,
+            "width": 744,
+            "height": 601,
+            "top": 76,
+            "right": 756,
+            "bottom": 677,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 744,
+            "height": 576,
+            "top": 80,
+            "right": 756,
+            "bottom": 656,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 744,
+            "height": 30,
+            "top": 80,
+            "right": 756,
+            "bottom": 110,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 126,
+            "width": 744,
+            "height": 530,
+            "top": 126,
+            "right": 756,
+            "bottom": 656,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 231.75,
+            "y": 126,
+            "width": 304.5,
+            "height": 530,
+            "top": 126,
+            "right": 536.25,
+            "bottom": 656,
+            "left": 231.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 677,
+            "width": 768,
+            "height": 347,
+            "top": 677,
+            "right": 768,
+            "bottom": 1024,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 768x1024",
+      "width": 768,
+      "height": 1024,
+      "mode": "tablet-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 231.75,
+        "y": 126,
+        "width": 304.5,
+        "height": 488,
+        "top": 126,
+        "right": 536.25,
+        "bottom": 614,
+        "left": 231.75
+      },
+      "piano": {
+        "x": 236.484375,
+        "y": 727,
+        "width": 295.03125,
+        "height": 256,
+        "top": 727,
+        "right": 531.515625,
+        "bottom": 983,
+        "left": 236.484375
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 3,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 768,
+            "height": 76,
+            "top": 0,
+            "right": 768,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 76,
+            "width": 744,
+            "height": 601,
+            "top": 76,
+            "right": 756,
+            "bottom": 677,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 744,
+            "height": 576,
+            "top": 80,
+            "right": 756,
+            "bottom": 656,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 744,
+            "height": 30,
+            "top": 80,
+            "right": 756,
+            "bottom": 110,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 126,
+            "width": 744,
+            "height": 530,
+            "top": 126,
+            "right": 756,
+            "bottom": 656,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 231.75,
+            "y": 126,
+            "width": 304.5,
+            "height": 530,
+            "top": 126,
+            "right": 536.25,
+            "bottom": 656,
+            "left": 231.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 677,
+            "width": 768,
+            "height": 347,
+            "top": 677,
+            "right": 768,
+            "bottom": 1024,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 820x1180",
+      "width": 820,
+      "height": 1180,
+      "mode": "tablet-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 257.75,
+        "y": 126,
+        "width": 304.5,
+        "height": 618,
+        "top": 126,
+        "right": 562.25,
+        "bottom": 744,
+        "left": 257.75
+      },
+      "piano": {
+        "x": 247.5,
+        "y": 857,
+        "width": 325,
+        "height": 282,
+        "top": 857,
+        "right": 572.5,
+        "bottom": 1139,
+        "left": 247.5
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 4,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 820,
+            "height": 76,
+            "top": 0,
+            "right": 820,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 76,
+            "width": 796,
+            "height": 731,
+            "top": 76,
+            "right": 808,
+            "bottom": 807,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 796,
+            "height": 706,
+            "top": 80,
+            "right": 808,
+            "bottom": 786,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 796,
+            "height": 30,
+            "top": 80,
+            "right": 808,
+            "bottom": 110,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 126,
+            "width": 796,
+            "height": 660,
+            "top": 126,
+            "right": 808,
+            "bottom": 786,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 257.75,
+            "y": 126,
+            "width": 304.5,
+            "height": 660,
+            "top": 126,
+            "right": 562.25,
+            "bottom": 786,
+            "left": 257.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 807,
+            "width": 820,
+            "height": 373,
+            "top": 807,
+            "right": 820,
+            "bottom": 1180,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 820x1180",
+      "width": 820,
+      "height": 1180,
+      "mode": "tablet-portrait",
+      "wide": false,
+      "overflow": 0,
+      "stage": {
+        "x": 257.75,
+        "y": 126,
+        "width": 304.5,
+        "height": 618,
+        "top": 126,
+        "right": 562.25,
+        "bottom": 744,
+        "left": 257.75
+      },
+      "piano": {
+        "x": 247.5,
+        "y": 857,
+        "width": 325,
+        "height": 282,
+        "top": 857,
+        "right": 572.5,
+        "bottom": 1139,
+        "left": 247.5
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 4,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 820,
+            "height": 76,
+            "top": 0,
+            "right": 820,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-narrow",
+          "rect": {
+            "x": 12,
+            "y": 76,
+            "width": 796,
+            "height": 731,
+            "top": 76,
+            "right": 808,
+            "bottom": 807,
+            "left": 12
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 796,
+            "height": 706,
+            "top": 80,
+            "right": 808,
+            "bottom": 786,
+            "left": 12
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 12,
+            "y": 80,
+            "width": 796,
+            "height": 30,
+            "top": 80,
+            "right": 808,
+            "bottom": 110,
+            "left": 12
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 12,
+            "y": 126,
+            "width": 796,
+            "height": 660,
+            "top": 126,
+            "right": 808,
+            "bottom": 786,
+            "left": 12
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 257.75,
+            "y": 126,
+            "width": 304.5,
+            "height": 660,
+            "top": 126,
+            "right": 562.25,
+            "bottom": 786,
+            "left": 257.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 807,
+            "width": 820,
+            "height": 373,
+            "top": 807,
+            "right": 820,
+            "bottom": 1180,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 1024x768",
+      "width": 1024,
+      "height": 768,
+      "mode": "tablet-landscape",
+      "wide": true,
+      "overflow": 0,
+      "stage": {
+        "x": 359.734375,
+        "y": 160,
+        "width": 304.5,
+        "height": 327,
+        "top": 160,
+        "right": 664.234375,
+        "bottom": 487,
+        "left": 359.734375
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 2,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1024,
+            "height": 76,
+            "top": 0,
+            "right": 1024,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-wide",
+          "rect": {
+            "x": 0,
+            "y": 76,
+            "width": 1024,
+            "height": 468.96875,
+            "top": 76,
+            "right": 1024,
+            "bottom": 544.96875,
+            "left": 0
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 355.328125,
+            "y": 96,
+            "width": 313.328125,
+            "height": 432.96875,
+            "top": 96,
+            "right": 668.65625,
+            "bottom": 528.96875,
+            "left": 355.328125
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 355.328125,
+            "y": 96,
+            "width": 313.328125,
+            "height": 42,
+            "top": 96,
+            "right": 668.65625,
+            "bottom": 138,
+            "left": 355.328125
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 355.328125,
+            "y": 160,
+            "width": 313.328125,
+            "height": 369,
+            "top": 160,
+            "right": 668.65625,
+            "bottom": 529,
+            "left": 355.328125
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 359.734375,
+            "y": 160,
+            "width": 304.5,
+            "height": 369,
+            "top": 160,
+            "right": 664.234375,
+            "bottom": 529,
+            "left": 359.734375
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 544.96875,
+            "width": 1024,
+            "height": 223.03125,
+            "top": 544.96875,
+            "right": 1024,
+            "bottom": 768,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 1024x768",
+      "width": 1024,
+      "height": 768,
+      "mode": "tablet-landscape",
+      "wide": true,
+      "overflow": 0,
+      "stage": {
+        "x": 359.734375,
+        "y": 160,
+        "width": 304.5,
+        "height": 327,
+        "top": 160,
+        "right": 664.234375,
+        "bottom": 487,
+        "left": 359.734375
+      },
+      "piano": {
+        "x": 12,
+        "y": 551.96875,
+        "width": 1000,
+        "height": 175.03125,
+        "top": 551.96875,
+        "right": 1012,
+        "bottom": 727,
+        "left": 12
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 2,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1024,
+            "height": 76,
+            "top": 0,
+            "right": 1024,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-wide",
+          "rect": {
+            "x": 0,
+            "y": 76,
+            "width": 1024,
+            "height": 468.96875,
+            "top": 76,
+            "right": 1024,
+            "bottom": 544.96875,
+            "left": 0
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 355.328125,
+            "y": 96,
+            "width": 313.328125,
+            "height": 432.96875,
+            "top": 96,
+            "right": 668.65625,
+            "bottom": 528.96875,
+            "left": 355.328125
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 355.328125,
+            "y": 96,
+            "width": 313.328125,
+            "height": 42,
+            "top": 96,
+            "right": 668.65625,
+            "bottom": 138,
+            "left": 355.328125
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 355.328125,
+            "y": 160,
+            "width": 313.328125,
+            "height": 369,
+            "top": 160,
+            "right": 668.65625,
+            "bottom": 529,
+            "left": 355.328125
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 359.734375,
+            "y": 160,
+            "width": 304.5,
+            "height": 369,
+            "top": 160,
+            "right": 664.234375,
+            "bottom": 529,
+            "left": 359.734375
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 544.96875,
+            "width": 1024,
+            "height": 223.03125,
+            "top": 544.96875,
+            "right": 1024,
+            "bottom": 768,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 1180x820",
+      "width": 1180,
+      "height": 820,
+      "mode": "tablet-landscape",
+      "wide": true,
+      "overflow": 0,
+      "stage": {
+        "x": 437.734375,
+        "y": 160,
+        "width": 304.5,
+        "height": 352,
+        "top": 160,
+        "right": 742.234375,
+        "bottom": 512,
+        "left": 437.734375
+      },
+      "piano": {
+        "x": 12,
+        "y": 576.671875,
+        "width": 1156,
+        "height": 202.328125,
+        "top": 576.671875,
+        "right": 1168,
+        "bottom": 779,
+        "left": 12
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 2,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1180,
+            "height": 76,
+            "top": 0,
+            "right": 1180,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-wide",
+          "rect": {
+            "x": 0,
+            "y": 76,
+            "width": 1180,
+            "height": 493.671875,
+            "top": 76,
+            "right": 1180,
+            "bottom": 569.671875,
+            "left": 0
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 407.328125,
+            "y": 96,
+            "width": 365.328125,
+            "height": 457.671875,
+            "top": 96,
+            "right": 772.65625,
+            "bottom": 553.671875,
+            "left": 407.328125
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 407.328125,
+            "y": 96,
+            "width": 365.328125,
+            "height": 42,
+            "top": 96,
+            "right": 772.65625,
+            "bottom": 138,
+            "left": 407.328125
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 407.328125,
+            "y": 160,
+            "width": 365.328125,
+            "height": 394,
+            "top": 160,
+            "right": 772.65625,
+            "bottom": 554,
+            "left": 407.328125
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 437.734375,
+            "y": 160,
+            "width": 304.5,
+            "height": 394,
+            "top": 160,
+            "right": 742.234375,
+            "bottom": 554,
+            "left": 437.734375
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 569.671875,
+            "width": 1180,
+            "height": 250.328125,
+            "top": 569.671875,
+            "right": 1180,
+            "bottom": 820,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 1180x820",
+      "width": 1180,
+      "height": 820,
+      "mode": "tablet-landscape",
+      "wide": true,
+      "overflow": 0,
+      "stage": {
+        "x": 437.734375,
+        "y": 160,
+        "width": 304.5,
+        "height": 352,
+        "top": 160,
+        "right": 742.234375,
+        "bottom": 512,
+        "left": 437.734375
+      },
+      "piano": {
+        "x": 12,
+        "y": 576.671875,
+        "width": 1156,
+        "height": 202.328125,
+        "top": 576.671875,
+        "right": 1168,
+        "bottom": 779,
+        "left": 12
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 2,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1180,
+            "height": 76,
+            "top": 0,
+            "right": 1180,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-wide",
+          "rect": {
+            "x": 0,
+            "y": 76,
+            "width": 1180,
+            "height": 493.671875,
+            "top": 76,
+            "right": 1180,
+            "bottom": 569.671875,
+            "left": 0
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 407.328125,
+            "y": 96,
+            "width": 365.328125,
+            "height": 457.671875,
+            "top": 96,
+            "right": 772.65625,
+            "bottom": 553.671875,
+            "left": 407.328125
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 407.328125,
+            "y": 96,
+            "width": 365.328125,
+            "height": 42,
+            "top": 96,
+            "right": 772.65625,
+            "bottom": 138,
+            "left": 407.328125
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 407.328125,
+            "y": 160,
+            "width": 365.328125,
+            "height": 394,
+            "top": 160,
+            "right": 772.65625,
+            "bottom": 554,
+            "left": 407.328125
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 437.734375,
+            "y": 160,
+            "width": 304.5,
+            "height": 394,
+            "top": 160,
+            "right": 742.234375,
+            "bottom": 554,
+            "left": 437.734375
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 569.671875,
+            "width": 1180,
+            "height": 250.328125,
+            "top": 569.671875,
+            "right": 1180,
+            "bottom": 820,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 1366x768",
+      "width": 1366,
+      "height": 768,
+      "mode": "desktop",
+      "wide": true,
+      "overflow": 0,
+      "stage": {
+        "x": 530.734375,
+        "y": 160.109375,
+        "width": 304.5,
+        "height": 267,
+        "top": 160.109375,
+        "right": 835.234375,
+        "bottom": 427.109375,
+        "left": 530.734375
+      },
+      "piano": {
+        "x": 12,
+        "y": 492.109375,
+        "width": 1342,
+        "height": 234.890625,
+        "top": 492.109375,
+        "right": 1354,
+        "bottom": 727,
+        "left": 12
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 2,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1366,
+            "height": 76,
+            "top": 0,
+            "right": 1366,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-wide",
+          "rect": {
+            "x": 0,
+            "y": 76,
+            "width": 1366,
+            "height": 409.109375,
+            "top": 76,
+            "right": 1366,
+            "bottom": 485.109375,
+            "left": 0
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 469.328125,
+            "y": 96,
+            "width": 427.328125,
+            "height": 373.109375,
+            "top": 96,
+            "right": 896.65625,
+            "bottom": 469.109375,
+            "left": 469.328125
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 469.328125,
+            "y": 96,
+            "width": 427.328125,
+            "height": 42,
+            "top": 96,
+            "right": 896.65625,
+            "bottom": 138,
+            "left": 469.328125
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 469.328125,
+            "y": 160.109375,
+            "width": 427.328125,
+            "height": 309,
+            "top": 160.109375,
+            "right": 896.65625,
+            "bottom": 469.109375,
+            "left": 469.328125
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 530.734375,
+            "y": 160.109375,
+            "width": 304.5,
+            "height": 309,
+            "top": 160.109375,
+            "right": 835.234375,
+            "bottom": 469.109375,
+            "left": 530.734375
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 485.109375,
+            "width": 1366,
+            "height": 282.890625,
+            "top": 485.109375,
+            "right": 1366,
+            "bottom": 768,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 1366x768",
+      "width": 1366,
+      "height": 768,
+      "mode": "desktop",
+      "wide": true,
+      "overflow": 0,
+      "stage": {
+        "x": 530.734375,
+        "y": 160.109375,
+        "width": 304.5,
+        "height": 267,
+        "top": 160.109375,
+        "right": 835.234375,
+        "bottom": 427.109375,
+        "left": 530.734375
+      },
+      "piano": {
+        "x": 12,
+        "y": 492.109375,
+        "width": 1342,
+        "height": 234.890625,
+        "top": 492.109375,
+        "right": 1354,
+        "bottom": 727,
+        "left": 12
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 2,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1366,
+            "height": 76,
+            "top": 0,
+            "right": 1366,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-wide",
+          "rect": {
+            "x": 0,
+            "y": 76,
+            "width": 1366,
+            "height": 409.109375,
+            "top": 76,
+            "right": 1366,
+            "bottom": 485.109375,
+            "left": 0
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 469.328125,
+            "y": 96,
+            "width": 427.328125,
+            "height": 373.109375,
+            "top": 96,
+            "right": 896.65625,
+            "bottom": 469.109375,
+            "left": 469.328125
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 469.328125,
+            "y": 96,
+            "width": 427.328125,
+            "height": 42,
+            "top": 96,
+            "right": 896.65625,
+            "bottom": 138,
+            "left": 469.328125
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 469.328125,
+            "y": 160.109375,
+            "width": 427.328125,
+            "height": 309,
+            "top": 160.109375,
+            "right": 896.65625,
+            "bottom": 469.109375,
+            "left": 469.328125
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 530.734375,
+            "y": 160.109375,
+            "width": 304.5,
+            "height": 309,
+            "top": 160.109375,
+            "right": 835.234375,
+            "bottom": 469.109375,
+            "left": 530.734375
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 485.109375,
+            "width": 1366,
+            "height": 282.890625,
+            "top": 485.109375,
+            "right": 1366,
+            "bottom": 768,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main en 1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "mode": "desktop",
+      "wide": true,
+      "overflow": 0,
+      "stage": {
+        "x": 807.75,
+        "y": 160.140625,
+        "width": 304.5,
+        "height": 482,
+        "top": 160.140625,
+        "right": 1112.25,
+        "bottom": 642.140625,
+        "left": 807.75
+      },
+      "piano": {
+        "x": 12,
+        "y": 707.140625,
+        "width": 1896,
+        "height": 331.859375,
+        "top": 707.140625,
+        "right": 1908,
+        "bottom": 1039,
+        "left": 12
+      },
+      "nav": [
+        {
+          "text": "My melodies",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Music",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Rounds",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 3,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 76,
+            "top": 0,
+            "right": 1920,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-wide",
+          "rect": {
+            "x": 0,
+            "y": 76,
+            "width": 1920,
+            "height": 624.140625,
+            "top": 76,
+            "right": 1920,
+            "bottom": 700.140625,
+            "left": 0
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 654,
+            "y": 96,
+            "width": 612,
+            "height": 588.140625,
+            "top": 96,
+            "right": 1266,
+            "bottom": 684.140625,
+            "left": 654
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 654,
+            "y": 96,
+            "width": 612,
+            "height": 42,
+            "top": 96,
+            "right": 1266,
+            "bottom": 138,
+            "left": 654
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 654,
+            "y": 160.140625,
+            "width": 612,
+            "height": 524,
+            "top": 160.140625,
+            "right": 1266,
+            "bottom": 684.140625,
+            "left": 654
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 807.75,
+            "y": 160.140625,
+            "width": 304.5,
+            "height": 524,
+            "top": 160.140625,
+            "right": 1112.25,
+            "bottom": 684.140625,
+            "left": 807.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 700.140625,
+            "width": 1920,
+            "height": 379.859375,
+            "top": 700.140625,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    },
+    {
+      "name": "Main ru 1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "mode": "desktop",
+      "wide": true,
+      "overflow": 0,
+      "stage": {
+        "x": 807.75,
+        "y": 160.140625,
+        "width": 304.5,
+        "height": 482,
+        "top": 160.140625,
+        "right": 1112.25,
+        "bottom": 642.140625,
+        "left": 807.75
+      },
+      "piano": {
+        "x": 12,
+        "y": 707.140625,
+        "width": 1896,
+        "height": 331.859375,
+        "top": 707.140625,
+        "right": 1908,
+        "bottom": 1039,
+        "left": 12
+      },
+      "nav": [
+        {
+          "text": "Мои мелодии",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Музыка",
+          "active": "true",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        },
+        {
+          "text": "Раунды",
+          "active": "false",
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)"
+        }
+      ],
+      "fullRounds": 3,
+      "containers": [
+        {
+          "name": "mvp-site-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 76,
+            "top": 0,
+            "right": 1920,
+            "bottom": 76,
+            "left": 0
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "main-layout training-three-zones training-shell-main is-three-wide",
+          "rect": {
+            "x": 0,
+            "y": 76,
+            "width": 1920,
+            "height": 624.140625,
+            "top": 76,
+            "right": 1920,
+            "bottom": 700.140625,
+            "left": 0
+          },
+          "style": "",
+          "children": 3
+        },
+        {
+          "name": "playback-page training-zone training-zone-center",
+          "rect": {
+            "x": 654,
+            "y": 96,
+            "width": 612,
+            "height": 588.140625,
+            "top": 96,
+            "right": 1266,
+            "bottom": 684.140625,
+            "left": 654
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "main-tools",
+          "rect": {
+            "x": 654,
+            "y": 96,
+            "width": 612,
+            "height": 42,
+            "top": 96,
+            "right": 1266,
+            "bottom": 138,
+            "left": 654
+          },
+          "style": "",
+          "children": 2
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 654,
+            "y": 160.140625,
+            "width": 612,
+            "height": 524,
+            "top": 160.140625,
+            "right": 1266,
+            "bottom": 684.140625,
+            "left": 654
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "training-music-slot",
+          "rect": {
+            "x": 807.75,
+            "y": 160.140625,
+            "width": 304.5,
+            "height": 524,
+            "top": 160.140625,
+            "right": 1112.25,
+            "bottom": 684.140625,
+            "left": 807.75
+          },
+          "style": "",
+          "children": 1
+        },
+        {
+          "name": "main-footer training-persistent-footer",
+          "rect": {
+            "x": 0,
+            "y": 700.140625,
+            "width": 1920,
+            "height": 379.859375,
+            "top": 700.140625,
+            "right": 1920,
+            "bottom": 1080,
+            "left": 0
+          },
+          "style": "",
+          "children": 6
+        },
+        {
+          "name": "mvp-playback-host",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "left": 0
+          },
+          "style": "",
+          "children": 0
+        }
+      ]
+    }
+  ]
+}
