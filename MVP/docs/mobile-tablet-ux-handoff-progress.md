@@ -87,3 +87,6 @@ Remaining before release: hands-on Safari on iPhone/iPad, physical touch and MID
 - The visual fixture is reproducible in the browser test runner with `scope=course&width=375&lang=ru&visual=1`. See the [owner acceptance checklist](mobile-tablet-browser-acceptance.md).
 
 - The 768×1024 RU tablet and 1366×768 EN Desktop full Tutorial runs also passed on `ee14999`. Both reached completion with two loop passes. [RU tablet](acceptance-mobile-20261119/checkpoint-next-course-ru-768-final.json), [Desktop EN](acceptance-mobile-20261119/checkpoint-next-course-en-1366.json).
+
+- Targeted final Main regression passed all four cases. RU/EN at 375×667 both settled to a 293 px field and two full rounds. RU/EN at 1366×768 retained two full rounds and the three-column layout. All four had zero page overflow. [Measurement](acceptance-mobile-20261119/checkpoint-next-main-regression.json), [RU phone capture](acceptance-mobile-20261119/checkpoint-next-main-ru-375.jpg).
+- Full 390×844 Phone EN passed after verifying the native Play actions actually started playback. The initial harness timeout is retained with the results. Switching EN → RU after passing preserved `ONBOARDING_COMPLETE`. [Phone EN protocol](acceptance-mobile-20261119/checkpoint-next-course-en-390.json), [locale resume protocol](acceptance-mobile-20261119/checkpoint-next-tutorial-locale.json).
