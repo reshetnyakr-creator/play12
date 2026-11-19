@@ -86,7 +86,13 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   listen(root,'scroll',()=>{cancelAnimationFrame(scrollFrame);scrollFrame=requestAnimationFrame(()=>{if(!wide&&!transitioning){active=Math.round(root.scrollLeft/Math.max(1,root.clientWidth));active=Math.max(0,Math.min(2,active));hidePopup();mark();}});},{passive:true});
   listen(root,'keydown',e=>{if(e.target!==root&&![left,center,right].includes(e.target))return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();go(active+(e.key==='ArrowLeft'?-1:1));}});
   listen(root,'touchstart',e=>{if(popupOpen())return;const interactive=e.target.closest('button,input,select,a,[role="dialog"],.mvp-round-loop-board,.mvp-practice-board,.mvp-metronome-board');if(interactive)e.stopPropagation();},{passive:true});
-  observer=new ResizeObserver(resize);[root,footer,leftControls,rightControls,widthProbe].forEach(n=>observer.observe(n));listen(G,'resize',resize);listen(G,'play12:responsive-layout',resize);if(doc.fonts){doc.fonts.ready?.then(resize);if(doc.fonts.addEventListener)listen(doc.fonts,'loadingdone',resize);}if(G.visualViewport){listen(G.visualViewport,'resize',resize);listen(G.visualViewport,'scroll',resize);}resize();
+  observer=new ResizeObserver(resize);[root,footer,leftControls,rightControls,widthProbe].forEach(n=>observer.observe(n));
+  // A status row can disappear without changing the fixed-height training shell.
+  // Observe the inputs to the score height budget, excluding the score itself.
+  for(const child of center.children){
+    if(child!==playbackHost)observer.observe(child);
+  }
+  listen(G,'resize',resize);listen(G,'play12:responsive-layout',resize);if(doc.fonts){doc.fonts.ready?.then(resize);if(doc.fonts.addEventListener)listen(doc.fonts,'loadingdone',resize);}if(G.visualViewport){listen(G.visualViewport,'resize',resize);listen(G.visualViewport,'scroll',resize);}resize();
  },dispose(){if(!mounted)return;mounted=false;G.clearTimeout(motionTimer);G.clearTimeout(hintTimer);swipeHint?.remove();observer?.disconnect();cancelAnimationFrame(frame);cancelAnimationFrame(scrollFrame);off.splice(0).forEach(f=>f());for(const h of homes.reverse()){if(h.next?.parentElement===h.parent)h.parent.insertBefore(h.n,h.next);else h.parent.appendChild(h.n);}leftSlot.remove();rightSlot.remove();musicSlot.remove();nav.remove();warning.remove();widthProbe.remove();root.classList.remove('training-three-zones','training-shell-main','is-three-wide','is-three-narrow');doc.body.classList.remove('play12-three-zones','play12-training-shell');}};
 }
 G.Play12TrainingZones={fit,metrics,corridors,fieldBudget,compositionRange,physicalKeyboard,create};if(typeof module!=='undefined')module.exports=G.Play12TrainingZones;
