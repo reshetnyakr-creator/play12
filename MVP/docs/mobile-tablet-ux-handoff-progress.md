@@ -38,3 +38,9 @@ Initial Chromium results: clipboard 2 cases, file transport 4 cases, security 1 
 - Workspace serial rerun passed library 0/1/13, Backup via existing handler, delete/cancel, edit Undo/Redo and the full Grab cycle. Phone English UI also exposed Download and Restore Backup. Arrow/tab sequence verified Music → My melodies → Music → Rounds.
 - Persistence serial rerun passed across locale, rotation and reload.
 - Main passed 20 viewport/locale geometry checks. See acceptance-mobile-20261119/cloud-main-matrix.json. The 375×667 RU case displayed one full round, compared with two in EN. One test score at 390×844 and 430×932 displayed three in both languages.
+
+### Shared page layout follow-up
+
+Application checkpoint `90c7990757888a36e5c8b796c6ba76a8dcbe667e` corrects the invalid tablet media query, brings the shared responsive sheet to the remaining public headers, and sizes tablet hero CTAs from their content. Browser remeasurement at 768×1024 and 1024×768 on both locales confirmed common headers on Home, Manual, Manifesto and Import: 81 px total height, 56 px logo link, all seven nav links in one row, zero page overflow. Home CTA widths are 194 px EN and 254 px RU. Import file CTA widths are 292 px EN and 325 px RU. Before, at 768×1024 the respective Home and Import CTAs were 709 px and 650 px, and headers were 165 px tall.
+
+Baseline Cloud Browser navigation check opened Home, Manual, Manifesto, Menu, Main, Tutorial and Import in both locales. Both old Editor URLs redirected to the respective Import. Initial full Spotlight sweep measured nine EN 375×667 targets successfully. It stalled loading the next fixture when other tabs were active; a separate EN 375×667 round-go4 rerun passed. Desktop EN first full course timed out waiting for metronome-on while the application reported metronome-tempo. A foreground rerun was started. Full post-change acceptance and native device checks remain open.
