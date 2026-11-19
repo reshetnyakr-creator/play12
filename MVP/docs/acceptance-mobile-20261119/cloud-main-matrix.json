@@ -126,5 +126,11 @@
         "ru": 0
       }
     }
-  ]
+  ],
+  "retest": {
+    "applicationCommit": "8600b8be681fa03ef8df4e2dcc2cea84807ad527",
+    "status": "passed",
+    "cases": 20,
+    "sameMeasurements": true
+  }
 }
