@@ -80,3 +80,15 @@ test('Reveal callback fires once after the target settles', () => {
   assert.equal(h.timers.size, 1);
   h.coach.stop();
 });
+
+test('The confirmation dialog does not avoid a button inside itself', () => {
+  const h = fixture({avoidTargets: true});
+  const card = new Element('zero-chooser');
+  const button = new Element();
+  card.contains = element => element === button;
+  card.rect = {left: 100, right: 300, top: 120, bottom: 240, width: 200, height: 120};
+  button.rect = {left: 120, right: 280, top: 155, bottom: 205, width: 160, height: 50};
+  h.coach.show(card, [button], null, card);
+  assert.equal(card.style['--mvp-coach-y'], '180px');
+  h.coach.stop();
+});

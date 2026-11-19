@@ -43,14 +43,22 @@
           if (field?.height) card.style.setProperty('--mvp-coach-y', `${field.top + field.height / 2}px`);
         }
         holes.replaceChildren();
-        const seen = new Set();
         // Zero changes rebuild Piano View asynchronously; follow the current elements.
         const currentTargets = typeof targets === 'function' ? targets() : targets;
         if(options.reveal?.(currentTargets.find(Boolean))===false){overlay.style.visibility='hidden';card.style.visibility='hidden';frame=global.requestAnimationFrame(update);return;}overlay.style.visibility='';card.style.visibility='';
-        const targetRects=[];
+        const targetRects=[], measured=[];
         for (const element of currentTargets.filter(Boolean)) {
           const r = element.getBoundingClientRect();
-          if (r.width <= 0 || r.height <= 0) continue;targetRects.push(r);
+          if (r.width <= 0 || r.height <= 0) continue;
+          // Confirmation buttons inside a dialog move with it; projecting a
+          // collision against them displaces the dialog after they are measured.
+          const insideCard = card.contains?.(element);
+          if (!insideCard) targetRects.push(r);
+          measured.push({element, r, insideCard});
+        }
+        const seen = new Set();
+        for (const {element, r: initialRect, insideCard} of measured) {
+          const r = insideCard ? element.getBoundingClientRect() : initialRect;
           const bounds = `${r.left},${r.top},${r.width},${r.height}`;
           if (seen.has(bounds)) continue;
           seen.add(bounds);
