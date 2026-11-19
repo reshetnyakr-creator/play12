@@ -85,3 +85,5 @@ Remaining before release: hands-on Safari on iPhone/iPad, physical touch and MID
 
 - On application checkpoint `ee14999`, the complete 375×667 RU visual course and 1024×768 EN landscape tablet course passed with two loop passes each. The first verifies early Spotlight and Confirm 0 geometry, smooth panel movement and step 3 reload. [Phone protocol](acceptance-mobile-20261119/checkpoint-next-visual-course.json), [landscape EN protocol](acceptance-mobile-20261119/checkpoint-next-course-en-1024.json).
 - The visual fixture is reproducible in the browser test runner with `scope=course&width=375&lang=ru&visual=1`. See the [owner acceptance checklist](mobile-tablet-browser-acceptance.md).
+
+- The 768×1024 RU tablet and 1366×768 EN Desktop full Tutorial runs also passed on `ee14999`. Both reached completion with two loop passes. [RU tablet](acceptance-mobile-20261119/checkpoint-next-course-ru-768-final.json), [Desktop EN](acceptance-mobile-20261119/checkpoint-next-course-en-1366.json).
