@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Main en 375x667",
+    "status": "passed",
+    "rounds": 2,
+    "overflow": 0,
+    "stage": 293,
+    "piano": 120.046875,
+    "wide": false
+  },
+  {
+    "name": "Main ru 375x667",
+    "status": "passed",
+    "rounds": 2,
+    "overflow": 0,
+    "stage": 293,
+    "piano": 120.046875,
+    "wide": false
+  },
+  {
+    "name": "Main en 1366x768",
+    "status": "passed",
+    "rounds": 2,
+    "overflow": 0,
+    "stage": 267,
+    "piano": 234.890625,
+    "wide": true
+  },
+  {
+    "name": "Main ru 1366x768",
+    "status": "passed",
+    "rounds": 2,
+    "overflow": 0,
+    "stage": 267,
+    "piano": 234.890625,
+    "wide": true
+  }
+]
