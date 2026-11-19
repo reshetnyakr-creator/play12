@@ -66,9 +66,10 @@
           else if(options.dock?.(card)){overlay.style.visibility='hidden';card.style.visibility='hidden';frame=global.requestAnimationFrame(update);return;}
           else card.style.setProperty('--mvp-coach-y',`${Math.max(top+height/2,Math.min(bottom-height/2,preferred))}px`);
         }
+        if (!timer) timer = global.setTimeout(() => stop(), 5000);
         frame = global.requestAnimationFrame(update);
       };
-      update(); timer = global.setTimeout(() => stop(), 5000);
+      update();
     }
     stop();
     return Object.freeze({show, stop});
