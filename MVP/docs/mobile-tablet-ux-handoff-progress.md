@@ -13,3 +13,11 @@ Application checkpoint: 2f018e99bc2af8c89eef28eb3aa3acd9b1844ee4, recovered from
 | Release | Pending acceptance. |
 
 Historical runs are in acceptance-mobile-20261119 and apply to the earlier recorded state. Next run fresh unit and Chromium checks on the recovered implementation. Physical iOS Safari and hardware MIDI require devices.
+
+## Fresh checks and interruption
+
+- `node --test MVP/tests/*.cjs` passed 273 of 273 against application checkpoint 2f018e99.
+- `python MVP/tests/test_validate_play12.py` passed 9 of 9.
+- Chromium 156.0.8078.79 failed before navigation with `process_singleton_posix.cc:297: socket() failed: Operation not permitted`. The managed preview fallback rejected the checkout because it has no dev script or static hosting manifest.
+- No new browser screenshots or acceptance metrics were produced. Full RU/EN Tutorial, Spotlight, navigation, Backup and import browser acceptance remains open. Production was not updated or checked as a release.
+- On real iPhone/iPad Safari, verify Spotlight after changing panels, showing or hiding browser chrome, and rotating. Check Confirm 0, all six stages, native swipe, Backup, paste and file import in RU and EN. Verify physical MIDI separately.
