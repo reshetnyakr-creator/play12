@@ -98,7 +98,7 @@
       return { finger: benchmarkFinger, mode: "benchmark", confidence: 1 };
     }
     const candidate = note.method.auto_fingering_candidate;
-    if (!cfg.candidatePreview || !candidate || !Number.isInteger(candidate.finger)) return cfg.unassignedDisplay ? { finger: 3, mode: "unassigned", confidence: null } : null;
+    if (!cfg.candidatePreview || !candidate || !Number.isInteger(candidate.finger)) return cfg.unassignedDisplay ? { finger: null, mode: "unassigned", confidence: null } : null;
     if (candidate.zero_note !== document.play12.zero_pitch_class) return null;
     const reviewedFinger = cfg.reviewOverrides && cfg.reviewOverrides[note.id];
     if (Number.isInteger(reviewedFinger)) {
@@ -278,7 +278,10 @@
       const { note, displayFingering } = item;
       const finger = displayFingering.finger;
       const noteX = rightStart + (finger - 1) * width;
-      const handX = note.hand === "R" ? noteX : (5 - finger) * width;
+      const unassigned = displayFingering.mode === "unassigned";
+      const blockWidth = unassigned ? Math.min(countWidth / 3, width * .55) : width;
+      const handX = unassigned ? (note.hand === "R" ? rightStart - blockWidth : handWidth)
+        : (note.hand === "R" ? noteX : (5 - finger) * width);
       const noteStart = (note.globalStart - startQ) / stepQ;
       const noteDuration = fraction(note.duration_quarters) / stepQ;
       const y = (steps - noteStart - noteDuration) * height;
@@ -291,6 +294,7 @@
       group.setAttribute("data-midi", note.pitch.midi);
       group.setAttribute("data-dynamic", dynamic);
       group.setAttribute("data-fingering-mode", displayFingering.mode);
+      if (note.method.fingering_source) group.setAttribute("data-fingering-source", note.method.fingering_source);
       group.setAttribute("data-measure-index", note.measureIndex);
       if (displayFingering.confidence != null) group.setAttribute("data-fingering-confidence", displayFingering.confidence);
       if (displayFingering.mode === "auto-candidate") group.classList.add("play12-auto-candidate");
@@ -315,19 +319,20 @@
       const block = global.document.createElementNS(svgNS, "rect");
       block.setAttribute("x", handX);
       block.setAttribute("y", y);
-      block.setAttribute("width", width);
+      block.setAttribute("width", blockWidth);
       block.setAttribute("height", noteDuration * height);
       block.setAttribute("rx", width * cfg.radiusRatio);
       const officialColor = cfg.wrapCycles ? cfg.colors[((Math.floor((note.pitch.midi-(document.play12.reference_zero_midi ?? 21))/12)%cfg.colors.length)+cfg.colors.length)%cfg.colors.length] : colorForMidi(note.pitch.midi, cfg.colors, document.play12.reference_zero_midi ?? 21);
       block.setAttribute("fill", mixWithWhite(officialColor, fillOpacity));
       block.setAttribute("fill-opacity", 1);
       block.setAttribute("stroke", "#111111");
+      if (unassigned) block.setAttribute("stroke-dasharray", "3 2");
       block.setAttribute("stroke-width", cfg.gridLineWidth * cfg.noteBorderRatio);
       group.appendChild(block);
       const activeGlow = global.document.createElementNS(svgNS, "rect");
       activeGlow.setAttribute("x", handX);
       activeGlow.setAttribute("y", y);
-      activeGlow.setAttribute("width", width);
+      activeGlow.setAttribute("width", blockWidth);
       activeGlow.setAttribute("height", noteDuration * height);
       activeGlow.setAttribute("rx", width * cfg.radiusRatio);
       activeGlow.setAttribute("fill", "#FFFFFF");
@@ -335,7 +340,7 @@
       activeGlow.setAttribute("pointer-events", "none");
       group.appendChild(activeGlow);
       const label = global.document.createElementNS(svgNS, "text");
-      label.setAttribute("x", handX + width / 2);
+      label.setAttribute("x", handX + blockWidth / 2);
       label.setAttribute("y", y + noteDuration * height - 5 * cfg.zoom);
       label.setAttribute("text-anchor", "middle");
       label.setAttribute("class", "play12-symbol");
