@@ -1,0 +1,3 @@
+# Fingering coverage and melody title
+
+Baseline bb25b178. The supplied MXL contained 107 measures and zero source fingering tags. Its work-title is John Lennon - Imagine and movement-title is absent. Parsed with the production importer using the piano staff map. Baseline on the diagnostic executor: budget_exhausted, 411/1468 assigned (28.0%), SEARCH_BUDGET for both hands, no finger overlap. Measures 47–107 contained 184 assigned notes (3 assigned finger 3), 713 supported but unassigned notes, and 2 unsupported notes. Main enabled unassignedDisplay, which placed those unassigned notes in the finger 3 lane despite empty data-finger.

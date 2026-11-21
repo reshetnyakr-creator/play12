@@ -11,3 +11,17 @@ test('manual locks survive recalc, invalid lock cannot create success',()=>{cons
 test('manual target-only transaction and undo/redo snapshots preserve music',()=>{const s=score([note('a',60,'0','1'),note('b',62,'1','1')]),before=JSON.stringify(s),d={score:s,run:E.propose(s,cfg),mode:'engine',manual:{},history:[],cursor:0,revision:1};const b=d.run.assignments.b;const trial=E.edit(d,'a',5);assert(trial.accepted);E.commit(d,trial);assert.equal(E.effective(d).score.parts[0].measures[0].events[1].method.finger,b);assert.equal(JSON.stringify(s),before);assert.equal(d.history.length,1);assert.deepEqual(d.history[0].before,{});assert.throws(()=>E.edit(d,'a',6));});
 test('unknown hand and unsupported technique remain unassigned with partial coverage',()=>{const s=score([note('a',60,'0','1'),note('b',62,'1','1',null)]);s.score.parts[0].measures[0].events[1].editor_supported=false;const r=E.propose(s,cfg);assert.equal(r.assigned,1);assert.equal(r.coverage,.5);assert.equal(r.feasibility,'unknown');});
 test('deterministic assignments, bounded detailed log, experimental factors explicit',()=>{const s=score([note('a',61,'0','1'),note('b',63,'1','1'),note('c',67,'2','1')]);const a=E.propose(s,cfg,{},true),b=E.propose(s,cfg);assert.deepEqual(a.assignments,b.assignments);assert(a.details.length<=cfg.diagnostics.maxDetails);assert.equal(a.ranking_status,'experimental_config');assert.equal(a.profile.geometry.calibrated,false);});
+
+test('long two-hand score assigns the last supported notes within the default budget', () => {
+  const notes = Array.from({length: 440}, (_, i) => [
+    note('r'+i, 60+i%7, String(i), '2'),
+    note('l'+i, 40+i%5, String(i), '1', 'L')
+  ]).flat();
+  const run = E.propose(score(notes), cfg, {r0: 2});
+  assert.equal(run.assignments.r0, 2);
+  assert.equal(run.assigned, notes.length);
+  assert.equal(run.coverage, 1);
+  assert(run.assignments.r439 && run.assignments.l439);
+  assert.equal(run.validation.conflicts.length, 0);
+  assert(!run.validation.warnings.some(x => x.code === 'FINGER_OVERLAP'));
+});
