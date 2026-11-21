@@ -41,7 +41,40 @@ const developer=element('details');developer.hidden=!dev;developer.append(elemen
 function melodyTitle(d){const b=button(d.title,()=>d.id===doc?.id?(D.activate(d.id,true),library()):open(d.id));b.className='main-melody-title';b.setAttribute('aria-label',t('Открыть мелодию «')+d.title+t('»'));return b;}
 let libraryVersion=0;async function library(){const version=++libraryVersion;const docs=D.ordered(await D.list());if(version!==libraryVersion)return;rows.replaceChildren();for(const d of docs){const row=element('article',null,{class:'main-melody'});if(d.id===(doc?.id||D.workspace().activeId))row.setAttribute('aria-current','true');row.append(element('span','♫',{class:'main-music-icon','aria-hidden':'true'}),melodyTitle(d),action(t('Тренироваться'),'▥',()=>d.id===doc?.id?(D.activate(d.id,true),library(),mode(false)):open(d.id)),action(t('Редактировать'),'✎',()=>d.id===doc?.id?(D.activate(d.id,true),library(),mode(true)):open(d.id,'edit')),action(t('Удалить'),'♜',async()=>{if(!confirm(t('Удалить мелодию «')+d.title+t('»?')))return;if(d.id===doc?.id&&!leave())return;await D.remove(d.id);D.forget(d.id);localStorage.removeItem('play12.main.draft:'+d.id);sessionStorage.removeItem('play12.main.position:'+d.id);if(d.id===doc?.id||new URLSearchParams(location.search).get('composition')===d.id){controller?.playback.pauseImmediate();dirty=false;location.href=Play12Routes.path('main');}else await library();}));if(d.id===doc?.id){const chosen=row.querySelector('[aria-label="'+(editing?t('Редактировать'):t('Тренироваться'))+'"]');chosen.classList.add('is-mode-active');chosen.setAttribute('aria-pressed','true');}rows.append(row);}if(!docs.length)rows.append(element('p',t('Пока нет мелодий.')));}
 function cache(){dirty=true;try{localStorage.setItem('play12.main.draft:'+doc.id,JSON.stringify({revision,document:doc}));}catch(e){error(Error(t('Черновик не сохранён: недостаточно места. Сохраните изменения перед выходом.')));}sync();}
-function sync(){if(!doc)return;document.body.classList.toggle('is-editing',editing);$('main-edit-tools').hidden=!editing;$('main-save').disabled=!dirty||saving;$('main-undo').disabled=!editing||doc.cursor===0;$('main-redo').disabled=!editing||doc.cursor===doc.history.length;for(const g of $('play12-score').querySelectorAll('g[data-event-id]')){g.classList.toggle('main-selected',g.dataset.eventId===selected&&editing);g.style.touchAction=editing?'none':'pan-x pan-y';};$('main-fingers').hidden=!selected||!editing;document.body.classList.toggle('training-nav-locked',!!selected&&editing);if(selected&&editing)positionFingers();}
+function syncTitle(){
+  const label=$('main-title-label'),input=$('main-title-input');
+  if(!label||!input)return;
+  label.textContent=doc.title;
+  label.parentElement.title=doc.title;
+  label.parentElement.setAttribute('aria-label',doc.title);
+  label.disabled=!editing||saving;
+  label.tabIndex=editing&&!saving?0:-1;
+  if(!editing){input.hidden=true;label.hidden=false;}
+}
+function finishTitle(commit){
+  const input=$('main-title-input'),label=$('main-title-label');
+  if(!input||input.hidden)return true;
+  const title=input.value.trim();
+  if(commit&&!title){input.setCustomValidity(t('Введите название мелодии.'));input.reportValidity();input.focus();return false;}
+  input.hidden=true;label.hidden=false;
+  if(commit&&title!==doc.title){doc.title=title;doc.revision++;cache();shell?.resize();}
+  sync();label.focus();
+  return true;
+}
+function mountTitle(){
+  const heading=element('h1');
+  const label=element('button',doc.title,{id:'main-title-label',class:'main-title-text',type:'button'});
+  const input=element('input',null,{id:'main-title-input',type:'text',maxlength:'120','aria-label':t('Название мелодии'),hidden:''});
+  heading.append(label,input);
+  label.addEventListener('click',()=>{if(!editing||saving)return;input.value=doc.title;input.setCustomValidity('');label.hidden=true;input.hidden=false;sync();input.focus();input.select();});
+  input.addEventListener('input',()=>input.setCustomValidity(''));
+  input.addEventListener('keydown',event=>{
+    if(event.isComposing||!['Enter','Escape'].includes(event.key))return;
+    event.preventDefault();event.stopPropagation();finishTitle(event.key==='Enter');
+  });
+  tools.append(heading);
+}
+function sync(){if(!doc)return;syncTitle();document.body.classList.toggle('is-editing',editing);$('main-edit-tools').hidden=!editing;$('main-save').disabled=saving||(!dirty&&$('main-title-input')?.hidden!==false);$('main-undo').disabled=!editing||doc.cursor===0;$('main-redo').disabled=!editing||doc.cursor===doc.history.length;for(const g of $('play12-score').querySelectorAll('g[data-event-id]')){g.classList.toggle('main-selected',g.dataset.eventId===selected&&editing);g.style.touchAction=editing?'none':'pan-x pan-y';};$('main-fingers').hidden=!selected||!editing;document.body.classList.toggle('training-nav-locked',!!selected&&editing);if(selected&&editing)positionFingers();}
 function showCoverage(){
   const notes=E.events(E.effective(doc));
   const missing=notes.filter(e=>e.method.finger==null).length;
@@ -51,8 +84,8 @@ function showCoverage(){
     : '';
 }
 function refresh(){controller.document=doc;controller.refresh(doc);bindDrag();showCoverage();sync();if(selected)paintFingers(fingerChanged&&dirty);}
-async function save(){if(saving||!dirty)return;saving=true;clearTimeout(toastTimer);toast.hidden=true;sync();try{doc.userId=D.profile().userId;await E.Store.put(doc,revision);const stored=await E.Store.get(doc.id);if(!stored||stored.revision!==doc.revision||JSON.stringify(stored.manual)!==JSON.stringify(doc.manual))throw Error(t('Не удалось подтвердить сохранение'));revision=doc.revision;dirty=false;localStorage.removeItem('play12.main.draft:'+doc.id);if(selected)paintFingers(false);showSaved();}finally{saving=false;sync();}}
-async function mode(value){if(!controller)return;if(!value&&dirty){if(!confirm(t('Сохранить изменения перед тренировкой?')))return;await save();}controller.playback.pauseImmediate(position());editing=value;selected=null;sync();library().catch(error);}
+async function save(){if(saving||!finishTitle(true)||!dirty)return;saving=true;clearTimeout(toastTimer);toast.hidden=true;sync();try{doc.userId=D.profile().userId;await E.Store.put(doc,revision);const stored=await E.Store.get(doc.id);if(!stored||stored.revision!==doc.revision||stored.title!==doc.title||JSON.stringify(stored.manual)!==JSON.stringify(doc.manual))throw Error(t('Не удалось подтвердить сохранение'));revision=doc.revision;dirty=false;localStorage.removeItem('play12.main.draft:'+doc.id);if(selected)paintFingers(false);await library();showSaved();}finally{saving=false;sync();}}
+async function mode(value){if(!controller||saving)return;if(!value&&!finishTitle(true))return;if(!value&&dirty){if(!confirm(t('Сохранить изменения перед тренировкой?')))return;await save();}controller.playback.pauseImmediate(position());editing=value;selected=null;sync();library().catch(error);}
 async function apply(finger){if(!editing||!selected)return;const trial=editorAdapter.change(selected,finger);if(!trial.accepted){status.textContent=t('Этот палец уже занят пересекающейся нотой. Назначение не изменено.');return;}cache();refresh();paintFingers(true);}
 let fingerChanged=false;
 function showSaved(){clearTimeout(toastTimer);toast.hidden=false;toast.textContent=t('Изменения сохранены');toastTimer=setTimeout(()=>{toast.hidden=true;toast.textContent='';},3000);}
@@ -62,7 +95,7 @@ function select(id){if(!editing)return;selected=id;sync();paintFingers(false);}
 
 window.play12Main={select,closePicker(){selected=null;sync();}};window.addEventListener('resize',()=>{if(selected&&editing)positionFingers();});window.addEventListener('scroll',()=>{if(selected&&editing)positionFingers();},true);document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){selected=null;sync();}});
 function bindDrag(){for(const g of $('play12-score').querySelectorAll('g[data-event-id]')){let start;if(g.dataset.mainDragBound)return;g.dataset.mainDragBound='true';g.style.touchAction=editing?'none':'pan-x pan-y';g.addEventListener('pointerdown',ev=>{if(!editing||ev.button!==0)return;start={x:ev.clientX,y:ev.clientY};g.setPointerCapture(ev.pointerId);});g.addEventListener('pointercancel',()=>start=null);g.addEventListener('pointerup',ev=>{if(!start)return;const moved=Math.hypot(ev.clientX-start.x,ev.clientY-start.y)>8;start=null;if(!moved)return;try{const svg=g.ownerSVGElement,point=new DOMPoint(ev.clientX,ev.clientY).matrixTransform(svg.getScreenCTM().inverse()),cell=Play12Renderer.defaults.cellWidth,right=5*cell+cell*Play12Renderer.defaults.countColumnWidthRatio,n=E.events(doc.score).find(e=>e.id===g.dataset.eventId),finger=n.hand==='L'?5-Math.floor(point.x/cell):Math.floor((point.x-right)/cell)+1;if(!n.hand||finger<1||finger>5)throw Error(t('Перетащите ноту в колонку пальца той же руки.'));select(n.id);apply(finger).catch(error);}catch(e){error(e);}});}}
-function ready(){if(controller)return;controller=window.play12MainController;if(!controller)return;doc=controller.document;revision=doc.revision;D.activate(doc.id);empty.hidden=true;$('playback-stage').hidden=false;tools.replaceChildren();tools.append(element('h1',doc.title));
+function ready(){if(controller)return;controller=window.play12MainController;if(!controller)return;doc=controller.document;revision=doc.revision;D.activate(doc.id);empty.hidden=true;$('playback-stage').hidden=false;tools.replaceChildren();mountTitle();
 center.insertBefore(element('p',null,{id:'main-coverage',role:'status',hidden:''}),fieldHost);showCoverage();
 const editTools=element('div',null,{id:'main-edit-tools'}),undo=button(t('Отменить'),()=>{if(editorAdapter.undo()){cache();refresh();}}),redo=button(t('Повторить'),()=>{if(editorAdapter.redo()){cache();refresh();}}),saveButton=button(t('Сохранить изменения'),save);undo.id='main-undo';redo.id='main-redo';undo.title=t('Отменить');undo.setAttribute('aria-label',t('Отменить'));undo.textContent='↶';redo.title=t('Повторить');redo.setAttribute('aria-label',t('Повторить'));redo.textContent='↷';saveButton.id='main-save';editTools.append(undo,redo,saveButton,button(t('Готово'),()=>mode(false)));const fingers=element('div',null,{id:'main-fingers'});fingers.append(element('span','',{id:'main-selection'}));for(let i=1;i<=5;i++)fingers.append(button(String(i),()=>apply(i)));fingers.setAttribute('role','dialog');fingers.setAttribute('aria-label',t('Выбор пальца'));fingers.hidden=true;document.body.append(fingers);tools.append(editTools);
 const raw=localStorage.getItem('play12.main.draft:'+doc.id);if(raw){try{const draft=JSON.parse(raw);if(draft.revision===revision&&confirm(t('Восстановить несохранённые изменения аппликатуры?'))){doc=draft.document;dirty=true;refresh();}else if(draft.revision!==revision)status.textContent=t('Есть черновик другой версии. Он сохранён в этом браузере; экспортируйте его в режиме разработчика.');}catch(e){error(e);}}
