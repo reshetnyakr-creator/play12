@@ -23,7 +23,7 @@ body.play12-three-zones .is-three-narrow .training-skill-card,
 body.play12-three-zones .is-three-narrow .training-panel-slot{width:min(100%,var(--training-music-width));align-self:center}
 body.play12-three-zones .is-three-narrow .main-library-heading h2{font-size:18px}
 body.play12-three-zones .is-three-narrow .training-left-controls{width:min(100%,var(--training-music-width));height:auto;flex-wrap:wrap;justify-content:center;gap:8px}
-body.play12-three-zones .is-three-narrow .training-right-controls{width:min(100%,var(--training-music-width));display:grid;grid-template-columns:minmax(0,1fr) 36px;align-items:end}
+body.play12-three-zones .is-three-narrow .training-right-controls{width:min(100%,var(--training-music-width));display:grid;grid-template-columns:minmax(0,1fr);align-items:end}
 body.play12-three-zones .is-three-narrow .training-right-controls>.mvp-round-loop-board{width:100%;min-width:0}
 body.play12-three-zones .training-zone-navigation{display:grid;grid-template-columns:28px repeat(3,minmax(0,1fr)) 28px;width:100%;box-sizing:border-box}
 body.play12-three-zones .training-zone-navigation button{min-width:0;padding-inline:2px}

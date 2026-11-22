@@ -9,3 +9,22 @@ body.play12-training-shell .music-workspace>.playback-zone{position:relative!imp
 .music-workspace .playback-zone-transport button{height:30px;min-width:0;padding:0 7px;border-radius:18px;font:600 11px/1 Inter,Arial,sans-serif;white-space:nowrap}
 .music-workspace .playback-timecode{position:static;transform:none;white-space:nowrap;font:500 10px/1 Inter,Arial,sans-serif}
 .music-workspace .playback-grid-control{display:block;position:static;width:42px;height:28px;justify-self:end}
+
+.music-workspace .playback-zone-transport #onboarding-choose-zero {
+  position: static;
+  flex: none;
+  box-sizing: border-box;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #E96E40;
+  color: #CEF932;
+  font: 700 13px/1 Inter, Arial, sans-serif;
+  box-shadow: none;
+}
+.music-workspace .playback-zone-transport #onboarding-choose-zero[hidden] {
+  display: none;
+}

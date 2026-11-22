@@ -23,3 +23,15 @@
 .main-tools .main-title-text:disabled{opacity:1;cursor:default}
 .main-tools .main-title-text:enabled{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
 #main-title-input{font:inherit;color:inherit;width:100%;box-sizing:border-box;padding:0 2px;border:1px solid #b1582d;border-radius:4px;background:white}
+
+.play12-main .main-library-heading .main-add-melody {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0;
+  color: #111;
+  font: 700 26px/1 Inter, Arial, sans-serif;
+}
