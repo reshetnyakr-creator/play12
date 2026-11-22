@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
   <link rel="stylesheet" href="play12-playback.css?v=dynamic-piano-01">
   <link rel="stylesheet" href="play12-onboarding.css?v=shell-13">
-  <link rel="stylesheet" href="music-workspace.css?v=zero-board-1">
+  <link rel="stylesheet" href="music-workspace.css?v=zero-board-2">
 <link rel="stylesheet" href="/MVP/mobile-tablet.css?v=zero-board-1"><script src="/MVP/mobile-tablet.js?v=mobile-1"></script></head>
 <body class="play12-onboarding-boot">
   <section id="play12-onboarding" class="play12-onboarding mvp-shell" aria-label="Play12 onboarding">
@@ -343,7 +343,7 @@
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=mobile-5"></script>
   <script src="training-shell.js?v=1.4"></script>
-  <script src="training-zones.js?v=zero-board-1"></script>
+  <script src="training-zones.js?v=zero-board-2"></script>
   <script src="tutorial-layout.js?v=mobile-1"></script>
   <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=zero-board-1','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=mobile-1'])document.write('<link rel="stylesheet" href="'+href+'">');}</script>
   <script src="play12-onboarding.js?v=mobile-3"></script>
@@ -539,13 +539,6 @@
       const zeroConfirmation = document.getElementById('zero-confirmation');
       const chooseZero = document.getElementById('choose-zero');
       const onboardingChooseZero = document.getElementById('onboarding-choose-zero');
-      const zeroLabel = onboardingChooseZero.getAttribute('aria-label');
-      const showZero = midi => {
-        const pitch = pitchClasses[midi % 12].replace('#', '♯');
-        onboardingChooseZero.textContent = pitch;
-        onboardingChooseZero.setAttribute('aria-label', `${zeroLabel}: ${pitch}`);
-      };
-      showZero(initialZeroMidi);
       const useZero = document.getElementById('use-zero');
       const chooseAnotherZero = document.getElementById('choose-another-zero');
       let choosingZero = false;
@@ -596,7 +589,6 @@
         if (candidateZeroMidi == null) return;
         pianoView.setZeroMidi(candidateZeroMidi);
         window.play12Playback.setRuntimeZeroNote(candidateZeroMidi);
-        showZero(candidateZeroMidi);
         localStorage.setItem(zeroStorageKey, String(candidateZeroMidi));
         localStorage.setItem(zeroPitchClassStorageKey, String(candidateZeroPitchClass));
         choosingZero = false;
@@ -651,7 +643,6 @@
         window.play12MidiDiagnostic.clearCalibration?.();
         pianoView.setRange(21,108);pianoView.setZeroMidi(defaultZeroMidi);
         window.play12Playback.setRuntimeZeroNote(defaultZeroMidi);
-        showZero(defaultZeroMidi);
         window.play12Playback.bpmInput.value=String(originalTempo);window.play12Playback.changeBpm();
         window.play12Playback.setMetronome(false,false);
         window.play12Playback.setPracticeSettings({practiceModeEnabled:false,practiceLeftHandEnabled:true,practiceRightHandEnabled:true});

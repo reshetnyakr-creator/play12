@@ -10,9 +10,10 @@ body.play12-training-shell .music-workspace>.playback-zone{position:relative!imp
 .music-workspace .playback-timecode{position:static;transform:none;white-space:nowrap;font:500 10px/1 Inter,Arial,sans-serif}
 .music-workspace .playback-grid-control{display:block;position:static;width:42px;height:28px;justify-self:end}
 
-.music-workspace .playback-zone-transport #onboarding-choose-zero {
+.music-workspace .playback-zone > #onboarding-choose-zero {
   position: static;
-  flex: none;
+  display: grid;
+  place-items: center;
   box-sizing: border-box;
   width: 30px;
   min-width: 30px;
@@ -25,6 +26,11 @@ body.play12-training-shell .music-workspace>.playback-zone{position:relative!imp
   font: 700 13px/1 Inter, Arial, sans-serif;
   box-shadow: none;
 }
-.music-workspace .playback-zone-transport #onboarding-choose-zero[hidden] {
+.music-workspace .playback-zone > #onboarding-choose-zero[hidden] {
   display: none;
+}
+
+body.play12-training-shell .music-workspace > .playback-zone:has(> #onboarding-choose-zero:not([hidden])),
+body.play12-onboarding-listen .music-workspace > .playback-zone:has(> #onboarding-choose-zero:not([hidden])) {
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
 }

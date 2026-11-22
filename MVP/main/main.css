@@ -24,14 +24,28 @@
 .main-tools .main-title-text:enabled{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
 #main-title-input{font:inherit;color:inherit;width:100%;box-sizing:border-box;padding:0 2px;border:1px solid #b1582d;border-radius:4px;background:white}
 
-.play12-main .main-library-heading .main-add-melody {
+body.play12-main .main-layout .main-library-heading {
+  align-items: center;
+  flex-wrap: nowrap;
+}
+body.play12-main .main-layout .main-library-heading .main-add-melody {
+  position: relative;
   display: inline-grid;
   place-items: center;
   flex: none;
-  width: 44px;
-  height: 44px;
+  width: 30px;
+  height: 30px;
   box-sizing: border-box;
   padding: 0;
+  border: 1px solid #d1d3ce;
+  border-radius: 50%;
+  background: #fff;
   color: #111;
-  font: 700 26px/1 Inter, Arial, sans-serif;
+  font: 700 20px/1 Inter, Arial, sans-serif;
+  text-decoration: none;
+}
+body.play12-main .main-library-heading .main-add-melody::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
 }
