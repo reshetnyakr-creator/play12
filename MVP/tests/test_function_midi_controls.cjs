@@ -102,3 +102,15 @@ test('disconnecting the calibrated input clears its functional hold while anothe
  m.calibration={inputId:'A',channel:1,leftMidi:36,rightMidi:96,functionMidi:96,keyCount:61,verified:true};
  t.send(t.inputA,96);assert.equal(m.inputBusy(),true);t.inputA.state='disconnected';m.refreshInputs();assert.equal(m.inputBusy(),false);assert.equal(m.currentStatus.status,'connected');assert(m.inputHandlers.has('B'));assert(!m.inputHandlers.has('A'));
 });
+
+test('a consumed release still ends the previously routed MIDI note only', () => {
+  const f = setup();
+  f.send(f.inputA, 60);
+  f.send(f.inputB, 60);
+  f.diagnostic.addInputInterceptor(() => true);
+  f.send(f.inputA, 60, 0);
+  assert.deepEqual(f.events.at(-1), ['off', 60, 'midi', 'A:1:60']);
+  assert.deepEqual([...f.diagnostic.activeMidiTokens.keys()], ['B:1:60']);
+  f.send(f.inputB, 60, 64, 0, true);
+  assert.equal(f.diagnostic.activeMidiTokens.size, 0);
+});

@@ -365,8 +365,7 @@
         this.activeMidiTokens.set(token, message.note);
         this.activeMidiNotes.add(message.note);
         this.noteEvents?.handleNoteOn(message.note, message.velocity, "midi", token);
-      } else if (!consumed) {
-        this.activeMidiTokens.delete(token);
+      } else if (!message.noteOn && this.activeMidiTokens.delete(token)) {
         if (![...this.activeMidiTokens.values()].includes(message.note)) this.activeMidiNotes.delete(message.note);
         this.noteEvents?.handleNoteOff(message.note, "midi", token);
       }

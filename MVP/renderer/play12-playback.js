@@ -92,6 +92,8 @@
       this.context = context;
       this.stage = stage;
       this.sources = new Set();
+      // Transport resets own scheduled audio, while MIDI releases own their live voices.
+      this.midiSources = new WeakSet();
       this.voices = new Map();
       this.noteKeys = new Set();
       this.beatKeys = new Set();
@@ -115,18 +117,21 @@
         if ((preserveRobot && key.startsWith("robot:")) || (preserveMusical && voice.startedAt <= at && voice.endsAt > at)) voice.oscillators.forEach(source => retainedSources.add(source));
       }
       for (const source of this.sources) {
-        if (retainedSources.has(source)) continue;
+        if (this.midiSources.has(source) || retainedSources.has(source)) continue;
         try { source.stop(at); } catch (_) {}
         this.sources.delete(source);
       }
-      for (const [key, voice] of this.voices) if (!voice.oscillators.some(source => retainedSources.has(source))) this.voices.delete(key);
+      for (const [key, voice] of this.voices) if (!voice.oscillators.some(source => this.midiSources.has(source) || retainedSources.has(source))) this.voices.delete(key);
       this.noteKeys.clear();
       this.beatKeys.clear();
       this.pendingBeatVisuals.length = 0;
       this.stage.dataset.activeAudioSources = String(this.sources.size);
     }
     scheduleStopAt(at) {
-      for (const source of this.sources) { try { source.stop(at); } catch (_) {} }
+      for (const source of this.sources) {
+        if (this.midiSources.has(source)) continue;
+        try { source.stop(at); } catch (_) {}
+      }
       this.stage.dataset.scheduledStopAudioTime = String(at);
     }
     scheduleNote(event, when, durationQuarters, bpm) {
@@ -140,7 +145,7 @@
       this.stage.dataset.lastScheduledNoteAudioTime = String(when);
       this.stage.dataset.activeAudioSources = String(this.sources.size);
     }
-    noteOn(key, midi, dynamic = "mf", when = this.context.currentTime, decayAt = null, output = this.master) {
+    noteOn(key, midi, dynamic = "mf", when = this.context.currentTime, decayAt = null, output = this.master, liveMidi = false) {
       if (this.voices.has(key)) this.noteOff(key, when);
       const gain = this.context.createGain();
       const level = DYNAMIC_GAIN[dynamic] || .8;
@@ -158,6 +163,7 @@
         oscillator.connect(partial).connect(gain);
         oscillator.start(when);
         this.track(oscillator);
+        if (liveMidi) this.midiSources.add(oscillator);
         oscillators.push(oscillator);
       }
       this.voices.set(key, { gain, oscillators, startedAt: when, endsAt: decayAt });
@@ -288,7 +294,7 @@
         await this.unlockAudio();
         if (this.audioContext.state !== "running") throw new Error(`AudioContext remained ${this.audioContext.state}`);
         if (this.inputNotes.get(key) !== intent) return;
-        this.audio.noteOn(key, midiNote, "mf", this.audioContext.currentTime);
+        this.audio.noteOn(key, midiNote, "mf", this.audioContext.currentTime, null, undefined, source === "midi");
         intent.started = true;
         this.stage.dataset.lastInputNoteOn = `${source}:${midiNote}:${velocity}`;
         if (intent.released) {
@@ -359,7 +365,7 @@
       if (this.clock.running) {
         this.audio.stopAll();
         for (const [key, intent] of this.inputNotes) {
-          if (intent.released) continue;
+          if (intent.released || intent.source === "midi") continue;
           this.audio.noteOn(key, intent.midi, "mf", this.audioContext.currentTime);
           intent.started = true;
         }

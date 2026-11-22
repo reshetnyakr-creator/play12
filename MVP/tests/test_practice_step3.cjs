@@ -857,3 +857,50 @@ test('Card instruction waits for asynchronous Piano View geometry without changi
  h.pianoView.keys.set(49,{});const [ticket,fn]=[...frames][0];frames.delete(ticket);fn();
  assert.equal(h.controller.getState().zeroSetupStage,'verify-yellow');assert.equal(frames.size,0);assert.match(h.node('#onboarding-listen-coach').dataset.copy,/yellow.*1/);assert(!h.node('#onboarding-listen-coach').dataset.copy.includes('not visible'));
 });
+
+test('MIDI voices survive the next practice gate and end only on their own release', async () => {
+  const {c} = make([['R',72,0],['R',74,1],['R',76,2]]);
+  configure(c);
+  await c.play();
+  const firstKey = 'midi:piano:0:72';
+  c.handleNoteOn(72, 90, 'midi', 'piano:0:72');
+  await Promise.resolve();
+  const first = c.audio.voices.get(firstKey);
+  assert(first);
+  assert.equal(c.expectedPracticeEvent.start, 1);
+  c.audioContext.currentTime = 1;
+  c.tick();
+  assert.equal(c.waitingForInput.start, 1);
+  assert.equal(first.oscillators[0].stopAt, undefined, 'next gate must not stop held MIDI');
+  c.handleNoteOn(74, 90, 'midi', 'piano:0:74');
+  await Promise.resolve();
+  const second = c.audio.voices.get('midi:piano:0:74');
+  c.handleNoteOff(72, 'midi', 'piano:0:72');
+  assert.equal(first.oscillators[0].stopAt, 1.035);
+  assert.equal(second.oscillators[0].stopAt, undefined);
+  c.handleNoteOff(74, 'midi', 'piano:0:74');
+  assert.equal(c.inputNotes.size, 0);
+  assert.equal(c.audio.voices.size, 0);
+  for (const voice of [first, second]) for (const oscillator of voice.oscillators) oscillator.finish();
+  assert.equal(c.audio.sources.size, 0);
+});
+
+test('transport stops leave MIDI release tails and repeated notes independent', async () => {
+  const {c} = make();
+  const token = 'piano:0:72';
+  const key = 'midi:' + token;
+  c.handleNoteOn(72, 80, 'midi', token);
+  await Promise.resolve();
+  const first = c.audio.voices.get(key);
+  c.audioContext.currentTime = .02;
+  c.handleNoteOn(72, 90, 'midi', token);
+  await Promise.resolve();
+  const second = c.audio.voices.get(key);
+  assert.notEqual(first, second);
+  c.audio.scheduleStopAt(.03);
+  c.restart();
+  assert.equal(first.oscillators[0].stopAt, .02 + .035);
+  assert.equal(second.oscillators[0].stopAt, undefined);
+  c.handleNoteOff(72, 'midi', token);
+  assert.equal(second.oscillators[0].stopAt, .02 + .035);
+});
