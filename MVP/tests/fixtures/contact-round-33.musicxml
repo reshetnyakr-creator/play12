@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<score-partwise version="4.0"><part-list><score-part id="P1"><part-name>Piano</part-name></score-part></part-list>
+<part id="P1"><measure number="33">
+<attributes><divisions>4</divisions><time><beats>3</beats><beat-type>4</beat-type></time><staves>2</staves></attributes>
+<direction><direction-type><pedal type="start" line="yes"/></direction-type><staff>2</staff></direction>
+<note><pitch><step>F</step><octave>2</octave></pitch><duration>12</duration><voice>5</voice><staff>2</staff></note>
+<note><chord/><pitch><step>C</step><octave>3</octave></pitch><duration>12</duration><voice>5</voice><staff>2</staff></note>
+<note><chord/><pitch><step>F</step><octave>3</octave></pitch><duration>12</duration><voice>5</voice><staff>2</staff></note>
+<direction><direction-type><pedal type="stop" line="yes"/></direction-type><staff>2</staff></direction>
+<backup><duration>12</duration></backup><forward><duration>4</duration></forward>
+<note><pitch><step>F</step><octave>3</octave></pitch><duration>8</duration><voice>6</voice><staff>2</staff></note>
+<note><chord/><pitch><step>C</step><octave>4</octave></pitch><duration>8</duration><voice>6</voice><staff>2</staff></note>
+<note><chord/><pitch><step>F</step><octave>4</octave></pitch><duration>8</duration><voice>6</voice><staff>2</staff></note>
+</measure></part></score-partwise>
