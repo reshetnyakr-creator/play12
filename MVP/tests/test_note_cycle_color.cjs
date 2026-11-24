@@ -59,3 +59,22 @@ test('Renderer adds one left-side Round marker per runtime Round and includes it
   assert.equal(Number(svg.style.width.replace('px','')),Number(svg.dataset.noteFieldWidth)+32);
   assert(markers.every(marker=>Number(marker.attrs.transform.match(/translate\(([-\d.]+)/)[1])<0));
 });
+
+test('imported 6/8 keeps all six beat labels at ×1 and ×2',()=>{
+  const doc=structuredClone(score);
+  const first=doc.score.parts[0].measures[0];
+  first.attributes.time={beats:6,beat_type:8};
+  first.events=[];
+  first.editor_duration_q='3';
+  doc.editor={rounds:[{start:0,end:3,measureStart:0,beats:6,beatQuarters:.5}]};
+  for(const gridResolution of ['1/4','1/8']){
+    const svg=window.Play12Renderer.render(doc,new Element('div'),{
+      zeroNote:'C',measureCount:1,editorTimeline:true,gridResolution,
+      countWords:{1:'ONE',2:'TWO',3:'THREE',4:'FOUR'}
+    });
+    assert.equal(svg.dataset.totalQuarters,'3');
+    const beats=svg.children.filter(e=>e.attrs.class?.startsWith('play12-count ')&&!e.attrs.class.includes('-and'));
+    assert.deepEqual(beats.map(e=>e.textContent),['ONE','TWO','THREE','FOUR','5','6']);
+    assert(beats.every((e,i)=>i===0||+e.attrs.y < +beats[i-1].attrs.y));
+  }
+});

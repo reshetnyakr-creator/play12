@@ -256,8 +256,22 @@
           class: "play12-cell",
         });
       }
-      const countText = withinBeat === 0 ? cfg.countWords[beat + 1] : cfg.countAnd;
+      const countText = withinBeat === 0 ? (cfg.countWords[beat + 1] ?? String(beat + 1)) : cfg.countAnd;
       countLabels.push({ text: countText, x: handWidth + countWidth / 2, y: y + height * 0.63, beat: withinBeat === 0, primary: withinBeat === 0 && beat === 0 });
+    }
+
+    // A coarse grid can have fewer rows than the meter has beats (e.g. 6/8).
+    // Place beat labels at their own times, independent of the editable grid.
+    if (cfg.editorTimeline && beatSteps < 1) {
+      countLabels.length = 0;
+      for (const round of document.editor.rounds.slice(0, measureCount)) {
+        for (let beat = 0; beat < round.beats; beat++) {
+          const start = round.measureStart + beat * round.beatQuarters;
+          if (start < round.start || start >= round.end) continue;
+          const y = (steps - (start + round.beatQuarters / 2) / stepQ) * height;
+          countLabels.push({text: cfg.countWords[beat + 1] ?? String(beat + 1), x: handWidth + countWidth / 2, y, beat: true, primary: beat === 0});
+        }
+      }
     }
 
     for (let s = 0; s < steps; s += measureSteps) {

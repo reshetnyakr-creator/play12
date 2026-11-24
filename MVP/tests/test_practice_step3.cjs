@@ -253,7 +253,7 @@ test('Geometry extends inner clip to fixed Playback at top/middle/bottom scroll 
   const {c,sandbox}=make();
   sandbox.document.body={classList:{contains:()=>true}};sandbox.getComputedStyle=()=>({borderLeftWidth:'1'});
   const shell=new Element(), cell=new Element();cell.getAttribute=()=> '24';
-  c.svg.isConnected=true;c.svg.parentElement=new Element();c.svg.querySelector=()=>cell;c.svg.querySelectorAll=()=>[cell];
+  c.svg.isConnected=true;c.svg.parentElement=new Element();c.svg.querySelector=()=>cell;c.svg.querySelectorAll=()=>Array(10).fill(cell);
   c.stage.closest=()=>true;c.stage.querySelector=()=>shell;
   c.pianoView={mount:new Element(),setActiveMidis(){}};c.pianoView.mount.isConnected=true;
   for(const top of [200,0,-450]) for(const boundary of [350,600]){
@@ -903,4 +903,51 @@ test('transport stops leave MIDI release tails and repeated notes independent', 
   assert.equal(second.oscillators[0].stopAt, undefined);
   c.handleNoteOff(72, 'midi', token);
   assert.equal(second.oscillators[0].stopAt, .02 + .035);
+});
+
+test('painting a stable frame avoids writing hundreds of unchanged note groups', () => {
+  const {c} = make(Array.from({length:500}, (_, i) => ['R', 72, i]));
+  let writes = 0;
+  for (const event of c.events) {
+    event.group.classList.toggle = () => { writes++; };
+    event.group.style = new Proxy({}, {set(target, key, value) { writes++; target[key] = value; return true; }});
+  }
+  c.paint(0);
+  assert.equal(writes, 0);
+  c.clock.start(0);
+  c.paint(.5);
+  assert.equal(c.events[0].group.dataset.noteState, 'active');
+  assert.equal(writes, 3);
+});
+
+test('a failed audio activation leaves transport stopped and permits a retry', async () => {
+  const {c} = make();
+  c.audioContext.state = 'suspended';
+  c.audioContext.resume = async () => { throw Error('requires gesture'); };
+  await c.play();
+  assert.equal(c.clock.running, false);
+  assert.equal(c.stage.dataset.audioResumeError, 'requires gesture');
+  c.audioContext.resume = async () => { c.audioContext.state = 'running'; };
+  await c.play();
+  assert.equal(c.clock.running, true);
+  assert.equal(c.stage.dataset.audioResumeError, undefined);
+});
+
+test('a second activation retries a pending touch resume and starts the held note', async () => {
+  const {c} = make();
+  c.audioContext.state = 'suspended';
+  let complete, calls = 0;
+  c.audioContext.resume = () => {
+    if (++calls === 1) return new Promise(resolve => { complete = resolve; });
+    c.audioContext.state = 'running';
+    complete();
+    return Promise.resolve();
+  };
+  c.handleNoteOn(72, 100, 'mouse', 1);
+  await c.unlockAudio();
+  await Promise.resolve();
+  assert.equal(calls, 2);
+  assert(c.audio.voices.has('mouse:1'));
+  c.handleNoteOff(72, 'mouse', 1);
+  assert.equal(c.audio.voices.size, 0);
 });

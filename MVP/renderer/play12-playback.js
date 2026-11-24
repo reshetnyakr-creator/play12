@@ -240,7 +240,7 @@
       this.noteListeners = new Set();
       this.stateListeners = new Set();
       this.audioResumePromise = Promise.resolve();
-      if (this.pianoView) this.pianoView.mount.addEventListener("pointerdown", () => {
+      if (this.pianoView) this.pianoView.mount.addEventListener("pointerup", () => {
         this.unlockAudio();
       }, { capture: true });
       if (this.pianoView) this.pianoView.setVirtualNoteHandlers({
@@ -279,7 +279,16 @@
       this.frame = requestAnimationFrame(() => this.tick());
     }
     unlockAudio() {
-      if (this.audioContext.state !== "running") this.audioResumePromise = this.audioContext.resume();
+      if (this.audioContext.state === "running") return Promise.resolve(true);
+      // Touch activation may arrive on release, after note-on already requested resume.
+      this.audioResumePromise = this.audioContext.resume().then(() => {
+        const running = this.audioContext.state === "running";
+        if (running) delete this.stage.dataset.audioResumeError;
+        return running;
+      }, error => {
+        this.stage.dataset.audioResumeError = error.message;
+        return false;
+      });
       return this.audioResumePromise;
     }
     handleNoteOn(midiNote, velocity = 100, source = "mouse", token = midiNote) {
@@ -291,8 +300,13 @@
       if (source === "mouse" || source === "midi") this.acceptPracticeInput(midiNote);
       this.syncInputVisual(source);
       const start = async () => {
-        await this.unlockAudio();
-        if (this.audioContext.state !== "running") throw new Error(`AudioContext remained ${this.audioContext.state}`);
+        if (!await this.unlockAudio()) {
+          if (this.inputNotes.get(key) === intent) {
+            this.inputNotes.delete(key);
+            this.syncInputVisual(source);
+          }
+          return;
+        }
         if (this.inputNotes.get(key) !== intent) return;
         this.audio.noteOn(key, midiNote, "mf", this.audioContext.currentTime, null, undefined, source === "midi");
         intent.started = true;
@@ -464,9 +478,9 @@
       this.pulse.style.width = `${compactPlayer ? noteFieldWidth + shellPadding * 2 : noteFieldWidth + lineOverhang * 2}px`;
       const zoneRect = this.playline.getBoundingClientRect();
       const zoneBorder = parseFloat(getComputedStyle(this.playline).borderLeftWidth) || 0;
-      const cellRects = [...this.svg.querySelectorAll(".play12-cell")].map(cell => cell.getBoundingClientRect());
-      this.progressStartX = Math.min(...cellRects.map(rect => rect.left)) - zoneRect.left - zoneBorder;
-      this.progressEndX = Math.max(...cellRects.map(rect => rect.right)) - zoneRect.left - zoneBorder;
+      const cells = this.svg.querySelectorAll(".play12-cell");
+      this.progressStartX = cells[0].getBoundingClientRect().left - zoneRect.left - zoneBorder;
+      this.progressEndX = cells[9].getBoundingClientRect().right - zoneRect.left - zoneBorder;
       if (localWorkspace || this.playline.closest('.mvp-control-row')) {
         this.progressStartX = 16; this.progressEndX = (localWorkspace ? parseFloat(this.stage.style.width) : zoneRect.width) - 16;
       }
@@ -483,9 +497,9 @@
       this.svg.parentElement.style.height = `${this.executionY() + 1}px`;
       const zoneRect = this.playline.getBoundingClientRect();
       const zoneBorder = parseFloat(getComputedStyle(this.playline).borderLeftWidth) || 0;
-      const cellRects = [...this.svg.querySelectorAll(".play12-cell")].map(cell => cell.getBoundingClientRect());
-      this.progressStartX = Math.min(...cellRects.map(rect => rect.left)) - zoneRect.left - zoneBorder;
-      this.progressEndX = Math.max(...cellRects.map(rect => rect.right)) - zoneRect.left - zoneBorder;
+      const cells = this.svg.querySelectorAll(".play12-cell");
+      this.progressStartX = cells[0].getBoundingClientRect().left - zoneRect.left - zoneBorder;
+      this.progressEndX = cells[9].getBoundingClientRect().right - zoneRect.left - zoneBorder;
       this.paint(this.displayPosition ?? this.clock.position);
     }
     executionY() {
@@ -754,7 +768,9 @@
       this.bpmMinus?.addEventListener('click', () => { this.bpmInput.value = String(this.clock.bpm - 10); this.changeBpm(true); });
       this.bpmPlus?.addEventListener('click', () => { this.bpmInput.value = String(this.clock.bpm + 10); this.changeBpm(true); });
       this.metronomeButton?.addEventListener('click', () => this.setMetronome(!this.metronomeInput.checked));
-      document.addEventListener('pointerdown', () => { if (this.metronomeAudio && this.metronomeInput.checked) this.unlockAudio(); }, {once: true});
+      document.addEventListener("click", () => {
+        if ((this.clock.running || this.countIn || this.waitingForInput || this.metronomeInput.checked) && this.audioContext.state !== "running") this.unlockAudio();
+      }, { capture: true });
       this.loopInput.addEventListener("change", () => { this.audio.stopAll(); this.stage.dataset.loopEnabled = String(this.loopInput.checked); });
       this.loopGapInput?.addEventListener("change", () => {
         localStorage.setItem("play12.loop-gap", this.loopGapInput.value);
@@ -778,7 +794,8 @@
     }
     async play() {
       if (this.clock.running || this.countIn || this.waitingForInput) return;
-      await this.audioContext.resume();
+      if (this.audioContext.state !== "running" && !await this.unlockAudio()) return;
+      if (this.clock.running || this.countIn || this.waitingForInput) return;
       if (this.clock.position >= this.totalQuarters - EPSILON) {
         this.clock.pause(0);
         if (this.practiceEnabled()) this.preparePractice(0);
@@ -1264,25 +1281,36 @@
       this.stage.dataset.musicalPosition = String(this.clock.position);
       this.stage.dataset.displayPosition = String(position);
       const soundingMidis = [];
+      const measureQuarters = this.signatureAt(position).measureQuarters;
+      const sounding = this.clock.running && !this.countIn && !this.preRollPrep && !this.loopGap;
       for (const event of this.events) {
         let state = "upcoming", opacity = 1;
-        event.group.classList.toggle("is-practice-expected", !!this.waitingForInput?.events.includes(event));
-        if (this.clock.running && !this.countIn && !this.preRollPrep && !this.loopGap && position >= event.start && position < event.start + event.duration) {
+        const expected = !!this.waitingForInput?.events.includes(event);
+        if (sounding && position >= event.start && position < event.start + event.duration) {
           state = "active";
           soundingMidis.push(event.midi);
         }
         else if (position >= event.start + event.duration) {
           const age = position - event.start - event.duration;
-          const measureQuarters = this.signatureAt(position).measureQuarters;
           state = age <= measureQuarters ? "played" : "faded";
           if (state === "played") opacity = .72;
           if (state === "faded") opacity = Math.max(.06, 1 - (age - measureQuarters) / (3 * measureQuarters));
         }
-        event.group.dataset.noteState = state;
-        event.group.classList.toggle("is-active", state === "active");
-        event.group.classList.toggle("is-played", state === "played");
-        event.group.classList.toggle("is-faded", state === "faded");
-        event.group.style.opacity = String(opacity);
+        if (event.paintedExpected !== expected) {
+          event.group.classList.toggle("is-practice-expected", expected);
+          event.paintedExpected = expected;
+        }
+        if (event.paintedState !== state) {
+          event.group.dataset.noteState = state;
+          event.group.classList.toggle("is-active", state === "active");
+          event.group.classList.toggle("is-played", state === "played");
+          event.group.classList.toggle("is-faded", state === "faded");
+          event.paintedState = state;
+        }
+        if (event.paintedOpacity !== opacity) {
+          event.group.style.opacity = String(opacity);
+          event.paintedOpacity = opacity;
+        }
       }
       if (this.pianoView) this.pianoView.setActiveMidis(this.practiceEnabled() ? [] : soundingMidis, "playback");
       this.updateProgress(this.clock.position);
