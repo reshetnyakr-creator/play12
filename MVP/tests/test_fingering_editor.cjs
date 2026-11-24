@@ -78,9 +78,16 @@ test('time and candidate budgets are reported separately', () => {
   const timeout = limited('maxMilliseconds', -1);
   assert.equal(timeout.search_status, 'budget_exhausted');
   assert.deepEqual({ ...timeout.unassignedReasons }, {first: 'TIME_LIMIT', second: 'TIME_LIMIT'});
-  const exhausted = E.propose(input, { ...cfg, search: { ...cfg.search, maxCandidatesPerLayer: 1 } }, { first: 9 });
-  assert.equal(exhausted.unassignedReasons.first, 'INVALID_LOCK');
-  assert.equal(exhausted.unassignedReasons.second, 'NOT_PROCESSED');
+  const narrow = { ...cfg, search: { ...cfg.search, maxCandidatesPerLayer: 1 } };
+  const chord = score([note('lower', 60, '0', '1'), note('upper', 64, '0', '1'),
+    note('following', 67, '1', '1')]);
+  const exhausted = E.propose(chord, narrow, { lower: 1, upper: 1 });
+  assert.equal(exhausted.unassignedReasons.lower, 'SEARCH_EXHAUSTED');
+  assert.equal(exhausted.unassignedReasons.upper, 'SEARCH_EXHAUSTED');
+  assert(exhausted.assignments.following);
+  const invalid = E.propose(input, narrow, { first: 9 });
+  assert.equal(invalid.unassignedReasons.first, 'INVALID_LOCK');
+  assert.equal(invalid.unassignedReasons.second, 'NOT_PROCESSED');
 });
 
 test('simultaneous unison in different voices requires a shared-contact plan', () => {
