@@ -951,3 +951,18 @@ test('a second activation retries a pending touch resume and starts the held not
   c.handleNoteOff(72, 'mouse', 1);
   assert.equal(c.audio.voices.size, 0);
 });
+
+test('indexed paint preserves fades and active notes through far seeks and back', () => {
+  const events = Array.from({length: 500}, (_, i) => ['R', 72, i]);
+  const {c} = make(events);
+  c.clock.start(0);
+  c.paint(1.5);
+  assert.equal(c.events[1].group.dataset.noteState, 'active');
+  c.paint(490.5);
+  assert.equal(c.events[1].group.style.opacity, '0.06');
+  assert.equal(c.events[490].group.dataset.noteState, 'active');
+  c.paint(1.5);
+  assert.equal(c.events[490].group.dataset.noteState, 'upcoming');
+  assert.equal(c.events[490].group.style.opacity, '1');
+  assert.equal(c.events[1].group.dataset.noteState, 'active');
+});

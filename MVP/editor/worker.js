@@ -1,1 +1,1 @@
-importScripts('core.js?v=fingering-1');onmessage=async({data})=>{try{postMessage({id:data.id,run:Play12Editor.propose(data.score,data.config,data.locks,data.detailed)});}catch(error){postMessage({id:data.id,error:error.message});}};
+importScripts('core.js?v=stage11');onmessage=async({data})=>{try{postMessage({id:data.id,run:Play12Editor.propose(data.score,data.config,data.locks,data.detailed)});}catch(error){postMessage({id:data.id,error:error.message});}};

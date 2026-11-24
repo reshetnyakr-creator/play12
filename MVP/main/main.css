@@ -49,3 +49,15 @@ body.play12-main .main-library-heading .main-add-melody::before {
   position: absolute;
   inset: -8px;
 }
+
+/* Before Playback mounts, keep the library usable at the active device width. */
+html[data-device-mode="tablet-portrait"] .main-layout-unloaded,
+html[data-device-mode="tablet-landscape"] .main-layout-unloaded,
+html[data-device-mode="phone-portrait"] .main-layout-unloaded {
+  grid-template-columns: minmax(0, 1fr);
+}
+html[data-device-mode="tablet-portrait"] .main-layout-unloaded .main-skill,
+html[data-device-mode="tablet-landscape"] .main-layout-unloaded .main-skill,
+html[data-device-mode="phone-portrait"] .main-layout-unloaded .main-skill {
+  min-height: 0;
+}

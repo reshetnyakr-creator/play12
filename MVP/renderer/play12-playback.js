@@ -392,6 +392,15 @@
       const midis = [...this.inputNotes.values()].filter(note => note.source === source && !note.released).map(note => note.midi);
       this.pianoView.setActiveMidis(midis, source);
     }
+    firstEventAt(position) {
+      let low = 0, high = this.eventsByStart.length;
+      while (low < high) {
+        const mid = Math.floor((low + high) / 2);
+        if (this.eventsByStart[mid].start < position) low = mid + 1;
+        else high = mid;
+      }
+      return low;
+    }
     replaceSvg(svg) {
       this.preCountView?.clear();
       this.preCountView = null;
@@ -415,6 +424,10 @@
         const groups = new Map(this.events.map(e => [e.id, e.group]));
         this.events = this.musicSchedule.map(e => ({ ...e, group: groups.get(e.id), midi: effectiveMidiPitch(e.sourceMidi, this.referenceZeroNote, this.runtimeZeroNote) }));
       }
+      this.eventsByStart = [...this.events].sort((a, b) => a.start - b.start);
+      this.longestEvent = this.events.reduce((max, event) => Math.max(max, event.duration), 0);
+      this.longestMeasure = this.rounds.reduce((max, round) => Math.max(max, round.measureQuarters), 0);
+      this.previousPaintPosition = null;
       this.buildPracticeEvents();
       Object.assign(this.stage.dataset, {
         referenceZeroNote: String(this.referenceZeroNote),
@@ -1212,9 +1225,9 @@
       const practiceLimit = this.practiceEnabled() && this.expectedPracticeEvent ? this.expectedPracticeEvent.start : Infinity;
       const hardEnd = Math.min(loop ? loop.end : this.totalQuarters, this.pauseTarget == null ? Infinity : this.pauseTarget, practiceLimit);
       const horizon = practiceScheduleEnd(Math.min(hardEnd, nowQ + .15 * this.clock.bpm / 60), practiceLimit);
-      for (const event of this.events) {
-        if (event.start >= hardEnd - EPSILON) continue;
-        if (this.practiceEnabled()) continue;
+      for (let i = this.practiceEnabled() ? this.eventsByStart.length : this.firstEventAt(nowQ - EPSILON); i < this.eventsByStart.length; i++) {
+        const event = this.eventsByStart[i];
+        if (event.start >= hardEnd - EPSILON || event.start > horizon + EPSILON) break;
         if (Number.isFinite(practiceLimit) && event.start >= practiceLimit - EPSILON) continue;
         if (event.start + EPSILON < nowQ || event.start > horizon + EPSILON) continue;
         if (this.musicAudioInput.checked) this.audio.scheduleNote(event, this.clock.quarterToAudioTime(event.start), Math.min(event.duration, hardEnd - event.start), this.clock.bpm);
@@ -1257,7 +1270,8 @@
     }
     triggerContacts(from, to) {
       if (from == null || to < from) return;
-      const contacts = this.events.filter(event => event.start >= from - EPSILON && event.start <= to + EPSILON);
+      const contacts = [];
+      for (let i = this.firstEventAt(from - EPSILON); i < this.eventsByStart.length && this.eventsByStart[i].start <= to + EPSILON; i++) contacts.push(this.eventsByStart[i]);
       if (!contacts.length) return;
       this.playline.classList.remove("is-note-on");
       void this.playline.offsetWidth;
@@ -1283,7 +1297,14 @@
       const soundingMidis = [];
       const measureQuarters = this.signatureAt(position).measureQuarters;
       const sounding = this.clock.running && !this.countIn && !this.preRollPrep && !this.loopGap;
-      for (const event of this.events) {
+      // Older notes are already at the minimum opacity; future notes are unchanged.
+      // Include the previous window so seeks and loop wraps update both sides.
+      const previous = this.previousPaintPosition;
+      const first = previous == null ? 0 : this.firstEventAt(Math.min(previous, position) - this.longestEvent - 4 * this.longestMeasure);
+      const end = previous == null ? Infinity : Math.max(previous, position) + EPSILON;
+      this.previousPaintPosition = position;
+      for (let i = first; i < this.eventsByStart.length && this.eventsByStart[i].start <= end; i++) {
+        const event = this.eventsByStart[i];
         let state = "upcoming", opacity = 1;
         const expected = !!this.waitingForInput?.events.includes(event);
         if (sounding && position >= event.start && position < event.start + event.duration) {
