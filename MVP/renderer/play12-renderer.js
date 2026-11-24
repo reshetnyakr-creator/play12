@@ -127,9 +127,7 @@
     const steps = Math.ceil(selection.totalQuarters / stepQ);
     const window = options.scoreWindow;
     const firstRow = window?.from ?? 0, lastRow = window?.to ?? steps;
-    const notes = (window ? selection.notes.filter(note =>
-      note.globalStart < lastRow * stepQ && note.globalStart + fraction(note.duration_quarters) > firstRow * stepQ
-    ) : selection.notes)
+    const notes = (options.windowNotes ?? selection.notes)
       .map((note) => ({ note, displayFingering: resolveDisplayFingering(document, note, cfg) }))
       .filter((item) => item.displayFingering);
     const startQ = 0;
@@ -401,7 +399,27 @@
     const steps = Math.ceil(selection.totalQuarters / step);
     const buffer = Math.ceil(8 / step);
     let range = {from: 0, to: Math.min(steps, buffer * 2)};
-    const draw = (scoreWindow, host) => renderPlay12(document, host, {...options, selection, scoreWindow});
+    let longest = 0;
+    const index = selection.notes.map((note, order) => {
+      const duration = fraction(note.duration_quarters);
+      longest = Math.max(longest, duration);
+      return {note, order, end: note.globalStart + duration};
+    }).sort((a, b) => a.note.globalStart - b.note.globalStart);
+    const draw = (scoreWindow, host) => {
+      const start = scoreWindow.from * step, stop = scoreWindow.to * step;
+      let low = 0, high = index.length;
+      while (low < high) {
+        const mid = Math.floor((low + high) / 2);
+        if (index[mid].note.globalStart < start - longest) low = mid + 1;
+        else high = mid;
+      }
+      const visible = [];
+      for (let i = low; i < index.length && index[i].note.globalStart < stop; i++) {
+        if (index[i].end >= start) visible.push(index[i]);
+      }
+      const windowNotes = visible.sort((a, b) => a.order - b.order).map(item => item.note);
+      return renderPlay12(document, host, {...options, selection, scoreWindow, windowNotes});
+    };
     const svg = draw(range, mount);
     svg.ensureScoreWindow = (position, span, anchor = position) => {
       const from = Math.min(steps-1, Math.max(0, Math.floor(position / step)));

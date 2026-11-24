@@ -966,3 +966,44 @@ test('indexed paint preserves fades and active notes through far seeks and back'
   assert.equal(c.events[490].group.style.opacity, '1');
   assert.equal(c.events[1].group.dataset.noteState, 'active');
 });
+
+test('Practice and Loop cross detached score windows using the complete schedule', async()=>{
+  const {c}=make([['R',72,0],['R',74,4]]);
+  c.rounds=[
+    {start:0,end:4,measureStart:0,beatQuarters:1,beats:4,measureQuarters:4},
+    {start:4,end:8,measureStart:4,beatQuarters:1,beats:4,measureQuarters:4}
+  ];
+  const groups=c.events.map(event=>event.group);
+  const getNotes=()=>groups.filter((_,index)=>index===active);
+  let active=0;
+  c.svg.querySelectorAll=getNotes;
+  c.svg.ensureScoreWindow=position=>{
+    const next=position>=4?1:0;
+    if(next===active)return false;
+    active=next;
+    c.svg.dataset.windowShiftY=String(next*42);
+    return true;
+  };
+  c.musicSchedule=c.events.map(({id,start,duration,hand,sourceMidi,dynamic})=>({id,start,duration,hand,sourceMidi,dynamic}));
+  c.replaceSvg(c.svg);
+  configure(c);
+  c.loopInput.checked=true;
+  c.loopStartInput.value='0';c.loopEndInput.value='1';
+  await c.play();
+  assert.equal(c.waitingForInput.start,0);
+  assert.equal(c.events[1].group,undefined);
+  assert(c.acceptPracticeInput(72));
+  assert.equal(c.expectedPracticeEvent.start,4);
+  c.audioContext.currentTime=4;
+  c.tick();
+  assert.equal(c.waitingForInput.start,4);
+  assert.equal(c.events[0].group,null);
+  assert.equal(c.events[1].group,groups[1]);
+  assert.equal(c.acceptPracticeInput(72),false);
+  assert(c.acceptPracticeInput(74));
+  c.audioContext.currentTime=8;
+  c.tick();
+  assert.equal(c.loopWrapCount,1);
+  assert.equal(c.waitingForInput.start,0);
+  assert.equal(c.events[0].group,groups[0]);
+});

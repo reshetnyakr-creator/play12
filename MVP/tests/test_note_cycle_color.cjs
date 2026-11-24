@@ -112,3 +112,28 @@ test('windowed renderer keeps global coordinates and bounds SVG nodes as the sco
   }
   assert.equal(new Set(counts).size,1);
 });
+
+test('windowed mixed meter uses the actual measure boundaries on both Graph levels',()=>{
+  const doc=structuredClone(score),part=doc.score.parts[0];
+  const meters=[3,4,3];
+  let offset=0;
+  doc.editor={rounds:meters.map(beats=>{
+    const start=offset;
+    offset+=beats;
+    return {start,end:offset,measureStart:start,beats,beatType:4,beatQuarters:1};
+  })};
+  part.measures=meters.map((beats,index)=>({
+    index,attributes:{time:{beats,beat_type:4}},editor_duration_q:String(beats),events:[]
+  }));
+  doc.score.parts=[part];
+  for(const gridResolution of ['1/4','1/8']){
+    const svg=window.Play12Renderer.renderWindowed(doc,new Element('div'),{
+      zeroNote:'C',measureCount:3,editorTimeline:true,gridResolution,
+      countWords:{1:'ONE',2:'TWO',3:'THREE',4:'FOUR'}
+    });
+    const labels=svg.children.filter(e=>e.attrs.class?.startsWith('play12-count ')&&!e.attrs.class.includes('-and'));
+    assert.deepEqual(labels.map(e=>e.textContent),['ONE','TWO','THREE','ONE','TWO','THREE','FOUR','ONE','TWO','THREE']);
+    const marks=svg.children.filter(e=>e.attrs['data-round-marker']);
+    assert.deepEqual(marks.map(e=>Number(e.attrs['data-round-top-y'])),gridResolution==='1/4'?[224,96,0]:[448,192,0]);
+  }
+});
