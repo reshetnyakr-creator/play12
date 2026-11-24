@@ -122,14 +122,18 @@
     const cfg = { ...DEFAULTS, ...options };
     if (document.play12.zero_pitch_class !== cfg.zeroNote) throw new Error("Renderer zeroNote does not match the score");
     const measureCount = options.measureCount || 8;
-    const selection = selectMeasureRange(document, measureCount, cfg);
-    const notes = selection.notes
+    const selection = options.selection || selectMeasureRange(document, measureCount, cfg);
+    const stepQ = gridInQuarters(cfg.gridResolution);
+    const steps = Math.ceil(selection.totalQuarters / stepQ);
+    const window = options.scoreWindow;
+    const firstRow = window?.from ?? 0, lastRow = window?.to ?? steps;
+    const notes = (window ? selection.notes.filter(note =>
+      note.globalStart < lastRow * stepQ && note.globalStart + fraction(note.duration_quarters) > firstRow * stepQ
+    ) : selection.notes)
       .map((note) => ({ note, displayFingering: resolveDisplayFingering(document, note, cfg) }))
       .filter((item) => item.displayFingering);
-    const stepQ = gridInQuarters(cfg.gridResolution);
     const startQ = 0;
     const endQ = selection.totalQuarters;
-    const steps = Math.ceil((endQ - startQ) / stepQ);
     const width = cfg.cellWidth * cfg.zoom;
     const height = cfg.cellHeight * cfg.zoom;
     const handWidth = 5 * width;
@@ -151,7 +155,10 @@
     const noteFieldWidth = totalWidth + edgePadding * 2 + leftRibbonSpace + rightRibbonSpace;
     const renderedWidth = noteFieldWidth + markerGap + markerDiameter;
     const noteFieldLeft = -edgePadding - leftRibbonSpace;
-    svg.setAttribute("viewBox", `${noteFieldLeft - markerGap - markerDiameter} ${-edgePadding} ${renderedWidth} ${steps * height + edgePadding * 2}`);
+    const viewportY = (steps - lastRow) * height - edgePadding;
+    svg.setAttribute("viewBox", `${noteFieldLeft - markerGap - markerDiameter} ${viewportY} ${renderedWidth} ${(lastRow-firstRow) * height + edgePadding * 2}`);
+    svg.dataset.windowShiftY = String((steps - lastRow) * height);
+    svg.dataset.gridOriginY = String(steps * height);
     // Expanding the viewBox for ribbons must not scale down the established grid geometry.
     svg.style.width = `${renderedWidth}px`;
     svg.setAttribute("role", "img");
@@ -179,6 +186,7 @@
         for (const occurrence of segment.occurrences) {
           const occurrenceStart = fraction(occurrence.start_quarters_global);
           const occurrenceEnd = fraction(occurrence.end_quarters_global);
+          if (window && (occurrenceEnd < firstRow * stepQ || occurrenceStart > lastRow * stepQ)) continue;
           const y = (steps - (occurrenceEnd - startQ) / stepQ) * height;
           const ribbon = make("rect", {
             x: segment.hand === "R" ? totalWidth + ribbonGap : -ribbonGap - ribbonWidth,
@@ -202,15 +210,18 @@
     let roundStart = 0;
     selection.selectedMeasures.forEach((measure, index) => {
       const time = measure.attributes.time;
-      const length = time.beats * 4 / time.beat_type;
-      const centerY = (steps - (roundStart + length / 2 - startQ) / stepQ) * height;
+      const length = cfg.editorTimeline && measure.editor_duration_q ? fraction(measure.editor_duration_q) : time.beats * 4 / time.beat_type;
+      const measureStart = roundStart;
+      roundStart += length;
+      if (window && (roundStart < firstRow * stepQ || measureStart > lastRow * stepQ)) return;
+      const centerY = (steps - (measureStart + length / 2 - startQ) / stepQ) * height;
       const centerX = noteFieldLeft - markerGap - markerDiameter / 2;
       const marker = global.document.createElementNS(svgNS, "g");
       marker.setAttribute("class", "play12-round-marker");
       marker.setAttribute("data-round-marker", String(index + 1));
       marker.setAttribute("data-round-left-x",String(centerX));
       marker.setAttribute("data-round-top-x", String(noteFieldLeft + noteFieldWidth / 2));
-      marker.setAttribute("data-round-top-y", String((steps - (roundStart + length - startQ) / stepQ) * height));
+      marker.setAttribute("data-round-top-y", String((steps - (roundStart - startQ) / stepQ) * height));
       marker.setAttribute("transform", cfg.roundMarkerPlacement==='left-top'?`translate(${centerX} ${marker.getAttribute("data-round-top-y")})`:cfg.roundMarkerPlacement==='top-center'?`translate(${marker.getAttribute("data-round-top-x")} ${marker.getAttribute("data-round-top-y")})`:`translate(${centerX} ${centerY})`);
       const circle = global.document.createElementNS(svgNS, "circle");
       circle.setAttribute("r", String(markerDiameter / 2)); circle.setAttribute("class", "play12-round-marker-circle");
@@ -219,7 +230,6 @@
       const check = global.document.createElementNS(svgNS, "text");
       check.setAttribute("class", "play12-round-marker-check"); check.textContent = "✓";
       marker.appendChild(circle); marker.appendChild(number); marker.appendChild(check); svg.appendChild(marker);
-      roundStart += length;
     });
 
     const time = selection.selectedMeasures[0].attributes.time;
@@ -228,11 +238,15 @@
     const measureSteps = time.beats * beatSteps;
     const metricMap = cfg.metricMaps[meter] || (cfg.editorTimeline ? Array.from({length:time.beats}, (_,i) => i === 0 ? "primary" : "weak") : undefined);
     const countLabels = [];
-    for (let s = 0; s < steps; s++) {
+    for (let s = firstRow; s < lastRow; s++) {
       const y = (steps - 1 - s) * height;
-      const beat = Math.floor((s % measureSteps) / beatSteps);
-      const withinBeat = s % beatSteps;
-      const level = withinBeat === 0 ? metricMap[beat] : null;
+      const round = cfg.editorTimeline ? document.editor.rounds.find(r => s * stepQ >= r.start && s * stepQ < r.end) : null;
+      const size = round ? round.beatQuarters / stepQ : beatSteps;
+      const relative = round ? s - round.measureStart / stepQ : s % measureSteps;
+      const beat = Math.floor(relative / size);
+      const withinBeat = relative % size;
+      const map = round ? cfg.metricMaps[`${round.beats}/${round.beatType}`] : metricMap;
+      const level = withinBeat === 0 ? (map?.[beat] ?? (beat === 0 ? "primary" : "weak")) : null;
       make("rect", {
         x: handWidth,
         y,
@@ -257,14 +271,14 @@
         });
       }
       const countText = withinBeat === 0 ? (cfg.countWords[beat + 1] ?? String(beat + 1)) : cfg.countAnd;
-      countLabels.push({ text: countText, x: handWidth + countWidth / 2, y: y + height * 0.63, beat: withinBeat === 0, primary: withinBeat === 0 && beat === 0 });
+      if (!(cfg.editorTimeline && (round?.beatQuarters ?? beatSteps*stepQ) < stepQ)) countLabels.push({ text: countText, x: handWidth + countWidth / 2, y: y + height * 0.63, beat: withinBeat === 0, primary: withinBeat === 0 && beat === 0 });
     }
 
     // A coarse grid can have fewer rows than the meter has beats (e.g. 6/8).
     // Place beat labels at their own times, independent of the editable grid.
-    if (cfg.editorTimeline && beatSteps < 1) {
-      countLabels.length = 0;
+    if (cfg.editorTimeline) {
       for (const round of document.editor.rounds.slice(0, measureCount)) {
+        if (round.beatQuarters >= stepQ || round.end <= firstRow * stepQ || round.start >= lastRow * stepQ) continue;
         for (let beat = 0; beat < round.beats; beat++) {
           const start = round.measureStart + beat * round.beatQuarters;
           if (start < round.start || start >= round.end) continue;
@@ -274,9 +288,12 @@
       }
     }
 
-    for (let s = 0; s < steps; s += measureSteps) {
-      const measureY = (steps - s - measureSteps) * height;
-      const measureHeight = measureSteps * height;
+    const borders = cfg.editorTimeline ? document.editor.rounds.slice(0, measureCount) :
+      Array.from({length: Math.ceil(steps / measureSteps)}, (_, i) => ({start: i * measureSteps * stepQ, end: (i + 1) * measureSteps * stepQ}));
+    for (const round of borders) {
+      if (round.end <= firstRow * stepQ || round.start >= lastRow * stepQ) continue;
+      const measureY = (steps - round.end / stepQ) * height;
+      const measureHeight = (round.end - round.start) / stepQ * height;
       make("rect", { x: 0, y: measureY, width: handWidth, height: measureHeight, rx: width * cfg.radiusRatio, fill: "none", stroke: "#6B7280", "stroke-opacity": 0.28, "stroke-width": 1 });
       make("rect", { x: rightStart, y: measureY, width: handWidth, height: measureHeight, rx: width * cfg.radiusRatio, fill: "none", stroke: "#6B7280", "stroke-opacity": 0.28, "stroke-width": 1 });
     }
@@ -378,5 +395,31 @@
     return svg;
   }
 
-  global.Play12Renderer = { render: renderPlay12, collectMissingFingering, resolveDisplayFingering, defaults: DEFAULTS };
+  function renderWindowed(document, mount, options) {
+    const selection = selectMeasureRange(document, options.measureCount, options);
+    const step = gridInQuarters(options.gridResolution);
+    const steps = Math.ceil(selection.totalQuarters / step);
+    const buffer = Math.ceil(8 / step);
+    let range = {from: 0, to: Math.min(steps, buffer * 2)};
+    const draw = (scoreWindow, host) => renderPlay12(document, host, {...options, selection, scoreWindow});
+    const svg = draw(range, mount);
+    svg.ensureScoreWindow = (position, span, anchor = position) => {
+      const from = Math.min(steps-1, Math.max(0, Math.floor(position / step)));
+      const to = Math.min(steps, Math.max(from+1, Math.ceil(Math.max(anchor, position+span) / step)+1));
+      if (from >= range.from && to <= range.to &&
+          (range.from === 0 || from - range.from >= buffer / 2) &&
+          (range.to === steps || range.to - to >= buffer / 2)) return false;
+      range = {from: Math.max(0, from-buffer), to: Math.min(steps, to+buffer)};
+      const next = draw(range, {replaceChildren(){}});
+      const preCount = svg.querySelector(".play12-precount-layer");
+      svg.replaceChildren(...next.children);
+      if (preCount) svg.appendChild(preCount);
+      svg.setAttribute("viewBox", next.getAttribute("viewBox"));
+      svg.dataset.windowShiftY = next.dataset.windowShiftY;
+      return true;
+    };
+    return svg;
+  }
+
+  global.Play12Renderer = { render: renderPlay12, renderWindowed, collectMissingFingering, resolveDisplayFingering, defaults: DEFAULTS };
 })(window);

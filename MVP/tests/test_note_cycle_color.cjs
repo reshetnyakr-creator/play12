@@ -5,6 +5,8 @@ const path = require('node:path');
 const vm = require('node:vm');
 class Element {
   constructor(tag) { this.tag = tag; this.attrs = {}; this.children = []; this.style = {}; this.dataset = {}; this.classList = {add(){}}; }
+  getAttribute(k) { return this.attrs[k] ?? null; }
+  querySelector() { return null; }
   setAttribute(k,v) { this.attrs[k] = String(v); }
   appendChild(e) { this.children.push(e); }
   replaceChildren(...children) { this.children = children; }
@@ -77,4 +79,36 @@ test('imported 6/8 keeps all six beat labels at ×1 and ×2',()=>{
     assert.deepEqual(beats.map(e=>e.textContent),['ONE','TWO','THREE','FOUR','5','6']);
     assert(beats.every((e,i)=>i===0||+e.attrs.y < +beats[i-1].attrs.y));
   }
+});
+
+test('windowed renderer keeps global coordinates and bounds SVG nodes as the score grows',()=>{
+  const render = (doc, windowed) => window.Play12Renderer[windowed?'renderWindowed':'render'](doc,new Element('div'),{
+    zeroNote:'C',measureCount:doc.editor.rounds.length,editorTimeline:true,gridResolution:'1/4',
+    wrapCycles:true,unassignedDisplay:true
+  });
+  const counts=[];
+  for(const quantity of [100,500,1000,2500,10000,20000]){
+    const doc=structuredClone(score),part=doc.score.parts[0],source=notes[0];
+    part.measures=Array.from({length:quantity/4},(_,index)=>({
+      index,attributes:{time:{beats:4,beat_type:4}},editor_duration_q:'4',
+      events:Array.from({length:4},(_,i)=>({...source,id:String(index*4+i),start_quarters:String(i),
+        editor_onset_q:String(index*4+i),duration_quarters:'1'}))
+    }));
+    doc.score.parts=[part];
+    doc.editor={rounds:part.measures.map((_,i)=>({start:i*4,end:i*4+4,measureStart:i*4,beats:4,beatType:4,beatQuarters:1}))};
+    const svg=render(doc,true);
+    const initial=svg.children.length;
+    assert(svg.ensureScoreWindow(quantity-8,5));
+    const last=svg.children.find(n=>n.attrs['data-event-id']===String(quantity-1));
+    assert.equal(last.attrs['data-global-start-quarters'],String(quantity-1));
+    assert.equal(last.children[0].attrs.y,'0');
+    assert(!svg.children.some(n=>n.attrs['data-event-id']==='0'));
+    assert(svg.ensureScoreWindow(0,5));
+    const first=svg.children.find(n=>n.attrs['data-event-id']==='0');
+    assert.equal(first.children[0].attrs.y,String((quantity-1)*32));
+    const ids=svg.children.map(n=>n.attrs['data-event-id']).filter(Boolean);
+    assert.equal(new Set(ids).size,ids.length);
+    counts.push(initial);
+  }
+  assert.equal(new Set(counts).size,1);
 });

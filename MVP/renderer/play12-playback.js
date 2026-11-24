@@ -364,7 +364,7 @@
       this.transposeDelta = this.runtimeZeroNote - this.referenceZeroNote;
       for (const event of this.events) {
         event.midi = effectiveMidiPitch(event.sourceMidi, this.referenceZeroNote, this.runtimeZeroNote);
-        event.group.dataset.effectiveMidi = String(event.midi);
+        if (event.group) event.group.dataset.effectiveMidi = String(event.midi);
       }
       Object.assign(this.stage.dataset, {
         referenceZeroNote: String(this.referenceZeroNote),
@@ -424,6 +424,8 @@
         const groups = new Map(this.events.map(e => [e.id, e.group]));
         this.events = this.musicSchedule.map(e => ({ ...e, group: groups.get(e.id), midi: effectiveMidiPitch(e.sourceMidi, this.referenceZeroNote, this.runtimeZeroNote) }));
       }
+      this.eventsById = new Map(this.events.map(event => [event.id, event]));
+      this.mountedEvents = this.events.filter(event => event.group);
       this.eventsByStart = [...this.events].sort((a, b) => a.start - b.start);
       this.longestEvent = this.events.reduce((max, event) => Math.max(max, event.duration), 0);
       this.longestMeasure = this.rounds.reduce((max, round) => Math.max(max, round.measureQuarters), 0);
@@ -437,6 +439,22 @@
       this.stage.dataset.gridResolution = this.gridResolutionInput ? this.gridResolutionInput.value : "1/16";
       this.stage.dataset.stepQuarters = String(this.stepQuarters);
       this.layoutCoreGeometry();
+    }
+    updateScoreWindow(position, height, anchor = position) {
+      if (!this.svg.ensureScoreWindow?.(position + this.timelineOffset, height / this.cellHeight * this.stepQuarters, anchor + this.timelineOffset)) return;
+      for (const event of this.mountedEvents) event.group = null;
+      this.mountedEvents = [];
+      for (const group of this.svg.querySelectorAll("g[data-event-id]")) {
+        const event = this.eventsById.get(group.dataset.eventId);
+        if (!event) continue;
+        event.group = group;
+        group.dataset.sourceMidi = String(event.sourceMidi);
+        group.dataset.effectiveMidi = String(event.midi);
+        group.style.visibility = this.preRollSelected != null && event.start < this.preRollSelected - EPSILON ? "hidden" : "";
+        event.paintedState = event.paintedExpected = event.paintedOpacity = undefined;
+        this.mountedEvents.push(event);
+      }
+      this.onScoreWindowChange?.();
     }
     layoutCoreGeometry() {
       if (!this.svg?.isConnected || !this.pianoView?.mount?.isConnected) return;
@@ -863,6 +881,7 @@
       this.stage.dataset.countInEndsAudioTime = String(this.countIn.endsAt);
       this.stage.dataset.countInMeasures = String(plan.measures);
       this.stage.dataset.countInMusicScheduled = 'false';
+      this.updateScoreWindow(selected, this.executionY(), selected + signature.measureQuarters);
       this.setPreRollVisibility(selected, true);
       this.preCountView = global.Play12PreCountView?.create({svg:this.svg,selected,plan,signature,stepQuarters:this.stepQuarters,cellHeight:this.cellHeight,originY:this.originY,timelineOffset:this.timelineOffset});
       this.paint(selected-plan.quarters);
@@ -872,12 +891,13 @@
     }
     setPreRollVisibility(selected, active) {
       if (!active) { this.preCountView?.clear(); this.preCountView = null; }
-      for (const event of this.events) {
+      this.preRollSelected = active ? selected : null;
+      for (const event of this.mountedEvents) {
         event.group.style.visibility = active && event.start < selected - EPSILON ? "hidden" : "";
       }
     }
     clearNoteOnEffects() {
-      for (const event of this.events) event.group.classList.remove("is-note-on-event");
+      for (const event of this.mountedEvents) event.group.classList.remove("is-note-on-event");
     }
     scheduleCountIn() {
       const beatSeconds = this.countIn.signature.beatQuarters * 60 / this.clock.bpm;
@@ -1276,11 +1296,12 @@
       this.playline.classList.remove("is-note-on");
       void this.playline.offsetWidth;
       this.playline.classList.add("is-note-on");
-      for (const event of contacts) {
-        event.group.classList.remove("is-note-on-event");
-        void event.group.getBoundingClientRect();
-        event.group.classList.add("is-note-on-event");
-        setTimeout(() => event.group.classList.remove("is-note-on-event"), 230);
+      for (const {group} of contacts) {
+        if (!group) continue;
+        group.classList.remove("is-note-on-event");
+        void group.getBoundingClientRect();
+        group.classList.add("is-note-on-event");
+        setTimeout(() => group.classList.remove("is-note-on-event"), 230);
       }
       this.stage.dataset.lastContactEvent = contacts.map(event => event.id).join(",");
       this.stage.dataset.lastContactQuarter = String(contacts[0].start);
@@ -1288,10 +1309,11 @@
     paint(position) {
       this.displayPosition = position;
       const playlineY = this.executionY();
+      this.updateScoreWindow(position, playlineY, this.countIn?.selected ?? position);
       // SVG coordinates retain the score's global pickup padding; playback time
       // is normalized so the first sounding event is q=0.
       const scoreY = playlineY - this.originY + (position + this.timelineOffset) / this.stepQuarters * this.cellHeight;
-      this.svg.style.transform = `translateY(${scoreY}px)`;
+      this.svg.style.transform = `translateY(${scoreY + Number(this.svg.dataset.windowShiftY || 0)}px)`;
       this.stage.dataset.musicalPosition = String(this.clock.position);
       this.stage.dataset.displayPosition = String(position);
       const soundingMidis = [];
@@ -1317,6 +1339,7 @@
           if (state === "played") opacity = .72;
           if (state === "faded") opacity = Math.max(.06, 1 - (age - measureQuarters) / (3 * measureQuarters));
         }
+        if (!event.group) continue;
         if (event.paintedExpected !== expected) {
           event.group.classList.toggle("is-practice-expected", expected);
           event.paintedExpected = expected;

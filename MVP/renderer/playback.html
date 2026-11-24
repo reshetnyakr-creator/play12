@@ -332,13 +332,13 @@
   <script>if(window.Play12Routes){Play12Routes.languages(document.querySelector('.mvp-language-switch'),window.__PLAY12_MAIN__?'main':'tutorial');const mainLink=document.getElementById('tutorial-main-link');if(mainLink)mainLink.href=Play12Routes.path('main');}</script>
   <script src="play12-i18n.js?v=en-routes-1"></script>
   <script src="../editor/core.js?v=stage11"></script>
-  <script src="play12-renderer.js?v=stage1-1"></script>
+  <script src="play12-renderer.js?v=stage12"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=mobile-1"></script>
-  <script src="play12-precount-view.js?v=round-final-01"></script>
+  <script src="play12-precount-view.js?v=stage12"></script>
   <script src="play12-round-board.js?v=en-routes-1"></script>
-  <script src="play12-playback.js?v=stage11"></script>
+  <script src="play12-playback.js?v=stage12"></script>
   <script src="web-midi-diagnostic.js?v=midi-voice-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=mobile-5"></script>
@@ -419,7 +419,7 @@
       if (reviewController) score = reviewController.effective();
       const reviewMeasureCount = score.score.parts[0].measures.length;
       const repetitionSegments = Play12Repetitions.detect(score);
-      const render = resolution => Play12Renderer.render(score, scoreRoot, {
+      const render = resolution => Play12Renderer[savedCompositionId && mainMode ? "renderWindowed" : "render"](score, scoreRoot, {
         measureCount: reviewMeasureCount, gridResolution: resolution, candidatePreview: false, candidateDebug: false,
         segments: repetitionSegments, roundMarkerPlacement: mainMode || !compositionReviewMode ? 'left-top' : 'side',
         onboardingLayout: !savedCompositionId, editorTimeline: !!savedCompositionId, unassignedDisplay: !!savedCompositionId, wrapCycles: !!savedCompositionId, noteSelectionEnabled: saintsReviewMode || mainMode,

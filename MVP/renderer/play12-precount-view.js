@@ -4,7 +4,7 @@
   function create({svg,selected,plan,signature,stepQuarters,cellHeight,originY,timelineOffset}){
     const ns='http://www.w3.org/2000/svg',layer=document.createElementNS(ns,'g');layer.setAttribute('class','play12-precount-layer');
     const box=svg.viewBox.baseVal,previousOverflow=svg.style.overflow;svg.style.overflow='visible';
-    const scale=cellHeight/stepQuarters,gridOrigin=originY+box.y;
+    const scale=cellHeight/stepQuarters,gridOrigin=Number(svg.dataset?.gridOriginY ?? (originY+box.y));
     const templateBottom=gridOrigin-((signature.measureStart ?? selected)+timelineOffset)*scale;
     const templateTop=templateBottom-signature.measureQuarters*scale;
     const template=[...svg.querySelectorAll('.play12-cell,.play12-count-space,.play12-count,rect[fill="none"][stroke="#6B7280"]')].filter(node=>{
