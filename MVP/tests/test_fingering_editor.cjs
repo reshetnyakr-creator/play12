@@ -26,3 +26,70 @@ test('long two-hand score assigns the last supported notes within the default bu
   assert.equal(run.validation.conflicts.length, 0);
   assert(!run.validation.warnings.some(x => x.code === 'FINGER_OVERLAP'));
 });
+
+test('Interstellar measure 33: repeated held key is unresolved and search resumes with surviving contacts', () => {
+  const held = [41, 48, 53].map((key, i) => note('held' + i, key, '96', '3', 'L'));
+  held.push(note('sustain', 40, '95', '6', 'L'));
+  const attacks = [53, 60, 65].map((key, i) => ({
+    ...note('attack' + i, key, '97', '2', 'L'), voice: '2'
+  }));
+  const following = note('next', 55, '99', '1', 'L');
+  const right = note('right', 73, '97', '3');
+  const input = score([...held, ...attacks, following, right]);
+  const snapshot = JSON.stringify(input);
+  const run = E.propose(input, cfg, { sustain: 3 });
+  assert.equal(run.contacts.length, 9);
+  assert.equal(run.assignments.sustain, 3);
+  assert(held.every(n => run.assignments[n.id] != null));
+  for (const n of attacks) {
+    assert.equal(run.assignments[n.id], null);
+    assert.equal(run.unassignedReasons[n.id], 'MODEL_CONFLICT_UNRESOLVED_KEY');
+  }
+  assert(run.assignments.next);
+  assert.notEqual(run.assignments.next, 3);
+  assert.equal(run.assignments.right, E.propose(score([right]), cfg).assignments.right);
+  assert.equal(run.validation.conflicts.length, 0);
+  assert(!run.validation.warnings.some(w => w.code === 'FINGER_OVERLAP'));
+  assert.equal(run.warnings.find(w => w.reason === 'MODEL_CONFLICT_UNRESOLVED_KEY').releaseBoundary, '99/1');
+  assert.deepEqual(E.propose(input, cfg, { sustain: 3 }).assignments, run.assignments);
+  assert.equal(JSON.stringify(input), snapshot);
+});
+
+test('multiple local failures at beginning, middle and end preserve feasible material', () => {
+  const chord = (start, size) => Array.from({ length: size }, (_, i) =>
+    note(start + ':' + i, 60 + i, start, '1'));
+  const bridge = note('bridge', 75, '1/2', '2');
+  const five = chord('3', 5);
+  const other = note('other', 45, '5', '1', 'L');
+  const run = E.propose(score([...chord('0', 6), bridge, ...five, ...chord('5', 6),
+    ...chord('6', 1), ...chord('7', 6), other]), cfg);
+  assert.equal(run.unassignedReasons.bridge, 'RECOVERY_PENDING_RELEASE');
+  assert.equal(new Set(five.map(n => run.assignments[n.id])).size, 5);
+  assert(five.every(n => run.assignments[n.id] != null));
+  assert(run.assignments['6:0']);
+  assert(run.assignments.other);
+  assert.equal(run.warnings.filter(w => w.reason === 'NO_FEASIBLE_ASSIGNMENT').length, 3);
+  assert.equal(run.validation.conflicts.length, 0);
+});
+
+test('time and candidate budgets are reported separately', () => {
+  const input = score([note('first', 60, '0', '1'), note('second', 62, '1', '1')]);
+  const limited = (key, value) => E.propose(input, { ...cfg, search: { ...cfg.search, [key]: value } });
+  const timeout = limited('maxMilliseconds', -1);
+  assert.equal(timeout.search_status, 'budget_exhausted');
+  assert.deepEqual({ ...timeout.unassignedReasons }, {first: 'TIME_LIMIT', second: 'TIME_LIMIT'});
+  const exhausted = E.propose(input, { ...cfg, search: { ...cfg.search, maxCandidatesPerLayer: 1 } }, { first: 9 });
+  assert.equal(exhausted.unassignedReasons.first, 'INVALID_LOCK');
+  assert.equal(exhausted.unassignedReasons.second, 'NOT_PROCESSED');
+});
+
+test('simultaneous unison in different voices requires a shared-contact plan', () => {
+  const first = note('first', 64, '0', '1');
+  const second = { ...note('second', 64, '0', '1'), voice: '2' };
+  const next = note('next', 64, '1', '1');
+  const run = E.propose(score([first, second, next]), cfg);
+  assert.equal(run.contacts.length, 3);
+  assert.equal(run.unassignedReasons.first, 'MODEL_CONFLICT_UNRESOLVED_KEY');
+  assert.equal(run.unassignedReasons.second, 'MODEL_CONFLICT_UNRESOLVED_KEY');
+  assert(run.assignments.next);
+});
