@@ -7,7 +7,7 @@ const { Q, contacts } = (typeof module !== 'undefined' ? require('./core.js') : 
 const compare = (first, second) => new Q(first).cmp(second);
 
 function damperWindows(part) {
-  const entries = part.pedals || [];
+  const entries = part.fermataPedals || part.pedals || [];
   const playback = entries.filter(event => event.source === 'sound' && event.kind === 'damper');
   if (!playback.length && entries.some(event => event.type === 'sostenuto' || Number(event.number) > 1)) {
     return []; // Ambiguous notation-only controller ownership.
@@ -56,7 +56,7 @@ function planContacts(score, { releases = {}, resetByKey = {}, minimumHoldByCont
     if (end !== contact.end) {
       const min = minimumHoldByContact[contact.id];
       const unknown = min == null;
-      const protectedContact = contact.ids.length !== 1 || event.ties?.length ||
+      const protectedContact = contact.fermata || contact.ids.length !== 1 || event.ties?.length ||
         event.articulations?.some(mark => mark !== 'staccato');
       const validBounds = compare(end, contact.start) > 0 && compare(end, contact.end) <= 0 &&
         !unknown && compare(new Q(end).sub(contact.start), min) >= 0;

@@ -139,7 +139,7 @@ function proposeBeginner(score, profile, locks = {}, detailed = false, settings 
   }
   const started = Date.now(), base = contacts(score,{locks});
   const releases = {}, preferred = {}, minimumHoldByContact = {}, resetByKey = {};
-  const tempo = score.editor?.tempoMap ?? [{at:0,bpm:score.editor?.tempo}];
+  const tempo = score.editor?.fermataTimeline?.tempoMap ?? score.editor?.tempoMap ?? [{at:0,bpm:score.editor?.tempo}];
   const referenceResets = new Proxy({}, {get:()=>settings.resetMs});
   const proposals = [];
   const byHand = groupByHand(base.contacts);

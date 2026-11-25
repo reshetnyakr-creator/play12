@@ -1,5 +1,5 @@
 (function(G){'use strict';
-const VERSION='0.1.4',clone=x=>JSON.parse(JSON.stringify(x));
+const VERSION='0.1.5',clone=x=>JSON.parse(JSON.stringify(x));
 class Q{constructor(n,d=1n){if(n instanceof Q){this.n=n.n;this.d=n.d;return;}if(typeof n==='string'){if(n.includes('/')){const a=n.split('/');if(a.length!==2)throw Error('Invalid fraction');n=BigInt(a[0]);d=BigInt(a[1]);}else if(n.includes('.')){const a=n.split('.');d=10n**BigInt(a[1].length);n=BigInt(a[0]+a[1]);}else n=BigInt(n);}this.n=BigInt(n);this.d=BigInt(d);if(!this.d)throw Error('Zero denominator');if(this.d<0n){this.n=-this.n;this.d=-this.d;}let a=this.n<0n?-this.n:this.n,b=this.d;while(b){[a,b]=[b,a%b];}this.n/=a||1n;this.d/=a||1n;}add(b){b=new Q(b);return new Q(this.n*b.d+b.n*this.d,this.d*b.d);}sub(b){b=new Q(b);return new Q(this.n*b.d-b.n*this.d,this.d*b.d);}cmp(b){b=new Q(b);const v=this.n*b.d-b.n*this.d;return v<0n?-1:v>0n?1:0;}toString(){return this.n+'/'+this.d;}valueOf(){return Number(this.n)/Number(this.d);}}
 const num=x=>Number(new Q(x)),max=(a,b)=>new Q(a).cmp(b)>=0?new Q(a):new Q(b),children=(n,t)=>Array.from(n.children||[]).filter(x=>x.localName===t),one=(n,t)=>children(n,t)[0],txt=(n,t,def='')=>one(n,t)?.textContent.trim()??def;
 const hash=async x=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(typeof x==='string'?x:JSON.stringify(x))))).map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -31,6 +31,57 @@ function pedalEvents(node, position, divisions, order) {
   return result;
 }
 const ARPEGGIO_SPREAD_QUARTERS = '1/8';
+const FERMATA_EXTENSION_FACTOR = 1.0;
+
+function realizeFermatas(score) {
+  const injections=new Map(), chordStops=new Set();
+  const members=score.score.parts.flatMap(part=>part.measures.flatMap(m=>m.events))
+    .filter(e=>!e.grace && new Q(e.duration_quarters).cmp(0)>0);
+  const end=e=>new Q(e.editor_onset_q).add(e.duration_quarters);
+  const chordKey=e=>JSON.stringify([e.editor_onset_q,end(e).toString()]);
+  for(const event of members){
+    if(!event.fermata?.length)continue;
+    if(event.kind==='note')chordStops.add(chordKey(event));
+    const key=end(event).toString(), duration=new Q(event.duration_quarters);
+    const factor=new Q(String(FERMATA_EXTENSION_FACTOR));
+    const extra=new Q(duration.n*factor.n,duration.d*factor.d);
+    injections.set(key,max(injections.get(key)??0,extra));
+  }
+  if(!injections.size)return score;
+  const holds=[...injections].sort((a,b)=>new Q(a[0]).cmp(b[0]));
+  const at=(point,after=true)=>{
+    let value=new Q(point);
+    for(const [q,extra] of holds){
+      const cmp=new Q(point).cmp(q);
+      if(cmp<0||(!after&&cmp===0))break;
+      value=value.add(extra);
+    }
+    return value;
+  };
+  for(const e of members){
+    const notatedEnd=end(e).toString();
+    const sustain=e.kind==='note'&&chordStops.has(chordKey(e));
+    const duration=sustain?injections.get(notatedEnd):null;
+    const mainEnd=at(notatedEnd,false);
+    e.fermataPerformance={
+      attack:at(e.arpeggioPerformance?.attack??e.editor_onset_q).toString(),
+      mainEnd:mainEnd.toString(),
+      end:(sustain?mainEnd.add(duration):mainEnd).toString(),
+      trail:duration?.toString()??null
+    };
+  }
+  score.editor.fermataTimeline={
+    holds:holds.map(([q,extra])=>({q,extra:extra.toString()})),
+    rounds:score.editor.rounds.map(r=>({...r,start:Number(at(r.start)),measureStart:Number(at(r.measureStart)),
+      end:Number(at(r.end)),measureQuarters:Number(at(r.end).sub(at(r.start)))})),
+    tempoMap:score.editor.tempoMap.map(e=>({...e,at:Number(at(e.at))}))
+  };
+  for(const part of score.score.parts){
+    part.fermataPedals=(part.pedals||[]).map(e=>({...e,at:at(e.at).toString()}));
+  }
+  return score;
+}
+
 
 function realizeArpeggios(part, diagnostics) {
   const groups = new Map();
@@ -115,13 +166,18 @@ function importXML(xml,handMap={}){if(/<!ENTITY|<!DOCTYPE[^>]*\[/i.test(xml))thr
 for(const [pi,part]of children(dom.documentElement,'part').entries()){let divisions=1,beats=4,beatType=4,offset=new Q(0),transpose=0;const measures=[],pedals=[];const sourceMeasures=children(part,'measure');for(const [mi,m]of sourceMeasures.entries()){let cursor=new Q(0),extent=new Q(0),last=new Q(0),unsupported=false;const events=[],attrs=one(m,'attributes');if(attrs){divisions=Number(txt(attrs,'divisions',String(divisions)));if(!Number.isSafeInteger(divisions)||divisions<=0)throw Error('Некорректные divisions');const time=one(attrs,'time');if(time){beats=Number(txt(time,'beats'));beatType=Number(txt(time,'beat-type'));if(!Number.isInteger(beats)||!Number.isInteger(beatType)||beats<=0||beatType<=0)throw Error('Составной/неопределённый размер пока не поддержан.');}if(one(attrs,'transpose')){const tr=one(attrs,'transpose');transpose=Number(txt(tr,'chromatic','0'))+12*Number(txt(tr,'octave-change','0'));}}
 for(const node of Array.from(m.children)){if(node.localName==='backup'||node.localName==='forward'){const delta=new Q(txt(node,'duration','0'),BigInt(divisions));cursor=node.localName==='backup'?cursor.sub(delta):cursor.add(delta);if(cursor.cmp(0)<0)throw Error('MusicXML backup выходит за начало такта');continue;}if(node.localName==='sound'){pedals.push(...pedalEvents(node,offset.add(cursor),divisions,pedals.length));continue;}
 if(node.localName==='direction'){pedals.push(...pedalEvents(node,offset.add(cursor),divisions,pedals.length));const sound=one(node,'sound');const met=node.querySelector('per-minute');const bpm=Number(sound?.getAttribute('tempo')||met?.textContent);if(bpm>0){if(pi===0){const directionOffset=one(node,'offset');const timingOffset=(sound&&one(sound,'offset'))||(directionOffset?.getAttribute('sound')==='yes'?directionOffset:null);const at=Number(offset.add(cursor).add(new Q(timingOffset?.textContent.trim()||'0',BigInt(divisions))));tempoEntries.set(at,bpm);}if(tempoSeen&&tempo!==bpm)diagnostics.push({code:'TEMPO_CHANGE_UNSUPPORTED',measure:mi+1,message:'Смена темпа сохранена в исходнике; проигрывание пока использует первый темп.'});if(!tempoSeen){tempo=bpm;tempoSeen=true;}}if(node.querySelector('pedal'))diagnostics.push({code:'PEDAL_RELEASE_UNKNOWN',measure:mi+1,message:'Педаль не определяет время снятия пальца.'});}
-if(node.localName!=='note')continue;const rest=!!one(node,'rest'),grace=!!one(node,'grace'),chord=!!one(node,'chord'),pitch=one(node,'pitch'),duration=new Q(txt(node,'duration','0'),BigInt(divisions));if(duration.cmp(0)<0)throw Error('Отрицательная длительность');const start=chord?last:cursor;if(!chord){last=start;cursor=cursor.add(duration);}extent=max(extent,start.add(duration));const staff=Number(txt(node,'staff','1')),voice=txt(node,'voice','1'),pid=part.getAttribute('id')||'P'+pi;const hand=handMap[pid+':'+staff]||handMap[pid]||null;const id=pid+'.m'+mi+'.e'+events.length;const step=pitch?txt(pitch,'step'):null,alter=pitch?Number(txt(pitch,'alter','0')):0,octave=pitch?Number(txt(pitch,'octave')):0,midi=pitch?(octave+1)*12+names[step]+alter+transpose:null;const fnode=node.querySelector('notations technical fingering'),fraw=fnode?.textContent?.trim(),f=fraw&&/^[1-5]$/.test(fraw)?Number(fraw):null;const ties=children(node,'tie').map(x=>x.getAttribute('type'));let supported=!grace&&duration.cmp(0)>0&&(rest||Number.isInteger(midi)&&midi>=0&&midi<=127);if(node.querySelector('trill-mark, tremolo, fermata')||!rest&&!pitch){supported=false;unsupported=true;}if(fraw&&!f)diagnostics.push({code:'SOURCE_FINGERING_COMPLEX',event:id,message:'Сложное обозначение пальцев сохранено в MusicXML.'});const arpeggioMarks=children(node,'notations').flatMap(n=>Array.from(n.children).filter(m=>['arpeggiate','non-arpeggiate'].includes(m.localName)).map(m=>({type:m.localName,number:m.getAttribute('number'),direction:m.getAttribute('direction'),boundary:m.getAttribute('type')})));
+if(node.localName!=='note')continue;const rest=!!one(node,'rest'),grace=!!one(node,'grace'),chord=!!one(node,'chord'),pitch=one(node,'pitch'),duration=new Q(txt(node,'duration','0'),BigInt(divisions));if(duration.cmp(0)<0)throw Error('Отрицательная длительность');const start=chord?last:cursor;if(!chord){last=start;cursor=cursor.add(duration);}extent=max(extent,start.add(duration));const staff=Number(txt(node,'staff','1')),voice=txt(node,'voice','1'),pid=part.getAttribute('id')||'P'+pi;const hand=handMap[pid+':'+staff]||handMap[pid]||null;const id=pid+'.m'+mi+'.e'+events.length;const step=pitch?txt(pitch,'step'):null,alter=pitch?Number(txt(pitch,'alter','0')):0,octave=pitch?Number(txt(pitch,'octave')):0,midi=pitch?(octave+1)*12+names[step]+alter+transpose:null;const fnode=node.querySelector('notations technical fingering'),fraw=fnode?.textContent?.trim(),f=fraw&&/^[1-5]$/.test(fraw)?Number(fraw):null;const tied=children(node,'notations').flatMap(n=>children(n,'tied'));
+const ties=[...new Set([...children(node,'tie'),...tied].flatMap(x=>{
+  const type=x.getAttribute('type');return type==='continue'?['stop','start']:['start','stop'].includes(type)?[type]:[];
+}))];let supported=!grace&&duration.cmp(0)>0&&(rest||Number.isInteger(midi)&&midi>=0&&midi<=127);if(node.querySelector('trill-mark, tremolo')||!rest&&!pitch){supported=false;unsupported=true;}if(fraw&&!f)diagnostics.push({code:'SOURCE_FINGERING_COMPLEX',event:id,message:'Сложное обозначение пальцев сохранено в MusicXML.'});const arpeggioMarks=children(node,'notations').flatMap(n=>Array.from(n.children).filter(m=>['arpeggiate','non-arpeggiate'].includes(m.localName)).map(m=>({type:m.localName,number:m.getAttribute('number'),direction:m.getAttribute('direction'),boundary:m.getAttribute('type')})));
 const hasArpeggio=arpeggioMarks.some(m=>m.type==='arpeggiate');
-const event={id,kind:rest?'rest':'note',staff,voice,hand,start_quarters:start.toString(),duration_quarters:duration.toString(),chord,grace,source_fingering:f,method:{finger:null,fingering_source:null,fingering_confidence:null,fingering_history:[]},ties,...(arpeggioMarks.length?{arpeggioMarks,arpeggioEligible:supported}:{}),fermata:Boolean(node.querySelector('fermata')),stem:txt(node,'stem',null),unisonSpecial:Boolean(fraw&&!f||fnode?.getAttribute('alternate')==='yes'||fnode?.getAttribute('substitution')==='yes'||node.querySelector('cue, play, listen, notations technical harmonic, notations glissando, notations slide, notations ornaments'))||children(node,'notations').some(notation=>Array.from(notation.children).some(mark=>!['tied','articulations','technical','slur','arpeggiate'].includes(mark.localName))||children(notation,'technical').some(tech=>Array.from(tech.children).some(mark=>mark.localName!=='fingering'))),unisonTiming:['attack','release','end-dynamics'].map(name=>node.getAttribute(name)),articulations:children(node,'notations').flatMap(n=>children(n,'articulations').flatMap(a=>Array.from(a.children,x=>x.localName))),editor_onset_q:offset.add(start).toString(),editor_supported:supported&&!hasArpeggio};if(!rest){if(!pitch){event.kind='unpitched';event.unpitched=one(node,'unpitched')?.textContent||null;event.pitch=null;diagnostics.push({code:'UNPITCHED_UNSUPPORTED',event:id,message:'Нота без определённой высоты сохранена, но не преобразована в клавишу.'});}else event.pitch={step,alter,octave,midi};event.play12_symbol={value:'0123456789XY'[((midi||0)%12+12)%12],origin:'conversion'};notes.push(event);}events.push(event);}
+const event={id,kind:rest?'rest':'note',staff,voice,hand,start_quarters:start.toString(),duration_quarters:duration.toString(),chord,grace,source_fingering:f,method:{finger:null,fingering_source:null,fingering_confidence:null,fingering_history:[]},ties,...(arpeggioMarks.length?{arpeggioMarks,arpeggioEligible:supported}:{}),fermata:children(node,'notations').flatMap(n=>children(n,'fermata')).map(mark=>({
+  shape:mark.textContent.trim(),type:mark.getAttribute('type')
+})), stem:txt(node,'stem',null),unisonSpecial:Boolean(fraw&&!f||fnode?.getAttribute('alternate')==='yes'||fnode?.getAttribute('substitution')==='yes'||node.querySelector('cue, play, listen, notations technical harmonic, notations glissando, notations slide, notations ornaments'))||children(node,'notations').some(notation=>Array.from(notation.children).some(mark=>!['tied','articulations','technical','slur','arpeggiate','fermata'].includes(mark.localName))||children(notation,'technical').some(tech=>Array.from(tech.children).some(mark=>mark.localName!=='fingering'))),unisonTiming:['attack','release','end-dynamics'].map(name=>node.getAttribute(name)),articulations:children(node,'notations').flatMap(n=>children(n,'articulations').flatMap(a=>Array.from(a.children,x=>x.localName))),editor_onset_q:offset.add(start).toString(),editor_supported:supported&&!hasArpeggio};if(!rest){if(!pitch){event.kind='unpitched';event.unpitched=one(node,'unpitched')?.textContent||null;event.pitch=null;diagnostics.push({code:'UNPITCHED_UNSUPPORTED',event:id,message:'Нота без определённой высоты сохранена, но не преобразована в клавишу.'});}else event.pitch={step,alter,octave,midi};event.play12_symbol={value:'0123456789XY'[((midi||0)%12+12)%12],origin:'conversion'};notes.push(event);}events.push(event);}
 if(m.querySelector('repeat,ending,segno,coda')||m.querySelector('sound[da-capo],sound[dacapo],sound[dalsegno]')){diagnostics.push({code:'TRAVERSAL_UNSUPPORTED',measure:mi+1,message:'Повторы/переходы не раскрыты: показан записанный порядок.'});}
 if(unsupported)diagnostics.push({code:'REALIZATION_MISSING',measure:mi+1,message:'Специальный приём требует исполнительского расписания; участок не назначен автоматически.'});const nominal=new Q(BigInt(beats*4),BigInt(beatType)),length=m.getAttribute('implicit')==='yes'?extent:max(nominal,extent);if(!length.n)throw Error('Пустой такт без длительности');const measure={index:mi,number:m.getAttribute('number')||String(mi+1),implicit:m.getAttribute('implicit')==='yes',attributes:{divisions,time:{beats,beat_type:beatType}},events,editor_duration_q:length.toString(),tempo_marks:mi===0?[{start_quarters:'0/1',bpm:tempo}]:[]};measures.push(measure);if(pi===0)rounds.push({index:mi,start:num(offset),end:num(offset.add(length)),measureStart:num(offset),beats,beatType,beatQuarters:4/beatType,measureQuarters:num(length)});offset=offset.add(length);}total=max(total,offset);parts.push({id:part.getAttribute('id'),name:dom.querySelector('score-part[id="'+part.getAttribute('id')+'"] part-name')?.textContent||part.getAttribute('id'),measures,pedals:pedals.sort((a,b)=>new Q(a.at).cmp(b.at)||a.order-b.order)});}
 for(const part of parts){realizeArpeggios(part,diagnostics);preserveUnresolvedArpeggioTies(part);}
-if(!notes.length)throw Error('В файле нет нот.');for(const e of notes)if(!e.hand)diagnostics.push({code:'HAND_UNKNOWN',event:e.id,message:'Укажите руку для партии/нотоносца.'});const reference=21;for(const e of notes)if(e.pitch)e.play12_symbol.value='0123456789XY'[((e.pitch.midi-9)%12+12)%12]||'?';const score={format:'play12-json',version:'0.1',source:{type:'musicxml',title},play12:{zero_pitch_class:'A',reference_zero_midi:reference,symbols:'0123456789XY',pitch_class_mapping:Object.fromEntries(Array.from('0123456789XY').map((x,i)=>[String((i+9)%12),x]))},score:{title,creators:[],parts},editor:{schema:'play12-editor/1',sharedUnison:true,total_quarters:total.toString(),rounds,tempo,tempoMap:[...new Map([[0,120],...tempoEntries])].sort(([a],[b])=>a-b).map(([at,bpm])=>({at,bpm})),diagnostics}};return score;}
+if(!notes.length)throw Error('В файле нет нот.');for(const e of notes)if(!e.hand)diagnostics.push({code:'HAND_UNKNOWN',event:e.id,message:'Укажите руку для партии/нотоносца.'});const reference=21;for(const e of notes)if(e.pitch)e.play12_symbol.value='0123456789XY'[((e.pitch.midi-9)%12+12)%12]||'?';const score={format:'play12-json',version:'0.1',source:{type:'musicxml',title},play12:{zero_pitch_class:'A',reference_zero_midi:reference,symbols:'0123456789XY',pitch_class_mapping:Object.fromEntries(Array.from('0123456789XY').map((x,i)=>[String((i+9)%12),x]))},score:{title,creators:[],parts},editor:{schema:'play12-editor/1',sharedUnison:true,total_quarters:total.toString(),rounds,tempo,tempoMap:[...new Map([[0,120],...tempoEntries])].sort(([a],[b])=>a-b).map(([at,bpm])=>({at,bpm})),diagnostics}};return realizeFermatas(score);}
 const events=score=>score.score.parts.flatMap(p=>p.measures.flatMap(m=>m.events)).filter(e=>e.kind==='note');
 // Manual assignment needs a pitched key and a hand, even when a technique blocks automatic realization.
 function isManuallyAssignable(e){return (e.hand === "L" || e.hand === "R") && !e.grace && Number.isInteger(e.pitch?.midi) && e.pitch.midi >= 0 && e.pitch.midi <= 127 && new Q(e.duration_quarters).cmp(0) > 0;}
@@ -133,14 +189,20 @@ for(const part of score.score.parts) for(const measure of part.measures) for(con
 timed.sort((a,b)=>a.at.cmp(b.at)||a.event.id.localeCompare(b.event.id));
 for(const {event:e,part,at} of timed){if(!e.hand)continue;const key=[e.hand,e.voice,e.pitch.midi,part.id].join(':');const stop=e.ties?.includes('stop'),start=e.ties?.includes('start');let c=stop?open.get(key):null;
 if(!e.editor_supported&&!(manual&&isManuallyAssignable(e))){
-  if(c?.arpeggio&&e.fermata&&new Q(c.end).cmp(at)===0){
+  if(c?.arpeggio&&(e.fermata===true||e.fermata?.length)&&new Q(c.end).cmp(at)===0){
     c.sustainedIds=[...(c.sustainedIds||[]),e.id];
     c.end=at.add(e.duration_quarters).toString();
     if(!start)open.delete(key);
   }
   continue;
 }
-if(c&&new Q(c.end).cmp(e.editor_onset_q)===0){c.ids.push(e.id);c.end=new Q(e.editor_onset_q).add(e.duration_quarters).toString();}else{c={id:e.id,ids:[e.id],hand:e.hand,key:e.pitch.midi,start:e.arpeggioPerformance?.attack??e.editor_onset_q,...(e.arpeggioPerformance?{arpeggio:e.arpeggioPerformance}:{}),end:at.add(e.duration_quarters).toString(),releaseBasis:'assumed_score_duration'};out.push(c);if(stop)warnings.push({code:'AMBIGUOUS_TIE',event:e.id});}if(start)open.set(key,c);else open.delete(key);}if(out.some(c=>c.arpeggio))out.sort((a,b)=>new Q(a.start).cmp(b.start)||a.id.localeCompare(b.id));return {contacts:score.editor?.schema && !score.editor.sharedUnison ? out : mergeUnisons(out,byId,locks),warnings};}
+const nominalEnd=at.add(e.duration_quarters).toString();
+const actualEnd=e.fermataPerformance?.end??nominalEnd;
+if(c&&new Q(c.notatedEnd??c.end).cmp(e.editor_onset_q)===0){
+  c.ids.push(e.id);c.end=actualEnd;
+  if(e.fermataPerformance)c.notatedEnd=nominalEnd;
+  if(e.fermataPerformance?.trail)c.fermata=true;
+}else{c={id:e.id,ids:[e.id],hand:e.hand,key:e.pitch.midi,start:e.fermataPerformance?.attack??e.arpeggioPerformance?.attack??e.editor_onset_q,...(e.arpeggioPerformance?{arpeggio:e.arpeggioPerformance}:{}),end:actualEnd,...(e.fermataPerformance?{notatedEnd:nominalEnd,fermata:!!e.fermataPerformance.trail}:{}),releaseBasis:'assumed_score_duration'};out.push(c);if(stop)warnings.push({code:'AMBIGUOUS_TIE',event:e.id});}if(start)open.set(key,c);else open.delete(key);}if(out.some(c=>c.arpeggio||c.notatedEnd))out.sort((a,b)=>new Q(a.start).cmp(b.start)||a.id.localeCompare(b.id));return {contacts:score.editor?.schema && !score.editor.sharedUnison ? out : mergeUnisons(out,byId,locks),warnings};}
 
 function mergeUnisons(contacts, byId, locks) {
   const buckets = new Map(), aliases = new Map(), hidden = new Set();
@@ -153,7 +215,7 @@ function mergeUnisons(contacts, byId, locks) {
     // A tie continuation without its matching start is never a fresh unison.
     if (notes[0].ties?.includes('stop')) continue;
     if (!parts.has(members[0].part)) parts.set(members[0].part,parts.size);
-    const key = JSON.stringify([parts.get(members[0].part),c.hand,c.key,c.start,c.arpeggio?.group??null,
+    const key = JSON.stringify([parts.get(members[0].part),c.hand,c.key,c.start,c.end,c.arpeggio?.group??null,
       members.map(({event:e,at})=>[at.toString(),new Q(e.duration_quarters).toString(),
         [...(e.ties||[])].sort(),[...(e.articulations||[])].sort()])]);
     if (!buckets.has(key)) buckets.set(key,[]);
@@ -276,16 +338,23 @@ function effective(doc) {
     e.method.fingering_source=e.method.finger==null?null:doc.manual[e.id]!=null?'user':doc.mode==='source'?'source':'engine';
   }
   for(const c of contacts(score).contacts){
-    if(!c.unisonGroups)continue;
+    if(c.ids.length<2)continue;
+    const groups=c.unisonGroups??c.ids.map(id=>[id]);
     const manual=c.ids.map(id=>doc.manual[id]).find(f=>f!=null);
     const finger=manual??c.ids.map(id=>base[id]).find(f=>f!=null)??null;
-    for(const [head,...followers] of c.unisonGroups){
+    for(const [head,...followers] of groups){
       for(const id of [head,...followers]){
         const e=byId.get(id);
         e.method.finger=finger;
         e.method.fingering_source=finger==null?null:manual!=null?'user':doc.mode==='source'?'source':'engine';
       }
       for(const id of followers)byId.get(id).sharedContactRepresentative=head;
+    }
+    if(groups.length>1){
+      const first=byId.get(c.id), last=byId.get(groups.at(-1)[0]);
+      first.continuousPerformance={attack:c.start,mainEnd:last.fermataPerformance?.mainEnd??c.end,
+        end:c.end,trail:last.fermataPerformance?.trail??null,trailSegment:last.duration_quarters};
+      for(const id of c.ids)if(id!==c.id)byId.get(id).sharedContactRepresentative=c.id;
     }
   }
   return score;
@@ -294,5 +363,5 @@ function edit(doc,id,finger){if(!Number.isInteger(finger)||finger<1||finger>5)th
 function commit(doc,trial){if(!trial.accepted)throw Error('Rejected');doc.history=doc.history.slice(0,doc.cursor);doc.history.push({before:trial.before,after:trial.after,ids:trial.ids,timestamp:new Date().toISOString(),engine:doc.run.version,profile:doc.run.profile.version});doc.cursor=doc.history.length;doc.manual=trial.after;doc.revision++;return doc;}
 const dbPromise=()=>new Promise((resolve,reject)=>{const req=indexedDB.open('play12-editor',1);req.onupgradeneeded=()=>req.result.createObjectStore('compositions',{keyPath:'id'});req.onerror=()=>reject(req.error);req.onsuccess=()=>resolve(req.result);});
 const Store={async get(id){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions'),r=tx.objectStore('compositions').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close();});},async list(){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions'),r=tx.objectStore('compositions').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close();});},async put(doc,expected){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions','readwrite'),store=tx.objectStore('compositions'),r=store.get(doc.id);r.onsuccess=()=>{if(expected!=null&&r.result&&r.result.revision!==expected){tx.abort();return;}store.put(clone(doc));};tx.oncomplete=()=>{db.close();res();};tx.onabort=()=>{db.close();rej(Error('Конфликт ревизии или ошибка сохранения. Изменения не перезаписаны.'));};tx.onerror=()=>rej(tx.error);});}};
-G.Play12Editor={VERSION,Q,hash,importXML,ARPEGGIO_SPREAD_QUARTERS,realizeArpeggios,events,contacts,validate,keyX,propose,setRuntimeFingering,effective,edit,commit,clone,Store};if(typeof module!=='undefined')module.exports=G.Play12Editor;
+G.Play12Editor={VERSION,Q,hash,importXML,ARPEGGIO_SPREAD_QUARTERS,FERMATA_EXTENSION_FACTOR,realizeFermatas,realizeArpeggios,events,contacts,validate,keyX,propose,setRuntimeFingering,effective,edit,commit,clone,Store};if(typeof module!=='undefined')module.exports=G.Play12Editor;
 })(typeof window!=='undefined'?window:globalThis);
