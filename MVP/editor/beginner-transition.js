@@ -137,7 +137,7 @@ function proposeBeginner(score, profile, locks = {}, detailed = false, settings 
   if (profile.id !== 'beginner' || !score.score.parts.some(p => p.pedals?.length)) {
     return propose(score,profile,locks,detailed);
   }
-  const started = Date.now(), base = contacts(score);
+  const started = Date.now(), base = contacts(score,{locks});
   const releases = {}, preferred = {}, minimumHoldByContact = {}, resetByKey = {};
   const tempo = score.editor?.tempoMap ?? [{at:0,bpm:score.editor?.tempo}];
   const referenceResets = new Proxy({}, {get:()=>settings.resetMs});

@@ -90,13 +90,69 @@ test('time and candidate budgets are reported separately', () => {
   assert.equal(invalid.unassignedReasons.second, 'NOT_PROCESSED');
 });
 
-test('simultaneous unison in different voices requires a shared-contact plan', () => {
+test('simultaneous unison shares a contact while a later attack stays separate', () => {
   const first = note('first', 64, '0', '1');
-  const second = { ...note('second', 64, '0', '1'), voice: '2' };
+  const second = { ...note('second', 64, '0', '1'), voice: '2', stem:'up' };
   const next = note('next', 64, '1', '1');
   const run = E.propose(score([first, second, next]), cfg);
-  assert.equal(run.contacts.length, 3);
-  assert.equal(run.unassignedReasons.first, 'MODEL_CONFLICT_UNRESOLVED_KEY');
-  assert.equal(run.unassignedReasons.second, 'MODEL_CONFLICT_UNRESOLVED_KEY');
-  assert(run.assignments.next);
+  assert.equal(run.contacts.length, 2);
+  assert.deepEqual(run.contacts[0].unisonGroups,[['second','first']]);
+  assert.equal(run.assignments.first,run.assignments.second);
+  assert.equal(run.assigned,3);
+});
+
+test('three compatible voices map to one contact and one editable representative', () => {
+  const notes = [1,2,3].map(i=>({...note('n'+i,64,'0','1'),voice:String(i),
+    staff:2,stem:i===2?'up':'down'}));
+  const input=score(notes);
+  const run=E.propose(input,cfg,{n3:4});
+  assert.equal(run.contacts.length,1);
+  assert.deepEqual(run.contacts[0].unisonGroups,[['n2','n1','n3']]);
+  assert.deepEqual(Object.values(run.assignments),[4,4,4]);
+  assert.equal(run.validation.warnings.length,0);
+  const doc={score:input,run,mode:'engine',manual:{},history:[],cursor:0,revision:1};
+  const edited=E.edit(doc,'n2',3);
+  assert(edited.accepted);
+  E.commit(doc,edited);
+  assert.equal(doc.history.length,1);
+  assert.deepEqual(doc.manual,{n1:3,n2:3,n3:3});
+  const restored=E.clone(doc);
+  const visible=E.events(E.effective(restored));
+  assert.deepEqual(visible.filter(e=>!e.sharedContactRepresentative).map(e=>e.id),['n2']);
+  assert(visible.every(e=>e.method.finger===3));
+  restored.manual=restored.history[0].before;
+  assert(E.events(E.effective(restored)).every(e=>e.method.finger===4));
+  restored.manual=restored.history[0].after;
+  assert(E.events(E.effective(restored)).every(e=>e.method.finger===3));
+  assert(notes.every(e=>!('sharedContactRepresentative' in e)));
+});
+
+test('same pitch stays separate for unrelated or conflicting performances', () => {
+  const first={...note('a',64,'0','2'),voice:'1'};
+  const twin={...note('b',64,'0','2'),voice:'2'};
+  for(const change of [
+    {voice:'1'}, {hand:'L'}, {editor_onset_q:'1'}, {duration_quarters:'1'},
+    {articulations:['staccato']}, {ties:['stop']}, {unisonSpecial:true}, {unisonTiming:['2',null,null]}
+  ]) {
+    assert.equal(E.contacts(score([first,{...twin,...change}])).contacts.length,2);
+  }
+  assert.equal(E.contacts(score([{...first,source_fingering:2},{...twin,source_fingering:3}])).contacts.length,2);
+  assert.equal(E.contacts(score([first,twin]),{locks:{a:2,b:3}}).contacts.length,2);
+  const split=score([first]);
+  split.score.parts.push({id:'P2',measures:[{events:[twin]}]});
+  assert.equal(E.contacts(split).contacts.length,2);
+});
+
+test('aligned tie chains share a contact and preserve separate representatives per segment',()=>{
+  const chain = (id,voice,stem) => [
+    {...note(id+'a',64,'0','1','R',['start']),voice,stem},
+    {...note(id+'b',64,'1','1','R',['stop']),voice,stem}
+  ];
+  const input=score([...chain('x','1','down'),...chain('y','2','up'),note('z',67,'0','1')]);
+  const run=E.propose(input,cfg);
+  assert.equal(run.contacts.length,2);
+  assert.deepEqual(run.contacts.find(c=>c.id==='ya').unisonGroups,[['ya','xa'],['yb','xb']]);
+  assert.equal(run.assigned,5);
+  assert.equal(run.assignments.xb,run.assignments.ya);
+  assert.notEqual(run.assignments.z,run.assignments.ya);
 });
