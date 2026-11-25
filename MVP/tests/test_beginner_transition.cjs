@@ -2,7 +2,7 @@
 const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const {reference,keyGeometry,elapsedMs,evaluateTransition,proposeWithTransitions} =
-  require('../editor/beginner-transition.cjs');
+  require('../editor/beginner-transition.js');
 const config = require('../editor/beginner.json');
 const event = (id,midi,start,duration) => ({id,kind:'note',voice:'1',hand:'L',
   editor_supported:true,pitch:{midi},editor_onset_q:start,duration_quarters:duration,ties:[]});
@@ -49,4 +49,29 @@ test('bounded search derives 5–3–1 as one candidate and preserves the litera
   assert(one.candidates.length && one.candidates.every(c=>c.fingers.a===4));
   assert.equal(evaluateTransition(target.evaluation.from,target.evaluation.to, {...demo,resetMsByKey:{53:500}}).status,
     'constraint_violation');
+});
+
+test('production worker assigns the pedal-assisted chord and keeps no-pedal fallback', () => {
+  const vm = require('node:vm'), fs = require('node:fs'), path = require('node:path');
+  const root = path.join(__dirname,'../editor');
+  const sandbox = vm.createContext({onmessage: null, postMessage: value => { sandbox.reply=value; }});
+  sandbox.importScripts = (...urls) => urls.forEach(url =>
+    vm.runInContext(fs.readFileSync(path.join(root,url.split('?')[0]),'utf8'),sandbox));
+  vm.runInContext(fs.readFileSync(path.join(root,'worker.js'),'utf8'),sandbox);
+  const withPedal = score(pedal);
+  withPedal.editor = {tempo:80};
+  const send = (input,transpose) => {
+    sandbox.onmessage({data:{score:structuredClone(input),config,transpose}});
+    assert(!sandbox.reply.error,sandbox.reply.error);
+    return sandbox.reply.run;
+  };
+  const result = send(withPedal,0);
+  assert.equal(result.assigned,6);
+  assert.equal(result.validation.conflicts.length,0);
+  assert.deepEqual(Object.values(result.assignments),[5,3,1,5,3,1]);
+  assert.equal(result.releaseShift[0].release,'1/2');
+  assert.equal(result.releaseShift[0].status,'conditionally_feasible');
+  assert.equal(send(score([]),0).assigned,3);
+  assert.equal(send(withPedal,1).contacts[0].key,42);
+  assert.equal(withPedal.score.parts[0].measures[0].events[0].pitch.midi,41);
 });

@@ -1,8 +1,9 @@
+(function (G) {
 'use strict';
 
 // Research sidecar. Times are exact quarter-note coordinates. Calibration is
 // supplied by the caller for the specific instrument, tempo and performer.
-const { Q, contacts } = require('./core.js');
+const { Q, contacts } = (typeof module !== 'undefined' ? require('./core.js') : G.Play12Editor);
 const compare = (first, second) => new Q(first).cmp(second);
 
 function damperWindows(part) {
@@ -125,4 +126,8 @@ function validateFingers(actions, fingers, transition) {
   return issues;
 }
 
-module.exports = { damperWindows, planContacts, validateFingers };
+const api = { damperWindows, planContacts, validateFingers };
+
+if (typeof module !== 'undefined') module.exports = api;
+else G.Play12ContactPlan = api;
+})(globalThis);

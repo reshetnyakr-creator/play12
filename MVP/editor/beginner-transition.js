@@ -1,7 +1,8 @@
+(function (G) {
 'use strict';
 
-const { Q, contacts, propose } = require('./core.js');
-const { planContacts, validateFingers } = require('./contact-plan.cjs');
+const { Q, contacts, propose } = (typeof module !== 'undefined' ? require('./core.js') : G.Play12Editor);
+const { planContacts, validateFingers } = (typeof module !== 'undefined' ? require('./contact-plan.js') : G.Play12ContactPlan);
 
 const reference = Object.freeze({whiteWidth: 23.5, blackWidth: 13, whiteDepth: 145,
   blackDepth: 95, blackHeight: 12, whiteContactDepth: 35, blackContactDepth: 105});
@@ -128,4 +129,100 @@ function proposeWithTransitions(score, profile, requests = [], locks = {}) {
   return {baseline,transitions:requests.slice(0,32).map(request => searchTransition(score,{...request,locks},layers))};
 }
 
-module.exports = {reference,keyGeometry,elapsedMs,evaluateTransition,proposeWithTransitions};
+const defaults = Object.freeze({resetMs:60, releaseFraction:'1/2', maxTransfers:32, preferenceCost:4000});
+const begin = c => new Q(c.start);
+const end = c => new Q(c.end);
+
+function proposeBeginner(score, profile, locks = {}, detailed = false, settings = defaults) {
+  if (profile.id !== 'beginner' || !score.score.parts.some(p => p.pedals?.length)) {
+    return propose(score,profile,locks,detailed);
+  }
+  const started = Date.now(), base = contacts(score);
+  const releases = {}, preferred = {}, minimumHoldByContact = {}, resetByKey = {};
+  const tempo = score.editor?.tempoMap ?? [{at:0,bpm:score.editor?.tempo}];
+  const referenceResets = new Proxy({}, {get:()=>settings.resetMs});
+  const proposals = [];
+  const byHand = groupByHand(base.contacts);
+  for (const groups of byHand) {
+    for (let i = 1; i < groups.length && proposals.length < settings.maxTransfers; i++) {
+      if (Date.now()-started > profile.search.maxMilliseconds / 4) break;
+      const first = groups[i-1], next = groups[i], at = next[0].start;
+      if (first.length !== 3 || next.length < 1 || next.length > 3 ||
+          !first.some(a => end(a).cmp(at)>0 && next.some(b => a.key===b.key)) ||
+          first.some(a=>end(a).cmp(at)<=0 || a.ids.length!==1) ||
+          new Set(next.map(a=>a.key)).size!==next.length) continue;
+      const prior = groups.slice(0,i-1);
+      if (prior.some(group=>group.some(a=>end(a).cmp(first[0].start)>0))) continue;
+      const interval = begin(next[0]).sub(first[0].start);
+      const fraction = new Q(settings.releaseFraction);
+      const release = begin(first[0]).add(new Q(interval.n*fraction.n,interval.d*fraction.d)).toString();
+      const available = elapsedMs(release,at,tempo);
+      if (available == null || available < settings.resetMs) continue;
+      const shaped = bestSimpleShape(first,next,locks);
+      if (!shaped) continue;
+      const evaluation = evaluateTransition(shaped.first.map(a=>({...a,end:release})),shaped.next,
+        {geometry:reference,tempo, resetMsByKey:referenceResets,
+          capability:({from,to})=>({poseAllowed:[from,to].every(p=>p.at(-1).point.x-p[0].point.x<=7*reference.whiteWidth),
+            minimumMs:0})});
+      if (evaluation.status!=='conditionally_feasible') continue;
+      for (const action of first) {
+        releases[action.id]=release;
+        minimumHoldByContact[action.id]=new Q(release).sub(action.start).toString();
+        resetByKey[action.key]=interval.sub(new Q(release).sub(first[0].start)).toString();
+      }
+      proposals.push({first,next,shaped,release,evaluation});
+    }
+  }
+  if (!proposals.length) return propose(score,profile,locks,detailed,{base,started,preferred});
+  function plan() { return planContacts(score,{releases,resetByKey,minimumHoldByContact},base.contacts); }
+  let resolved = plan();
+  const affected = new Set(resolved.issues.flatMap(issue=>issue.ids??[issue.id]));
+  for (const old of resolved.actions.filter(a=>releases[a.id])) {
+    const repeat = resolved.actions.find(a=>a.instrument===old.instrument&&a.key===old.key&&begin(a).cmp(old.start)>0);
+    if (repeat && !(elapsedMs(old.end,repeat.start,tempo)>=settings.resetMs)) affected.add(old.id);
+  }
+  const accepted = proposals.filter(p=>![...p.first,...p.next].some(a=>affected.has(a.id)));
+  if (accepted.length!==proposals.length) {
+    for (const p of proposals.filter(p=>!accepted.includes(p))) for (const a of p.first) delete releases[a.id];
+    resolved = plan();
+  }
+  const acceptedIds = new Set(accepted.flatMap(p=>[...p.first,...p.next].map(a=>a.id)));
+  if (resolved.issues.some(issue=>(issue.ids??[issue.id]).some(id=>acceptedIds.has(id)))) {
+    return propose(score,profile,locks,detailed,{base,started,preferred});
+  }
+  for (const {shaped} of accepted) for (const a of [...shaped.first,...shaped.next]) preferred[a.id]=a.finger;
+  const run = propose(score,profile,locks,detailed,{base,started,preferred,actions:resolved.actions,
+    preferenceCost:settings.preferenceCost});
+  run.releaseShift = accepted.map(p=>({status:'conditionally_feasible', from:p.first.map(a=>a.id),
+    to:p.next.map(a=>a.id), release:p.release, availableMs:p.evaluation.availableMs,
+    matchedPreference:[...p.shaped.first,...p.shaped.next].every(a=>run.assignments[a.id]===a.finger)}));
+  return run;
+}
+
+function groupByHand(contacts) {
+  return ['L','R'].map(hand=>{
+    const groups = new Map();
+    for (const c of contacts.filter(c=>c.hand===hand).sort((a,b)=>begin(a).cmp(b.start)||a.key-b.key)) {
+      if (!groups.has(c.start)) groups.set(c.start,[]);
+      groups.get(c.start).push(c);
+    }
+    return [...groups.values()];
+  });
+}
+
+function bestSimpleShape(first,next,locks) {
+  const spread = [5,3,1];
+  const options = group=>[...fingerings(group)].filter(f=>group.every(a=>locks[a.id]==null||locks[a.id]===f[a.id]))
+    .map(f=>group.map(a=>({...a,finger:f[a.id]})));
+  const pairs = options(first).flatMap(a=>options(next).map(b=>({first:a,next:b})));
+  const ideal = first[0].hand==='L'?spread:[...spread].reverse();
+  const cost = pair=>pair.first.reduce((sum,a,i)=>sum+Math.abs(a.finger-ideal[i]),0)+
+    pair.next.reduce((sum,a,i)=>sum+(pair.next.length===3?Math.abs(a.finger-pair.first[i].finger)*2:0),0);
+  return pairs.sort((a,b)=>cost(a)-cost(b))[0];
+}
+
+const api = {proposeBeginner,defaults,reference,keyGeometry,elapsedMs,evaluateTransition,proposeWithTransitions};
+
+if (typeof module !== 'undefined') module.exports = api;
+else G.Play12BeginnerTransition = api;
+})(globalThis);

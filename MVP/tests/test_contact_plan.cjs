@@ -1,7 +1,7 @@
 'use strict';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { damperWindows, planContacts, validateFingers } = require('../editor/contact-plan.cjs');
+const { damperWindows, planContacts, validateFingers } = require('../editor/contact-plan.js');
 
 const note = (id, midi, start, duration, hand = 'L', articulations = [], ties = []) => ({
   id, kind: 'note', hand, voice: '1', editor_supported: true, pitch: { midi },

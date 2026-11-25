@@ -75,6 +75,46 @@ function mountTitle(){
   tools.append(heading);
 }
 function sync(){if(!doc)return;syncTitle();document.body.classList.toggle('is-editing',editing);$('main-edit-tools').hidden=!editing;$('main-save').disabled=saving||(!dirty&&$('main-title-input')?.hidden!==false);$('main-undo').disabled=!editing||doc.cursor===0;$('main-redo').disabled=!editing||doc.cursor===doc.history.length;for(const g of $('play12-score').querySelectorAll('g[data-event-id]')){g.classList.toggle('main-selected',g.dataset.eventId===selected&&editing);g.style.touchAction=editing?'none':'pan-x pan-y';};$('main-fingers').hidden=!selected||!editing;document.body.classList.toggle('training-nav-locked',!!selected&&editing);if(selected&&editing)positionFingers();}
+let zeroFingeringJob=0, zeroFingeringWorker=null, stopWaitingForPause=null;
+async function updateZeroFingering(){
+  if(!doc||doc.mode!=='engine')return;
+  const job=++zeroFingeringJob,current=doc,delta=controller.playback.transposeDelta;
+  zeroFingeringWorker?.terminate();
+  stopWaitingForPause?.();
+  const apply=run=>{
+    if(job!==zeroFingeringJob||current!==doc)return;
+    if(controller.playback.clock.running){
+      let unsubscribe;
+      unsubscribe=controller.playback.addStateListener(({running})=>{
+        if(!running){unsubscribe();stopWaitingForPause=null;apply(run);}
+      });
+      stopWaitingForPause=unsubscribe;
+      return;
+    }
+    E.setRuntimeFingering(current,run);
+    refresh();
+  };
+  if(!delta){apply(null);return;}
+  try{
+    const response=await fetch('/MVP/editor/beginner.json');
+    if(!response.ok)throw Error('HTTP '+response.status);
+    const config=await response.json(), manualSnapshot=JSON.stringify(current.manual);
+    if(job!==zeroFingeringJob||current!==doc)return;
+    const worker=new Worker('/MVP/editor/worker.js?v=stage14');
+    zeroFingeringWorker=worker;
+    const run=await new Promise((resolve,reject)=>{
+      const close=()=>{clearTimeout(timer);worker.terminate();if(zeroFingeringWorker===worker)zeroFingeringWorker=null;};
+      const timer=setTimeout(()=>{close();reject(Error(t('Превышено время расчёта')));},25000);
+      worker.onmessage=({data})=>{close();data.error?reject(Error(data.error)):resolve(data.run);};
+      worker.onerror=event=>{close();reject(Error(event.message));};
+      worker.postMessage({score:current.score,config,locks:current.manual,transpose:delta});
+    });
+    if(manualSnapshot!==JSON.stringify(current.manual))return updateZeroFingering();
+    if(run.validation.conflicts.length||run.search_status==='budget_exhausted')return;
+    apply(run);
+  }catch(failure){if(job===zeroFingeringJob)error(failure);}
+}
+window.addEventListener('play12:zero-confirmed',updateZeroFingering);
 function showCoverage(){
   const notes=E.events(E.effective(doc));
   const missing=notes.filter(e=>e.method.finger==null).length;
@@ -102,11 +142,11 @@ const raw=localStorage.getItem('play12.main.draft:'+doc.id);if(raw){try{const dr
 let localeState=null;try{localeState=JSON.parse(sessionStorage.getItem('play12.main.locale-state:'+doc.id));sessionStorage.removeItem('play12.main.locale-state:'+doc.id);}catch(_){}if(localeState?.practice){controller.playback.setPracticeSettings(localeState.practice);controller.playback.setMetronome(localeState.metronome===true,false);controller.playback.musicAudioInput.checked=localeState.music!==false;}
 controller.playback.onScoreWindowChange=()=>{bindDrag();if(selected){const visible=[...$('play12-score').querySelectorAll('g[data-event-id]')].some(g=>g.dataset.eventId===selected);if(!visible)selected=null;sync();}};
 const at=Number(sessionStorage.getItem('play12.main.position:'+doc.id));if(Number.isFinite(at)&&at>=0)controller.playback.seek(at);bindDrag();shell=Play12TrainingShell.create({runtime:{midiDiagnostic:window.play12MidiDiagnostic,stage:$('playback-stage'),pianoView:controller.playback.pianoView,playback:controller.playback},root:layout,playbackHost:fieldHost,controlRow,pianoHost,footer,zones:{left,center,right},controls:[$('metronome-board').parentElement,$('practice-board')]});
-footer.prepend($('keyboard-range-warning'));$('onboarding-choose-zero').hidden=false;$('round-loop-board').hidden=false;shell.mount();mode(new URLSearchParams(location.search).get('mode')==='edit'||dirty);connectMidi();if(localeState?.selected&&editing)select(localeState.selected);library().catch(error);}
+footer.prepend($('keyboard-range-warning'));$('onboarding-choose-zero').hidden=false;$('round-loop-board').hidden=false;shell.mount();mode(new URLSearchParams(location.search).get('mode')==='edit'||dirty);connectMidi();if(controller.playback.transposeDelta)updateZeroFingering();if(localeState?.selected&&editing)select(localeState.selected);library().catch(error);}
 
 let lastAction=-Infinity,lastTick=performance.now();const activeInput=()=>{lastAction=performance.now();};for(const type of ['pointerdown','keydown'])document.addEventListener(type,activeInput,{passive:true});
 const activityTimer=setInterval(()=>{const now=performance.now(),elapsed=now-lastTick;lastTick=now;if(doc&&!document.hidden&&elapsed<5000&&(controller?.playback.clock.running||now-lastAction<15000)){const state=D.addActivity(elapsed);$('main-practice-time').textContent=t('Время занятий: ')+Math.floor(state.practiceMs/60000)+t(' мин');}},1000);
-window.addEventListener('pagehide',()=>{clearInterval(activityTimer);clearTimeout(toastTimer);shell?.dispose();},{once:true});
+window.addEventListener('pagehide',()=>{clearInterval(activityTimer);clearTimeout(toastTimer);shell?.dispose();zeroFingeringWorker?.terminate();stopWaitingForPause?.();},{once:true});
 function midiPresentation(status){const unsupported=status==='unavailable'||status==='unsupported';return{text:status==='connected'?t('MIDI: подключено'):status==='requesting'?t('MIDI: подключение…'):unsupported?t('MIDI не поддерживается'):status==='permission-denied'?t('MIDI: не подключено — нет разрешения'):t('MIDI: не подключено'),title:status==='no-input'?t('MIDI-устройство не обнаружено'):status==='permission-denied'?t('Разрешите MIDI в настройках браузера'):unsupported?t('В этом браузере отсутствует Web MIDI API'):status==='error'?t('Ошибка подключения MIDI'):'',connected:status==='connected',unsupported,disabled:unsupported||status==='requesting'};}
 function connectMidi(){const midi=window.play12MidiDiagnostic;if(!midi)return;if(!dev)$('midi-diagnostic').hidden=true;const panel=element('div',null,{class:'main-midi'}),label=element('span',t('MIDI: не подключено'),{class:'main-midi-status',role:'status','aria-live':'polite'});let calibrationHint='';
 const render=()=>{const status=midi.currentStatus?.status||'no-input',view=midiPresentation(status);label.textContent=view.text+(view.connected&&calibrationHint?' · '+calibrationHint:'');label.title=view.title;label.setAttribute('data-midi-status',view.connected?'connected':status);connect.hidden=view.connected&&!['unusual','confirm','invalid','verify-retry'].includes(midi.calibrationMode);connect.disabled=view.disabled;connect.textContent=view.connected?({unusual:t('Использовать диапазон'),confirm:t('Подтвердить диапазон'),invalid:t('Повторить калибровку'),'verify-retry':t('Проверить ещё раз')}[midi.calibrationMode]||t('Подключить MIDI')):t('Подключить MIDI');if(!view.connected)calibrationHint='';};
