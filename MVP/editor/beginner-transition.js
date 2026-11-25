@@ -146,21 +146,27 @@ function proposeBeginner(score, profile, locks = {}, detailed = false, settings 
   for (const groups of byHand) {
     for (let i = 1; i < groups.length && proposals.length < settings.maxTransfers; i++) {
       if (Date.now()-started > profile.search.maxMilliseconds / 4) break;
-      const first = groups[i-1], next = groups[i], at = next[0].start;
-      if (first.length !== 3 || next.length < 1 || next.length > 3 ||
+      const previous = groups[i-1], next = groups[i], at = next[0].start;
+      const repeated = next.length===1 ? previous.find(a=>a.key===next[0].key) : null;
+      // A same-key single attack can release its own key while tied bass keys
+      // remain held. The ordinary beam search still reserves those fingers.
+      const stationary = Boolean(repeated);
+      const first = stationary ? [repeated] : previous;
+      if ((!stationary && first.length !== 3) || next.length > 3 ||
           !first.some(a => end(a).cmp(at)>0 && next.some(b => a.key===b.key)) ||
           first.some(a=>end(a).cmp(at)<=0 || a.ids.length!==1) ||
           new Set(next.map(a=>a.key)).size!==next.length) continue;
       const prior = groups.slice(0,i-1);
-      if (prior.some(group=>group.some(a=>end(a).cmp(first[0].start)>0))) continue;
+      if (!stationary && prior.some(group=>group.some(a=>end(a).cmp(first[0].start)>0))) continue;
       const interval = begin(next[0]).sub(first[0].start);
       const fraction = new Q(settings.releaseFraction);
       const release = begin(first[0]).add(new Q(interval.n*fraction.n,interval.d*fraction.d)).toString();
       const available = elapsedMs(release,at,tempo);
       if (available == null || available < settings.resetMs) continue;
-      const shaped = bestSimpleShape(first,next,locks);
+      const shaped = stationary ? {first:[],next:[]} : bestSimpleShape(first,next,locks);
       if (!shaped) continue;
-      const evaluation = evaluateTransition(shaped.first.map(a=>({...a,end:release})),shaped.next,
+      const evaluation = stationary ? {status:'conditionally_feasible',availableMs:available} :
+        evaluateTransition(shaped.first.map(a=>({...a,end:release})),shaped.next,
         {geometry:reference,tempo, resetMsByKey:referenceResets,
           capability:({from,to})=>({poseAllowed:[from,to].every(p=>p.at(-1).point.x-p[0].point.x<=7*reference.whiteWidth),
             minimumMs:0})});
@@ -170,7 +176,7 @@ function proposeBeginner(score, profile, locks = {}, detailed = false, settings 
         minimumHoldByContact[action.id]=new Q(release).sub(action.start).toString();
         resetByKey[action.key]=interval.sub(new Q(release).sub(first[0].start)).toString();
       }
-      proposals.push({first,next,shaped,release,evaluation});
+      proposals.push({first,next,shaped,release,evaluation,stationary});
     }
   }
   if (!proposals.length) return propose(score,profile,locks,detailed,{base,started,preferred});
@@ -193,7 +199,7 @@ function proposeBeginner(score, profile, locks = {}, detailed = false, settings 
   for (const {shaped} of accepted) for (const a of [...shaped.first,...shaped.next]) preferred[a.id]=a.finger;
   const run = propose(score,profile,locks,detailed,{base,started,preferred,actions:resolved.actions,
     preferenceCost:settings.preferenceCost});
-  run.releaseShift = accepted.map(p=>({status:'conditionally_feasible', from:p.first.map(a=>a.id),
+  run.releaseShift = accepted.map(p=>({status:'conditionally_feasible', strategy:p.stationary?'rearticulate':'release_shift', from:p.first.map(a=>a.id),
     to:p.next.map(a=>a.id), release:p.release, availableMs:p.evaluation.availableMs,
     matchedPreference:[...p.shaped.first,...p.shaped.next].every(a=>run.assignments[a.id]===a.finger)}));
   return run;

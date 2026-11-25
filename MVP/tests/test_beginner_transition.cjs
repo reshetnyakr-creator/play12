@@ -75,3 +75,25 @@ test('production worker assigns the pedal-assisted chord and keeps no-pedal fall
   assert.equal(send(withPedal,1).contacts[0].key,42);
   assert.equal(withPedal.score.parts[0].measures[0].events[0].pitch.midi,41);
 });
+
+test('same-key rearticulation preserves two tied bass contacts under pedal',()=>{
+  const {proposeBeginner}=require('../editor/beginner-transition.js');
+  const input=score(pedal);
+  input.editor={tempo:80};
+  const part=input.score.parts[0];
+  part.measures[0].events=[
+    {...event('bass1',41,'0','1'),ties:['start']},
+    {...event('bass2',48,'0','1'),ties:['start']},
+    event('up',53,'0','3'),
+    {...event('bass1-end',41,'1','2'),ties:['stop']},
+    {...event('bass2-end',48,'1','2'),ties:['stop']},
+    event('again',53,'2','1')
+  ];
+  const result=proposeBeginner(input,config);
+  assert.equal(result.assigned,6);
+  assert.equal(result.releaseShift[0].strategy,'rearticulate');
+  assert.equal(result.contacts.find(c=>c.id==='bass1').end,'3/1');
+  assert.notEqual(result.assignments.again,result.assignments.bass1);
+  assert.notEqual(result.assignments.again,result.assignments.bass2);
+  assert.equal(result.validation.conflicts.length,0);
+});

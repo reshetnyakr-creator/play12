@@ -28,6 +28,18 @@ function damperWindows(part) {
   return windows;
 }
 
+function containingWindow(windows, at) {
+  const point = new Q(at);
+  let lo = 0, hi = windows.length;
+  while (lo < hi) {
+    const mid = (lo+hi) >>> 1;
+    if (point.cmp(windows[mid].start) > 0) lo = mid+1;
+    else hi = mid;
+  }
+  const window = windows[lo-1];
+  return window && point.cmp(window.end) < 0 ? window : null;
+}
+
 function planContacts(score, { releases = {}, resetByKey = {}, minimumHoldByContact = {} } = {}, sourceContacts = contacts(score).contacts) {
   const parts = new Map();
   for (const part of score.score.parts) {
@@ -40,7 +52,7 @@ function planContacts(score, { releases = {}, resetByKey = {}, minimumHoldByCont
   const actions = sourceContacts.map(contact => {
     const { event, damper, instrument } = parts.get(contact.id);
     const end = new Q(releases[contact.id] ?? contact.end).toString();
-    const coverage = damper.find(window => compare(window.start, end) < 0 && compare(end, window.end) < 0);
+    const coverage = containingWindow(damper,end);
     if (end !== contact.end) {
       const min = minimumHoldByContact[contact.id];
       const unknown = min == null;
