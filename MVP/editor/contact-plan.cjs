@@ -27,8 +27,7 @@ function damperWindows(part) {
   return windows;
 }
 
-function planContacts(score, { releases = {}, resetByKey = {}, minimumHoldByContact = {} } = {}) {
-  const base = contacts(score);
+function planContacts(score, { releases = {}, resetByKey = {}, minimumHoldByContact = {} } = {}, sourceContacts = contacts(score).contacts) {
   const parts = new Map();
   for (const part of score.score.parts) {
     const damper = damperWindows(part);
@@ -37,7 +36,7 @@ function planContacts(score, { releases = {}, resetByKey = {}, minimumHoldByCont
     }
   }
   const issues = [];
-  const actions = base.contacts.map(contact => {
+  const actions = sourceContacts.map(contact => {
     const { event, damper, instrument } = parts.get(contact.id);
     const end = new Q(releases[contact.id] ?? contact.end).toString();
     const coverage = damper.find(window => compare(window.start, end) < 0 && compare(end, window.end) < 0);

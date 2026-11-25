@@ -99,7 +99,7 @@ function searchTransition(score, request, layers) {
   // Bounded explicit release proposals are compared with the literal plan.
   for (const release of [null,...releaseOptions.slice(0,8)]) {
     const releases = release === null ? {} : Object.fromEntries(firstIds.map(id => [id,release]));
-    const plan = planContacts(score,{releases,minimumHoldByContact,resetByKey});
+    const plan = planContacts(score,{releases,minimumHoldByContact,resetByKey},layers);
     const blockers = plan.issues.filter(issue => scope.has(issue.id) || issue.ids?.some(id => scope.has(id)));
     if (blockers.length) { rejected.push({release,blockers}); continue; }
     const planned = new Map(plan.actions.filter(c => scope.has(c.id)).map(c => [c.id,c]));
