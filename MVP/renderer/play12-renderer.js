@@ -68,7 +68,7 @@
         // end of a complete metric frame, leaving empty time before it.
         const pickupPadding = measure.implicit ? Math.max(0, nominal - extent) : 0;
         for (const event of events) {
-          if (event.kind === "note") {
+          if (event.kind === "note" && !(cfg.editorTimeline && event.sharedContactRepresentative)) {
             notes.push({ ...event, globalStart: cfg.editorTimeline && event.editor_onset_q != null ? fraction(event.editor_onset_q) : offset + pickupPadding + fraction(event.start_quarters), measureIndex: measure.index });
           }
         }
