@@ -69,7 +69,12 @@
         const pickupPadding = measure.implicit ? Math.max(0, nominal - extent) : 0;
         for (const event of events) {
           if (event.kind === "note" && !(cfg.editorTimeline && event.sharedContactRepresentative)) {
-            notes.push({ ...event, globalStart: cfg.editorTimeline && event.editor_onset_q != null ? fraction(event.editor_onset_q) : offset + pickupPadding + fraction(event.start_quarters), measureIndex: measure.index });
+            const performance = cfg.editorTimeline ? event.arpeggioPerformance : null;
+            const globalStart = performance ? fraction(performance.attack) :
+              cfg.editorTimeline && event.editor_onset_q != null ? fraction(event.editor_onset_q) :
+              offset + pickupPadding + fraction(event.start_quarters);
+            notes.push({ ...event, globalStart, measureIndex: measure.index,
+              ...(performance ? {duration_quarters:fraction(performance.end)-globalStart} : {}) });
           }
         }
         offset += cfg.editorTimeline && measure.editor_duration_q ? fraction(measure.editor_duration_q) : nominal;

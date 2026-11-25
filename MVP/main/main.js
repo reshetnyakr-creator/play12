@@ -100,7 +100,7 @@ async function updateZeroFingering(){
     if(!response.ok)throw Error('HTTP '+response.status);
     const config=await response.json(), manualSnapshot=JSON.stringify(current.manual);
     if(job!==zeroFingeringJob||current!==doc)return;
-    const worker=new Worker('/MVP/editor/worker.js?v=stage15');
+    const worker=new Worker('/MVP/editor/worker.js?v=stage16');
     zeroFingeringWorker=worker;
     const run=await new Promise((resolve,reject)=>{
       const close=()=>{clearTimeout(timer);worker.terminate();if(zeroFingeringWorker===worker)zeroFingeringWorker=null;};

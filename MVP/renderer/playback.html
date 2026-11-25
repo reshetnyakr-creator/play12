@@ -331,14 +331,14 @@
   </main>
   <script>if(window.Play12Routes){Play12Routes.languages(document.querySelector('.mvp-language-switch'),window.__PLAY12_MAIN__?'main':'tutorial');const mainLink=document.getElementById('tutorial-main-link');if(mainLink)mainLink.href=Play12Routes.path('main');}</script>
   <script src="play12-i18n.js?v=en-routes-1"></script>
-  <script src="../editor/core.js?v=stage15"></script>
-  <script src="play12-renderer.js?v=stage15"></script>
+  <script src="../editor/core.js?v=stage16"></script>
+  <script src="play12-renderer.js?v=stage16"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=mobile-1"></script>
   <script src="play12-precount-view.js?v=stage12"></script>
   <script src="play12-round-board.js?v=en-routes-1"></script>
-  <script src="play12-playback.js?v=stage12"></script>
+  <script src="play12-playback.js?v=stage16"></script>
   <script src="web-midi-diagnostic.js?v=midi-voice-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=mobile-5"></script>
@@ -480,7 +480,20 @@
         loopEnd.add(new Option(`Round ${index + 1}`, index));
       });
       loopEnd.value = rounds.length > 1 ? '1' : '0';
-      const makeMusicSchedule = score => Play12Editor.contacts(score).contacts.map(c => ({id:c.id, start:Number(new Play12Editor.Q(c.start)), duration:Number(new Play12Editor.Q(c.end).sub(c.start)), hand:c.hand, sourceMidi:c.key, dynamic:'mf'})).concat(Play12Editor.events(score).filter(e => !e.editor_supported || !e.hand).filter(e => !e.grace && Number.isInteger(e.pitch.midi) && Number(new Play12Editor.Q(e.duration_quarters)) > 0).map(e => ({id:e.id,start:Number(new Play12Editor.Q(e.editor_onset_q)),duration:Number(new Play12Editor.Q(e.duration_quarters)),hand:e.hand || 'R',sourceMidi:e.pitch.midi,dynamic:'mf'})));
+      const makeMusicSchedule = score => {
+        const editor=Play12Editor, {Q}=editor, contacts=editor.contacts(score).contacts;
+        const sustained=new Set(contacts.flatMap(c=>c.sustainedIds||[]));
+        const scheduled=contacts.map(c=>({id:c.id,start:Number(new Q(c.start)),
+          duration:Number(new Q(c.end).sub(c.start)),hand:c.hand,sourceMidi:c.key,dynamic:'mf',
+          ...(c.arpeggio?{arpeggio:c.arpeggio.group}:{})}));
+        for (const e of editor.events(score)) {
+          if ((e.editor_supported&&e.hand)||e.grace||e.unresolvedArpeggioContinuation||sustained.has(e.id)||!Number.isInteger(e.pitch?.midi)) continue;
+          const duration=Number(e.unresolvedArpeggioEnd?new Q(e.unresolvedArpeggioEnd).sub(e.editor_onset_q):new Q(e.duration_quarters));
+          if(duration>0)scheduled.push({id:e.id,start:Number(new Q(e.editor_onset_q)),duration,
+            hand:e.hand||'R',sourceMidi:e.pitch.midi,dynamic:'mf'});
+        }
+        return scheduled;
+      };
       window.play12Playback = Play12Playback.start({
         svg, stage: document.getElementById('playback-stage'), playline: document.getElementById('playline'),
         playButton: document.getElementById('play'), pauseButton: document.getElementById('pause'),
@@ -496,6 +509,8 @@
         gridResolutionInput: reviewGrid, pulse: document.getElementById('grid-pulse'),
         progressHead: document.getElementById('progress-head'), timecode: document.getElementById('timecode'), pianoView,
         referenceZeroNote, runtimeZeroNote: initialZeroMidi,
+        tempoMap: savedCompositionId && Play12Editor.events(score).some(e=>e.arpeggioPerformance)
+          ? score.editor.tempoMap : null,
         musicSchedule: savedCompositionId ? makeMusicSchedule(score) : null,
         beatLamp: document.getElementById('metronome-beat-lamp')
       });

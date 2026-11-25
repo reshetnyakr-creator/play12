@@ -83,6 +83,26 @@ function realizeArpeggios(part, diagnostics) {
   }
 }
 
+function preserveUnresolvedArpeggioTies(part) {
+  const events=part.measures.flatMap(m=>m.events).filter(e=>e.kind==='note');
+  if(!events.some(e=>!e.arpeggioPerformance&&e.arpeggioMarks?.some(m=>m.type==='arpeggiate')&&e.ties.includes('start')))return;
+  const pending=new Map();
+  for(const e of events.sort((a,b)=>new Q(a.editor_onset_q).cmp(b.editor_onset_q))){
+    const key=JSON.stringify([e.hand,e.voice,e.pitch.midi]);
+    const previous=pending.get(key);
+    const end=new Q(e.editor_onset_q).add(e.duration_quarters).toString();
+    if(previous&&e.ties.includes('stop')&&previous.unresolvedArpeggioEnd===e.editor_onset_q){
+      e.unresolvedArpeggioContinuation=previous.id;
+      e.editor_supported=false;
+      previous.unresolvedArpeggioEnd=end;
+      if(!e.ties.includes('start'))pending.delete(key);
+    }else if(!e.arpeggioPerformance&&e.arpeggioMarks?.some(m=>m.type==='arpeggiate')&&e.ties.includes('start')){
+      e.unresolvedArpeggioEnd=end;
+      pending.set(key,e);
+    }else pending.delete(key);
+  }
+}
+
 function compatibleArpeggioKey(notes) {
   if(notes.length===1)return true;
   const mark=e=>JSON.stringify([e.hand,e.duration_quarters,[...e.ties].sort(),[...e.articulations].sort()]);
@@ -100,7 +120,7 @@ const hasArpeggio=arpeggioMarks.some(m=>m.type==='arpeggiate');
 const event={id,kind:rest?'rest':'note',staff,voice,hand,start_quarters:start.toString(),duration_quarters:duration.toString(),chord,grace,source_fingering:f,method:{finger:null,fingering_source:null,fingering_confidence:null,fingering_history:[]},ties,...(arpeggioMarks.length?{arpeggioMarks,arpeggioEligible:supported}:{}),fermata:Boolean(node.querySelector('fermata')),stem:txt(node,'stem',null),unisonSpecial:Boolean(fraw&&!f||fnode?.getAttribute('alternate')==='yes'||fnode?.getAttribute('substitution')==='yes'||node.querySelector('cue, play, listen, notations technical harmonic, notations glissando, notations slide, notations ornaments'))||children(node,'notations').some(notation=>Array.from(notation.children).some(mark=>!['tied','articulations','technical','slur','arpeggiate'].includes(mark.localName))||children(notation,'technical').some(tech=>Array.from(tech.children).some(mark=>mark.localName!=='fingering'))),unisonTiming:['attack','release','end-dynamics'].map(name=>node.getAttribute(name)),articulations:children(node,'notations').flatMap(n=>children(n,'articulations').flatMap(a=>Array.from(a.children,x=>x.localName))),editor_onset_q:offset.add(start).toString(),editor_supported:supported&&!hasArpeggio};if(!rest){if(!pitch){event.kind='unpitched';event.unpitched=one(node,'unpitched')?.textContent||null;event.pitch=null;diagnostics.push({code:'UNPITCHED_UNSUPPORTED',event:id,message:'Нота без определённой высоты сохранена, но не преобразована в клавишу.'});}else event.pitch={step,alter,octave,midi};event.play12_symbol={value:'0123456789XY'[((midi||0)%12+12)%12],origin:'conversion'};notes.push(event);}events.push(event);}
 if(m.querySelector('repeat,ending,segno,coda')||m.querySelector('sound[da-capo],sound[dacapo],sound[dalsegno]')){diagnostics.push({code:'TRAVERSAL_UNSUPPORTED',measure:mi+1,message:'Повторы/переходы не раскрыты: показан записанный порядок.'});}
 if(unsupported)diagnostics.push({code:'REALIZATION_MISSING',measure:mi+1,message:'Специальный приём требует исполнительского расписания; участок не назначен автоматически.'});const nominal=new Q(BigInt(beats*4),BigInt(beatType)),length=m.getAttribute('implicit')==='yes'?extent:max(nominal,extent);if(!length.n)throw Error('Пустой такт без длительности');const measure={index:mi,number:m.getAttribute('number')||String(mi+1),implicit:m.getAttribute('implicit')==='yes',attributes:{divisions,time:{beats,beat_type:beatType}},events,editor_duration_q:length.toString(),tempo_marks:mi===0?[{start_quarters:'0/1',bpm:tempo}]:[]};measures.push(measure);if(pi===0)rounds.push({index:mi,start:num(offset),end:num(offset.add(length)),measureStart:num(offset),beats,beatType,beatQuarters:4/beatType,measureQuarters:num(length)});offset=offset.add(length);}total=max(total,offset);parts.push({id:part.getAttribute('id'),name:dom.querySelector('score-part[id="'+part.getAttribute('id')+'"] part-name')?.textContent||part.getAttribute('id'),measures,pedals:pedals.sort((a,b)=>new Q(a.at).cmp(b.at)||a.order-b.order)});}
-for(const part of parts)realizeArpeggios(part,diagnostics);
+for(const part of parts){realizeArpeggios(part,diagnostics);preserveUnresolvedArpeggioTies(part);}
 if(!notes.length)throw Error('В файле нет нот.');for(const e of notes)if(!e.hand)diagnostics.push({code:'HAND_UNKNOWN',event:e.id,message:'Укажите руку для партии/нотоносца.'});const reference=21;for(const e of notes)if(e.pitch)e.play12_symbol.value='0123456789XY'[((e.pitch.midi-9)%12+12)%12]||'?';const score={format:'play12-json',version:'0.1',source:{type:'musicxml',title},play12:{zero_pitch_class:'A',reference_zero_midi:reference,symbols:'0123456789XY',pitch_class_mapping:Object.fromEntries(Array.from('0123456789XY').map((x,i)=>[String((i+9)%12),x]))},score:{title,creators:[],parts},editor:{schema:'play12-editor/1',sharedUnison:true,total_quarters:total.toString(),rounds,tempo,tempoMap:[...new Map([[0,120],...tempoEntries])].sort(([a],[b])=>a-b).map(([at,bpm])=>({at,bpm})),diagnostics}};return score;}
 const events=score=>score.score.parts.flatMap(p=>p.measures.flatMap(m=>m.events)).filter(e=>e.kind==='note');
 // Manual assignment needs a pitched key and a hand, even when a technique blocks automatic realization.
@@ -160,7 +180,21 @@ function mergeUnisons(contacts, byId, locks) {
 }
 function validate(cs,assign){const conflicts=[],unknown=[];for(const c of cs){const f=assign[c.id];if(f!=null&&(!Number.isInteger(f)||f<1||f>5))conflicts.push({code:'INVALID_FINGER',ids:c.ids,severity:'error'});}const timed=cs.map(c=>({c,start:new Q(c.start),end:new Q(c.end)})).sort((a,b)=>a.start.cmp(b.start));for(let i=0;i<timed.length;i++)for(let j=i+1;j<timed.length;j++){const first=timed[i],second=timed[j];if(second.start.cmp(first.end)>=0)break;if(first.start.cmp(second.end)>=0)continue;const {c:a}=first,{c:b}=second;if(a.key===b.key){unknown.push({code:'KEY_OWNERSHIP_UNKNOWN',ids:[a.id,b.id],severity:'warning'});continue;}if(a.hand===b.hand&&assign[a.id]!=null&&assign[a.id]===assign[b.id]){const confirmed=a.releaseBasis!=='assumed_score_duration'&&b.releaseBasis!=='assumed_score_duration';(confirmed?conflicts:unknown).push({code:'FINGER_OVERLAP',ids:[a.id,b.id],severity:confirmed?'error':'warning',basis:[a.releaseBasis,b.releaseBasis]});}}return{conflicts,warnings:unknown,physical:'unknown'};}
 function keyX(midi,cfg){const pc=((midi%12)+12)%12,white={0:0,2:1,4:2,5:3,7:4,9:5,11:6},black={1:0,3:1,6:2,8:3,10:4};return Math.floor(midi/12)*700+(white[pc]!=null?cfg.geometry.white[white[pc]]:cfg.geometry.black[black[pc]]);}
-function propose(score,cfg,locks={},detailed=false,performance=null){const started=performance?.started??Date.now(),base=performance?.base??contacts(score,{locks}),all=performance?.actions??base.contacts,assign={},reasons=[...base.warnings],stats={generated:0,rejected:0,pruned:0},details=[],alternatives=[];const keyPositions=new Map(all.map(c=>[c.key,keyX(c.key,cfg)]));const keyPosition=key=>keyPositions.get(key);const unassignedReasons = Object.create(null);
+function propose(score,cfg,locks={},detailed=false,performance=null){const started=performance?.started??Date.now(),base=performance?.base??contacts(score,{locks}),all=performance?.actions??base.contacts,assign={},reasons=[...base.warnings],stats={generated:0,rejected:0,pruned:0},details=[],alternatives=[];const keyPositions=new Map(all.map(c=>[c.key,keyX(c.key,cfg)]));const keyPosition=key=>keyPositions.get(key);
+const arpeggioPreferred=new Map(), arpeggiosByHand=new Map();
+for(const contact of all) if(contact.arpeggio){
+  const key=JSON.stringify([contact.arpeggio.group,contact.hand]);
+  if(!arpeggiosByHand.has(key))arpeggiosByHand.set(key,[]);
+  arpeggiosByHand.get(key).push(contact);
+}
+for(const group of arpeggiosByHand.values()) if(group.length>=2&&group.length<=5){
+  group.sort((a,b)=>a.key-b.key);
+  for(const [i,contact] of group.entries()){
+    const offset=Math.floor(i*4/(group.length-1));
+    arpeggioPreferred.set(contact.id,contact.hand==='R'?1+offset:5-offset);
+  }
+}
+const unassignedReasons = Object.create(null);
 const markUnassigned = (contacts, reason) => {
   for (const contact of contacts) for (const id of contact.ids) unassignedReasons[id] = reason;
 };
@@ -184,8 +218,10 @@ const keys = new Set(active.map(c=>c.key));
 const sharedKey = group.some(c=>{const duplicate=keys.has(c.key);keys.add(c.key);return duplicate;});
 // Distinct attacks with unresolved ownership cannot consume separate fingers on
 // one key. A genuine tie has already been resolved to one contact by contacts().
-let results=[],layerGenerated=0;for(const state of sharedKey||active.length+group.length>5?[]:states){const used=new Set(active.map(c=>state.assign[c.id]));const placements=[];function gen(i,usedNow,p){if(i===group.length){placements.push(p);return;}const c=group[i],fixed=locks[c.id]??(c.unisonGroups?c.ids.map(id=>locks[id]).find(f=>f!=null):null);for(const f of fixed?[fixed]:[1,2,3,4,5]){stats.generated++;layerGenerated++;if(!Number.isInteger(f)||f<1||f>5||usedNow.has(f)){stats.rejected++;continue;}gen(i+1,new Set([...usedNow,f]),{...p,[c.id]:f});if(layerGenerated>=cfg.search.maxCandidatesPerLayer)break;}}gen(0,used,{});const together=[...active,...group];const prev=Object.values(state.last).sort((a,b)=>new Q(b.start).cmp(a.start))[0];for(const p of placements){let cost=state.cost,features={},last={...state.last};const add=(name,raw)=>{const value=Math.round(raw)*cfg.weights[name];cost+=value;features[name]=(features[name]||0)+value;};for(const c of group){const f=p[c.id],old=state.last[f],x=keyPosition(c.key);if(performance?.preferred[c.id] && performance.preferred[c.id]!==f)cost+=performance.preferenceCost;if([1,3,6,8,10].includes(c.key%12)){if(f===1)add('thumbBlack',1);if(f===5)add('pinkyBlack',1);}if(old&&old.key!==c.key)add('sameFingerMove',1);if(prev&&prev.key!==c.key&&prev.f!==f){const direction=(x-keyPosition(prev.key))*(f-prev.f)*(hand==='R'?1:-1);if(direction<0)add('crossing',1);}if(next){const target=(keyPosition(next.key)-x)/100*(hand==='R'?1:-1),available=target>0?5-f:f-1;add('futureReach',Math.max(0,Math.abs(target)-available));}last[f]={key:c.key,start:c.start,f};}
-for(let i=0;i<together.length;i++)for(let j=i+1;j<together.length;j++){const a=together[i],b=together[j];if(p[a.id]==null&&p[b.id]==null)continue;const fa=p[a.id]||state.assign[a.id],fb=p[b.id]||state.assign[b.id],dx=(keyPosition(b.key)-keyPosition(a.key))*(hand==='R'?1:-1)/100;add('chordShape',Math.abs(Math.abs(dx)-Math.abs(fb-fa))*10);if(dx*(fb-fa)<0)add('chordOrder',1);}const position=group.reduce((v,c)=>v+keyPosition(c.key)-(hand==='R'?1:-1)*(p[c.id]-1)*100,0)/group.length;if(state.position!=null)add('positionShift',Math.abs(position-state.position));results.push({cost,parent:state,p,tie:JSON.stringify(p),last,position,features});if(detailed&&details.length<cfg.diagnostics.maxDetails)details.push({hand,time,assign:p,cost,features});}if(layerGenerated>=cfg.search.maxCandidatesPerLayer){truncated=true;break;}}
+let results=[],layerGenerated=0;for(const state of sharedKey||active.length+group.length>5?[]:states){const used=new Set(active.map(c=>state.assign[c.id]));const placements=[];function gen(i,usedNow,p){if(i===group.length){placements.push(p);return;}const c=group[i],fixed=locks[c.id]??(c.unisonGroups?c.ids.map(id=>locks[id]).find(f=>f!=null):null);for(const f of fixed?[fixed]:[1,2,3,4,5]){stats.generated++;layerGenerated++;if(!Number.isInteger(f)||f<1||f>5||usedNow.has(f)){stats.rejected++;continue;}gen(i+1,new Set([...usedNow,f]),{...p,[c.id]:f});if(layerGenerated>=cfg.search.maxCandidatesPerLayer)break;}}gen(0,used,{});const together=[...active,...group];const prev=Object.values(state.last).sort((a,b)=>new Q(b.start).cmp(a.start))[0];for(const p of placements){let cost=state.cost,features={},last={...state.last};const add=(name,raw)=>{const value=Math.round(raw)*cfg.weights[name];cost+=value;features[name]=(features[name]||0)+value;};for(const c of group){const f=p[c.id],old=state.last[f],x=keyPosition(c.key);
+const natural=arpeggioPreferred.get(c.id);
+if(natural!=null)cost+=Math.abs(f-natural)*cfg.weights.chordOrder*12;if(performance?.preferred[c.id] && performance.preferred[c.id]!==f)cost+=performance.preferenceCost;if([1,3,6,8,10].includes(c.key%12)){if(f===1)add('thumbBlack',1);if(f===5)add('pinkyBlack',1);}if(old&&old.key!==c.key)add('sameFingerMove',1);if(prev&&prev.key!==c.key&&prev.f!==f){const direction=(x-keyPosition(prev.key))*(f-prev.f)*(hand==='R'?1:-1);if(direction<0)add('crossing',1);}if(next){const target=(keyPosition(next.key)-x)/100*(hand==='R'?1:-1),available=target>0?5-f:f-1;add('futureReach',Math.max(0,Math.abs(target)-available));}last[f]={key:c.key,start:c.start,f};}
+for(let i=0;i<together.length;i++)for(let j=i+1;j<together.length;j++){const a=together[i],b=together[j];if(p[a.id]==null&&p[b.id]==null)continue;const fa=p[a.id]||state.assign[a.id],fb=p[b.id]||state.assign[b.id],dx=(keyPosition(b.key)-keyPosition(a.key))*(hand==='R'?1:-1)/100;add('chordShape',Math.abs(Math.abs(dx)-Math.abs(fb-fa))*10);if(dx*(fb-fa)<0)add('chordOrder',a.arpeggio&&a.arpeggio.group===b.arpeggio?.group?40:1);}const position=group.reduce((v,c)=>v+keyPosition(c.key)-(hand==='R'?1:-1)*(p[c.id]-1)*100,0)/group.length;if(state.position!=null)add('positionShift',Math.abs(position-state.position));results.push({cost,parent:state,p,tie:JSON.stringify(p),last,position,features});if(detailed&&details.length<cfg.diagnostics.maxDetails)details.push({hand,time,assign:p,cost,features});}if(layerGenerated>=cfg.search.maxCandidatesPerLayer){truncated=true;break;}}
 if (!results.length) {
   if(group.some(c=>locks[c.id] && (!Number.isInteger(locks[c.id]) || locks[c.id]<1 || locks[c.id]>5))) {
     markUnassigned(group,'INVALID_LOCK');
