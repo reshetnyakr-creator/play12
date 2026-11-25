@@ -320,7 +320,7 @@
     const hasTrails=notes.some(({note})=>note.fermataTrail);
     const trailDefs=hasTrails?make("defs"):null;
     const trailLayer=hasTrails?make("g",{class:"play12-fermata-trails","pointer-events":"none"}):null;
-    let trailIndex=0;
+    const trailGradients=new Map();
     for (const item of notes) {
       const { note, displayFingering } = item;
       const finger = displayFingering.finger;
@@ -374,19 +374,26 @@
       if(note.fermataTrail){
         const trailHeight=fraction(note.fermataTrail)/stepQ*height;
         const overlap=(note.continuousPerformance ? fraction(note.trailSegment)/stepQ : noteDuration)*height/3;
-        const id=`play12-fermata-${++trailIndex}`;
-        const gradient=global.document.createElementNS(svgNS,"linearGradient");
-        for(const [key,value] of Object.entries({id,gradientUnits:"userSpaceOnUse",x1:handX,x2:handX,y1:y,y2:y-trailHeight})){
-          gradient.setAttribute(key,value);
+        const color=block.getAttribute("fill");
+        const fadeStart=(overlap/(trailHeight+overlap)).toFixed(9);
+        const key=`${color}:${fadeStart}`;
+        let id=trailGradients.get(key);
+        if(!id){
+          id=`play12-fermata-${trailGradients.size+1}`;
+          trailGradients.set(key,id);
+          const gradient=global.document.createElementNS(svgNS,"linearGradient");
+          for(const [name,value] of Object.entries({id,x1:0,x2:0,y1:1,y2:0})){
+            gradient.setAttribute(name,value);
+          }
+          for(const [offset,opacity] of [[fadeStart,1],[1,0]]){
+            const stop=global.document.createElementNS(svgNS,"stop");
+            stop.setAttribute("offset",offset);
+            stop.setAttribute("stop-color",color);
+            stop.setAttribute("stop-opacity",opacity);
+            gradient.appendChild(stop);
+          }
+          trailDefs.appendChild(gradient);
         }
-        for(const [offset,opacity] of [[0,1],[1,0]]){
-          const stop=global.document.createElementNS(svgNS,"stop");
-          stop.setAttribute("offset",offset);
-          stop.setAttribute("stop-color",block.getAttribute("fill"));
-          stop.setAttribute("stop-opacity",opacity);
-          gradient.appendChild(stop);
-        }
-        trailDefs.appendChild(gradient);
         const trail=global.document.createElementNS(svgNS,"rect");
         for(const [key,value] of Object.entries({x:handX,y:y-trailHeight,width:blockWidth,height:trailHeight+overlap,
           fill:`url(#${id})`,"data-fermata-trail":note.id}))trail.setAttribute(key,value);
