@@ -331,14 +331,14 @@
   </main>
   <script>if(window.Play12Routes){Play12Routes.languages(document.querySelector('.mvp-language-switch'),window.__PLAY12_MAIN__?'main':'tutorial');const mainLink=document.getElementById('tutorial-main-link');if(mainLink)mainLink.href=Play12Routes.path('main');}</script>
   <script src="play12-i18n.js?v=en-routes-1"></script>
-  <script src="../editor/core.js?v=stage16"></script>
-  <script src="play12-renderer.js?v=stage16"></script>
+  <script src="../editor/core.js?v=stage17"></script>
+  <script src="play12-renderer.js?v=stage17"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=mobile-1"></script>
   <script src="play12-precount-view.js?v=stage12"></script>
   <script src="play12-round-board.js?v=en-routes-1"></script>
-  <script src="play12-playback.js?v=stage16"></script>
+  <script src="play12-playback.js?v=stage17"></script>
   <script src="web-midi-diagnostic.js?v=midi-voice-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=mobile-5"></script>
@@ -459,7 +459,8 @@
       let globalMeasureStart = 0;
       for (const measure of score.score.parts[0].measures.slice(0, reviewMeasureCount)) {
         const time = measure.attributes.time;
-        const length = savedCompositionId ? Number(new Play12Editor.Q(measure.editor_duration_q)) : time.beats * 4 / time.beat_type;
+        const expanded = savedCompositionId && score.editor.fermataTimeline?.rounds[measure.index];
+        const length = savedCompositionId ? expanded?.measureQuarters??Number(new Play12Editor.Q(measure.editor_duration_q)) : time.beats * 4 / time.beat_type;
         rounds.push({
           index: measure.index,
           implicit: measure.implicit === true,
@@ -469,7 +470,8 @@
           beats: time.beats,
           beatType: time.beat_type,
           beatQuarters: 4 / time.beat_type,
-          measureQuarters: length
+          measureQuarters: length,
+          ...(expanded?{beatsAt:expanded.beatsAt,nominalMeasureQuarters:expanded.nominalMeasureQuarters}:{})
         });
         globalMeasureStart += length;
       }
@@ -484,12 +486,12 @@
         const editor=Play12Editor, {Q}=editor, contacts=editor.contacts(score).contacts;
         const sustained=new Set(contacts.flatMap(c=>c.sustainedIds||[]));
         const scheduled=contacts.map(c=>({id:c.id,start:Number(new Q(c.start)),
-          duration:Number(new Q(c.end).sub(c.start)),hand:c.hand,sourceMidi:c.key,dynamic:'mf',
+          duration:Number(new Q(c.end).sub(c.start)),hand:c.hand,sourceMidi:c.key,dynamic:'mf',continuous:c.ids.length>1||c.fermata,
           ...(c.arpeggio?{arpeggio:c.arpeggio.group}:{})}));
         for (const e of editor.events(score)) {
           if ((e.editor_supported&&e.hand)||e.grace||e.unresolvedArpeggioContinuation||sustained.has(e.id)||!Number.isInteger(e.pitch?.midi)) continue;
           const duration=Number(e.unresolvedArpeggioEnd?new Q(e.unresolvedArpeggioEnd).sub(e.editor_onset_q):new Q(e.duration_quarters));
-          if(duration>0)scheduled.push({id:e.id,start:Number(new Q(e.editor_onset_q)),duration,
+          if(duration>0)scheduled.push({id:e.id,start:Number(new Q(e.fermataPerformance?.attack??e.editor_onset_q)),duration:e.fermataPerformance?Number(new Q(e.fermataPerformance.end).sub(e.fermataPerformance.attack)):duration,
             hand:e.hand||'R',sourceMidi:e.pitch.midi,dynamic:'mf'});
         }
         return scheduled;
@@ -509,8 +511,9 @@
         gridResolutionInput: reviewGrid, pulse: document.getElementById('grid-pulse'),
         progressHead: document.getElementById('progress-head'), timecode: document.getElementById('timecode'), pianoView,
         referenceZeroNote, runtimeZeroNote: initialZeroMidi,
-        tempoMap: savedCompositionId && Play12Editor.events(score).some(e=>e.arpeggioPerformance)
-          ? score.editor.tempoMap : null,
+        tempoMap: savedCompositionId ? score.editor.fermataTimeline?.tempoMap??
+          (Play12Editor.events(score).some(e=>e.arpeggioPerformance)?score.editor.tempoMap:null) : null,
+        fermataHolds: savedCompositionId ? score.editor.fermataTimeline?.holds : null,
         musicSchedule: savedCompositionId ? makeMusicSchedule(score) : null,
         beatLamp: document.getElementById('metronome-beat-lamp')
       });

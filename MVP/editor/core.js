@@ -48,15 +48,18 @@ function realizeFermatas(score) {
     injections.set(key,max(injections.get(key)??0,extra));
   }
   if(!injections.size)return score;
-  const holds=[...injections].sort((a,b)=>new Q(a[0]).cmp(b[0]));
+  const holds=[...injections].map(([q,extra])=>[new Q(q),extra]).sort((a,b)=>a[0].cmp(b[0]));
+  let total=new Q(0);
+  const cumulative=holds.map(([,extra])=>total=total.add(extra));
   const at=(point,after=true)=>{
-    let value=new Q(point);
-    for(const [q,extra] of holds){
-      const cmp=new Q(point).cmp(q);
-      if(cmp<0||(!after&&cmp===0))break;
-      value=value.add(extra);
+    const value=new Q(point);
+    let lo=0,hi=holds.length;
+    while(lo<hi){
+      const mid=(lo+hi)>>>1,cmp=value.cmp(holds[mid][0]);
+      if(cmp>0||(after&&cmp===0))lo=mid+1;
+      else hi=mid;
     }
-    return value;
+    return lo ? value.add(cumulative[lo-1]) : value;
   };
   for(const e of members){
     const notatedEnd=end(e).toString();
@@ -71,9 +74,11 @@ function realizeFermatas(score) {
     };
   }
   score.editor.fermataTimeline={
-    holds:holds.map(([q,extra])=>({q,extra:extra.toString()})),
+    holds:holds.map(([q,extra])=>({q:q.toString(),extra:extra.toString(),start:Number(at(q,false)),end:Number(at(q))})),
     rounds:score.editor.rounds.map(r=>({...r,start:Number(at(r.start)),measureStart:Number(at(r.measureStart)),
-      end:Number(at(r.end)),measureQuarters:Number(at(r.end).sub(at(r.start)))})),
+      end:Number(at(r.end)),measureQuarters:Number(at(r.end).sub(at(r.start))),
+      nominalMeasureQuarters:r.measureQuarters,beatsAt:Array.from({length:r.beats},
+        (_,i)=>Number(at(r.measureStart+i*r.beatQuarters)))})),
     tempoMap:score.editor.tempoMap.map(e=>({...e,at:Number(at(e.at))}))
   };
   for(const part of score.score.parts){
@@ -167,7 +172,8 @@ for(const [pi,part]of children(dom.documentElement,'part').entries()){let divisi
 for(const node of Array.from(m.children)){if(node.localName==='backup'||node.localName==='forward'){const delta=new Q(txt(node,'duration','0'),BigInt(divisions));cursor=node.localName==='backup'?cursor.sub(delta):cursor.add(delta);if(cursor.cmp(0)<0)throw Error('MusicXML backup выходит за начало такта');continue;}if(node.localName==='sound'){pedals.push(...pedalEvents(node,offset.add(cursor),divisions,pedals.length));continue;}
 if(node.localName==='direction'){pedals.push(...pedalEvents(node,offset.add(cursor),divisions,pedals.length));const sound=one(node,'sound');const met=node.querySelector('per-minute');const bpm=Number(sound?.getAttribute('tempo')||met?.textContent);if(bpm>0){if(pi===0){const directionOffset=one(node,'offset');const timingOffset=(sound&&one(sound,'offset'))||(directionOffset?.getAttribute('sound')==='yes'?directionOffset:null);const at=Number(offset.add(cursor).add(new Q(timingOffset?.textContent.trim()||'0',BigInt(divisions))));tempoEntries.set(at,bpm);}if(tempoSeen&&tempo!==bpm)diagnostics.push({code:'TEMPO_CHANGE_UNSUPPORTED',measure:mi+1,message:'Смена темпа сохранена в исходнике; проигрывание пока использует первый темп.'});if(!tempoSeen){tempo=bpm;tempoSeen=true;}}if(node.querySelector('pedal'))diagnostics.push({code:'PEDAL_RELEASE_UNKNOWN',measure:mi+1,message:'Педаль не определяет время снятия пальца.'});}
 if(node.localName!=='note')continue;const rest=!!one(node,'rest'),grace=!!one(node,'grace'),chord=!!one(node,'chord'),pitch=one(node,'pitch'),duration=new Q(txt(node,'duration','0'),BigInt(divisions));if(duration.cmp(0)<0)throw Error('Отрицательная длительность');const start=chord?last:cursor;if(!chord){last=start;cursor=cursor.add(duration);}extent=max(extent,start.add(duration));const staff=Number(txt(node,'staff','1')),voice=txt(node,'voice','1'),pid=part.getAttribute('id')||'P'+pi;const hand=handMap[pid+':'+staff]||handMap[pid]||null;const id=pid+'.m'+mi+'.e'+events.length;const step=pitch?txt(pitch,'step'):null,alter=pitch?Number(txt(pitch,'alter','0')):0,octave=pitch?Number(txt(pitch,'octave')):0,midi=pitch?(octave+1)*12+names[step]+alter+transpose:null;const fnode=node.querySelector('notations technical fingering'),fraw=fnode?.textContent?.trim(),f=fraw&&/^[1-5]$/.test(fraw)?Number(fraw):null;const tied=children(node,'notations').flatMap(n=>children(n,'tied'));
-const ties=[...new Set([...children(node,'tie'),...tied].flatMap(x=>{
+const soundTies=children(node,'tie');
+const ties=[...new Set((soundTies.length?soundTies:tied).flatMap(x=>{
   const type=x.getAttribute('type');return type==='continue'?['stop','start']:['start','stop'].includes(type)?[type]:[];
 }))];let supported=!grace&&duration.cmp(0)>0&&(rest||Number.isInteger(midi)&&midi>=0&&midi<=127);if(node.querySelector('trill-mark, tremolo')||!rest&&!pitch){supported=false;unsupported=true;}if(fraw&&!f)diagnostics.push({code:'SOURCE_FINGERING_COMPLEX',event:id,message:'Сложное обозначение пальцев сохранено в MusicXML.'});const arpeggioMarks=children(node,'notations').flatMap(n=>Array.from(n.children).filter(m=>['arpeggiate','non-arpeggiate'].includes(m.localName)).map(m=>({type:m.localName,number:m.getAttribute('number'),direction:m.getAttribute('direction'),boundary:m.getAttribute('type')})));
 const hasArpeggio=arpeggioMarks.some(m=>m.type==='arpeggiate');

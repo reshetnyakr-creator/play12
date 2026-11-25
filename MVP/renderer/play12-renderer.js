@@ -69,12 +69,15 @@
         const pickupPadding = measure.implicit ? Math.max(0, nominal - extent) : 0;
         for (const event of events) {
           if (event.kind === "note" && !(cfg.editorTimeline && event.sharedContactRepresentative)) {
-            const performance = cfg.editorTimeline ? event.arpeggioPerformance : null;
+            const performance = cfg.editorTimeline ? event.continuousPerformance ?? event.fermataPerformance ?? event.arpeggioPerformance : null;
             const globalStart = performance ? fraction(performance.attack) :
               cfg.editorTimeline && event.editor_onset_q != null ? fraction(event.editor_onset_q) :
               offset + pickupPadding + fraction(event.start_quarters);
             notes.push({ ...event, globalStart, measureIndex: measure.index,
-              ...(performance ? {duration_quarters:fraction(performance.end)-globalStart} : {}) });
+              ...(performance ? {
+                duration_quarters:fraction(performance.mainEnd??performance.end)-globalStart,
+                fermataTrail:performance.trail??null, trailSegment:performance.trailSegment??event.duration_quarters
+              } : {}) });
           }
         }
         offset += cfg.editorTimeline && measure.editor_duration_q ? fraction(measure.editor_duration_q) : nominal;
@@ -82,6 +85,9 @@
       totalQuarters = Math.max(totalQuarters, offset);
     }
     if (selectedMeasures.length < measureCount) throw new Error(`The score has fewer than ${measureCount} measures`);
+    if(cfg.editorTimeline && document.editor.fermataTimeline) {
+      totalQuarters=document.editor.fermataTimeline.rounds[measureCount-1]?.end??totalQuarters;
+    }
     return { notes, selectedMeasures, totalQuarters };
   }
 
@@ -210,10 +216,12 @@
       }
     }
 
+    const editorRounds=document.editor?.fermataTimeline?.rounds??document.editor?.rounds;
+    const holds=cfg.editorTimeline ? document.editor?.fermataTimeline?.holds??[] : [];
     let roundStart = 0;
     selection.selectedMeasures.forEach((measure, index) => {
       const time = measure.attributes.time;
-      const length = cfg.editorTimeline && measure.editor_duration_q ? fraction(measure.editor_duration_q) : time.beats * 4 / time.beat_type;
+      const length = cfg.editorTimeline && measure.editor_duration_q ? editorRounds?.[index]?.measureQuarters??fraction(measure.editor_duration_q) : time.beats * 4 / time.beat_type;
       const measureStart = roundStart;
       roundStart += length;
       if (window && (roundStart < firstRow * stepQ || measureStart > lastRow * stepQ)) return;
@@ -243,11 +251,11 @@
     const countLabels = [];
     for (let s = firstRow; s < lastRow; s++) {
       const y = (steps - 1 - s) * height;
-      const round = cfg.editorTimeline ? document.editor.rounds.find(r => s * stepQ >= r.start && s * stepQ < r.end) : null;
+      const round = cfg.editorTimeline ? editorRounds.find(r => s * stepQ >= r.start && s * stepQ < r.end) : null;
       const size = round ? round.beatQuarters / stepQ : beatSteps;
       const relative = round ? s - round.measureStart / stepQ : s % measureSteps;
-      const beat = Math.floor(relative / size);
-      const withinBeat = relative % size;
+      const beat = round?.beatsAt ? round.beatsAt.findIndex(q=>Math.abs(q-s*stepQ)<1e-7) : Math.floor(relative / size);
+      const withinBeat = round?.beatsAt ? (beat<0?1:0) : relative % size;
       const map = round ? cfg.metricMaps[`${round.beats}/${round.beatType}`] : metricMap;
       const level = withinBeat === 0 ? (map?.[beat] ?? (beat === 0 ? "primary" : "weak")) : null;
       make("rect", {
@@ -273,17 +281,18 @@
           class: "play12-cell",
         });
       }
+      const inHold=holds.some(h=>h.start<=s*stepQ&&s*stepQ<h.end);
       const countText = withinBeat === 0 ? (cfg.countWords[beat + 1] ?? String(beat + 1)) : cfg.countAnd;
-      if (!(cfg.editorTimeline && (round?.beatQuarters ?? beatSteps*stepQ) < stepQ)) countLabels.push({ text: countText, x: handWidth + countWidth / 2, y: y + height * 0.63, beat: withinBeat === 0, primary: withinBeat === 0 && beat === 0 });
+      if (!inHold && !(cfg.editorTimeline && (round?.beatQuarters ?? beatSteps*stepQ) < stepQ)) countLabels.push({ text: countText, x: handWidth + countWidth / 2, y: y + height * 0.63, beat: withinBeat === 0, primary: withinBeat === 0 && beat === 0 });
     }
 
     // A coarse grid can have fewer rows than the meter has beats (e.g. 6/8).
     // Place beat labels at their own times, independent of the editable grid.
     if (cfg.editorTimeline) {
-      for (const round of document.editor.rounds.slice(0, measureCount)) {
+      for (const round of editorRounds.slice(0, measureCount)) {
         if (round.beatQuarters >= stepQ || round.end <= firstRow * stepQ || round.start >= lastRow * stepQ) continue;
         for (let beat = 0; beat < round.beats; beat++) {
-          const start = round.measureStart + beat * round.beatQuarters;
+          const start = round.beatsAt?.[beat]??round.measureStart + beat * round.beatQuarters;
           if (start < round.start || start >= round.end) continue;
           const y = (steps - (start + round.beatQuarters / 2) / stepQ) * height;
           countLabels.push({text: cfg.countWords[beat + 1] ?? String(beat + 1), x: handWidth + countWidth / 2, y, beat: true, primary: beat === 0});
@@ -291,7 +300,7 @@
       }
     }
 
-    const borders = cfg.editorTimeline ? document.editor.rounds.slice(0, measureCount) :
+    const borders = cfg.editorTimeline ? editorRounds.slice(0, measureCount) :
       Array.from({length: Math.ceil(steps / measureSteps)}, (_, i) => ({start: i * measureSteps * stepQ, end: (i + 1) * measureSteps * stepQ}));
     for (const round of borders) {
       if (round.end <= firstRow * stepQ || round.start >= lastRow * stepQ) continue;
@@ -308,6 +317,10 @@
     const dynamic = cfg.editorTimeline ? (document.score.parts.flatMap(p => p.measures).flatMap(m => m.dynamic_marks || [])[0]?.value || "mf") : dynamicAtStart(document);
     const fillOpacity = cfg.dynamicsOpacity[dynamic];
     if (fillOpacity == null) throw new Error(`No opacity configured for dynamic ${dynamic}`);
+    const hasTrails=notes.some(({note})=>note.fermataTrail);
+    const trailDefs=hasTrails?make("defs"):null;
+    const trailLayer=hasTrails?make("g",{class:"play12-fermata-trails","pointer-events":"none"}):null;
+    let trailIndex=0;
     for (const item of notes) {
       const { note, displayFingering } = item;
       const finger = displayFingering.finger;
@@ -358,6 +371,27 @@
       block.setAttribute("rx", width * cfg.radiusRatio);
       const officialColor = cfg.wrapCycles ? cfg.colors[((Math.floor((note.pitch.midi-(document.play12.reference_zero_midi ?? 21))/12)%cfg.colors.length)+cfg.colors.length)%cfg.colors.length] : colorForMidi(note.pitch.midi, cfg.colors, document.play12.reference_zero_midi ?? 21);
       block.setAttribute("fill", mixWithWhite(officialColor, fillOpacity));
+      if(note.fermataTrail){
+        const trailHeight=fraction(note.fermataTrail)/stepQ*height;
+        const overlap=(note.continuousPerformance ? fraction(note.trailSegment)/stepQ : noteDuration)*height/3;
+        const id=`play12-fermata-${++trailIndex}`;
+        const gradient=global.document.createElementNS(svgNS,"linearGradient");
+        for(const [key,value] of Object.entries({id,gradientUnits:"userSpaceOnUse",x1:handX,x2:handX,y1:y,y2:y-trailHeight})){
+          gradient.setAttribute(key,value);
+        }
+        for(const [offset,opacity] of [[0,1],[1,0]]){
+          const stop=global.document.createElementNS(svgNS,"stop");
+          stop.setAttribute("offset",offset);
+          stop.setAttribute("stop-color",block.getAttribute("fill"));
+          stop.setAttribute("stop-opacity",opacity);
+          gradient.appendChild(stop);
+        }
+        trailDefs.appendChild(gradient);
+        const trail=global.document.createElementNS(svgNS,"rect");
+        for(const [key,value] of Object.entries({x:handX,y:y-trailHeight,width:blockWidth,height:trailHeight+overlap,
+          fill:`url(#${id})`,"data-fermata-trail":note.id}))trail.setAttribute(key,value);
+        trailLayer.appendChild(trail);
+      }
       block.setAttribute("fill-opacity", 1);
       block.setAttribute("stroke", "#111111");
       if (unassigned) block.setAttribute("stroke-dasharray", "3 2");
@@ -406,7 +440,7 @@
     let range = {from: 0, to: Math.min(steps, buffer * 2)};
     let longest = 0;
     const index = selection.notes.map((note, order) => {
-      const duration = fraction(note.duration_quarters);
+      const duration = fraction(note.duration_quarters) + (note.fermataTrail ? fraction(note.fermataTrail) : 0);
       longest = Math.max(longest, duration);
       return {note, order, end: note.globalStart + duration};
     }).sort((a, b) => a.note.globalStart - b.note.globalStart);

@@ -38,7 +38,7 @@
     const offset = Math.max(0, position - (round.measureStart ?? round.start));
     const strongStart = !round.implicit && offset < EPSILON;
     const measures = strongStart ? 2 : 1;
-    const quarters = measures * round.measureQuarters + offset;
+    const quarters = measures * (round.nominalMeasureQuarters??round.measureQuarters) + offset;
     return {measures, quarters, beats: Math.ceil(quarters / round.beatQuarters - EPSILON), pickup: !!round.implicit || offset > EPSILON};
   };
   const effectiveMidiPitch = (sourceMidiPitch, referenceZeroNote, runtimeZeroNote) =>
@@ -261,6 +261,8 @@
       const AudioContext = global.AudioContext || global.webkitAudioContext;
       this.audioContext = new AudioContext();
       this.clock = new PlaybackClock(this.audioContext, options.initialBpm, 0, options.tempoMap, options.originalTempo);
+      this.fermataHolds=options.fermataHolds??[];
+      this.scoreBeatPositions=this.fermataHolds.length ? options.rounds.flatMap(r=>r.beatsAt??[]) : [];
       this.audio = new WebAudioEngine(this.audioContext, this.stage);
       this.audio.setMetronomeLevel(this.metronomeVolumeInput?.value ?? 4);
       if (this.metronomeButton) {
@@ -897,15 +899,29 @@
         return;
       }
       this.lastPlaybackPosition = selected - EPSILON;
+      this.restoreContinuousNotes(selected,audioTime);
       this.scheduleAhead();
       this.updateControls();
+    }
+    restoreContinuousNotes(position,audioTime) {
+      if(this.practiceEnabled()||!this.musicAudioInput.checked)return;
+      const limit=this.currentLoop()?.end??this.totalQuarters;
+      for(const event of this.eventsByStart){
+        if(event.start>=position-EPSILON)break;
+        if(!event.continuous)continue;
+        const end=Math.min(event.start+event.duration,limit);
+        if(end<=position)continue;
+        this.audio.scheduleNote(event,audioTime,end-position,this.clock.bpm,this.clock.secondsBetween(position,end));
+      }
     }
     preCountEnabled() {
       return this.countInInput.checked && (!this.roundBoard || !this.roundBoard.root.hidden);
     }
     beginPreCount(selected, cycleAt = null) {
       const signature = this.signatureAt(selected);
-      const plan = preCountPlan(signature, selected);
+      const elapsedHolds=(this.fermataHolds||[]).reduce((sum,h)=>sum+Math.max(0,
+        Math.min(selected,h.end)-Math.max(signature.start,h.start)),0);
+      const plan = preCountPlan(signature, selected-elapsedHolds);
       const startAt = cycleAt ?? (this.metronomeAudio && this.metronomeInput.checked ? this.nextGridStart(signature.measureStart ?? signature.start) : this.audioContext.currentTime + .025);
       this.clock.pause(selected);
       this.countIn = {selected, signature, plan, startedAt: startAt, endsAt: startAt + plan.quarters * 60 / this.clock.bpm};
@@ -1141,17 +1157,23 @@
         if(this.tempoBeatAnchor!==anchor){
           this.metronomeAudio.stopAll();
           this.tempoBeatAnchor=anchor;
-          this.nextScoreBeat=Math.ceil(this.clock.position-EPSILON);
+          this.nextScoreBeat=this.scoreBeatPositions.length ? 0 : Math.ceil(this.clock.position-EPSILON);
         }
-        this.nextScoreBeat=Math.max(this.nextScoreBeat,Math.ceil(this.clock.position-EPSILON));
-        while(this.clock.quarterToAudioTime(this.nextScoreBeat)<=now+.1){
-          const when=this.clock.quarterToAudioTime(this.nextScoreBeat++);
+        const position=this.clock.position-EPSILON;
+        const mapped=this.scoreBeatPositions;
+        if(mapped.length){
+          while(this.nextScoreBeat<mapped.length&&mapped[this.nextScoreBeat]<position)this.nextScoreBeat++;
+        }else this.nextScoreBeat=Math.max(this.nextScoreBeat,Math.ceil(position));
+        const nextBeat=()=>mapped.length ? mapped[this.nextScoreBeat]??Infinity : this.nextScoreBeat;
+        while(Number.isFinite(nextBeat())&&this.clock.quarterToAudioTime(nextBeat())<=now+.1){
+          const when=this.clock.quarterToAudioTime(nextBeat());
+          this.nextScoreBeat++;
           this.metronomeAudio.scheduleClick(`steady-${++this.metronomeBeatCounter}`,when,false);
           this.stage.dataset.metronomeBeatCounter=String(this.metronomeBeatCounter);
           this.metronomePhaseTime=when;
         }
         this.metronomeAudio.beatKeys.clear();
-        this.nextMetronomeBeat=this.clock.quarterToAudioTime(this.nextScoreBeat);
+        this.nextMetronomeBeat=Number.isFinite(nextBeat())?this.clock.quarterToAudioTime(nextBeat()):now+60/this.clock.bpm;
         return;
       }
       this.tempoBeatAnchor=null;
@@ -1325,6 +1347,7 @@
       if (index === this.lastPulseIndex) return;
       this.lastPulseIndex = index;
       const q = index * this.stepQuarters - this.timelineOffset;
+      if(this.fermataHolds?.some(h=>h.start<=q&&q<h.end))return;
       const round = this.signatureAt(q);
       const strong = Math.abs(q - round.start) < this.stepQuarters / 3;
       this.pulse.classList.remove("is-pulsing", "is-strong");
