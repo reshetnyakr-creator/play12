@@ -71,7 +71,7 @@
           const gaps=[];let cursor=top;for(const [a,b]of intervals){if(a>cursor)gaps.push([cursor,a]);cursor=Math.max(cursor,b);}if(cursor<bottom)gaps.push([cursor,bottom]);
           const choices=gaps.filter(([a,b])=>b-a>=height).map(([a,b])=>Math.max(a+height/2,Math.min(b-height/2,preferred))).sort((a,b)=>Math.abs(a-preferred)-Math.abs(b-preferred));
           if(choices.length)card.style.setProperty('--mvp-coach-y',`${choices[0]}px`);
-          else if(options.dock?.(card)){overlay.style.visibility='hidden';card.style.visibility='hidden';frame=global.requestAnimationFrame(update);return;}
+          else if(options.dock?.(card,targetRects[0])){overlay.style.visibility='hidden';card.style.visibility='hidden';frame=global.requestAnimationFrame(update);return;}
           else card.style.setProperty('--mvp-coach-y',`${Math.max(top+height/2,Math.min(bottom-height/2,preferred))}px`);
         }
         if (!timer) {

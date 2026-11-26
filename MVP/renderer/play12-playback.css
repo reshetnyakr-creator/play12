@@ -178,3 +178,16 @@ html, body { margin: 0; min-height: 100%; background: #f7f7f5; }
 body .music-workspace > .playback-stage.has-round-navigator {
   min-height: 158px !important;
 }
+html[data-device-mode="phone-landscape"] .training-persistent-footer .play12-piano-view {
+  height: 74px !important;
+  min-height: 0 !important;
+}
+html[data-device-mode="phone-landscape"] .tutorial-main-aligned .mvp-listen-coach.tutorial-coach-side {
+  max-height: calc(100dvh - 16px);
+  overflow-y: auto;
+  font-size: 15px;
+}
+html[data-device-mode="phone-landscape"] body.tutorial-main-aligned.play12-three-zones {
+  grid-template-rows: auto minmax(160px, 1fr) auto;
+  overflow-y: auto;
+}
