@@ -75,13 +75,15 @@
     function layout(){
       const bar=stage.getBoundingClientRect(),grab=doc.getElementById('playback-grid')?.getBoundingClientRect();
       if(!bar.width||!bar.height)return;
-      const size=grab?.height||30;
+      const scaleX=bar.width/stage.offsetWidth||1,scaleY=bar.height/stage.offsetHeight||1;
+      const size=grab?.height ? grab.height/scaleY : 30;
       root.style.setProperty('--round-nav-size',size+'px');
-      if(grab?.width)root.style.setProperty('--round-nav-x',(grab.left+grab.width/2-bar.left)+'px');
-      const area=Math.min(bar.height,playback.executionY());
-      const bottom=Math.max(0,bar.height-area)+4;
+      if(grab?.width)root.style.setProperty('--round-nav-x',((grab.left+grab.width/2-bar.left)/scaleX)+'px');
+      const area=Math.min(stage.offsetHeight,playback.executionY());
+      const bottom=Math.max(0,stage.offsetHeight-area)+4;
       root.style.bottom=bottom+'px';
       travel=Math.max(0,area-root.offsetHeight-8);
+      root.dataset.travel=String(travel*scaleY);
       const current=index;
       index=-1;
       update(rounds[Math.max(0,current)].start);
@@ -117,7 +119,7 @@
       jump(target-1);
     });
     const apply=(y,state)=>{
-      const target=Math.round(clamp(state.index/last+(state.y-y)/travel,0,1)*last);
+      const target=Math.round(clamp(state.index/last+(state.y-y)/Number(root.dataset.travel),0,1)*last);
       jump(target);
     };
     root.addEventListener('pointerdown',event=>{
@@ -125,12 +127,13 @@
       blocked=false;
       gesture={id:event.pointerId,y:event.clientY,index,dragged:false};
     });
-    root.addEventListener('pointermove',event=>{
-      if(!gesture||gesture.id!==event.pointerId)return;
+    global.addEventListener('pointermove',event=>{
+      if(!gesture||gesture.id!==event.pointerId||!travel)return;
       if(!gesture.dragged&&Math.abs(gesture.y-event.clientY)<5)return;
       if(!gesture.dragged){
         gesture.dragged=true;
         root.setPointerCapture(event.pointerId);
+        if(playback.clock.running||playback.countIn||playback.waitingForInput)playback.seek(rounds[index].start);
       }
       gesture.latest=event.clientY;
       if(!frame)frame=global.requestAnimationFrame(()=>{

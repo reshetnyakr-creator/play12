@@ -169,3 +169,12 @@ html, body { margin: 0; min-height: 100%; background: #f7f7f5; }
   padding: 0 5px; border: 0; border-radius: 6px; background: transparent;
   color: #333; font: inherit; cursor: pointer;
 }
+/* The score keeps its cell widths. The added gutter is reserved for the navigator. */
+.mvp-playback-host .playback-stage.has-round-navigator .playback-score,
+.mvp-playback-host .playback-stage.has-round-navigator.has-round-progress .playback-score {
+  left: 7px !important;
+  transform: none;
+}
+body .music-workspace > .playback-stage.has-round-navigator {
+  min-height: 158px !important;
+}

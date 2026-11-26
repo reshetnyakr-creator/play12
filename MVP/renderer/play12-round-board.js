@@ -65,13 +65,16 @@
       if(h>0)root.style.setProperty('--round-mini-height',`${h}px`);
     };
     const update=position=>{
+      if(!Number.isFinite(position))return;
       syncGeometry();
       if(!total){element('round-from').textContent='—';element('round-to').textContent='—';loop.disabled=true;frame.hidden=true;return;}
       const musicalPosition=c.countIn?.selected ?? position;
       const index=musicalPosition>=c.rounds[total-1].end?total-1:roundIndex(c.rounds,Math.max(0,musicalPosition));
       root.dataset.currentRound=String(index+1);
       if(policy.state.kind!=='manual'&&!c.loopInput.checked){
-        c.loopStartInput.value=c.loopEndInput.value=String(index);
+        const value=String(index);
+        if(c.loopStartInput.value!==value)c.loopStartInput.value=value;
+        if(c.loopEndInput.value!==value)c.loopEndInput.value=value;
       }
       // Equal-width blocks require interpolation inside the actual current measure.
       const round=c.rounds[index],fraction=clamp((position-round.start)/(round.end-round.start),0,1);
@@ -132,6 +135,7 @@
     resetRange.textContent=t('Reset range');
     resetRange.addEventListener('click',()=>{
       c.loopInput.checked=false;
+      c.loopInput.dispatchEvent(new Event('change'));
       policy.clear();
       c.pauseImmediate(c.clock.position);
       update(c.clock.position);
