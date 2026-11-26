@@ -1037,9 +1037,9 @@
       else if (stage === 'metronome-on') showActionCoach(t('Try turning on the metronome.'), 'metronome-toggle');
       else if (stage === 'metronome-tempo') showCoach(t('Change the speed using the buttons beside BPM.'),'metronome-tempo-controls',false,()=>setGuideStage('metronome-on'));
       else if (stage === 'metronome-play') showActionCoach(`${t('Try playing five notes in a row with the metronome.')}<br>${t('Press Play')}`, 'play');
-      else if (stage === 'round-info') panelInfo('rounds','You do not have to learn the whole piece at once. Choose a section and practise just that part.','round-loop-board','round-go4');
-      else if (stage === 'round-go4') showActionCoach(`${t('Choose the section you want to practise.')}<br>${t('Go to Round 4')}`, 'round-navigation');
-      else if (stage === 'round-loop-info') showCoach(t('Loop repeats the section you choose.'), 'round-loop-toggle', false, () => setRoundGuideStage('round-loop'));
+      else if (stage === 'round-info') showCoach(`<strong>${t('Round Navigation')}</strong><br>${t('Use the arrows to move between rounds. Drag the panel up or down to quickly navigate through the piece. Tap the round number to jump directly to a specific section.')}`, 'round-navigator', false, () => {state.introducedPanels ||= {};state.introducedPanels.rounds=true;setGuideStage('round-go4');});
+      else if (stage === 'round-go4') showActionCoach(`${t('Choose the section you want to practise.')}<br>${t('Go to Round 4')}`, 'round-navigator');
+      else if (stage === 'round-loop-info') showCoach(`<strong>${t('Practice Range')}</strong><br>${t('Select the From and To rounds to repeat a section of the piece. Until you set a range, these values follow the current round.')}`, 'round-loop-board', false, () => setRoundGuideStage('round-loop'));
       else if (stage === 'round-loop') showActionCoach(t('Turn on Loop'), 'round-loop-toggle');
       else if (stage === 'round-range') showActionCoach(t('Set the Loop from Round 2 to Round 4'), 'round-range');
       else if (stage === 'round-precount-info') showCoach(t('Pre-count gives you a moment to get ready before each attempt.'), 'round-precount-toggle', false, () => setRoundGuideStage('round-precount'));
