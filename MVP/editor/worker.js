@@ -1,4 +1,4 @@
-importScripts('core.js?v=stage18','contact-plan.js?v=stage18','beginner-transition.js?v=stage18');
+importScripts('core.js?v=stage19','contact-plan.js?v=stage19','beginner-transition.js?v=stage19');
 onmessage = ({data}) => {
   try {
     const score = data.score;

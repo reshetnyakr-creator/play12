@@ -1,5 +1,5 @@
 (function(G){'use strict';
-const VERSION='0.1.6',clone=x=>JSON.parse(JSON.stringify(x));
+const VERSION='0.1.7',clone=x=>JSON.parse(JSON.stringify(x));
 class Q{constructor(n,d=1n){if(n instanceof Q){this.n=n.n;this.d=n.d;return;}if(typeof n==='string'){if(n.includes('/')){const a=n.split('/');if(a.length!==2)throw Error('Invalid fraction');n=BigInt(a[0]);d=BigInt(a[1]);}else if(n.includes('.')){const a=n.split('.');d=10n**BigInt(a[1].length);n=BigInt(a[0]+a[1]);}else n=BigInt(n);}this.n=BigInt(n);this.d=BigInt(d);if(!this.d)throw Error('Zero denominator');if(this.d<0n){this.n=-this.n;this.d=-this.d;}let a=this.n<0n?-this.n:this.n,b=this.d;while(b){[a,b]=[b,a%b];}this.n/=a||1n;this.d/=a||1n;}add(b){b=new Q(b);return new Q(this.n*b.d+b.n*this.d,this.d*b.d);}sub(b){b=new Q(b);return new Q(this.n*b.d-b.n*this.d,this.d*b.d);}cmp(b){b=new Q(b);const v=this.n*b.d-b.n*this.d;return v<0n?-1:v>0n?1:0;}toString(){return this.n+'/'+this.d;}valueOf(){return Number(this.n)/Number(this.d);}}
 const num=x=>Number(new Q(x)),max=(a,b)=>new Q(a).cmp(b)>=0?new Q(a):new Q(b),children=(n,t)=>Array.from(n.children||[]).filter(x=>x.localName===t),one=(n,t)=>children(n,t)[0],txt=(n,t,def='')=>one(n,t)?.textContent.trim()??def;
 const hash=async x=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(typeof x==='string'?x:JSON.stringify(x))))).map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -248,8 +248,14 @@ function mergeUnisons(contacts, byId, locks) {
 }
 const COMFORT_SPAN = 'BEGINNER_COMFORT_SPAN_EXCEEDED';
 const OCTAVE_FINGERING = 'BEGINNER_OCTAVE_FINGERING_VIOLATION';
+function pairKey(first,second) {
+  return first<second?first+'-'+second:second+'-'+first;
+}
 function comfortLimit(profile, first, second) {
-  return profile?.comfortSpan?.[first < second ? first+'-'+second : second+'-'+first];
+  return profile?.comfortSpan?.[pairKey(first,second)];
+}
+function practicalLimit(profile, first, second) {
+  return (profile?.practicalSpan??profile?.comfortSpan)?.[pairKey(first,second)];
 }
 function octaveMatches(hand, lowFinger, highFinger) {
   return hand==='L' ? lowFinger===5&&highFinger===1 : lowFinger===1&&highFinger===5;
@@ -257,7 +263,7 @@ function octaveMatches(hand, lowFinger, highFinger) {
 function spanViolation(profile, lower, upper, lowFinger, highFinger) {
   const distance=upper.key-lower.key;
   if(profile.octaveFingers&&distance===12&&!octaveMatches(lower.hand,lowFinger,highFinger))return OCTAVE_FINGERING;
-  if(distance>comfortLimit(profile,lowFinger,highFinger))return COMFORT_SPAN;
+  if(distance>practicalLimit(profile,lowFinger,highFinger))return profile.practicalSpan?'SPAN_VIOLATION':COMFORT_SPAN;
   return null;
 }
 // A local proof ignores the current beam prefix but retains actual contact
@@ -283,33 +289,48 @@ function hasLocalBeginnerShape(contacts, profile, fixed){
 function manualContact(c, locks) {
   return c.ids.some(id=>locks[id]!=null);
 }
-function checkContactSpan(a,b,first,second,options,conflicts,warnings) {
+function checkContactSpan(a,b,first,second,options,conflicts,warnings,extensions) {
   const {profile,locks={},rounds=[],source='engine'}=options;
   if((!profile?.comfortSpan&&!profile?.octaveFingers)||a.hand!==b.hand||first===second||
       !Number.isInteger(first)||!Number.isInteger(second)||first<1||first>5||second<1||second>5)return;
   const [lower,upper,lowFinger,highFinger]=a.key<b.key?[a,b,first,second]:[b,a,second,first];
   const distance=upper.key-lower.key, limit=comfortLimit(profile,lowFinger,highFinger);
-  const spanExceeded=distance>limit;
+  const hardLimit=practicalLimit(profile,lowFinger,highFinger);
+  const spanExceeded=distance>hardLimit;
+  const extended=Boolean(profile.practicalSpan)&&distance>limit&&!spanExceeded;
   const badOctave=profile.octaveFingers&&distance===12&&!octaveMatches(a.hand,lowFinger,highFinger);
-  if(!spanExceeded&&!badOctave)return;
+  if(!spanExceeded&&!badOctave&&!extended)return;
   const overlapStart=max(a.start,b.start);
   const overlapEnd = new Q(a.end).cmp(b.end)<=0 ? new Q(a.end) : new Q(b.end);
   const sources=[lower,upper].map(c=>manualContact(c,locks)?'manual':source);
   const advisory=sources.includes('manual')||source==='source';
   const record=rule=>{
-    (advisory?warnings:conflicts).push({
-      code:sources.includes('manual')?'MANUAL_ASSIGNMENT_SPAN_VIOLATION':rule,
-      rule,severity:advisory?'warning':'error',hand:a.hand,ids:[lower.id,upper.id],
+    const extension=rule==='PRACTICAL_EXTENSION';
+    (extension?extensions:advisory?warnings:conflicts).push({
+      code:!extension&&sources.includes('manual')?'MANUAL_ASSIGNMENT_SPAN_VIOLATION':rule,
+      rule,severity:extension?'info':advisory?'warning':'error',hand:a.hand,ids:[lower.id,upper.id],
       eventIds:[lower.ids,upper.ids],midi:[lower.key,upper.key],fingers:[lowFinger,highFinger],
-      distance,limit:limit??null,excess:limit==null?null:Math.max(0,distance-limit),source:sources,
+      distance,limit:(extension?limit:hardLimit)??null,comfortLimit:limit??null,practicalLimit:hardLimit??null,reason:extension?(advisory?'USER_OR_SOURCE_ASSIGNMENT':'MINIMUM_EXCESS_AMONG_RETAINED_FEASIBLE_PATHS'):undefined,excess:limit==null?null:Math.max(0,distance-(extension?limit:hardLimit)),source:sources,
       overlap:[overlapStart.toString(),overlapEnd.toString()],
       rounds:rounds.filter(r=>r.end>Number(overlapStart)&&r.start<Number(overlapEnd)).map(r=>r.index+1)
     });
   };
-  if(spanExceeded)record(COMFORT_SPAN);
+  if(spanExceeded)record(profile.practicalSpan?'SPAN_VIOLATION':COMFORT_SPAN);
+  if(extended&&!badOctave)record('PRACTICAL_EXTENSION');
   if(badOctave)record(OCTAVE_FINGERING);
 }
-function validate(cs,assign,options={}){const conflicts=[],unknown=[];for(const c of cs){const f=assign[c.id];if(f!=null&&(!Number.isInteger(f)||f<1||f>5))conflicts.push({code:'INVALID_FINGER',ids:c.ids,severity:'error'});}const timed=cs.map(c=>({c,start:new Q(c.start),end:new Q(c.end)})).sort((a,b)=>a.start.cmp(b.start));for(let i=0;i<timed.length;i++)for(let j=i+1;j<timed.length;j++){const first=timed[i],second=timed[j];if(second.start.cmp(first.end)>=0)break;if(first.start.cmp(second.end)>=0)continue;const {c:a}=first,{c:b}=second;if(a.key===b.key){unknown.push({code:'KEY_OWNERSHIP_UNKNOWN',ids:[a.id,b.id],severity:'warning'});continue;}if(a.hand===b.hand&&assign[a.id]!=null&&assign[a.id]===assign[b.id]){const confirmed=a.releaseBasis!=='assumed_score_duration'&&b.releaseBasis!=='assumed_score_duration';(confirmed?conflicts:unknown).push({code:'FINGER_OVERLAP',ids:[a.id,b.id],severity:confirmed?'error':'warning',basis:[a.releaseBasis,b.releaseBasis]});}checkContactSpan(a,b,assign[a.id],assign[b.id],options,conflicts,unknown);}return{conflicts,warnings:unknown,physical:'unknown'};}
+function validate(cs,assign,options={}){const conflicts=[],unknown=[],extensions=[];for(const c of cs){const f=assign[c.id];if(f!=null&&(!Number.isInteger(f)||f<1||f>5))conflicts.push({code:'INVALID_FINGER',ids:c.ids,severity:'error'});}const timed=cs.map(c=>({c,start:new Q(c.start),end:new Q(c.end)})).sort((a,b)=>a.start.cmp(b.start));for(let i=0;i<timed.length;i++)for(let j=i+1;j<timed.length;j++){const first=timed[i],second=timed[j];if(second.start.cmp(first.end)>=0)break;if(first.start.cmp(second.end)>=0)continue;const {c:a}=first,{c:b}=second;if(a.key===b.key){unknown.push({code:'KEY_OWNERSHIP_UNKNOWN',ids:[a.id,b.id],severity:'warning'});continue;}if(a.hand===b.hand&&assign[a.id]!=null&&assign[a.id]===assign[b.id]){const confirmed=a.releaseBasis!=='assumed_score_duration'&&b.releaseBasis!=='assumed_score_duration';(confirmed?conflicts:unknown).push({code:'FINGER_OVERLAP',ids:[a.id,b.id],severity:confirmed?'error':'warning',basis:[a.releaseBasis,b.releaseBasis]});}checkContactSpan(a,b,assign[a.id],assign[b.id],options,conflicts,unknown,extensions);}
+  const result={conflicts,warnings:unknown,physical:'unknown'};
+  if(options.profile?.practicalSpan){
+    const categories=Object.fromEntries(cs.filter(c=>Number.isInteger(assign[c.id])).map(c=>[c.id,'COMFORTABLE']));
+    for(const extension of extensions)for(const id of extension.ids)categories[id]='PRACTICAL_EXTENSION';
+    for(const issue of [...conflicts,...unknown])if(issue.rule==='SPAN_VIOLATION'){
+      for(const id of issue.ids)categories[id]='SPAN_VIOLATION';
+    }
+    Object.assign(result,{extensions,categories});
+  }
+  return result;
+}
 function keyX(midi,cfg){const pc=((midi%12)+12)%12,white={0:0,2:1,4:2,5:3,7:4,9:5,11:6},black={1:0,3:1,6:2,8:3,10:4};return Math.floor(midi/12)*700+(white[pc]!=null?cfg.geometry.white[white[pc]]:cfg.geometry.black[black[pc]]);}
 // Reserve one beam slot per retained fingering of keys that will still be
 // held at the next attack before filling the rest by normal path cost.
@@ -329,7 +350,7 @@ function chooseContactBeam(results, width, retained) {
   }
   return results.filter(candidate=>chosen.has(candidate));
 }
-function propose(score,cfg,locks={},detailed=false,performance=null){const started=performance?.started??Date.now(),base=performance?.base??contacts(score,{locks}),all=performance?.actions??base.contacts,assign={},reasons=[...base.warnings],stats={generated:0,rejected:0,pruned:0,comfortSpanRejected:0,octaveRejected:0,admissible:0},details=[],alternatives=[];const keyPositions=new Map(all.map(c=>[c.key,keyX(c.key,cfg)]));const keyPosition=key=>keyPositions.get(key);
+function propose(score,cfg,locks={},detailed=false,performance=null){const started=performance?.started??Date.now(),base=performance?.base??contacts(score,{locks}),all=performance?.actions??base.contacts,assign={},reasons=[...base.warnings],stats={generated:0,rejected:0,pruned:0,comfortSpanRejected:0,practicalSpanRejected:0,octaveRejected:0,admissible:0},details=[],alternatives=[];const keyPositions=new Map(all.map(c=>[c.key,keyX(c.key,cfg)]));const keyPosition=key=>keyPositions.get(key);
 const arpeggioPreferred=new Map(), arpeggiosByHand=new Map();
 for(const contact of all) if(contact.arpeggio){
   const key=JSON.stringify([contact.arpeggio.group,contact.hand]);
@@ -349,7 +370,7 @@ const unassignedReasons = Object.create(null);
 const markUnassigned = (contacts, reason) => {
   for (const contact of contacts) for (const id of contact.ids) unassignedReasons[id] = reason;
 };
-let timedOut=false, truncated=false;for(const hand of ['L','R']){const cs=all.filter(c=>c.hand===hand).sort((a,b)=>new Q(a.start).cmp(b.start)||a.key-b.key||a.id.localeCompare(b.id));const groups=[];for(const c of cs){let g=groups.at(-1);if(!g||new Q(g[0].start).cmp(c.start))groups.push(g=[]);g.push(c);}const ends=new Map(cs.map(c=>[c.id,new Q(c.end)]));let held=[], recoveryEnd=null;let states=[{cost:0,assign:{},last:{},position:null,features:{},rank:0,path:null}];for(let gi=0;gi<groups.length;gi++){const group=groups[gi],time=group[0].start,next=groups[gi+1]?.[0];const onset=new Q(time);
+let timedOut=false, truncated=false;for(const hand of ['L','R']){const cs=all.filter(c=>c.hand===hand).sort((a,b)=>new Q(a.start).cmp(b.start)||a.key-b.key||a.id.localeCompare(b.id));const groups=[];for(const c of cs){let g=groups.at(-1);if(!g||new Q(g[0].start).cmp(c.start))groups.push(g=[]);g.push(c);}const ends=new Map(cs.map(c=>[c.id,new Q(c.end)]));let held=[], recoveryEnd=null;let states=[{cost:0,assign:{},last:{},position:null,features:{},rank:0,path:null,expandedPairs:0,excess:0}];for(let gi=0;gi<groups.length;gi++){const group=groups[gi],time=group[0].start,next=groups[gi+1]?.[0];const onset=new Q(time);
 if (Date.now()-started>cfg.search.maxMilliseconds) {
   timedOut=true;
   reasons.push({code:'SEARCH_BUDGET',hand});
@@ -374,9 +395,9 @@ for(const state of sharedKey||active.length+group.length>5?[]:states){
   const used = new Set(active.map(c=>state.assign[c.id]));
   const assignedContacts = active.map(c=>[c,state.assign[c.id]]);
   const placements=[];
-  function gen(i, usedNow, p){
+  function gen(i, usedNow, p, expandedPairs, excess){
     if(i===group.length){
-      placements.push(p);
+      placements.push({p,expandedPairs,excess});
       stats.admissible++;
       return;
     }
@@ -390,32 +411,38 @@ for(const state of sharedKey||active.length+group.length>5?[]:states){
         if(enforceSpan)layerGenerated++;
         continue;
       }
+      let addedPairs=0,addedExcess=0;
       if(enforceSpan){
         let violation=null;
         for(const [other,otherFinger] of assignedContacts){
           if(fixed!=null&&fixedById.get(other.id)!=null)continue;
           violation=other.key<c.key?spanViolation(cfg,other,c,otherFinger,f):spanViolation(cfg,c,other,f,otherFinger);
           if(violation)break;
+          if(cfg.practicalSpan){
+            const extra=Math.abs(c.key-other.key)-comfortLimit(cfg,f,otherFinger);
+            if(extra>0){addedPairs++;addedExcess+=extra;}
+          }
         }
         if(violation){
           stats.rejected++;
           spanRejections++;
           if(violation===OCTAVE_FINGERING)stats.octaveRejected++;
+          else if(cfg.practicalSpan)stats.practicalSpanRejected++;
           else stats.comfortSpanRejected++;
           continue;
         }
       }
       if(enforceSpan)layerGenerated++;
       assignedContacts.push([c,f]);
-      gen(i+1,new Set([...usedNow,f]),{...p,[c.id]:f});
+      gen(i+1,new Set([...usedNow,f]),{...p,[c.id]:f},expandedPairs+addedPairs,excess+addedExcess);
       assignedContacts.pop();
     }
   }
-  gen(0,used,{});
-const together=[...active,...group];const prev=Object.values(state.last).sort((a,b)=>new Q(b.start).cmp(a.start))[0];for(const p of placements){let cost=state.cost,features={},last={...state.last};const add=(name,raw)=>{const value=Math.round(raw)*cfg.weights[name];cost+=value;features[name]=(features[name]||0)+value;};for(const c of group){const f=p[c.id],old=state.last[f],x=keyPosition(c.key);
+  gen(0,used,{},state.expandedPairs,state.excess);
+const together=[...active,...group];const prev=Object.values(state.last).sort((a,b)=>new Q(b.start).cmp(a.start))[0];for(const {p,expandedPairs,excess} of placements){let cost=state.cost,features={},last={...state.last};const add=(name,raw)=>{const value=Math.round(raw)*cfg.weights[name];cost+=value;features[name]=(features[name]||0)+value;};for(const c of group){const f=p[c.id],old=state.last[f],x=keyPosition(c.key);
 const natural=arpeggioPreferred.get(c.id);
 if(natural!=null)cost+=Math.abs(f-natural)*cfg.weights.chordOrder*400;if(performance?.preferred[c.id] && performance.preferred[c.id]!==f)cost+=performance.preferenceCost;if([1,3,6,8,10].includes(c.key%12)){if(f===1)add('thumbBlack',1);if(f===5)add('pinkyBlack',1);}if(old&&old.key!==c.key)add('sameFingerMove',1);if(prev&&prev.key!==c.key&&prev.f!==f){const direction=(x-keyPosition(prev.key))*(f-prev.f)*(hand==='R'?1:-1);if(direction<0)add('crossing',1);}if(next){const target=(keyPosition(next.key)-x)/100*(hand==='R'?1:-1),available=target>0?5-f:f-1;add('futureReach',Math.max(0,Math.abs(target)-available));}last[f]={key:c.key,start:c.start,f};}
-for(let i=0;i<together.length;i++)for(let j=i+1;j<together.length;j++){const a=together[i],b=together[j];if(p[a.id]==null&&p[b.id]==null)continue;const fa=p[a.id]||state.assign[a.id],fb=p[b.id]||state.assign[b.id],dx=(keyPosition(b.key)-keyPosition(a.key))*(hand==='R'?1:-1)/100;add('chordShape',Math.abs(Math.abs(dx)-Math.abs(fb-fa))*10);if(dx*(fb-fa)<0)add('chordOrder',a.arpeggio&&a.arpeggio.group===b.arpeggio?.group?40:1);}const position=group.reduce((v,c)=>v+keyPosition(c.key)-(hand==='R'?1:-1)*(p[c.id]-1)*100,0)/group.length;if(state.position!=null)add('positionShift',Math.abs(position-state.position));results.push({cost,parent:state,p,tie:JSON.stringify(p),last,position,features});if(detailed&&details.length<cfg.diagnostics.maxDetails)details.push({hand,time,assign:p,cost,features});}if(layerGenerated>=cfg.search.maxCandidatesPerLayer){truncated=true;break;}}
+for(let i=0;i<together.length;i++)for(let j=i+1;j<together.length;j++){const a=together[i],b=together[j];if(p[a.id]==null&&p[b.id]==null)continue;const fa=p[a.id]||state.assign[a.id],fb=p[b.id]||state.assign[b.id],dx=(keyPosition(b.key)-keyPosition(a.key))*(hand==='R'?1:-1)/100;add('chordShape',Math.abs(Math.abs(dx)-Math.abs(fb-fa))*10);if(dx*(fb-fa)<0)add('chordOrder',a.arpeggio&&a.arpeggio.group===b.arpeggio?.group?40:1);}const position=group.reduce((v,c)=>v+keyPosition(c.key)-(hand==='R'?1:-1)*(p[c.id]-1)*100,0)/group.length;if(state.position!=null)add('positionShift',Math.abs(position-state.position));results.push({cost,expandedPairs,excess,parent:state,p,tie:JSON.stringify(p),last,position,features});if(detailed&&details.length<cfg.diagnostics.maxDetails)details.push({hand,time,assign:p,cost,features});}if(layerGenerated>=cfg.search.maxCandidatesPerLayer){truncated=true;break;}}
 if (!results.length) {
   if(group.some(c=>locks[c.id] && (!Number.isInteger(locks[c.id]) || locks[c.id]<1 || locks[c.id]>5))) {
     markUnassigned(group,'INVALID_LOCK');
@@ -445,14 +472,17 @@ if (!results.length) {
     message:'Не найден путь при принятой модели удержания. Это не доказательство физической невозможности.'});
   continue;
 }const byPath=(a,b)=>a.parent.rank-b.parent.rank||a.tie.localeCompare(b.tie);
-results.sort((a,b)=>a.cost-b.cost||byPath(a,b));
+// A zero-extension path always ranks before a practical path. Keep
+// different held fingerings in the beam so a later attack can still decide
+// whether an earlier comfortable placement can be extended.
+results.sort((a,b)=>a.expandedPairs-b.expandedPairs||a.excess-b.excess||a.cost-b.cost||byPath(a,b));
 stats.pruned+=Math.max(0,results.length-cfg.search.beamWidth);
 const nextOnset=next&&enforceSpan?new Q(next.start):null;
 const retained=nextOnset?[...active,...group].filter(c=>ends.get(c.id).cmp(nextOnset)>0):[];
 const beam=chooseContactBeam(results,cfg.search.beamWidth,retained);
 const ranks=new Map(beam.slice().sort(byPath).map((candidate,index)=>[candidate,index]));
 states=beam.map(candidate=>{const {parent,p,cost,last,position,features}=candidate;return {
-  cost,last,position,path:{previous:parent.path,placement:p},
+  cost,expandedPairs:candidate.expandedPairs,excess:candidate.excess,last,position,path:{previous:parent.path,placement:p},
   assign:{...Object.fromEntries(active.map(c=>[c.id,parent.assign[c.id]])),...p},
   features:{...parent.features,...Object.fromEntries(Object.entries(features).map(([k,v])=>[k,(parent.features[k]||0)+v]))},
   rank:ranks.get(candidate)
@@ -468,7 +498,7 @@ if(states[0]){
     return assignments;
   }
   Object.assign(assign,materialize(states[0]));
-  alternatives.push({hand,paths:states.slice(0,cfg.search.alternatives).map(s=>({assignments:materialize(s),cost:s.cost,features:s.features}))});
+  alternatives.push({hand,paths:states.slice(0,cfg.search.alternatives).map(s=>({assignments:materialize(s),cost:s.cost,expandedPairs:s.expandedPairs,excess:s.excess,features:s.features}))});
 }}
 const checked=validate(all,assign,{profile:cfg,locks,rounds:score.editor?.fermataTimeline?.rounds??score.editor?.rounds});const unique=new Map();for(const c of all)for(const id of c.ids)unique.set(id,assign[c.id]??null);const notes=events(score),assigned=notes.filter(e=>unique.get(e.id)!=null).length;for(const e of notes) if(unique.get(e.id)==null&&!unassignedReasons[e.id]) unassignedReasons[e.id]=unique.has(e.id)?'NOT_PROCESSED':'EXCLUDED';return{version:VERSION,unassignedReasons,profile:clone(cfg),assignments:Object.fromEntries(unique),contactAssignments:assign,contacts:all,alternatives,stats,details,warnings:[...reasons,...checked.warnings,{code:'EXPERIMENTAL_PROFILE',message:'Экспериментальная аппликатура: проверьте с преподавателем. Физическая достижимость не подтверждена.'}],validation:checked,coverage:notes.length?assigned/notes.length:0,assigned,total:notes.length,search_status:timedOut?'budget_exhausted':assigned<notes.length?'partial':stats.pruned||truncated?'approximate_complete':'exact_complete',optimality:stats.pruned||truncated||assigned<notes.length?'not_proven':'within_declared_finite_model',ranking_status:'experimental_config',feasibility:'unknown',elapsed_ms:Date.now()-started};}
 const runtimeFingerings = new WeakMap();
@@ -513,7 +543,7 @@ function validateDocument(doc, manual=doc.manual) {
   return validate(cs,assign,{profile:run?.profile,locks:manual,source:doc.mode==='source'?'source':'engine',
     rounds:doc.score.editor?.fermataTimeline?.rounds??doc.score.editor?.rounds});
 }
-function edit(doc,id,finger){if(!Number.isInteger(finger)||finger<1||finger>5)throw Error('Палец должен быть от 1 до 5');const cs=contacts(doc.score,{manual:true,locks:doc.manual}).contacts,c=cs.find(c=>c.ids.includes(id));if(!c)throw Error('Рука или исполнительский контакт не определены');const before=clone(doc.manual),after={...before};for(const x of c.ids)after[x]=finger;const effectiveAssign={...baseAssignments(doc),...after},assign=Object.fromEntries(cs.map(c=>[c.id,effectiveAssign[c.id]]));const check=validate(cs,assign);const ergonomic=validateDocument(doc,after);check.warnings.push(...ergonomic.warnings.filter(w=>w.rule));if(check.conflicts.length)return{accepted:false,check};return{accepted:true,check,before,after,ids:c.ids};}
+function edit(doc,id,finger){if(!Number.isInteger(finger)||finger<1||finger>5)throw Error('Палец должен быть от 1 до 5');const cs=contacts(doc.score,{manual:true,locks:doc.manual}).contacts,c=cs.find(c=>c.ids.includes(id));if(!c)throw Error('Рука или исполнительский контакт не определены');const before=clone(doc.manual),after={...before};for(const x of c.ids)after[x]=finger;const effectiveAssign={...baseAssignments(doc),...after},assign=Object.fromEntries(cs.map(c=>[c.id,effectiveAssign[c.id]]));const check=validate(cs,assign);const ergonomic=validateDocument(doc,after);check.warnings.push(...ergonomic.warnings.filter(w=>w.rule));if(ergonomic.extensions)check.extensions=ergonomic.extensions;if(check.conflicts.length)return{accepted:false,check};return{accepted:true,check,before,after,ids:c.ids};}
 function commit(doc,trial){if(!trial.accepted)throw Error('Rejected');doc.history=doc.history.slice(0,doc.cursor);doc.history.push({before:trial.before,after:trial.after,ids:trial.ids,timestamp:new Date().toISOString(),engine:doc.run.version,profile:doc.run.profile.version});doc.cursor=doc.history.length;doc.manual=trial.after;doc.revision++;return doc;}
 const dbPromise=()=>new Promise((resolve,reject)=>{const req=indexedDB.open('play12-editor',1);req.onupgradeneeded=()=>req.result.createObjectStore('compositions',{keyPath:'id'});req.onerror=()=>reject(req.error);req.onsuccess=()=>resolve(req.result);});
 const Store={async get(id){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions'),r=tx.objectStore('compositions').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close();});},async list(){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions'),r=tx.objectStore('compositions').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close();});},async put(doc,expected){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions','readwrite'),store=tx.objectStore('compositions'),r=store.get(doc.id);r.onsuccess=()=>{if(expected!=null&&r.result&&r.result.revision!==expected){tx.abort();return;}store.put(clone(doc));};tx.oncomplete=()=>{db.close();res();};tx.onabort=()=>{db.close();rej(Error('Конфликт ревизии или ошибка сохранения. Изменения не перезаписаны.'));};tx.onerror=()=>rej(tx.error);});}};

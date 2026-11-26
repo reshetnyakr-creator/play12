@@ -10,7 +10,7 @@ const note=(id,midi,hand,start='0',duration='2',ties=[])=>({id,kind:'note',hand,
 const score=events=>({score:{parts:[{id:'P1',measures:[{events}]}]}});
 test('all ten published MaxComf boundaries are checked independently, in each hand and finger order',()=>{
   assert.deepEqual(profile.comfortSpan,expected);
-  const spanOnly={...profile,octaveFingers:false};
+  const spanOnly={...profile,practicalSpan:undefined,octaveFingers:false};
   for(const [pair,limit] of Object.entries(expected)){
     const [f,g]=pair.split('-').map(Number);
     for(const hand of ['R','L'])for(const [a,b] of [[f,g],[g,f]])for(const delta of [-1,0,1]){
@@ -39,7 +39,7 @@ test('all twelve octave pitch classes, both hands, alone and in chords with held
 });
 test('valid outer octave does not conceal an excessive internal pair',()=>{
   const cs=[contact('a',60),contact('b',64),contact('c',68),contact('d',72)];
-  const result=E.validate(cs,{a:1,b:2,c:3,d:5},{profile});
+  const result=E.validate(cs,{a:1,b:2,c:3,d:5},{profile:{...profile,practicalSpan:undefined}});
   assert.deepEqual(result.conflicts.map(x=>x.ids),[['b','c']]);
   assert(result.conflicts.every(x=>x.code==='BEGINNER_COMFORT_SPAN_EXCEEDED'));
 });
@@ -49,7 +49,7 @@ test('physical release at the next attack allows a large move; sounding pedal du
   assert.deepEqual(E.validate([a,b],{a:4,b:5},{profile}).conflicts,[]);
   b.start='1/2';
   const [issue]=E.validate([a,b],{a:4,b:5},{profile,rounds:[{index:0,start:0,end:1}]}).conflicts;
-  assert.deepEqual([issue.distance,issue.limit,issue.excess,issue.overlap,issue.rounds],[24,3,21,['1/2','1/1'],[1]]);
+  assert.deepEqual([issue.distance,issue.limit,issue.excess,issue.overlap,issue.rounds],[24,5,19,['1/2','1/1'],[1]]);
 });
 test('manual pair is retained and warned, and an impossible automatic layer recovers after release',()=>{
   const input=score([note('a',48,'R'),note('b',60,'R'),note('c',72,'R','2')]);
@@ -65,4 +65,59 @@ test('manual pair is retained and warned, and an impossible automatic layer reco
   assert.equal(failed.unassignedReasons.a,'NO_PATH_UNDER_BEGINNER_CONSTRAINTS');
   assert(failed.assignments.c);
   assert(failed.warnings.some(d=>d.diagnosis==='NO_LOCAL_SHAPE_WITH_CURRENT_CONTACTS'));
+});
+
+test('MaxComf and MaxPrac boundaries classify independent validation in either hand and order',()=>{
+  const practical={'1-2':10,'1-3':12,'1-4':14,'1-5':15,'2-3':5,'2-4':7,'2-5':10,'3-4':4,'3-5':7,'4-5':5};
+  assert.deepEqual(profile.practicalSpan,practical);
+  for(const [pair,comfort] of Object.entries(expected)){
+    const limit=practical[pair],[f,g]=pair.split('-').map(Number);
+    for(const hand of ['L','R'])for(const [a,b] of [[f,g],[g,f]]){
+      for(const distance of [comfort-1,comfort,comfort+1,limit,limit+1]){
+        const current=E.validate([contact('a',48,hand),contact('b',48+distance,hand)],{a,b},
+          {profile:{...profile,octaveFingers:false}});
+        const category=distance<=comfort?'COMFORTABLE':distance<=limit?'PRACTICAL_EXTENSION':'SPAN_VIOLATION';
+        assert.deepEqual(current.categories,{a:category,b:category});
+        assert.equal(current.extensions.length,Number(category==='PRACTICAL_EXTENSION'));
+        assert.equal(current.conflicts.length,Number(category==='SPAN_VIOLATION'));
+      }
+    }
+  }
+});
+test('local repair recovers the two real octaves, diagnoses each excess and returns to comfort',()=>{
+  for(const [pitches,extra] of [[[62,64,74],2],[[72,75,84],1]]){
+    const input=score([
+      note('keep',pitches[0],'R','0','4'),note('middle',pitches[1],'R','1'),note('octave',pitches[2],'R','1'),
+      note('next1',60,'R','4'),note('next2',64,'R','4')
+    ]);
+    const run=E.propose(input,profile);
+    assert.equal(run.assigned,5);
+    assert.deepEqual([run.assignments.keep,run.assignments.middle,run.assignments.octave],[1,2,5]);
+    assert.deepEqual(run.validation.conflicts,[]);
+    assert.equal(run.validation.extensions.length,1);
+    const [stretch]=run.validation.extensions;
+    assert.deepEqual(stretch.ids,['middle','octave']);
+    assert.deepEqual(stretch.overlap,['1/1','3/1']);
+    assert.equal(stretch.excess,extra);
+    assert.equal(run.validation.categories.next1,'COMFORTABLE');
+    assert.equal(run.validation.categories.next2,'COMFORTABLE');
+  }
+});
+test('practical tier never relaxes octaves, MaxPrac or a saved manual finger',()=>{
+  const cs=[contact('a',60),contact('b',72)];
+  assert(E.validate(cs,{a:1,b:4},{profile}).conflicts.some(x=>x.rule==='BEGINNER_OCTAVE_FINGERING_VIOLATION'));
+  const run=E.propose(score([note('a',60,'R'),note('b',72,'R'),note('c',88,'R','2')]),profile,{a:4});
+  assert.equal(run.assignments.a,null);
+  assert.equal(run.unassignedReasons.a,'MANUAL_LOCK_BLOCKS_BEGINNER_PATH');
+  assert(run.assignments.c);
+  const manual=E.validate(cs,{a:4,b:5},{profile,locks:{a:4,b:5}});
+  assert.equal(manual.conflicts.length,0);
+  assert(manual.warnings.some(x=>x.rule==='SPAN_VIOLATION'));
+  assert.equal(manual.categories.a,'SPAN_VIOLATION');
+});
+test('even very high movement cost cannot displace a comfortable feasible path',()=>{
+  const input=score([note('a',60,'R'),note('b',64,'R')]);
+  const result=E.propose(input,{...profile,weights:{...profile.weights,chordShape:-10000}});
+  assert.equal(result.assigned,2);
+  assert.equal(result.validation.extensions.length,0);
 });
