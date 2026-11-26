@@ -1007,3 +1007,14 @@ test('Practice and Loop cross detached score windows using the complete schedule
   assert.equal(c.waitingForInput.start,0);
   assert.equal(c.events[0].group,groups[0]);
 });
+
+test('the scheduled first attack of a repeated cycle stops at the Loop end', () => {
+  const {c, scheduled} = make([['R', 60, 0]]);
+  c.events[0].duration = 12;
+  c.events[0].continuous = true;
+  c.currentLoop = () => ({start: 0, end: 4});
+  c.schedulePlaybackAnchor(0, 1);
+  assert.equal(scheduled.length, 1);
+  assert.equal(scheduled[0].when, 1);
+  assert.equal(scheduled[0].duration, 4);
+});

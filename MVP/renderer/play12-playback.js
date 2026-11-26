@@ -971,7 +971,9 @@
         if (event.start < selected - EPSILON || event.start > horizon + EPSILON) continue;
         if (this.musicAudioInput.checked) {
           const when = audioTime + this.clock.secondsBetween(selected,event.start);
-          this.audio.scheduleNote(event, when, event.duration, this.clock.bpm,this.clock.secondsBetween(event.start,event.start+event.duration));
+          const end = Math.min(event.start + event.duration, loopLimit);
+          this.audio.scheduleNote(event, when, end - event.start, this.clock.bpm,
+            this.clock.secondsBetween(event.start, end));
           this.stage.dataset.countInMusicScheduled = "future-only";
           this.stage.dataset.firstPlaybackAudioTime = String(when);
         }
