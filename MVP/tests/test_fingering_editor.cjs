@@ -37,7 +37,8 @@ test('Interstellar measure 33: repeated held key is unresolved and search resume
   const right = note('right', 73, '97', '3');
   const input = score([...held, ...attacks, following, right]);
   const snapshot = JSON.stringify(input);
-  const run = E.propose(input, cfg, { sustain: 3 });
+  const {comfortSpan,octaveFingers,...legacy}=cfg;
+  const run = E.propose(input, legacy, { sustain: 3 });
   assert.equal(run.contacts.length, 9);
   assert.equal(run.assignments.sustain, 3);
   assert(held.every(n => run.assignments[n.id] != null));
@@ -51,7 +52,13 @@ test('Interstellar measure 33: repeated held key is unresolved and search resume
   assert.equal(run.validation.conflicts.length, 0);
   assert(!run.validation.warnings.some(w => w.code === 'FINGER_OVERLAP'));
   assert.equal(run.warnings.find(w => w.reason === 'MODEL_CONFLICT_UNRESOLVED_KEY').releaseBoundary, '99/1');
-  assert.deepEqual(E.propose(input, cfg, { sustain: 3 }).assignments, run.assignments);
+  assert.deepEqual(E.propose(input, legacy, { sustain: 3 }).assignments, run.assignments);
+  const beginner=E.propose(input,cfg,{sustain:3});
+  assert.equal(beginner.assignments.sustain,3);
+  assert.equal(beginner.validation.conflicts.length,0);
+  assert(held.slice(0,3).every(n=>beginner.unassignedReasons[n.id]==='NO_PATH_UNDER_BEGINNER_CONSTRAINTS'));
+  assert.equal(beginner.warnings.find(w=>w.reason==='NO_PATH_UNDER_BEGINNER_CONSTRAINTS')?.diagnosis,
+    'NO_LOCAL_SHAPE_WITH_CURRENT_CONTACTS');
   assert.equal(JSON.stringify(input), snapshot);
 });
 

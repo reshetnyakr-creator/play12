@@ -60,15 +60,17 @@ test('production worker assigns the pedal-assisted chord and keeps no-pedal fall
   vm.runInContext(fs.readFileSync(path.join(root,'worker.js'),'utf8'),sandbox);
   const withPedal = score(pedal);
   withPedal.editor = {tempo:80};
-  const send = (input,transpose) => {
-    sandbox.onmessage({data:{score:structuredClone(input),config,transpose}});
+  const send = (input,transpose,profile=config) => {
+    sandbox.onmessage({data:{score:structuredClone(input),config:profile,transpose}});
     assert(!sandbox.reply.error,sandbox.reply.error);
     return sandbox.reply.run;
   };
   const result = send(withPedal,0);
   assert.equal(result.assigned,6);
   assert.equal(result.validation.conflicts.length,0);
-  assert.deepEqual(Object.values(result.assignments),[5,3,1,5,3,1]);
+  const {comfortSpan,octaveFingers,...legacy}=config;
+  assert.deepEqual(Object.values(send(withPedal,0,legacy).assignments),[5,3,1,5,3,1]);
+  assert.deepEqual(Object.values(result.assignments),[5,2,1,5,2,1]);
   assert.equal(result.releaseShift[0].release,'1/2');
   assert.equal(result.releaseShift[0].status,'conditionally_feasible');
   assert.equal(send(score([]),0).assigned,3);
