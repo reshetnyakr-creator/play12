@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-playback.css?v=dynamic-piano-01">
+  <link rel="stylesheet" href="play12-playback.css?v=stage21">
   <link rel="stylesheet" href="play12-onboarding.css?v=shell-13">
   <link rel="stylesheet" href="music-workspace.css?v=zero-board-2">
 <link rel="stylesheet" href="/MVP/mobile-tablet.css?v=zero-board-1"><script src="/MVP/mobile-tablet.js?v=mobile-1"></script></head>
@@ -338,7 +338,8 @@
   <script src="piano-view.js?v=mobile-1"></script>
   <script src="play12-precount-view.js?v=stage12"></script>
   <script src="play12-round-board.js?v=en-routes-1"></script>
-  <script src="play12-playback.js?v=stage19"></script>
+  <script src="play12-round-navigator.js?v=stage21"></script>
+  <script src="play12-playback.js?v=stage21"></script>
   <script src="web-midi-diagnostic.js?v=midi-voice-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=mobile-5"></script>
@@ -539,6 +540,8 @@
         reviewGrid.addEventListener('change',()=>{window.play12Playback.pauseImmediate();window.play12Playback.replaceSvg(render(reviewGrid.value));syncGridButton();});
       }
       window.play12Playback.roundBoard = Play12RoundBoard.create({root: document.getElementById('round-loop-board'), playback: window.play12Playback, repetitions: repetitionSegments, title: baseScore.score.title});
+      window.play12Playback.roundNavigator = Play12RoundNavigator.create(window.play12Playback);
+      window.play12Playback.layoutCoreGeometry();
       reviewController?.connect(effectiveScore => {
         score = effectiveScore;
         window.play12Playback.pauseImmediate();
@@ -627,7 +630,7 @@
         const playbackAllowed = onboardingRoot.hidden || onboardingRoot.dataset.playbackShortcutsEnabled === 'true';
         if (['play','pause','restart'].includes(action)) return playbackAllowed && window.play12Playback.commandAvailable(action);
         if (['metronome','bpm-down','bpm-up'].includes(action)) return !document.getElementById('metronome-board').hidden && window.play12Playback.commandAvailable(action);
-        if (['previous-round','next-round'].includes(action)) return !document.getElementById('round-loop-board').hidden && window.play12Playback.commandAvailable(action);
+        if (['previous-round','next-round'].includes(action)) return window.play12Playback.commandAvailable(action);
         return false;
       };
       window.play12MidiDiagnostic = Play12MidiDiagnostic.create({

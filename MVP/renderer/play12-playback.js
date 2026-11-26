@@ -502,7 +502,7 @@
       const shellPadding = 7;
       const progressRailWidth = this.stage.classList?.contains?.('has-round-progress') ? 32 : 0;
       if (compactPlayer) {
-        const unifiedBoardWidth = scoreWidth + progressRailWidth + shellPadding * 2;
+        const unifiedBoardWidth = scoreWidth + progressRailWidth + shellPadding * 2 + (this.roundNavigator ? 44 : 0);
         this.stage.style.width = `${unifiedBoardWidth}px`;
         if(localWorkspace)this.stage.parentElement.style.width=`${unifiedBoardWidth}px`;
         this.stage.dataset.playerShellPadding = String(shellPadding);
@@ -554,6 +554,7 @@
       this.stage.dataset.playlineOverhang = String(lineOverhang);
       this.stage.dataset.noteFieldWidth = String(noteFieldWidth);
       this.stage.dataset.musicContentWidth = String(scoreWidth + progressRailWidth);
+      this.roundNavigator?.layout();
       this.stage.dataset.progressStartX = String(this.progressStartX);
       this.stage.dataset.progressEndX = String(this.progressEndX);
       this.paint(this.displayPosition ?? this.clock.position);
@@ -1096,6 +1097,7 @@
       this.pauseImmediate(this.rounds[clamp(index + direction, 0, this.rounds.length - 1)].start);
     }
     commandAvailable(action) {
+      if (this.roundNavigator && ['previous-round','next-round'].includes(action)) return this.roundNavigator.canMove(action==='previous-round'?-1:1);
       if (action === 'previous-round') return !!this.roundBoard?.navigate && !this.roundBoard.root?.hidden && !this.roundBoard.root?.querySelector?.('#round-previous')?.disabled;
       if (action === 'next-round') return !!this.roundBoard?.navigate && !this.roundBoard.root?.hidden && !this.roundBoard.root?.querySelector?.('#round-next')?.disabled;
       const button = {metronome:this.metronomeButton,'bpm-down':this.bpmMinus,'bpm-up':this.bpmPlus,play:this.playButton,pause:this.pauseButton,restart:this.restartButton}[action];
@@ -1103,6 +1105,7 @@
     }
     runCommand(action) {
       if (!this.commandAvailable(action)) return false;
+      if (this.roundNavigator && ['previous-round','next-round'].includes(action)) return this.roundNavigator.move(action==='previous-round'?-1:1);
       if (action === 'previous-round') this.roundBoard.navigate(-1);
       else if (action === 'next-round') this.roundBoard.navigate(1);
       else ({metronome:this.metronomeButton,'bpm-down':this.bpmMinus,'bpm-up':this.bpmPlus,play:this.playButton,pause:this.pauseButton,restart:this.restartButton}[action]).click();
@@ -1369,7 +1372,9 @@
       this.progressHead.style.left = `${this.progressStartX + progress * (this.progressEndX - this.progressStartX)}px`;
       this.timecode.textContent = `${this.formatTime(q * 60 / this.clock.bpm)} / ${this.formatTime(this.totalQuarters * 60 / this.clock.bpm)}`;
       this.stage.dataset.progress = String(progress);
-      this.roundBoard?.update(this.countIn?.selected ?? this.loopGap?.loop.start ?? q);
+      const roundPosition=this.countIn?.selected ?? this.loopGap?.loop.start ?? q;
+      this.roundNavigator?.update(roundPosition);
+      this.roundBoard?.update(roundPosition);
     }
     triggerContacts(from, to) {
       if (from == null || to < from) return;
