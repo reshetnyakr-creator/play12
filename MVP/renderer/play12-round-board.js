@@ -37,14 +37,14 @@
     const element=id=>root.querySelector('#'+id)||document.getElementById(id), total=c.rounds.length;
     const timeline=element('round-timeline'),strip=element('round-strip'),head=element('round-playhead'),frame=element('round-loop-frame');
     const trainingProgress=element('round-training-progress'),successTrack=element('round-success-track');
-    const previous=element('round-previous'),next=element('round-next'),loop=element('round-loop-toggle'),precount=element('round-precount-toggle');
-    const key=`play12.round-loop.v1:${title}`,policy=global.__PLAY12_MAIN__?createRepeatPolicy(c):null,validRange=policy?mainRange:normalizeRange;
+    const loop=element('round-loop-toggle'),precount=element('round-precount-toggle');
+    const key=`play12.round-loop.v1:${title}`,policy=createRepeatPolicy(c),validRange=mainRange;
     c.loopGapInput.value='direct';
     try{
       const saved=JSON.parse(localStorage.getItem(key));
       if(saved&&Number.isInteger(saved.from)&&Number.isInteger(saved.to)&&saved.from>=1&&saved.to<=total){
         const range=validRange(total,saved.from-1,saved.to-1);
-        c.loopStartInput.value=String(range.from);c.loopEndInput.value=String(range.to);if(policy&&saved.rangeKind==='manual')policy.manual();c.loopInput.checked=saved.loop===true;c.countInInput.checked=saved.precount===true;
+        c.loopStartInput.value=String(range.from);c.loopEndInput.value=String(range.to);if(saved.rangeKind==='manual'||saved.loop===true)policy.manual();c.loopInput.checked=saved.loop===true;c.countInInput.checked=saved.precount===true;
       }
     }catch(_){}
     const initialRange=validRange(total,c.loopStartInput.value,c.loopEndInput.value);
@@ -66,10 +66,13 @@
     };
     const update=position=>{
       syncGeometry();
-      if(!total){element('current-round').textContent='—';element('round-from').textContent='—';element('round-to').textContent='—';previous.disabled=next.disabled=loop.disabled=true;frame.hidden=true;return;}
+      if(!total){element('round-from').textContent='—';element('round-to').textContent='—';loop.disabled=true;frame.hidden=true;return;}
       const musicalPosition=c.countIn?.selected ?? position;
       const index=musicalPosition>=c.rounds[total-1].end?total-1:roundIndex(c.rounds,Math.max(0,musicalPosition));
-      element('current-round').textContent=String(index+1);root.dataset.currentRound=String(index+1);previous.disabled=index===0;next.disabled=index===total-1;
+      root.dataset.currentRound=String(index+1);
+      if(policy.state.kind!=='manual'&&!c.loopInput.checked){
+        c.loopStartInput.value=c.loopEndInput.value=String(index);
+      }
       // Equal-width blocks require interpolation inside the actual current measure.
       const round=c.rounds[index],fraction=clamp((position-round.start)/(round.end-round.start),0,1);
       const width=Number.parseFloat(getComputedStyle(root).getPropertyValue('--mini-round-width')) || 62;
@@ -96,11 +99,12 @@
       element('round-range-controls').classList.toggle('is-disabled',!policy&&!c.loopInput.checked);
     };
     const navigate=direction=>{c.moveRound(direction);update(c.clock.position);publish('navigate');};
-    for(const [button,direction] of [[previous,-1],[next,1]])button.addEventListener('click',()=>navigate(direction));
     loop.addEventListener('click',()=>{
       const valid=validRange(total,c.loopStartInput.value,c.loopEndInput.value);
       c.loopStartInput.value=String(valid.from);c.loopEndInput.value=String(valid.to);
-      c.loopInput.checked=!c.loopInput.checked;c.loopInput.dispatchEvent(new Event('change'));
+      c.loopInput.checked=!c.loopInput.checked;
+      if(c.loopInput.checked)policy.manual();
+      c.loopInput.dispatchEvent(new Event('change'));
       const range=c.currentLoop();
       c.pauseImmediate(range&&(c.clock.position<range.start||c.clock.position>=range.end)?range.start:c.clock.position);
       update(c.clock.position);if(!policy||c.loopInput.checked)publish(c.loopInput.checked?'loop-on':'loop-off');
@@ -124,7 +128,15 @@
     });
     precount.addEventListener('click',()=>{c.countInInput.checked=!c.countInInput.checked;if(!c.countInInput.checked&&c.countIn)c.pauseImmediate(c.countIn.selected);update(c.clock.position);publish('precount');});
     const pulse=()=>{if(root.hidden||!c.metronomeInput.checked)return;head.classList.remove('is-beat');void head.offsetWidth;head.classList.add('is-beat');};
-    if(policy)c.loopInput.addEventListener('change',()=>{if(!c.loopInput.checked){policy.clear();update(c.clock.position);publish('loop-off');}});
+    const resetRange=element('round-range-reset');
+    resetRange.textContent=t('Reset range');
+    resetRange.addEventListener('click',()=>{
+      c.loopInput.checked=false;
+      policy.clear();
+      c.pauseImmediate(c.clock.position);
+      update(c.clock.position);
+      publish('loop-off');
+    });
     const reset=()=>{
       policy?.clear();
       c.loopInput.checked=false;c.countInInput.checked=false;c.loopStartInput.value='0';c.loopEndInput.value=total>1?'1':'0';
@@ -156,7 +168,7 @@
     const setPasses=passes=>{root.dataset.trainingPasses=String(passes);};
     const syncSuccess=()=>{for(const number of successfulRounds)applySuccess(number,true,false);};
     update(c.clock.position);
-    return {root,suggestRepeatAtPause(position){if(policy?.pause(position)){update(position);publish('suggestion');}},update(position){update(position);syncSuccess();},navigate,pulse,reset,syncGeometry,setTraining,setPasses,setRoundSuccess,clearTrainingSuccess,pulseCompleteChain,controlState,taskRounds:()=>[...taskRounds],successfulRounds:()=>[...successfulRounds]};
+    return {root,suggestRepeatAtPause(position){update(position);},notifyNavigation(){publish('navigate');},update(position){update(position);syncSuccess();},navigate,pulse,reset,syncGeometry,setTraining,setPasses,setRoundSuccess,clearTrainingSuccess,pulseCompleteChain,controlState,taskRounds:()=>[...taskRounds],successfulRounds:()=>[...successfulRounds]};
   }
   global.Play12RoundBoard={create,roundIndex,stripOffset,ribbonFor,normalizeRange,editRange,createRepeatPolicy,mainRange};
 })(window);
