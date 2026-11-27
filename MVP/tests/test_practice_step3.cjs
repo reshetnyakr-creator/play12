@@ -137,6 +137,8 @@ function onboarding(saved=null, midiDiagnostic=null, layoutSpy=null) {
   c.rounds=Array.from({length:9},(_,i)=>({start:i,end:i+1,beatQuarters:1,beats:4,measureQuarters:4}));
   const node=id=>{if(!nodes.has(id)) {const e=new Element(); const classes=new Set();e.classList={add(...xs){xs.forEach(x=>classes.add(x));},remove(...xs){xs.forEach(x=>classes.delete(x));},toggle(x,on){on ? classes.add(x):classes.delete(x);},contains(x){return classes.has(x);}};e.removeAttribute=name=>delete e[name];e.animate=()=>{};e.appendChild=child=>child.parentElement=e;e.insertBefore=e.appendChild;e.prepend=e.appendChild;nodes.set(id,e);}return nodes.get(id);};
   const root=node('root');root.querySelector=node;const progress=[1,2,3,4,5,6].map(n=>{const e=node(`progress${n}`);e.dataset.progressStep=String(n);return e;});
+  node('#practice-board').querySelector=selector=>['#practice-board-mode','#practice-left-hand','#practice-right-hand'].includes(selector)?node(selector):null;
+  const tutorialQuery=root.querySelector;root.querySelector=selector=>['#practice-board-mode','#practice-left-hand','#practice-right-hand'].includes(selector)?null:tutorialQuery(selector);
   const views=['WELCOME','MIDI_CONNECT','LISTEN_AND_CONTROL'].map(n=>{const e=node(n);e.dataset.onboardingView=n;return e;});
   root.querySelectorAll=q=>q==='[data-progress-step]'?progress:q==='[data-onboarding-view]'?views:[];
   const values=new Map(saved?[['play12.onboarding.state.v1',JSON.stringify(saved)]]:[]);

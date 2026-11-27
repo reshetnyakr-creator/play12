@@ -1217,7 +1217,7 @@
     const connectRuntime = nextRuntime => {
       runtime = nextRuntime;
       practiceBindingDispose?.();
-      practiceBindingDispose=global.Play12TrainingShell.bindPractice({playback:runtime.playback,root,onChange:(_state,key)=>changePracticeSetting(key,({practiceModeEnabled:practiceModeButton,practiceLeftHandEnabled:leftHandButton,practiceRightHandEnabled:rightHandButton})[key],true),onReject:button=>button.animate([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(0)'}],{duration:220})});
+      practiceBindingDispose=global.Play12TrainingShell.bindPractice({playback:runtime.playback,root:practiceBoard,onChange:(_state,key)=>changePracticeSetting(key,({practiceModeEnabled:practiceModeButton,practiceLeftHandEnabled:leftHandButton,practiceRightHandEnabled:rightHandButton})[key],true),onReject:button=>button.animate([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(0)'}],{duration:220})});
       removeNoteListener?.();
       removeMidiStatusListener?.();
       removeMidiInputInterceptor?.();

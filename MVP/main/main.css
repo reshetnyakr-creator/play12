@@ -19,10 +19,6 @@
 }
 
 #main-coverage{margin:0;color:#62432c;font-size:12px}
-.main-tools .main-title-text{font:inherit;color:inherit;background:none;border:0;border-radius:0;padding:0;text-align:left}
-.main-tools .main-title-text:disabled{opacity:1;cursor:default}
-.main-tools .main-title-text:enabled{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
-#main-title-input{font:inherit;color:inherit;width:100%;box-sizing:border-box;padding:0 2px;border:1px solid #b1582d;border-radius:4px;background:white}
 
 body.play12-main .main-layout .main-library-heading {
   align-items: center;
@@ -86,6 +82,13 @@ html[data-device-mode="phone-landscape"] body.play12-main:not(.tutorial-main-ali
 body.play12-main:not(.tutorial-main-aligned) .main-tools:not(:has(> :not([hidden]))) {
   display:none;
 }
-.main-edit-title {min-width:0}
-.main-edit-title button {max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body.play12-main #main-status:empty {display:none}
+
+.play12-main:not(.tutorial-main-aligned) .main-tools {
+  align-self:center;
+  width:min(100%,var(--main-editor-width,100%));
+  justify-content:center;
+}
+.main-melody-name {display:flex;align-items:center;gap:4px;min-width:0}
+.main-melody-name input {width:100%;min-width:0;font:inherit;box-sizing:border-box}
+.main-rename-melody {flex:none;border:0;background:transparent;color:inherit;cursor:pointer;min-width:24px;min-height:24px;padding:0}
