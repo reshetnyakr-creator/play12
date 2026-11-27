@@ -66,3 +66,19 @@ html[data-device-mode="phone-portrait"] .main-layout-unloaded .main-skill {
   height:var(--training-library-height,auto);
   flex:0 0 auto;
 }
+body.play12-main.play12-three-zones .is-three-narrow .main-library-card:not(.tutorial-progress-card) {
+  flex:none; min-height:0;
+}
+body.play12-main.play12-three-zones .is-three-narrow .main-library-card:not(.tutorial-progress-card) .main-melodies {
+  flex:1 1 0; min-height:0; overflow-y:auto;
+}
+body.play12-main:not(.tutorial-main-aligned).play12-three-zones .is-three-narrow .training-zone-right>.training-panel-slot {
+  margin-top:auto;
+}
+body.play12-main:not(.tutorial-main-aligned).play12-three-zones .is-three-narrow .training-skill-card {
+  order:0;
+}
+
+html[data-device-mode="phone-landscape"] body.play12-main:not(.tutorial-main-aligned) .is-three-narrow .training-skill-card {
+  order:3;
+}

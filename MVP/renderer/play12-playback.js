@@ -229,11 +229,12 @@
         voice.gain.gain.exponentialRampToValueAtTime(.0001, releaseEnd);
       }
       for (const oscillator of voice.oscillators) { try { oscillator.stop(releaseEnd); } catch (_) {} }
-      if (retainUntilEnd) {
+      if (retainUntilEnd && !voice.endTracked) {
+        voice.endTracked = true;
         voice.oscillators[0].addEventListener("ended", () => {
           if (this.voices.get(key) === voice) this.voices.delete(key);
         }, { once: true });
-      } else this.voices.delete(key);
+      } else if (!retainUntilEnd) this.voices.delete(key);
     }
     scheduleClick(key, when, accent) {
       if (this.beatKeys.has(key)) return;
@@ -517,12 +518,15 @@
       const noteFieldWidth = Number(this.svg.dataset.noteFieldWidth) || scoreWidth;
       const compactPlayer = this.stage.closest(".mvp-playback-host");
       const shellPadding = 7;
+      const compactNavigator = this.tempoNavigator && (global.innerWidth<=375||['phone-portrait','tablet-landscape'].includes(global.Play12Responsive?.state));
+      const navigatorWidth = compactNavigator ? 30 : 44;
       const progressRailWidth = this.stage.classList?.contains?.('has-round-progress') ? 32 : 0;
       if (compactPlayer) {
-        const unifiedBoardWidth = scoreWidth + progressRailWidth + shellPadding * 2 + (this.roundNavigator ? 44 : 0) + (this.tempoNavigator ? 44 : 0);
+        const unifiedBoardWidth = scoreWidth + progressRailWidth + shellPadding * 2 + (this.roundNavigator ? navigatorWidth : 0) + (this.tempoNavigator ? navigatorWidth : 0);
         this.stage.style.width = `${unifiedBoardWidth}px`;
         if(localWorkspace)this.stage.parentElement.style.width=`${unifiedBoardWidth}px`;
         this.stage.dataset.playerShellPadding = String(shellPadding);
+        this.stage.style.setProperty('--mvp-score-start',`${shellPadding+(this.tempoNavigator?navigatorWidth:0)}px`);
         this.stage.style.setProperty('--mvp-score-width',`${scoreWidth}px`);
         this.stage.style.setProperty('--mvp-progress-rail-width',`${progressRailWidth}px`);
         document.documentElement?.style.setProperty('--mvp-unified-board-width', `${unifiedBoardWidth}px`);
@@ -531,7 +535,7 @@
       const stageRect = this.stage.getBoundingClientRect();
       const pianoRect = this.pianoView.mount.getBoundingClientRect();
       const scoreLeft = compactPlayer
-        ? shellPadding + (this.tempoNavigator ? 44 : 0)
+        ? shellPadding + (this.tempoNavigator ? navigatorWidth : 0)
         : pianoRect.left - stageRect.left + (pianoRect.width - scoreWidth) / 2;
       this.svg.parentElement.style.left = `${scoreLeft}px`;
       if (compactPlayer) {

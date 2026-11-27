@@ -31,3 +31,12 @@ test('live tempo-map update preserves score position and integrates correctly ac
   assert.equal(c.position,2);
   assert.equal(c.bpm,60);
 });
+test('a tempo edit before a scheduled attack retains the scheduled clock anchor',()=>{
+  const {clock:c,audio}=clock();
+  c.start(4,2);
+  audio.currentTime=1;
+  c.setBpm(60);
+  assert.equal(c.anchorAudioTime,2);
+  assert.equal(c.position,4);
+  assert.equal(c.quarterToAudioTime(5),5);
+});

@@ -47,6 +47,16 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   leftSlot.style.left=a.left-left.getBoundingClientRect().left+'px';rightSlot.style.right='0px';const reserve=Math.max(leftControls.offsetHeight*ls,rightControls.offsetHeight*rs)+14;left.style.paddingBottom='0px';right.style.paddingBottom=reserve+'px';
   const lib=library.getBoundingClientRect();if(skillCard)skillCard.style.height=Math.max(0,lib.bottom-a.top)+'px';
  }
+ function alignCompactPractice(){
+  if(G.Play12Responsive?.state!=='phone-landscape'||!doc.body.classList.contains('play12-main')||
+    doc.body.classList.contains('tutorial-main-aligned')){
+    rightSlot.style.marginTop='';
+    return;
+  }
+  const play=doc.getElementById('playline').getBoundingClientRect();
+  const top=right.getBoundingClientRect().top;
+  rightSlot.style.marginTop=Math.max(0,play.bottom+center.scrollTop-top-rightSlot.offsetHeight)+'px';
+ }
  function alignLibrary(){
   if(!doc.body.classList.contains('play12-main'))return;
   const library=left.querySelector('.main-library-card');
@@ -70,7 +80,7 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   // Keep measured intrinsic sizes stable: CSS removes legacy viewport-based widths only in these slots.
   if(!wide){layoutCorridors();scaleSlot(leftSlot,leftControls,leftControls.scrollWidth);scaleSlot(rightSlot,rightControls,rightControls.scrollWidth);}
   layoutCorridors();const s=fit(music,center.clientWidth);workspace.style.transform=`scale(${s})`;workspace.style.transformOrigin='top left';musicSlot.style.width=music*s+'px';const footerHeight=footer.getBoundingClientRect().height;root.style.setProperty('--training-footer-height',footerHeight+'px');document.body.style.setProperty('--training-footer-height',footerHeight+'px');
-  alignTitle();const cs=getComputedStyle(center),visible=[...center.children].filter(n=>!n.hidden&&n!==playbackHost&&getComputedStyle(n).display!=='none'),chrome=visible.reduce((sum,n)=>{const style=getComputedStyle(n);return sum+n.getBoundingClientRect().height+(parseFloat(style.marginTop)||0)+(parseFloat(style.marginBottom)||0);},0)+visible.length*(parseFloat(cs.rowGap)||0),available=center.clientHeight||center.getBoundingClientRect().height,field=fieldBudget(available,chrome,s,doc.getElementById('playline').offsetHeight);runtime.stage.style.height=field+'px';root.dataset.viewportLimited=String(field<2*(runtime.playback.cellHeight||32));musicSlot.style.height=(runtime.stage.offsetHeight+doc.getElementById('playline').offsetHeight)*s+'px';runtime.playback.layoutCoreGeometry();layoutCorridors();alignTitle();alignLibrary();updateKeyboard();runtime.pianoView.syncContainer();
+  alignTitle();const cs=getComputedStyle(center),visible=[...center.children].filter(n=>!n.hidden&&n!==playbackHost&&getComputedStyle(n).display!=='none'),chrome=visible.reduce((sum,n)=>{const style=getComputedStyle(n);return sum+n.getBoundingClientRect().height+(parseFloat(style.marginTop)||0)+(parseFloat(style.marginBottom)||0);},0)+visible.length*(parseFloat(cs.rowGap)||0),available=center.clientHeight||center.getBoundingClientRect().height,field=fieldBudget(available,chrome,s,doc.getElementById('playline').offsetHeight);runtime.stage.style.height=field+'px';root.dataset.viewportLimited=String(field<2*(runtime.playback.cellHeight||32));musicSlot.style.height=(runtime.stage.offsetHeight+doc.getElementById('playline').offsetHeight)*s+'px';runtime.playback.layoutCoreGeometry();layoutCorridors();alignCompactPractice();alignTitle();alignLibrary();updateKeyboard();runtime.pianoView.syncContainer();
   warning.hidden=root.dataset.viewportLimited!=='true'&&(wide||!runtime.pianoView.windowReadabilityLimited?.());warning.textContent=root.dataset.viewportLimited==='true'?local("Недостаточно высоты окна для удобного нотного поля. Увеличьте окно или измените ориентацию.","The window is too short for a comfortable note field. Enlarge it or change orientation."):local("Диапазон произведения показан целиком. На этом экране обозначения клавиш могут быть слишком мелкими.","The complete piece range is shown. Key labels may be too small on this screen.");
   if(initial||changed){initial=false;go(active);}mark();
  }

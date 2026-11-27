@@ -197,7 +197,7 @@
         <div id="onboarding-control-row" class="mvp-control-row">
         <div class="mvp-control-column">
         <section id="metronome-board" class="mvp-metronome-board" aria-label="Metronome Board" hidden>
-          <button id="metronome-toggle" type="button" aria-pressed="false" aria-label="Metronome"><span id="metronome-beat-lamp" class="metronome-beat-lamp" aria-hidden="true"></span><span>BPM</span></button>
+          <button id="metronome-toggle" type="button" aria-pressed="false" aria-label="Metronome"><span id="metronome-beat-lamp" class="metronome-beat-lamp" aria-hidden="true"></span><span>Metronome</span></button>
           <div hidden>
             <button id="bpm-minus" type="button" aria-label="Decrease tempo by 10 BPM">−</button>
             <input id="bpm" type="hidden">
@@ -379,9 +379,11 @@
       saintsReviewMode ? fetch('../reviews/when_the_saints_manual_review.overlay.json').then(r => r.json()) : Promise.resolve(null)
     ]).then(([baseScore, cardTheme, seedReviewOverlay]) => {
       let score = baseScore;
-      const originalTempo = Number(baseScore.score.parts.flatMap(part => part.measures)
+      const firstMarkedTempo = Number(baseScore.score.parts.flatMap(part => part.measures)
         .flatMap(measure => measure.tempo_marks || []).find(mark => Number(mark.bpm) > 0)?.bpm) || 120;
-      const tempoStorageKey = `play12.tempo.v1:${baseScore.score.title}:${originalTempo}`;
+      const tempoMap = savedCompositionId ? score.editor.fermataTimeline?.tempoMap??score.editor.tempoMap : null;
+      const originalTempo = tempoMap?.find(mark=>mark.at===0)?.bpm ?? firstMarkedTempo;
+      const tempoStorageKey = `play12.tempo.v1:${baseScore.score.title}:${firstMarkedTempo}`;
       let savedTempo = {};
       try { savedTempo = JSON.parse(localStorage.getItem(tempoStorageKey)) || {}; } catch (_) {}
       const onboardingBpm = Number.isFinite(savedTempo.bpm) && Number.isInteger(savedTempo.bpm) && savedTempo.bpm >= 20 && savedTempo.bpm <= 300 ? savedTempo.bpm : Math.max(20,Math.min(300,Math.round(originalTempo)));
@@ -515,8 +517,7 @@
         gridResolutionInput: reviewGrid, pulse: document.getElementById('grid-pulse'),
         progressHead: document.getElementById('progress-head'), timecode: document.getElementById('timecode'), pianoView,
         referenceZeroNote, runtimeZeroNote: initialZeroMidi,
-        tempoMap: savedCompositionId ? score.editor.fermataTimeline?.tempoMap??
-          score.editor.tempoMap : null,
+        tempoMap,
         fermataHolds: savedCompositionId ? score.editor.fermataTimeline?.holds : null,
         musicSchedule: savedCompositionId ? makeMusicSchedule(score) : null,
         beatLamp: document.getElementById('metronome-beat-lamp')

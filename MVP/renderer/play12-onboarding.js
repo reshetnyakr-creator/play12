@@ -98,10 +98,10 @@
     const songStep = root.querySelector('#onboarding-song-step');
     const listenContinue = root.querySelector('#onboarding-listen-continue');
     const onboardingChooseZero = root.querySelector('#onboarding-choose-zero');
-    const practiceBoard = root.querySelector('#practice-board');
-    const practiceModeButton = root.querySelector('#practice-board-mode');
-    const leftHandButton = root.querySelector('#practice-left-hand');
-    const rightHandButton = root.querySelector('#practice-right-hand');
+    const practiceBoard = document.getElementById('practice-board');
+    const practiceModeButton = document.getElementById('practice-board-mode');
+    const leftHandButton = document.getElementById('practice-left-hand');
+    const rightHandButton = document.getElementById('practice-right-hand');
     const reconnectCard = root.querySelector('#returning-midi');
     const skipButton = root.querySelector('#onboarding-skip');
     const reconnectMessage = root.querySelector('#returning-midi-message');
@@ -419,6 +419,11 @@
       if (practiceBoard) practiceBoard.hidden = !boards.practice;
       const metronomeBoard = document.getElementById('metronome-board');
       if (metronomeBoard) metronomeBoard.hidden = !boards.metronome;
+      const tempoNavigator=runtime?.playback?.tempoNavigator;
+      if(tempoNavigator){
+        tempoNavigator.root.hidden=!boards.metronome;
+        if(boards.metronome)tempoNavigator.layout();
+      }
       root.classList.toggle('has-metronome-board', boards.metronome);
       const roundBoard = document.getElementById('round-loop-board');
       if (roundBoard) roundBoard.hidden = !boards.rounds;
@@ -1032,14 +1037,14 @@
       if(combinedBoard)combinedBoard.hidden=false;
       practiceModeButton.classList.toggle('is-guided', stage === 'enable');
       leftHandButton.classList.toggle('is-guided', stage === 'hand');
-      if(stage==='practice-info')panelInfo('practice','This is the Practice panel. Here you can choose which hand to practise with: right, left, or both.','practice-board','enable');
+      if(stage==='practice-info')panelInfo('practice','This is the Practice panel. Here you can choose which hand to practise with: right, left, or both.','practice-loop-board','enable');
       else if (stage === 'enable') showActionCoach(t('Now turn on Practice.'), 'practice-board-mode');
       else if (stage === 'hand') showActionCoach(t('Let’s play with your right hand. Turn off Left Hand.'), 'practice-left-hand');
       else if (stage === 'explain') showCoach(`${t('Watch the Note Field and play the keys it shows you')}<br><small>${t('The music will wait until you press the right key')}</small>`, 'explain', false, advancePracticeInstruction);
       else if (stage === 'ready') showActionCoach(t('Now press Play and try to play the melody with your right hand.'), 'play');
       else if(stage==='metronome-info')panelInfo('metronome','Here you can change the tempo to learn at a comfortable speed. The metronome helps you keep the rhythm.','metronome-board','metronome-tempo');
       else if (stage === 'metronome-on') showActionCoach(t('Try turning on the metronome.'), 'metronome-toggle');
-      else if (stage === 'metronome-tempo') showCoach(t('Change the speed using the buttons beside BPM.'),'metronome-tempo-controls',false,()=>setGuideStage('metronome-on'));
+      else if (stage === 'metronome-tempo') showCoach(t('Change the speed using the buttons beside BPM.'),'tempo-navigator',false,()=>setGuideStage('metronome-on'));
       else if (stage === 'metronome-play') showActionCoach(`${t('Try playing five notes in a row with the metronome.')}<br>${t('Press Play')}`, 'play');
       else if (stage === 'round-info') showCoach(`<strong>${t('Round Navigation')}</strong><br>${t('Use the arrows to move between rounds. Drag the panel up or down to quickly navigate through the piece. Tap the round number to jump directly to a specific section.')}`, 'round-navigator', false, () => {state.introducedPanels ||= {};state.introducedPanels.rounds=true;setGuideStage('round-go4');});
       else if (stage === 'round-go4') showActionCoach(`${t('Choose the section you want to practise.')}<br>${t('Go to Round 4')}`, 'round-navigator');

@@ -193,7 +193,7 @@ html[data-device-mode="phone-landscape"] body.tutorial-main-aligned.play12-three
 }
 
 .mvp-playback-host .playback-stage.has-tempo-navigator.has-round-navigator .playback-score {
-  left: 51px !important;
+  left: var(--mvp-score-start,51px) !important;
 }
 #tempo-navigator { left: 23px; }
 #tempo-navigator .round-navigator-number small { display:block; font-size:.55em; line-height:1; }
@@ -212,3 +212,21 @@ html[data-device-mode="phone-landscape"] body.tutorial-main-aligned.play12-three
 }
 #practice-loop-board [hidden] {display:none}
 .training-three-zones .training-right-controls:has(>#practice-loop-board) {height:auto}
+
+html:is([data-device-mode="phone-portrait"],[data-device-mode="tablet-landscape"]) #tempo-navigator {left:19px}
+html:is([data-device-mode="phone-portrait"],[data-device-mode="tablet-landscape"]) #round-navigator {
+  left:auto; right:0; transform:translateY(calc(-1 * var(--round-nav-offset, 0px)));
+}
+html[data-device-mode="phone-portrait"] .main-layout.training-three-zones.is-three-narrow {
+  margin-left:max(3px,env(safe-area-inset-left));
+  margin-right:max(3px,env(safe-area-inset-right));
+}
+@media(max-width:375px){
+  #tempo-navigator {left:19px}
+  #round-navigator {left:auto; right:0; transform:translateY(calc(-1 * var(--round-nav-offset, 0px)))}
+  body .main-layout.training-three-zones.is-three-narrow {
+    margin-left:max(3px,env(safe-area-inset-left));
+    margin-right:max(3px,env(safe-area-inset-right));
+  }
+}
+#practice-loop-board:has(>#round-loop-board[hidden]) {min-height:0}
