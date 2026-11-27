@@ -57,3 +57,7 @@ body.tutorial-main-aligned .training-left-controls>#metronome-board[hidden]{disp
 
 .tutorial-main-aligned .mvp-listen-coach.tutorial-coach-side{left:var(--tutorial-coach-x)!important;width:var(--tutorial-coach-width)!important;max-width:none!important}
 @media(max-width:767px){.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-inline{padding:12px 14px}.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-inline p{font-size:15px;line-height:1.35}.tutorial-main-aligned .has-inline-coach>.main-tools{display:none!important}}
+
+/* The existing landscape dock can be narrower than the standard coach. */
+html[data-device-mode="phone-landscape"] .tutorial-main-aligned .tutorial-coach-centered.tutorial-coach-side{padding:12px 14px}
+html[data-device-mode="phone-landscape"] .tutorial-main-aligned .tutorial-coach-centered.tutorial-coach-side p{font-size:15px;line-height:1.35}
