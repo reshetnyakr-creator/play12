@@ -160,12 +160,12 @@
       for(const number of taskRounds){const dot=document.createElement('span');dot.className='round-success-dot';dot.dataset.round=String(number);dot.setAttribute('aria-label',t('Round {number}',{number}));successTrack.appendChild(dot);}
       for(const number of successfulRounds)applySuccess(number,true,false);
     };
-    const clearTrainingSuccess=()=>{successfulRounds.clear();for(const number of taskRounds)applySuccess(number,false,false);for(const block of blocks())block.classList.remove('is-chain-complete');successTrack?.classList.remove('is-chain-complete');};
+    const clearTrainingSuccess=()=>{if(c.tutorialProgress)for(const number of successfulRounds)applySuccess(number,false,false);successfulRounds.clear();for(const number of taskRounds)applySuccess(number,false,false);for(const block of blocks())block.classList.remove('is-chain-complete');successTrack?.classList.remove('is-chain-complete');};
     const setRoundSuccess=(number,success=true)=>{if(success)successfulRounds.add(number);else successfulRounds.delete(number);applySuccess(number,success,success);};
     const pulseCompleteChain=()=>{for(const block of blocks().filter(block=>block.classList.contains('is-round-success')))block.classList.add('is-chain-complete');successTrack?.classList.add('is-chain-complete');global.setTimeout(()=>{for(const block of blocks())block.classList.remove('is-chain-complete');successTrack?.classList.remove('is-chain-complete');},600);};
     const setTraining=(active,passes=0,options={})=>{
       root.classList.toggle('is-training',active);trainingProgress.hidden=!active||c.tutorialProgress===true;root.dataset.trainingPasses=String(passes);c.stage.classList.toggle('has-round-progress',active&&c.tutorialProgress!==true);
-      if(active){taskRounds=options.rounds||Array.from({length:Number(c.loopEndInput.value)-Number(c.loopStartInput.value)+1},(_,index)=>Number(c.loopStartInput.value)+index+1);successfulRounds=new Set();renderTrack();}
+      if(active){if(c.tutorialProgress)clearTrainingSuccess();taskRounds=options.rounds||Array.from({length:Number(c.loopEndInput.value)-Number(c.loopStartInput.value)+1},(_,index)=>Number(c.loopStartInput.value)+index+1);successfulRounds=new Set();renderTrack();}
       else{clearTrainingSuccess();taskRounds=[];successTrack?.replaceChildren();}
       update(c.clock.position);global.requestAnimationFrame?.(()=>c.layoutCoreGeometry?.());
     };

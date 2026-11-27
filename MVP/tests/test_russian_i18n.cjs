@@ -40,3 +40,9 @@ test('homepages expose localized primary MVP CTAs and analytics goals',()=>{
   assert(ru.includes('href="/ru/MVP/menu/" data-metrika-goal="try_play12_ru">Попробовать Play12</a>'));
   for(const page of [en,ru]) assert(page.includes('window.play12ReachGoal(ctaGoal)'));
 });
+
+test('Tutorial Practice instruction matches the control label in RU',()=>{
+  const dictionary=readFileSync(path.join(root,'renderer/play12-i18n.js'),'utf8');
+  assert(dictionary.includes('"Now turn on Practice.":"Теперь включи практику"'));
+  assert(dictionary.includes("'Practice':'Практика'"));
+});

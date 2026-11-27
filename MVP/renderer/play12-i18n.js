@@ -19,7 +19,7 @@
     "Press the 0 button to choose your reference key.":"Нажми кнопку «0», чтобы выбрать свою точку отсчёта",
     "Now press a comfortable key on your instrument or choose it with your mouse on the on-screen keyboard.":"Теперь нажми удобную клавишу на инструменте или выбери её мышью на экранной клавиатуре",
     "This is the Practice panel. Here you can choose which hand to train: right, left, or both.":"Это панель «Практика». Здесь можно выбрать, какой рукой тренироваться: правой, левой или обеими",
-    "Now turn on Practice.":"Теперь включи Practice",
+    "Now turn on Practice.":"Теперь включи практику",
     "Let’s play with your right hand. Turn off Left Hand.":"Давай сыграем правой рукой. Выключи левую руку",
     "Now press Play and try to play the melody with your right hand.":"Теперь нажми Play и попробуй сыграть мелодию правой рукой",
     "Here you can change the tempo to learn at a comfortable speed. The metronome helps you keep the rhythm.":"Здесь можно изменить темп, чтобы учиться на удобной скорости. Метроном помогает держать ритм",

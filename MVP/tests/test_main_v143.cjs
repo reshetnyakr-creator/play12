@@ -1,12 +1,13 @@
 const{test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'../renderer',p),'utf8');
-function fixture(total=20){
+function fixture(total=20,tutorial=false){
  class N{constructor(){this.value='0';this.checked=false;this.hidden=false;this.disabled=false;this.dataset={};this.children=[];this.events={};this.style={setProperty(){}};this.classList={add(){},remove(){},toggle(){}};this.clientWidth=300;}setAttribute(){}getBoundingClientRect(){return{height:32};}addEventListener(t,f){(this.events[t]||=[]).push(f);}dispatchEvent(e){for(const f of this.events[e.type]||[])f(e);}click(){if(!this.disabled)this.dispatchEvent({type:'click'});}appendChild(n){this.children.push(n);n.parentElement=this;}insertBefore(n,b){this.appendChild(n);}remove(){}replaceChildren(){this.children=[];}querySelector(){return null;}querySelectorAll(){return[];}}
  const nodes=new Map(),get=id=>{if(!nodes.has(id))nodes.set(id,new N());return nodes.get(id);},store=new Map();
  const c={rounds:Array.from({length:total},(_,i)=>({start:i*4,end:(i+1)*4})),clock:{position:0},stage:new N(),audioContext:{currentTime:0},loopStartInput:get('start'),loopEndInput:get('end'),loopInput:get('loop'),loopGapInput:get('gap'),countInInput:get('count'),metronomeInput:get('met'),moveRound(){},pauseImmediate(pos){this.clock.position=pos;},currentLoop(){if(!this.loopInput.checked||!total)return null;return{start:this.rounds[+this.loopStartInput.value].start,end:this.rounds[+this.loopEndInput.value].end};},signatureAt(pos){return this.rounds.find(r=>pos>=r.start-1e-7&&pos<r.end-1e-7)||this.rounds.at(-1);}};
  c.loopEndInput.value=total>1?'1':'0';const root=new N();root.querySelector=s=>get(s.slice(1));
- const win={__PLAY12_MAIN__:true,dispatchEvent(){},requestAnimationFrame(){},setTimeout(){}};
- const ctx={window:win,document:{getElementById:get,createElement:()=>new N()},localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)},getComputedStyle:()=>({getPropertyValue:()=>52}),Event:class{constructor(t){this.type=t;}},CustomEvent:class{constructor(t,o){this.type=t;this.detail=o.detail;}}};vm.createContext(ctx);vm.runInContext(read('play12-round-board.js'),ctx);const board=win.Play12RoundBoard.create({root,playback:c,repetitions:{segments:[]},title:'test'});c.roundBoard=board;return{c,board,get,ctx,api:win.Play12RoundBoard,store,range:()=>[+c.loopStartInput.value+1,+c.loopEndInput.value+1],change(n,value){c[n].value=String(value);c[n].dispatchEvent(new ctx.Event('change'));}};
+ c.tutorialProgress=tutorial;
+ const win={__PLAY12_MAIN__:!tutorial,dispatchEvent(){},requestAnimationFrame(){},setTimeout(){}};
+ const ctx={window:win,document:{getElementById:get,createElement:()=>new N()},localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)},getComputedStyle:()=>({getPropertyValue:()=>52}),Event:class{constructor(t){this.type=t;}},CustomEvent:class{constructor(t,o){this.type=t;this.detail=o.detail;}}};vm.createContext(ctx);vm.runInContext(read('play12-round-board.js'),ctx);const board=win.Play12RoundBoard.create({root,playback:c,repetitions:{segments:[]},title:'test',tutorial});c.roundBoard=board;return{c,board,get,ctx,api:win.Play12RoundBoard,store,range:()=>[+c.loopStartInput.value+1,+c.loopEndInput.value+1],change(n,value){c[n].value=String(value);c[n].dispatchEvent(new ctx.Event('change'));}};
 }
 test('unset range follows first, middle, boundary and last position in playback and pause',()=>{
   const t=fixture();
@@ -48,3 +49,22 @@ test('manual range editing works before Loop and does not leak between compositi
 test('viewport budget uses both dimensions and actual chrome rather than a 260px score minimum',()=>{const ctx={window:{}};vm.createContext(ctx);vm.runInContext(read('training-zones.js'),ctx);for(const[w,h]of [[1920,1080],[1440,900],[1280,800],[1024,768],[430,844],[390,844],[375,812],[360,780],[320,640]]){const dock=w>=1024?(w-24)*564/3222.2+48:Math.min(180,h*.25)+90,header=w>=1024?76:140,padding=w>=1024?36:28,zone=h-header-dock-padding,scale=w===1024?.93:1,field=ctx.window.Play12TrainingZones.fieldBudget(zone,64,scale,42);assert(field>=0);assert((field+42)*scale+64<=zone+1e-7,`${w}x${h}`);}assert.equal(ctx.window.Play12TrainingZones.fieldBudget(20,64,1,42),0);});
 test('dot is completely inside board at both ends and middle; musical progress math remains unchanged',()=>{const css=read('training-viewport.css');assert(css.includes('bottom:1px'));assert(css.includes('transform:translateX(-50%)'));const radius=4.5/2;for(const x of [16,168.25,336.5-16]){assert(x-radius>=0);assert(x+radius<=336.5);}assert(42-1-4.5>=36);});
 test('viewport and title styling preserve mobile scroll, reduced motion and accessible text',()=>{const css=read('training-viewport.css'),js=read('training-zones.js');assert(css.includes('grid-template-rows:auto minmax(0,1fr) auto'));assert(css.includes('.main-melodies{min-height:0;max-height:none;flex:1 1 0;overflow-y:auto}'));assert(css.includes('prefers-reduced-motion:reduce'));assert(css.includes('animation-play-state:paused'));assert(js.includes('rightEdge-x'));assert(js.includes("heading.setAttribute('aria-label',label.textContent)"));assert(js.includes('travel>1'));assert(js.includes('G.visualViewport'));});
+
+test('Tutorial clears rendered round marks even outside the current task range',()=>{
+  const {c,board}=fixture(5,true);
+  const marks=new Set();
+  c.svg={querySelector(selector){
+    const round=Number(selector.match(/\d+/)[0]);
+    return {setAttribute(){},classList:{remove(){},add(){},toggle(name,on){
+      if(name==='is-round-success')on?marks.add(round):marks.delete(round);
+    }}};
+  }};
+  board.setRoundSuccess(1,true);
+  assert(marks.has(1));
+  board.clearTrainingSuccess();
+  assert.equal(marks.size,0);
+  board.setRoundSuccess(1,true);
+  board.setTraining(true,0,{rounds:[2,3,4]});
+  assert.equal(marks.size,0);
+  assert.equal(board.successfulRounds().length,0);
+});

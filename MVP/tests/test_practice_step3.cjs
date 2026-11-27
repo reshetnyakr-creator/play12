@@ -162,7 +162,7 @@ function onboarding(saved=null, midiDiagnostic=null, layoutSpy=null) {
 test('Saved tutorial state cannot expose Skip on the initial Continue screen',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',inputMode:'demo'});
   assert.equal(h.root.dataset.visibleStep,'WELCOME');assert.equal(h.node('#onboarding-skip').hidden,true);
-  h.controller.continueSession();assert.equal(h.root.dataset.visibleStep,'TRY_IT_YOURSELF');assert.equal(h.node('#onboarding-skip').disabled,true);
+  h.controller.continueSession();assert.equal(h.root.dataset.visibleStep,'TRY_IT_YOURSELF');assert.equal(h.node('#onboarding-skip').disabled,false);
 });
 test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actual controls advance',async()=>{
  const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();
@@ -692,19 +692,23 @@ test('Round timeline uses an exact 50% Playline for starts, midpoints, ends and 
   assert.equal(offset(400,2,width),76,'pre-count completion aligns exactly with the selected Round start');
 });
 
-test('Dismiss preserves unfinished playing task',async()=>{
- const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'ready',inputMode:'demo',practiceModeEnabled:true,practiceLeftHandEnabled:false});
+test('Demo can skip playing without crediting the music',async()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'ready',inputMode:'demo',metronomeUnlocked:false,practiceModeEnabled:true,practiceLeftHandEnabled:false});
  h.controller.continueSession();await h.c.play();
  assert.equal(h.controller.getState().practiceGuideStage,'playing');
- h.node('#onboarding-skip').handlers.click();
- assert.equal(h.controller.getState().practiceGuideStage,'playing');
+ h.node('#onboarding-skip').click();
+ assert.equal(h.controller.getState().practiceGuideStage,'metronome-info');
+ assert.equal(Boolean(h.controller.getState().successes['practice-song']),false);
+ assert.deepEqual([...h.c.roundBoard.successes],[]);
 });
-test('Dismiss preserves unfinished metronome-playing task',async()=>{
- const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',inputMode:'demo',metronomeUnlocked:true});
+test('Demo can skip metronome-playing without crediting the music',async()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',inputMode:'demo',metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false});
  h.controller.continueSession();await h.c.play();
  assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');
- h.node('#onboarding-skip').handlers.click();
- assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');
+ h.node('#onboarding-skip').click();
+ assert.equal(h.controller.getState().practiceGuideStage,'round-info');
+ assert.equal(Boolean(h.controller.getState().successes['metronome-song']),false);
+ assert.deepEqual([...h.c.roundBoard.successes],[]);
 });
 test('Metronome credits exactly five accepted actions, resets on wrong/pause, rejects autoplay',()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',practiceModeEnabled:true,practiceLeftHandEnabled:false,metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:4});h.c.metronomeInput.checked=true;h.controller.continueSession();

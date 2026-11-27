@@ -438,7 +438,7 @@
       if (songStep) songStep.textContent = t('Step {current} of 6', { current: activeStep });
       if (skipButton) {
         skipButton.hidden = !['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(visibleStep);
-        skipButton.disabled = visibleStep==='TRY_IT_YOURSELF' && actionStages.has(state.practiceGuideStage);
+        skipButton.disabled = visibleStep === 'TRY_IT_YOURSELF' && skipDisabled(state.practiceGuideStage);
       }
       alignedLayout?.resize();
     };
@@ -568,6 +568,7 @@
     const startNew = () => {
       resetRuntimeOnConnect = !runtime;
       metronomeAttempt={active:false,count:0,seen:new Set()};
+      visualAttempt.active = false;
       clearTimeout(ok12Timer); ok12Timer = null;
       if (ok12Toast) ok12Toast.hidden = true;
       runtime?.playback?.roundBoard?.setTraining?.(false, 0);
@@ -644,8 +645,20 @@
     root.querySelector('#returning-midi-retry').addEventListener('click', recoverMidi);
 
     const actionStages = new Set(['enable','hand','ready','playing','metronome-tempo','metronome-on','metronome-play','metronome-playing','round-go4','round-loop','round-range','round-precount','round-practice','final-practice']);
-    root.querySelector('#onboarding-skip').addEventListener('click', () => {
-      if(state.onboardingStep==='TRY_IT_YOURSELF'&&actionStages.has(state.practiceGuideStage))return;
+    const musicalStages = new Set(['ready', 'playing', 'metronome-play', 'metronome-playing', 'round-practice', 'final-practice']);
+    const canSkipMusic = stage => state.inputMode === 'demo' && musicalStages.has(stage);
+    const skipDisabled = stage => actionStages.has(stage) && !canSkipMusic(stage);
+
+    skipButton.addEventListener('click', () => {
+      if (state.onboardingStep === 'TRY_IT_YOURSELF' && skipDisabled(state.practiceGuideStage)) return;
+      const skippingMusic = state.onboardingStep === 'TRY_IT_YOURSELF' && canSkipMusic(state.practiceGuideStage);
+      if (skippingMusic) {
+        visualAttempt.active = false;
+        metronomeAttempt.active = false;
+        resetMetronomeSeries();
+        finalAttempt.active = false;
+        clearRoundTraining();
+      }
       skippingInstruction=true;
       clearTimeout(ok12Timer); ok12Timer=null;
       if(ok12Toast)ok12Toast.hidden=true;
@@ -995,12 +1008,14 @@
     };
 
     const advancePracticeInstruction = (skipped = false) => {
+      if (skipped && state.practiceGuideStage === 'final-practice') { completeTutorial(); return; }
       if (state.practiceGuideStage === 'final-instruction') { beginFinalPractice(); return; }
       clearHints();
       if(state.practiceGuideStage==='practice-info'){state.introducedPanels ||= {};state.introducedPanels.practice=true;}
       if(state.practiceGuideStage==='metronome-info'){state.introducedPanels ||= {};state.introducedPanels.metronome=true;}
       const next = {'practice-info':'enable','metronome-info':'metronome-tempo',enable: 'hand', hand: 'ready', explain: 'ready', ready: 'playing', playing: state.introducedPanels?.metronome?'metronome-on':'metronome-info', 'metronome-playing': 'round-info', 'metronome-on': 'metronome-play', 'metronome-tempo': 'metronome-on', 'metronome-play': 'round-info', 'round-info':'round-go4', 'round-go4':'round-loop-info', 'round-loop-info':'round-loop', 'round-loop':'round-range', 'round-range':'round-precount-info', 'round-precount-info':'round-precount', 'round-precount':'round-practice'};
       const freeNext = state.metronomeUnlocked ? (state.roundUnlocked ? 'free' : 'round-info') : 'metronome-on';
+      if (skipped && state.practiceGuideStage === 'ready') state.practiceGuideStage = 'playing';
       state.practiceGuideStage = skipped && state.practiceGuideStage === 'round-practice' ? 'final-instruction'
         : next[state.practiceGuideStage] || (skipped && state.practiceGuideStage === 'free' ? freeNext : 'free');
       if (state.practiceGuideStage.startsWith('metronome-') || state.practiceGuideStage.startsWith('round-')) state.metronomeUnlocked = true;
@@ -1034,7 +1049,7 @@
 
       const stage = state.practiceGuideStage;
       updatePassCaption();
-      if (skipButton) skipButton.disabled=actionStages.has(stage);
+      if (skipButton) skipButton.disabled = skipDisabled(stage);
       // An action recorded before the feedback timer is valid across a reload.
       const proven = {
         enable:['practice-enable','hand',settings.practiceModeEnabled],
