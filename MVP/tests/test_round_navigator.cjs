@@ -9,7 +9,7 @@ function fixture(total){
     constructor(){this.children=[];this.style={setProperty:(k,v)=>this.style[k]=v};this.dataset={};this.listeners={};
       this.offsetHeight=102;this.offsetWidth=348;this.classList={add(){}};}
     append(...nodes){this.children.push(...nodes);}
-    setAttribute(){}
+    setAttribute(name,value){this[name]=value;}
     addEventListener(name,fn){this.listeners[name]=fn;}
     getBoundingClientRect(){return{left:0,height:414,width:348};}
     setPointerCapture(){}
@@ -75,4 +75,23 @@ test('drag coalesces rapid moves and commits the last pointer point without a cl
   assert.equal(queue.size,0);
   assert.deepEqual(jumped,[1484]);
   assert.equal(doc.body.children[0].open,undefined);
+});
+
+test('upper arrow advances and lower arrow returns with correct labels and bounds',()=>{
+  const {buttons,navigator,jumped}=fixture(3);
+  const [up,,down]=buttons;
+  assert.equal(up.textContent,'▲');
+  assert.equal(up['aria-label'],'Next round');
+  assert.equal(down.textContent,'▼');
+  assert.equal(down['aria-label'],'Previous round');
+  assert.equal(up.disabled,false);
+  assert.equal(down.disabled,true);
+  up.send('click');
+  assert.deepEqual(jumped,[4]);
+  assert.equal(down.disabled,false);
+  down.send('click');
+  assert.deepEqual(jumped,[4,0]);
+  navigator.update(8);
+  assert.equal(up.disabled,true);
+  assert.equal(down.disabled,false);
 });

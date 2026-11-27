@@ -7,3 +7,11 @@ test('active melody stays first, recency is stable on refresh and changes on exp
 test('activity counter persists per stable identity and rejects invalid time',()=>{const{D}=setup();assert.equal(D.workspace().practiceMs,0);D.addActivity(1000);D.profile('New name');assert.equal(D.workspace().practiceMs,1000);D.addActivity(-1);D.addActivity(NaN);assert.equal(D.workspace().practiceMs,1000);D.addActivity(60000);assert.equal(D.workspace().practiceMs,6000);});
 test('backup includes recency and activity without mutating recency',async()=>{const{D}=setup();D.activate('legacy',true,100);D.addActivity(1000);const b=await D.backup();assert.equal(b.workspace.activeId,'legacy');assert.equal(b.workspace.opened.legacy,100);assert.equal(b.workspace.practiceMs,1000);assert.equal(D.workspace().opened.legacy,100);});
 test('reimport finds same source and fingering mode without changing saved manual history or revision',async()=>{const{D,docs,writes}=setup();docs[0].sourceHash='hash';docs[0].mode='engine';docs[0].manual={n1:3};docs[0].history=[{after:{n1:3}}];const d=await D.findImport('hash','engine');assert.equal(d,docs[0]);assert.equal(d.revision,2);assert.equal(d.manual.n1,3);assert.equal(d.history.length,1);assert.equal(await D.findImport('hash','source'),null);assert.equal(await D.findImport('different','engine'),null);assert.equal(writes.length,1);});
+test('different part selections of the same source remain separate from each other and legacy imports',async()=>{
+  const {D,docs}=setup();
+  Object.assign(docs[0],{sourceHash:'hash',mode:'engine'});
+  docs.push({id:'solo-p1',sourceHash:'hash',mode:'engine',partIds:['P1']});
+  assert.equal((await D.findImport('hash','engine',['P1'])).id,'solo-p1');
+  assert.equal(await D.findImport('hash','engine',['P2']),null);
+  assert.equal((await D.findImport('hash','engine',['P1','P2'],true)).id,'legacy');
+});

@@ -29,9 +29,9 @@
       root.append(item);
       return item;
     }
-    const previous=button('▲','Previous round');
+    const next=button('▲','Next round');
     const number=button('1','Go to round');
-    const next=button('▼','Next round');
+    const previous=button('▼','Previous round');
     number.className='round-navigator-number';
 
     const dialog=doc.createElement('dialog');
