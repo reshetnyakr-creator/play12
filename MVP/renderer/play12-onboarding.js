@@ -1042,8 +1042,8 @@
       else if (stage === 'hand') showActionCoach(t('Let’s play with your right hand. Turn off Left Hand.'), 'practice-left-hand');
       else if (stage === 'explain') showCoach(`${t('Watch the Note Field and play the keys it shows you')}<br><small>${t('The music will wait until you press the right key')}</small>`, 'explain', false, advancePracticeInstruction);
       else if (stage === 'ready') showActionCoach(t('Now press Play and try to play the melody with your right hand.'), 'play');
-      else if(stage==='metronome-info')panelInfo('metronome','Here you can change the tempo to learn at a comfortable speed. The metronome helps you keep the rhythm.','metronome-board','metronome-tempo');
-      else if (stage === 'metronome-on') showActionCoach(t('Try turning on the metronome.'), 'metronome-toggle');
+      else if(stage==='metronome-info')panelInfo('metronome','Here you can change the tempo to learn at a comfortable speed. The metronome helps you keep the rhythm.','tempo-navigator','metronome-tempo');
+      else if (stage === 'metronome-on') showActionCoach(t('Try turning on the metronome.'), 'tempo-metronome');
       else if (stage === 'metronome-tempo') showCoach(t('Change the speed using the buttons beside BPM.'),'tempo-navigator',false,()=>setGuideStage('metronome-on'));
       else if (stage === 'metronome-play') showActionCoach(`${t('Try playing five notes in a row with the metronome.')}<br>${t('Press Play')}`, 'play');
       else if (stage === 'round-info') showCoach(`<strong>${t('Round Navigation')}</strong><br>${t('Use the arrows to move between rounds. Drag the panel up or down to quickly navigate through the piece. Tap the round number to jump directly to a specific section.')}`, 'round-navigator', false, () => {state.introducedPanels ||= {};state.introducedPanels.rounds=true;setGuideStage('round-go4');});

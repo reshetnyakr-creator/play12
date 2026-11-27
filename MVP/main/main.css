@@ -82,3 +82,10 @@ body.play12-main:not(.tutorial-main-aligned).play12-three-zones .is-three-narrow
 html[data-device-mode="phone-landscape"] body.play12-main:not(.tutorial-main-aligned) .is-three-narrow .training-skill-card {
   order:3;
 }
+
+body.play12-main:not(.tutorial-main-aligned) .main-tools:not(:has(> :not([hidden]))) {
+  display:none;
+}
+.main-edit-title {min-width:0}
+.main-edit-title button {max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.play12-main #main-status:empty {display:none}

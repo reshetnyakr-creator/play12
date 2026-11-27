@@ -1018,3 +1018,31 @@ test('the scheduled first attack of a repeated cycle stops at the Loop end', () 
   assert.equal(scheduled[0].when, 1);
   assert.equal(scheduled[0].duration, 4);
 });
+
+test('integrated metronome stays armed and silent on Pause and pulses only on delivered transport beats',async()=>{
+  const {c}=make(undefined,24,true);
+  const states=[],pulses=[];
+  c.tempoNavigator={metronome:(...args)=>states.push(args),pulse:()=>pulses.push(c.audioContext.currentTime)};
+  c.setMetronome(true);
+  c.audioContext.currentTime=2;
+  c.scheduleMetronome();
+  assert.equal(c.metronomeBeatCounter,0);
+  assert.deepEqual(states.at(-1),[true,false]);
+  await c.play();
+  c.audioContext.currentTime=3;
+  c.scheduleMetronome();
+  const beat=c.metronomeAudio.pendingBeatVisuals.at(-1);
+  assert(beat);
+  c.audioContext.currentTime=beat.when;
+  c.tick();
+  assert(c.metronomeBeatCounter>0);
+  assert(pulses.length>0);
+  c.pauseImmediate(0);
+  const beats=c.metronomeBeatCounter;
+  assert.deepEqual(states.at(-1),[true,false]);
+  assert.equal(c.metronomeAudio.pendingBeatVisuals.length,0);
+  c.audioContext.currentTime=4;
+  c.scheduleMetronome();
+  assert.equal(c.metronomeBeatCounter,beats);
+  assert.equal(c.metronomeInput.checked,true);
+});

@@ -1153,6 +1153,7 @@
       this.tempoBeatAnchor = null;
       this.beatLamp?.classList.remove('is-beat', 'is-accent');
       this.stage.dataset.metronomeEnabled = String(enabled);
+      this.syncMetronomeIndicator();
       if (enabled) {
         if (interaction) this.unlockAudio();
         this.nextMetronomeBeat = this.clock.running
@@ -1177,8 +1178,24 @@
       const origin = phase + fraction * interval;
       return origin + Math.max(0, Math.ceil((this.audioContext.currentTime + .025 - origin) / interval)) * interval;
     }
+    metronomeRunning() {
+      return Boolean(this.clock.running||this.countIn||this.loopGap||
+        (this.waitingForInput&&!this.practicePaused));
+    }
+    syncMetronomeIndicator(){
+      if(!this.tempoNavigator)return;
+      const active=this.metronomeRunning();
+      if(!active&&this.metronomeWasRunning){
+        this.metronomeAudio.stopAll();
+        this.tempoBeatAnchor=null;
+        this.nextMetronomeBeat=this.audioContext.currentTime+.025;
+      }
+      this.metronomeWasRunning=active;
+      this.tempoNavigator.metronome(this.metronomeInput.checked,active);
+    }
     scheduleMetronome() {
       if (!this.metronomeAudio || !this.metronomeInput.checked || this.audioContext.state !== 'running') return;
+      if(this.tempoNavigator&&!this.metronomeRunning())return;
       const now = this.audioContext.currentTime;
       if(this.clock.running&&this.clock.tempo.length){
         const anchor=this.clock.anchorAudioTime;
@@ -1478,6 +1495,7 @@
       this.emitState();
     }
     updateControls() {
+      this.syncMetronomeIndicator();
       const busy = this.clock.running || !!this.preRollPrep || !!this.countIn || !!this.waitingForInput || !!this.loopGap;
       this.playButton.disabled = busy;
       this.pauseButton.disabled = !busy || this.pauseTarget != null;
@@ -1496,6 +1514,7 @@
       this.emitState();
     }
     flashBeatLamp(beat) {
+      if(this.metronomeInput.checked&&this.metronomeRunning())this.tempoNavigator?.pulse();
       if (!this.beatLamp) return;
       this.beatLamp.classList.remove("is-beat", "is-accent");
       void this.beatLamp.offsetWidth;

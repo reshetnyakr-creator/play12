@@ -34,41 +34,10 @@
       return item;
     }
     const next=button('▲',tempo?'Increase tempo by 1 BPM':'Next round');
-    const number=button('1',tempo?'Set tempo':'Go to round');
+    const number=button('1','Go to round');
     const previous=button('▼',tempo?'Decrease tempo by 1 BPM':'Previous round');
     number.className='round-navigator-number';
 
-    const dialog=doc.createElement('dialog');
-    dialog.className='round-navigator-dialog';
-    if(tempo)dialog.id='tempo-navigator-dialog';
-    const form=doc.createElement('form');
-    form.method='dialog';
-    const label=doc.createElement('label');
-    label.textContent=t(tempo?'Set tempo':'Go to round');
-    const input=doc.createElement('input');
-    input.inputMode='numeric';
-    input.autocomplete='off';
-    input.pattern='[0-9]+';
-    input.required=true;
-    label.append(input);
-    const range=doc.createElement('small');
-    range.textContent=tempo?'20–300 BPM':'1–'+rounds.length;
-    const go=doc.createElement('button');
-    go.textContent=t('Go');
-    const cancel=doc.createElement('button');
-    cancel.type='button';
-    cancel.textContent=t('Cancel');
-    cancel.addEventListener('click',()=>dialog.close());
-    form.append(label,range,go,cancel);
-    if(tempo){
-      const reset=doc.createElement('button');
-      reset.type='button';
-      reset.textContent=t('Restore original tempo');
-      reset.addEventListener('click',()=>{dialog.close();playback.controller.setUserBpm(null);});
-      form.append(reset);
-    }
-    dialog.append(form);
-    doc.body.append(dialog);
     stage.append(root);
     stage.classList.add(tempo?'has-tempo-navigator':'has-round-navigator');
 
@@ -81,7 +50,7 @@
 
       number.style.fontSize=number.textContent.length>3?`max(1px, calc(var(--round-nav-size) * ${1.36/number.textContent.length}))`:'';
       if(tempo){const unit=doc.createElement('small');unit.textContent='BPM';number.append(unit);}
-      number.setAttribute('aria-label',tempo?t('Set tempo')+' · '+rounds[index].start+' BPM':t('Round {number}',{number:index+1})+' · '+t('Go to round'));
+      number.setAttribute('aria-label',tempo?t('Metronome')+' · '+rounds[index].start+' BPM':t('Round {number}',{number:index+1})+' · '+t('Go to round'));
       previous.disabled=index===0;
       next.disabled=index===last;
       root.style.setProperty('--round-nav-offset',`${last?travel*index/last:0}px`);
@@ -112,31 +81,107 @@
     }
     previous.addEventListener('click',()=>{if(!blocked)jump(index-1);});
     next.addEventListener('click',()=>{if(!blocked)jump(index+1);});
-    number.addEventListener('click',()=>{
-      if(blocked)return;
-      input.value=String(tempo?rounds[index].start:index+1);
-      input.setCustomValidity('');
-      dialog.showModal();
-      input.focus();
-      input.select();
-    });
-    input.addEventListener('input',()=>input.setCustomValidity(''));
-    form.addEventListener('submit',event=>{
-      event.preventDefault();
-      const target=Number(input.value)-(tempo?bpmMin-1:0);
-      if(!/^\d+$/.test(input.value)||!Number.isSafeInteger(target)||target<1||target>rounds.length){
-        input.setCustomValidity(range.textContent);
-        input.reportValidity();
-        return;
-      }
-      dialog.close();
-      jump(target-1);
-    });
+    let pulse;
+    if(tempo){
+      root.style.touchAction='none';
+      number.id='tempo-metronome';
+      number.setAttribute('aria-keyshortcuts','Home');
+      number.setAttribute('aria-pressed','false');
+      let tap=null,press=null;
+      const controller=playback.controller;
+      const toggle=()=>controller.setMetronome(!controller.metronomeInput.checked);
+      const activate=()=>{
+        if(tap!==null){
+          global.clearTimeout(tap);
+          tap=null;
+          // The panel moves before the synthesized click is dispatched.
+          blocked=true;
+          controller.setUserBpm(null);
+          return;
+        }
+        tap=global.setTimeout(()=>{tap=null;toggle();},300);
+      };
+      number.addEventListener('pointerdown',event=>{
+        if(event.isPrimary&&event.button===0)press={id:event.pointerId,x:event.clientX,y:event.clientY};
+      });
+      global.addEventListener('pointerup',event=>{
+        if(press?.id!==event.pointerId)return;
+        const moved=Math.hypot(event.clientX-press.x,event.clientY-press.y);
+        press=null;
+        if(!gesture?.dragged&&moved<5&&number.contains(event.target))activate();
+      });
+      global.addEventListener('pointercancel',event=>{if(press?.id===event.pointerId)press=null;});
+      number.addEventListener('click',event=>{if(!event.detail&&!event.pointerType)toggle();});
+      number.addEventListener('keydown',event=>{
+        if(event.key==='Home'){
+          event.preventDefault();
+          if(tap!==null)global.clearTimeout(tap);
+          tap=null;
+          controller.setUserBpm(null);
+        }
+      });
+      pulse=()=>{beat?.cancel();beat=number.animate?.([{backgroundColor:'#CEF932'},{backgroundColor:'#CEF932'}],110);};
+    }else{
+      const dialog=doc.createElement('dialog');
+      dialog.className='round-navigator-dialog';
+
+      const form=doc.createElement('form');
+      form.method='dialog';
+      const label=doc.createElement('label');
+      label.textContent=t('Go to round');
+      const input=doc.createElement('input');
+      input.inputMode='numeric';
+      input.autocomplete='off';
+      input.pattern='[0-9]+';
+      input.required=true;
+      label.append(input);
+      const range=doc.createElement('small');
+      range.textContent='1–'+rounds.length;
+      const go=doc.createElement('button');
+      go.textContent=t('Go');
+      const cancel=doc.createElement('button');
+      cancel.type='button';
+      cancel.textContent=t('Cancel');
+      cancel.addEventListener('click',()=>dialog.close());
+      form.append(label,range,go,cancel);
+      dialog.append(form);
+      doc.body.append(dialog);
+      number.addEventListener('click',()=>{
+        if(blocked)return;
+        input.value=String(index+1);
+        input.setCustomValidity('');
+        dialog.showModal();
+        input.focus();
+        input.select();
+      });
+      input.addEventListener('input',()=>input.setCustomValidity(''));
+      form.addEventListener('submit',event=>{
+        event.preventDefault();
+        const target=Number(input.value);
+        if(!/^\d+$/.test(input.value)||!Number.isSafeInteger(target)||target<1||target>rounds.length){
+          input.setCustomValidity(range.textContent);
+          input.reportValidity();
+          return;
+        }
+        dialog.close();
+        jump(target-1);
+      });
+    }
+    let beat;
+    function metronome(enabled,active){
+      if(!tempo)return;
+      const pressed=String(enabled),running=String(active);
+      if(number.getAttribute('aria-pressed')===pressed&&number.dataset.ticking===running)return;
+      beat?.cancel();
+      number.setAttribute('aria-pressed',pressed);
+      number.dataset.ticking=running;
+    }
     const apply=(y,state)=>{
       const target=Math.round(clamp(state.index/last+(state.y-y)/Number(root.dataset.travel),0,1)*last);
       jump(target);
     };
     root.addEventListener('pointerdown',event=>{
+      if(tempo&&event.isPrimary)blocked=false;
       if(gesture||event.button!==0||!last||!travel)return;
       blocked=false;
       gesture={id:event.pointerId,y:event.clientY,index,dragged:false};
@@ -169,12 +214,12 @@
     global.addEventListener('pointerup',finish);
     root.addEventListener('pointercancel',finish);
     root.addEventListener('click',event=>{
-      if(blocked){event.preventDefault();event.stopImmediatePropagation();}
+      if(blocked&&(!tempo||event.detail)){event.preventDefault();event.stopImmediatePropagation();}
     },true);
     new ResizeObserver(layout).observe(stage);
     update(playback.clock.position);
     layout();
-    return {root,update,layout,canMove,move:direction=>jump(index+direction)};
+    return {root,update,layout,canMove,move:direction=>jump(index+direction),metronome,pulse};
   }
 
   global.Play12RoundNavigator={create,indexAt};

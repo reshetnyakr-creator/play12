@@ -37,7 +37,8 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
  }
  function scaleSlot(slot,content,width){const parent=slot.parentElement,style=getComputedStyle(parent),available=parent.clientWidth-parseFloat(style.paddingLeft||0)-parseFloat(style.paddingRight||0),s=fit(width,available);content.style.transform=`scale(${s})`;content.style.transformOrigin='top left';slot.style.width=`${width*s}px`;slot.style.height=`${content.offsetHeight*s}px`;slot.dataset.scale=String(s);return s;}
  function layoutCorridors(){
-  if(!wide){left.style.paddingBottom='';leftSlot.style.left='';rightSlot.style.right='';right.style.paddingBottom='';if(skillCard)skillCard.style.height='';rightControls.children[0].style.width='';return;}
+  if(!wide){left.style.paddingBottom='';leftSlot.style.left='';rightSlot.style.right='';right.style.paddingBottom='';if(skillCard){skillCard.style.height='';skillCard.style.width='';skillCard.style.marginLeft='';}
+    for(const card of [left.querySelector('.main-profile'),left.querySelector('.main-library-card')])if(card)card.style.width='';rightControls.children[0].style.width='';return;}
   const profile=left.querySelector('.main-profile'),library=left.querySelector('.main-library-card');if(!profile||!library)return;
   const line=doc.getElementById('playline'),p=line.getBoundingClientRect(),a=profile.getBoundingClientRect(),b=right.getBoundingClientRect(),spacing=parseFloat(getComputedStyle(leftControls).columnGap)||gap;
   const c=corridors({left:a.left,right:b.right,playbackLeft:p.left,playbackRight:p.right,gap:spacing,leftWidth:desktopLeft,rightWidth:desktopRight});
@@ -45,7 +46,15 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   const ls=fit(leftControls.scrollWidth,c.leftAvailable),rs=fit(rightControls.scrollWidth,c.rightAvailable);
   for(const[slot,content,s]of [[leftSlot,leftControls,ls],[rightSlot,rightControls,rs]]){content.style.transform=`scale(${s})`;content.style.transformOrigin='top left';slot.style.width=content.scrollWidth*s+'px';slot.style.height=content.offsetHeight*s+'px';slot.dataset.scale=String(s);}
   leftSlot.style.left=a.left-left.getBoundingClientRect().left+'px';rightSlot.style.right='0px';const reserve=Math.max(leftControls.offsetHeight*ls,rightControls.offsetHeight*rs)+14;left.style.paddingBottom='0px';right.style.paddingBottom=reserve+'px';
-  const lib=library.getBoundingClientRect();if(skillCard)skillCard.style.height=Math.max(0,lib.bottom-a.top)+'px';
+  if(skillCard&&!doc.body.classList.contains('tutorial-main-aligned')){
+    const board=round.getBoundingClientRect(),field=runtime.stage.getBoundingClientRect();
+    const spacing=Math.max(0,board.left-field.right);
+    const leftWidth=Math.max(0,field.left-spacing-a.left);
+    profile.style.width=library.style.width=leftWidth+'px';
+    skillCard.style.width=board.width+'px';
+    skillCard.style.marginLeft=board.left-b.left+'px';
+    skillCard.style.height=Math.max(0,board.top-spacing-skillCard.getBoundingClientRect().top)+'px';
+  }
  }
  function alignCompactPractice(){
   if(G.Play12Responsive?.state!=='phone-landscape'||!doc.body.classList.contains('play12-main')||
@@ -61,7 +70,7 @@ function create({runtime,root,playbackHost,pianoHost,footer,zones,helpers}){
   if(!doc.body.classList.contains('play12-main'))return;
   const library=left.querySelector('.main-library-card');
   if(!library||library.classList.contains('tutorial-progress-card'))return;
-  const bottom=runtime.stage.getBoundingClientRect().bottom;
+  const bottom=doc.getElementById('playline').getBoundingClientRect().bottom;
   const top=library.getBoundingClientRect().top;
   root.style.setProperty('--training-library-height',Math.max(64,bottom-top)+'px');
  }

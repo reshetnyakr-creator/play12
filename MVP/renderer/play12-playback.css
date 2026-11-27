@@ -230,3 +230,12 @@ html[data-device-mode="phone-portrait"] .main-layout.training-three-zones.is-thr
   }
 }
 #practice-loop-board:has(>#round-loop-board[hidden]) {min-height:0}
+
+#tempo-navigator .round-navigator-number {
+  background:#fff;
+  border-color:#d1d3ce;
+  color:#111111;
+}
+#tempo-navigator .round-navigator-number[aria-pressed="true"][data-ticking="false"] {
+  background:#CEF932;
+}
