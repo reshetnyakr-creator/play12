@@ -33,12 +33,12 @@
       }};
   }
   const mainRange=(total,from,to)=>{const start=clamp(Number(from)||0,0,Math.max(0,total-1));return{from:start,to:clamp(Number(to)||0,start,Math.max(0,total-1))};};
-  function create({root,playback:c,repetitions,title}){
+  function create({root,playback:c,repetitions,title,tutorial=false}){
     const element=id=>root.querySelector('#'+id)||document.getElementById(id), total=c.rounds.length;
     const timeline=element('round-timeline'),strip=element('round-strip'),head=element('round-playhead'),frame=element('round-loop-frame');
     const trainingProgress=element('round-training-progress'),successTrack=element('round-success-track');
     const loop=element('round-loop-toggle'),precount=element('round-precount-toggle');
-    const key=`play12.round-loop.v1:${title}`,policy=createRepeatPolicy(c),validRange=mainRange;
+    const key=tutorial?"play12.tutorial.round-loop.v1":`play12.round-loop.v1:${title}`,policy=createRepeatPolicy(c),validRange=mainRange;
     c.loopGapInput.value='direct';
     try{
       const saved=JSON.parse(localStorage.getItem(key));
@@ -110,7 +110,7 @@
       c.loopInput.dispatchEvent(new Event('change'));
       const range=c.currentLoop();
       c.pauseImmediate(range&&(c.clock.position<range.start||c.clock.position>=range.end)?range.start:c.clock.position);
-      update(c.clock.position);if(!policy||c.loopInput.checked)publish(c.loopInput.checked?'loop-on':'loop-off');
+      update(c.clock.position);if(tutorial||!policy||c.loopInput.checked)publish(c.loopInput.checked?'loop-on':'loop-off');
     });
     for(const [id,input,direction] of [['round-from-minus',c.loopStartInput,-1],['round-from-plus',c.loopStartInput,1],['round-to-minus',c.loopEndInput,-1],['round-to-plus',c.loopEndInput,1]])element(id).addEventListener('click',()=>{
       if(!c.loopInput.checked&&!policy)return;

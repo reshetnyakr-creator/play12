@@ -72,6 +72,10 @@
           seconds:previous?previous.seconds+(entry.at-previous.at)*60/previous.bpm:0});
       }
     }
+    originalBpmAt(quarter) {
+      return this.sourceTempo[this.tempoIndex(quarter,'at')]?.bpm ?? this.originalBpm;
+    }
+    tempoOffset() { return this.originalTempoSelected ? 0 : this.bpm-this.originalBpm; }
     effectiveBpmAt(quarter) {
       return this.tempo[this.tempoIndex(quarter,'at')]?.bpm ?? (this.originalTempoSelected?Math.max(20,this.originalBpm):this.bpm);
     }
@@ -1136,9 +1140,14 @@
     syncTempoControls() {
       this.bpmInput.value = String(this.clock.bpm);
       this.bpmInput.classList.remove('is-original-tempo');
-      this.tempoNavigator?.update(this.clock.bpm);
+      this.syncTempoReference();
       this.stage.dataset.bpm = String(this.clock.bpm);
       this.stage.dataset.originalTempo = String(this.originalTempo ?? this.clock.bpm);
+    }
+    syncTempoReference() {
+      if(!this.tempoNavigator)return;
+      const position=this.countIn?.selected??this.clock.position;
+      this.tempoNavigator.update?.(this.clock.effectiveBpmAt(position),this.clock.originalBpmAt(position),this.clock.tempoOffset()===0);
     }
     saveTempoSettings() {
       if (!this.tempoStorageKey) return;
@@ -1241,7 +1250,7 @@
     setUserBpm(value, interaction = true) {
       const original=value===null;
       const bpm=original?clamp(Math.round(this.clock.originalBpm),20,300):value;
-      if(!Number.isInteger(bpm)||bpm<20||bpm>300)return;
+      if(!Number.isFinite(bpm)||bpm<20||bpm>300)return;
       if(bpm===this.clock.bpm&&original===Boolean(this.clock.originalTempoSelected)){
         if(interaction)global.dispatchEvent(new CustomEvent('play12:tempo-change'));
         return;
@@ -1297,7 +1306,7 @@
       }
       this.syncTempoControls();
       this.saveTempoSettings();
-      global.dispatchEvent(new CustomEvent('play12:tempo-change'));
+      if(interaction)global.dispatchEvent(new CustomEvent('play12:tempo-change',{detail:{changed:true}}));
     }
     adjustBpm(delta) {
       this.setUserBpm(clamp(this.clock.bpm+Number(delta||0),20,300));
@@ -1525,6 +1534,7 @@
       this.stage.dataset.lastBeatLampAudioTime = String(beat.when);
     }
     tick() {
+      this.syncTempoReference();
       this.expireRobotNotes();
       this.expirePracticeCandidate();
       const rhythmicExpected = this.waitingForInput || this.expectedPracticeEvent;

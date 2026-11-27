@@ -162,7 +162,7 @@ function onboarding(saved=null, midiDiagnostic=null, layoutSpy=null) {
 test('Saved tutorial state cannot expose Skip on the initial Continue screen',()=>{
   const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',inputMode:'demo'});
   assert.equal(h.root.dataset.visibleStep,'WELCOME');assert.equal(h.node('#onboarding-skip').hidden,true);
-  h.controller.continueSession();assert.equal(h.root.dataset.visibleStep,'TRY_IT_YOURSELF');assert.equal(h.node('#onboarding-skip').hidden,false);
+  h.controller.continueSession();assert.equal(h.root.dataset.visibleStep,'TRY_IT_YOURSELF');assert.equal(h.node('#onboarding-skip').disabled,true);
 });
 test('A/B: natural Listen → Zero → Step 3; no autoplay, delayed guide, actual controls advance',async()=>{
  const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();
@@ -294,30 +294,30 @@ test('Chord expiry clears on tick; wrong note cannot extend window; Restart clea
   c.audioContext.currentTime=.1;c.acceptPracticeInput(70);c.audioContext.currentTime=.151;c.tick();assert.equal(c.waitingForInput.matchedPitches.size,0);assert.equal(c.waitingForInput.candidateStartedAt,null);
   c.acceptPracticeInput(64);assert(c.waitingForInput);c.restart();assert.equal(c.expectedPracticeEvent.matchedPitches.size,0);assert.equal(c.expectedPracticeEvent.candidateStartedAt,null);
 });
-test('Skip advances implemented stages without zero/progress loss',()=>{
-  const h=onboarding();h.values.set('play12.zero_note.midi','26');h.controller.startNew();
-  const skip=()=>h.node('#onboarding-skip').handlers.click();skip();assert.equal(h.root.dataset.onboardingStep,'LISTEN_AND_CONTROL');
-  skip();assert.equal(h.controller.getState().listenGuideStage,'pause');skip();assert.equal(h.controller.getState().listenGuideStage,'continue');skip();assert.equal(h.root.dataset.onboardingStep,'CHOOSE_ZERO');skip();assert.equal(h.controller.getState().zeroSetupStage,'cards');skip();assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');
-  for (const stage of ['practice-info','enable','hand','ready']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
-  for(const stage of ['playing','metronome-info','metronome-tempo','metronome-on','metronome-play','round-info','round-go4','round-loop-info','round-loop','round-range','round-precount-info','round-precount','round-practice']) {assert.equal(h.controller.getState().practiceGuideStage,stage);skip();}
-  assert.equal(h.controller.getState().practiceGuideStage,'final-instruction');skip();
-  assert.equal(h.root.dataset.onboardingStep,'TRY_IT_YOURSELF');assert.equal(h.controller.getState().practiceGuideStage,'final-practice');assert(h.c.practiceEnabled());assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);assert.equal(h.c.practiceSettings.practiceRightHandEnabled,true);
-  assert.equal(h.values.get('play12.zero_note.midi'),'26');assert.equal(h.node('#onboarding-listen-coach').hidden,true);assert.equal(h.timers.size,0);assert.equal(h.node('progress6')['aria-disabled'],'false');
+test('Information may be dismissed while Practice still requires its own control',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'practice-info',inputMode:'demo'});
+ h.controller.continueSession();
+ const skip=()=>h.node('#onboarding-skip').handlers.click();
+ skip();assert.equal(h.controller.getState().practiceGuideStage,'enable');
+ skip();assert.equal(h.controller.getState().practiceGuideStage,'enable');
+ assert.equal(h.c.practiceEnabled(),false);
+ h.node('#practice-board-mode').handlers.click();expire(h,950);
+ assert.equal(h.controller.getState().practiceGuideStage,'hand');
 });
 test('Action cards persist; Info cards share a 6s timeout and advance cleanly',()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',chooseZeroCompleted:true,practiceGuideStage:'practice-info',inputMode:'demo'});h.controller.continueSession();assert.equal(h.controller.getState().practiceGuideStage,'practice-info');expire(h,6000);assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.timers.size,0);
  h.c.emitState();assert.equal(h.node('#onboarding-listen-coach').hidden,false);h.node('#practice-board-mode').handlers.click();assert.equal(h.node('#round-ok12').hidden,false);expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'hand');h.node('#practice-left-hand').handlers.click();expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'ready');assert.equal(h.timers.size,0);
 });
 
-test('Skip every instruction preserves real settings, learned actions and default zero',()=>{
-  const h=onboarding();h.controller.startNew();const skip=()=>h.node('#onboarding-skip').handlers.click();
-  skip();skip();skip();skip();assert.equal(h.controller.getState().playLearned,false);assert.equal(h.controller.getState().pauseLearned,false);
-  skip();assert.equal(h.controller.getState().chooseZeroCompleted,false);assert.equal(h.values.has('play12.zero_note.midi'),false);
-  assert.equal(h.controller.getState().zeroSetupStage,'cards');skip();
-  for(const stage of ['practice-info','enable','hand','ready']){
-    assert.equal(h.controller.getState().practiceGuideStage,stage);const actual=JSON.stringify(h.c.getPracticeSettings());skip();assert.equal(JSON.stringify(h.c.getPracticeSettings()),actual);
-  }
-  assert.equal(h.controller.getState().practiceGuideStage,'playing');assert.equal(h.timers.size,0);
+test('A wrong hand toggle and dismiss do not credit the hand task',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'hand',inputMode:'demo',practiceModeEnabled:true});
+ h.controller.continueSession();
+ h.node('#practice-right-hand').handlers.click();
+ h.node('#onboarding-skip').handlers.click();
+ assert.equal(h.controller.getState().practiceGuideStage,'hand');assert(!h.controller.getState().successes['practice-hand']);
+ h.node('#practice-right-hand').handlers.click();
+ h.node('#practice-left-hand').handlers.click();expire(h,950);
+ assert.equal(h.controller.getState().practiceGuideStage,'ready');
 });
 test('Card placement and actions persist; explanatory cards use the shared timeout',()=>{
  const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();h.window.dispatchEvent({type:'play12:zero-confirmed'});expire(h,950);assert.equal(h.timers.size,0);h.node('#cards-ready').handlers.click();assert.equal(h.controller.getState().zeroSetupStage,'verify-yellow');h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'practice-info');expire(h,6000);assert.equal(h.controller.getState().practiceGuideStage,'enable');assert.equal(h.c.practiceEnabled(),false);
@@ -391,8 +391,15 @@ test('BPM bounds, MIDI +/- 10, invalid restores; tempo retimes clock and next me
   assert.equal(c.metronomeAudio.pendingBeatVisuals.at(-1).when,beatTime);
   assert.equal(c.metronomeAudio.pendingBeatVisuals.at(-1).accent,false);
 });
-test('Metronome tutorial actions persist and advance only on action or Skip',()=>{
- const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-info',metronomeUnlocked:true,inputMode:'demo'});h.controller.continueSession();assert.equal(h.node('#metronome-board').hidden,false);expire(h,6000);assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');const bpm=h.c.clock.bpm;expire(h,6000);assert.equal(h.c.clock.bpm,bpm);assert.equal(h.controller.getState().practiceGuideStage,'metronome-on');h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');assert.equal(h.c.metronomeInput.checked,false);assert(!h.controller.getState().successes['metronome-on']);
+test('Tempo guidance waits for an actual tempo change',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-info',metronomeUnlocked:true,inputMode:'demo'});
+ h.controller.continueSession();expire(h,6000);
+ assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');
+ h.window.dispatchEvent({type:'play12:tempo-change'});
+ h.node('#onboarding-skip').handlers.click();
+ assert.equal(h.controller.getState().practiceGuideStage,'metronome-tempo');
+ h.c.setUserBpm(61);
+ assert.equal(h.controller.getState().practiceGuideStage,'metronome-on');
 });
 
 test('Metronome and tempo interactions advance the instructions immediately',()=>{
@@ -586,13 +593,20 @@ test('Function transport commands follow button availability through Pre-count, 
   assert.equal(h.c.runCommand('play'),false);assert.equal(h.c.runCommand('pause'),true);assert.equal(h.c.countIn,null);
   assert.equal(h.c.runCommand('restart'),true);await new Promise(resolve=>setImmediate(resolve));assert(h.c.countIn,'Restart uses the same UI path and starts configured Pre-count');
 });
-test('Loop, range and Pre-count steps accept an already-correct state',()=>{
-  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-loop',roundUnlocked:true,metronomeUnlocked:true,highestUnlockedStep:5,inputMode:'demo'});
-  h.c.loopInput.checked=true;h.c.loopStartInput.value='1';h.c.loopEndInput.value='3';h.c.countInInput.checked=true;h.controller.continueSession();
-  const finish=()=>{expire(h,950);};
-  finish();assert.equal(h.controller.getState().practiceGuideStage,'round-range');
-  finish();assert.equal(h.controller.getState().practiceGuideStage,'round-precount-info');
-  h.node('#onboarding-skip').handlers.click();finish();assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
+test('Round controls require a matching action even when the initial configuration matches',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-loop',roundUnlocked:true,metronomeUnlocked:true,highestUnlockedStep:5,inputMode:'demo'});
+ h.c.loopInput.checked=true;h.c.loopStartInput.value='1';h.c.loopEndInput.value='3';h.c.countInInput.checked=true;
+ h.controller.continueSession();
+ const action=detail=>h.window.dispatchEvent({type:'play12:round-control',detail});
+ assert.equal(h.controller.getState().practiceGuideStage,'round-loop');
+ action({action:'loop-on',loop:true});expire(h,950);
+ assert.equal(h.controller.getState().practiceGuideStage,'round-range');
+ action({action:'range',loop:true,from:1,to:4});assert.equal(h.controller.getState().practiceGuideStage,'round-range');
+ action({action:'range',loop:true,from:2,to:4});expire(h,950);
+ assert.equal(h.controller.getState().practiceGuideStage,'round-precount-info');
+ h.node('#onboarding-skip').handlers.click();
+ action({action:'precount',precount:true});expire(h,950);
+ assert.equal(h.controller.getState().practiceGuideStage,'round-practice');
 });
 function roundFixture(h){h.c.practiceEvents=h.c.rounds.map(r=>({start:r.start,events:[{hand:'R',midi:72}],matchedPitches:new Set(),candidateStartedAt:null,completed:false}));}
 function creditRound(h,round){const r=h.c.rounds[round-1],notes=h.c.practiceEvents.filter(e=>e.start>=r.start&&e.start<r.end);for(const e of notes)h.window.dispatchEvent({type:'play12:practice-event-complete',detail:{round,position:e.start,roundComplete:e===notes.at(-1),expectedCount:notes.length,source:'user'}});}
@@ -678,15 +692,19 @@ test('Round timeline uses an exact 50% Playline for starts, midpoints, ends and 
   assert.equal(offset(400,2,width),76,'pre-count completion aligns exactly with the selected Round start');
 });
 
-test('Skip during unfinished Practice pass immediately unlocks Metronome and clears waits without changing controls',async()=>{
-  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'ready',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true,inputMode:'demo',highestUnlockedStep:3});h.controller.continueSession();
-  await h.c.play();assert.equal(h.controller.getState().practiceGuideStage,'playing');assert(h.c.waitingForInput);
-  const settings=JSON.stringify(h.c.getPracticeSettings()),bpm=h.c.clock.bpm;h.node('#onboarding-skip').handlers.click();
-  assert.equal(h.controller.getState().practiceGuideStage,'metronome-info');assert.equal(h.node('#metronome-board').hidden,false);assert.equal(h.c.waitingForInput,null);assert.equal(h.c.clock.running,false);assert.equal(JSON.stringify(h.c.getPracticeSettings()),settings);assert.equal(h.c.clock.bpm,bpm);
+test('Dismiss preserves unfinished playing task',async()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'ready',inputMode:'demo',practiceModeEnabled:true,practiceLeftHandEnabled:false});
+ h.controller.continueSession();await h.c.play();
+ assert.equal(h.controller.getState().practiceGuideStage,'playing');
+ h.node('#onboarding-skip').handlers.click();
+ assert.equal(h.controller.getState().practiceGuideStage,'playing');
 });
-test('Skip during unfinished Metronome pass unlocks Round guidance',async()=>{
-  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:3});h.controller.continueSession();await h.c.play();
-  assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'round-info');assert.equal(h.node('#round-loop-board').hidden,false);assert.equal(h.c.clock.running,false);
+test('Dismiss preserves unfinished metronome-playing task',async()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',inputMode:'demo',metronomeUnlocked:true});
+ h.controller.continueSession();await h.c.play();
+ assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');
+ h.node('#onboarding-skip').handlers.click();
+ assert.equal(h.controller.getState().practiceGuideStage,'metronome-playing');
 });
 test('Metronome credits exactly five accepted actions, resets on wrong/pause, rejects autoplay',()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-play',practiceModeEnabled:true,practiceLeftHandEnabled:false,metronomeUnlocked:true,inputMode:'demo',highestUnlockedStep:4});h.c.metronomeInput.checked=true;h.controller.continueSession();
@@ -799,7 +817,7 @@ test('early zero OK12 occurs once after confirmation without delaying the cards 
 });
 
 test('metronome early success is transient and is not replayed on repeated events',()=>{
- const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',introducedPanels:{metronome:true},highestUnlockedStep:4,inputMode:'demo',metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false});h.c.metronomeInput.checked=true;h.controller.continueSession();assert.equal(h.node('#round-ok12').hidden,false);expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');h.window.dispatchEvent({type:'play12:metronome-change',detail:{enabled:true}});assert.equal(h.node('#round-ok12').hidden,true);assert(h.controller.getState().successes['metronome-on']);
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',introducedPanels:{metronome:true},highestUnlockedStep:4,inputMode:'demo',metronomeUnlocked:true,practiceModeEnabled:true,practiceLeftHandEnabled:false});h.c.metronomeInput.checked=true;h.controller.continueSession();assert.equal(h.node('#round-ok12').hidden,true);h.window.dispatchEvent({type:'play12:metronome-change',detail:{enabled:true}});assert.equal(h.node('#round-ok12').hidden,false);expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');h.window.dispatchEvent({type:'play12:metronome-change',detail:{enabled:true}});assert.equal(h.node('#round-ok12').hidden,true);assert(h.controller.getState().successes['metronome-on']);
 });
 
 test('legacy saved metronome success suppresses early OK12 on a lesson revisit',()=>{
@@ -814,14 +832,23 @@ test('saved lesson does not mount TrainingZones until the visible Start/Continue
  h.controller.continueSession();assert.equal(h.root.dataset.visibleStep,'TRY_IT_YOURSELF');assert.equal(mounts,1);
 });
 
-test('Practice already ON and right-hand setup credit real state after whole-panel introduction',()=>{
- const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'practice-info',highestUnlockedStep:3,inputMode:'demo',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});h.controller.continueSession();assert(!h.controller.getState().successes['practice-enable']);expire(h,6000);assert(h.controller.getState().successes['practice-enable']);expire(h,950);assert(h.controller.getState().successes['practice-hand']);expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'ready');assert.equal(h.c.practiceSettings.practiceLeftHandEnabled,false);
+test('Restored Practice settings alone do not credit an unfinished task',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'practice-info',inputMode:'demo',practiceModeEnabled:true,practiceLeftHandEnabled:false});
+ h.controller.continueSession();expire(h,6000);
+ assert.equal(h.controller.getState().practiceGuideStage,'enable');
+ assert(!h.controller.getState().successes['practice-enable']);
+ h.node('#practice-board-mode').handlers.click();h.node('#practice-board-mode').handlers.click();expire(h,950);
+ assert.equal(h.controller.getState().practiceGuideStage,'hand');
+ assert(!h.controller.getState().successes['practice-hand']);
 });
 test('credited actual states advance after reload without another OK12 or toggle',()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'enable',introducedPanels:{practice:true},successes:{'practice-enable':true,'practice-hand':true},highestUnlockedStep:3,inputMode:'demo',practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});h.controller.continueSession();assert.equal(h.controller.getState().practiceGuideStage,'ready');assert.equal(h.node('#round-ok12').hidden,true);assert.equal(h.timers.size,0);
 });
-test('already selected Round4 credits once at task entry without a navigation event',()=>{
- const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-go4',highestUnlockedStep:5,inputMode:'demo',metronomeUnlocked:true,roundUnlocked:true});h.c.clock.pause(3);h.controller.continueSession();assert(h.controller.getState().successes['round-go4']);expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'round-loop-info');h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate'}});assert.equal(h.node('#round-ok12').hidden,true);
+test('An already selected Round 4 does not credit the navigation task',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'round-go4',highestUnlockedStep:5,inputMode:'demo',metronomeUnlocked:true,roundUnlocked:true});
+ h.c.clock.pause(3);h.controller.continueSession();assert(!h.controller.getState().successes['round-go4']);
+ h.window.dispatchEvent({type:'play12:round-control',detail:{action:'navigate',currentRound:4}});
+ expire(h,950);assert.equal(h.controller.getState().practiceGuideStage,'round-loop-info');
 });
 test('first user Play intent rewards actual start only; programmatic playback and repeat events do not',async()=>{
  const h=onboarding();h.controller.startNew();h.node('#onboarding-demo').handlers.click();await h.c.play();assert(!h.controller.getState().successes['listen-play']);h.c.pauseImmediate(0);
@@ -831,15 +858,18 @@ test('fast navigation cancels pending feedback callback rather than advancing a 
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'enable',introducedPanels:{practice:true},highestUnlockedStep:4,inputMode:'demo',practiceModeEnabled:false});h.controller.continueSession();h.node('progress3').handlers.click();h.node('#practice-board-mode').handlers.click();assert(h.controller.getState().successes['practice-enable']);h.node('progress1').handlers.click();assert.equal(h.controller.getState().onboardingStep,'LISTEN_AND_CONTROL');assert.equal([...h.timers.values()].filter(t=>t.delay===950).length,0);
 });
 
-test('Skip cancels a pending action-success timer without undoing later instructions',()=>{
- const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'enable',introducedPanels:{practice:true},highestUnlockedStep:3,inputMode:'demo'});h.controller.continueSession();h.node('#practice-board-mode').handlers.click();assert(h.controller.getState().successes['practice-enable']);h.node('#onboarding-skip').handlers.click();h.node('#onboarding-skip').handlers.click();assert.equal(h.controller.getState().practiceGuideStage,'ready');assert.equal([...h.timers.values()].filter(t=>t.delay===950).length,0);
+test('Dismiss does not skip the hand task while Practice success feedback plays',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'enable',introducedPanels:{practice:true},inputMode:'demo'});
+ h.controller.continueSession();h.node('#practice-board-mode').handlers.click();
+ h.node('#onboarding-skip').handlers.click();expire(h,950);
+ assert.equal(h.controller.getState().practiceGuideStage,'hand');
 });
 test('explicit legacy metronome feedback migrates without a repeated OK12',()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'metronome-on',metronomeSuccessFeedback:true,introducedPanels:{metronome:true},metronomeUnlocked:true,highestUnlockedStep:4,inputMode:'demo'});h.c.metronomeInput.checked=true;h.controller.continueSession();assert(h.controller.getState().successes['metronome-on']);assert.equal(h.node('#round-ok12').hidden,true);assert.equal(h.controller.getState().practiceGuideStage,'metronome-play');
 });
 
-test('Start over on Welcome preserves saved hand preferences and calibration/settings keys',()=>{
- const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',inputMode:'midi',midiVerified:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});for(const k of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.tempo.v1:test'])h.values.set(k,'preserved');h.controller.startNew();const s=h.controller.getState();assert.equal(s.practiceLeftHandEnabled,false);assert.equal(s.practiceModeEnabled,true);assert.equal(s.playLearned,false);assert.equal(s.roundPasses,0);for(const k of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.tempo.v1:test'])assert.equal(h.values.get(k),'preserved');
+test('Start over resets Tutorial hand and Practice settings and preserves Main and MIDI keys',()=>{
+ const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',inputMode:'midi',midiVerified:true,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});for(const k of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.tempo.v1:test'])h.values.set(k,'preserved');h.controller.startNew();const s=h.controller.getState();assert.equal(s.practiceLeftHandEnabled,true);assert.equal(s.practiceRightHandEnabled,true);assert.equal(s.practiceModeEnabled,false);assert.equal(s.playLearned,false);assert.equal(s.roundPasses,0);for(const k of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.tempo.v1:test'])assert.equal(h.values.get(k),'preserved');
 });
 test('Visual round success requires all actual selected-hand actions, not a partial round',async()=>{
  const h=onboarding({onboardingStep:'TRY_IT_YOURSELF',practiceGuideStage:'playing',inputMode:'demo',highestUnlockedStep:3,practiceModeEnabled:true,practiceLeftHandEnabled:false,practiceRightHandEnabled:true});h.c.rounds=[{start:0,end:8,beatQuarters:1,beats:4,measureQuarters:4}];h.controller.continueSession();await h.c.play();h.c.acceptPracticeInput(72);assert.deepEqual([...h.c.roundBoard.successes],[]);h.c.audioContext.currentTime=2;h.c.tick();h.c.acceptPracticeInput(74);assert.deepEqual([...h.c.roundBoard.successes],[1]);h.node('#practice-board-mode').handlers.click();assert.deepEqual([...h.c.roundBoard.successes],[]);

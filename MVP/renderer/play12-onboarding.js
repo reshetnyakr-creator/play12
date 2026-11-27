@@ -113,6 +113,7 @@
     const ok12Toast = root.querySelector('#round-ok12');
     let recoveringMidi = false;
     let resumeRequested = false;
+    let resetRuntimeOnConnect = false;
     let completionCardTimer = null;
     let celebrationFired = false;
     let finalAttempt = { active: false, valid: false, successfulRounds: new Set() };
@@ -435,7 +436,10 @@
       const combinedBoard=document.getElementById('practice-loop-board');
       if(combinedBoard)combinedBoard.hidden=!boards.practice&&!boards.rounds;
       if (songStep) songStep.textContent = t('Step {current} of 6', { current: activeStep });
-      if (skipButton) skipButton.hidden = !['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(visibleStep);
+      if (skipButton) {
+        skipButton.hidden = !['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(visibleStep);
+        skipButton.disabled = visibleStep==='TRY_IT_YOURSELF' && actionStages.has(state.practiceGuideStage);
+      }
       alignedLayout?.resize();
     };
 
@@ -562,8 +566,7 @@
     };
 
     const startNew = () => {
-      const preferences=visibleStep==='WELCOME'&&savedState?{practiceModeEnabled:state.practiceModeEnabled,practiceLeftHandEnabled:state.practiceLeftHandEnabled,practiceRightHandEnabled:state.practiceRightHandEnabled}:runtime?.playback?.getPracticeSettings?.()||{};
-      runtime?.playback?.pauseImmediate?.(0);
+      resetRuntimeOnConnect = !runtime;
       metronomeAttempt={active:false,count:0,seen:new Set()};
       clearTimeout(ok12Timer); ok12Timer = null;
       if (ok12Toast) ok12Toast.hidden = true;
@@ -581,11 +584,11 @@
         pauseLearned: false,
         listenFragmentCompleted: false,
         chooseZeroCompleted: false,
-        successes:{},introducedPanels:{},roundPasses:0,metronomeStreak:0,...preferences,
+        successes:{},introducedPanels:{},roundPasses:0,metronomeStreak:0,practiceModeEnabled:false,practiceLeftHandEnabled:true,practiceRightHandEnabled:true,
         cardsSetupCompleted: false, zeroSetupStage: null
       };
+      runtime?.resetLearningSetup?.();
       syncProgress();
-      runtime?.playback?.pauseImmediate?.(0);
       recoveringMidi = false;
       resumeRequested = false;
       setReconnectVisible(false);
@@ -640,7 +643,9 @@
     }
     root.querySelector('#returning-midi-retry').addEventListener('click', recoverMidi);
 
+    const actionStages = new Set(['enable','hand','ready','playing','metronome-tempo','metronome-on','metronome-play','metronome-playing','round-go4','round-loop','round-range','round-precount','round-practice','final-practice']);
     root.querySelector('#onboarding-skip').addEventListener('click', () => {
+      if(state.onboardingStep==='TRY_IT_YOURSELF'&&actionStages.has(state.practiceGuideStage))return;
       skippingInstruction=true;
       clearTimeout(ok12Timer); ok12Timer=null;
       if(ok12Toast)ok12Toast.hidden=true;
@@ -682,6 +687,7 @@
       else if (highestUnlocked() > activeProgressStep() && !(state.onboardingStep==='CHOOSE_ZERO'&&state.zeroSetupStage)) navigateStep(highestUnlocked());
       else if (['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(state.onboardingStep)) {
         if (state.onboardingStep === 'TRY_IT_YOURSELF') restorePracticeSettings();
+        runtime?.restoreLearningSetup?.();
         showStep(state.onboardingStep);
         if (state.onboardingStep === 'CHOOSE_ZERO' && ['select','confirm'].includes(state.zeroSetupStage)) global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
       }
@@ -1028,14 +1034,14 @@
 
       const stage = state.practiceGuideStage;
       updatePassCaption();
-      const controls = runtime.playback.roundBoard?.controlState?.();
-      if(stage==='enable'&&settings.practiceModeEnabled){rewardSuccess('practice-enable',()=>setGuideStage('hand'));return;}
-      if(stage==='hand'&&settings.practiceModeEnabled&&settings.practiceRightHandEnabled&&!settings.practiceLeftHandEnabled){rewardSuccess('practice-hand',()=>setGuideStage('ready'));return;}
-      if(stage==='metronome-on'&&runtime.playback.metronomeInput.checked){rewardSuccess('metronome-on',()=>setGuideStage('metronome-play'));return;}
-      if(stage==='round-go4'&&controls?.currentRound===4){completeRoundControlTask('round-loop-info');return;}
-      if (!roundTraining.feedbackPending && stage === 'round-loop' && controls?.loop === true) { completeRoundControlTask('round-range'); return; }
-      if (!roundTraining.feedbackPending && stage === 'round-range' && controls?.loop === true && controls.from === 2 && controls.to === 4) { completeRoundControlTask('round-precount-info'); return; }
-      if (!roundTraining.feedbackPending && stage === 'round-precount' && controls?.precount === true) { rewardSuccess('round-precount',prepareRoundPractice); return; }
+      if (skipButton) skipButton.disabled=actionStages.has(stage);
+      // An action recorded before the feedback timer is valid across a reload.
+      const proven = {
+        enable:['practice-enable','hand',settings.practiceModeEnabled],
+        hand:['practice-hand','ready',settings.practiceModeEnabled && !settings.practiceLeftHandEnabled && settings.practiceRightHandEnabled],
+        'metronome-on':['metronome-on','metronome-play',runtime.playback.metronomeInput.checked],
+      }[stage];
+      if(proven && proven[2] && state.successes?.[proven[0]]){setGuideStage(proven[1]);return;}
       practiceBoard.dataset.guideStage = stage;
       practiceBoard.hidden = false;
       const combinedBoard=document.getElementById('practice-loop-board');
@@ -1049,7 +1055,7 @@
       else if (stage === 'ready') showActionCoach(t('Now press Play and try to play the melody with your right hand.'), 'play');
       else if(stage==='metronome-info')panelInfo('metronome','Here you can change the tempo to learn at a comfortable speed. The metronome helps you keep the rhythm.','tempo-navigator','metronome-tempo');
       else if (stage === 'metronome-on') showActionCoach(t('Try turning on the metronome.'), 'tempo-metronome');
-      else if (stage === 'metronome-tempo') showCoach(t('Change the tempo using the arrow buttons or drag the panel up and down. Up to play faster, down to play slower.'),'tempo-navigator',false,()=>setGuideStage('metronome-on'));
+      else if (stage === 'metronome-tempo') showActionCoach(t('Change the tempo using the arrow buttons or drag the panel up and down. Up to play faster, down to play slower.'),'tempo-navigator');
       else if (stage === 'metronome-play') showActionCoach(`${t('Try playing five notes in a row with the metronome.')}<br>${t('Press Play')}`, 'play');
       else if (stage === 'round-info') showCoach(`<strong>${t('Round Navigation')}</strong><br>${t('Use the arrows to move between rounds. Drag the panel up or down to quickly navigate through the piece. Tap the round number to jump directly to a specific section.')}`, 'round-navigator', false, () => {state.introducedPanels ||= {};state.introducedPanels.rounds=true;setGuideStage('round-go4');});
       else if (stage === 'round-go4') showActionCoach(`${t('Choose the section you want to practise.')}<br>${t('Go to Round 4')}`, 'round-navigator');
@@ -1068,10 +1074,13 @@
     const isRu = () => i18n.isRu();
     global.addEventListener('play12:metronome-change', event => {
       if(!runtime?.playback?.metronomeInput.checked){resetMetronomeSeries();metronomeAttempt.active=false;}
-      if(state.onboardingStep==='TRY_IT_YOURSELF')syncPracticeGuide();
+      if (state.onboardingStep !== 'TRY_IT_YOURSELF') return;
+      if (state.practiceGuideStage==='metronome-on' && event.detail?.enabled && runtime.playback.metronomeInput.checked)
+        rewardSuccess('metronome-on',()=>setGuideStage('metronome-play'));
     });
-    global.addEventListener('play12:tempo-change', () => {
-      if(state.onboardingStep==='TRY_IT_YOURSELF')syncPracticeGuide();
+    global.addEventListener('play12:tempo-change', event => {
+      if(state.onboardingStep==='TRY_IT_YOURSELF'&&state.practiceGuideStage==='metronome-tempo'&&event.detail?.changed)
+        setGuideStage('metronome-on');
     });
 
     const updatePassCaption = () => {
@@ -1127,6 +1136,11 @@
     global.addEventListener('play12:round-control', event => {
       if (state.onboardingStep !== 'TRY_IT_YOURSELF' || returnAfterZero) return;
       const detail = event.detail || {};
+      const stage=state.practiceGuideStage;
+      if(stage==='round-go4'&&detail.action==='navigate'&&detail.currentRound===4)completeRoundControlTask('round-loop-info');
+      if(stage==='round-loop'&&detail.action==='loop-on'&&detail.loop)completeRoundControlTask('round-range');
+      if(stage==='round-range'&&detail.action==='range'&&detail.loop&&detail.from===2&&detail.to===4)completeRoundControlTask('round-precount-info');
+      if(stage==='round-precount'&&detail.action==='precount'&&detail.precount)rewardSuccess('round-precount',prepareRoundPractice);
       if(['metronome-play','metronome-playing'].includes(state.practiceGuideStage)){resetMetronomeSeries();metronomeAttempt.active=false;}
       if (state.practiceGuideStage === 'round-practice' && ['navigate', 'range', 'loop-off'].includes(event.detail.action)) {
         invalidateRoundTraining();
@@ -1211,8 +1225,13 @@
         return;
       }
       visualAttempt.active=false;runtime.playback.roundBoard?.clearTrainingSuccess?.();resetMetronomeSeries();metronomeAttempt.active=false;
-      Object.assign(state, runtime.playback.getPracticeSettings());
+      const settings=runtime.playback.getPracticeSettings();
+      Object.assign(state, settings);
       saveState(storage, state);
+      if(state.practiceGuideStage==='enable'&&key==='practiceModeEnabled'&&settings.practiceModeEnabled)
+        rewardSuccess('practice-enable',()=>setGuideStage('hand'));
+      if(state.practiceGuideStage==='hand'&&key==='practiceLeftHandEnabled'&&settings.practiceModeEnabled&&settings.practiceRightHandEnabled&&!settings.practiceLeftHandEnabled)
+        rewardSuccess('practice-hand',()=>setGuideStage('ready'));
       syncPracticeGuide();
     };
 
@@ -1221,6 +1240,7 @@
 
     const connectRuntime = nextRuntime => {
       runtime = nextRuntime;
+      if(resetRuntimeOnConnect){runtime.resetLearningSetup?.();resetRuntimeOnConnect=false;}
       practiceBindingDispose?.();
       practiceBindingDispose=global.Play12TrainingShell.bindPractice({playback:runtime.playback,root:practiceBoard,onChange:(_state,key)=>changePracticeSetting(key,({practiceModeEnabled:practiceModeButton,practiceLeftHandEnabled:leftHandButton,practiceRightHandEnabled:rightHandButton})[key],true),onReject:button=>button.animate([{transform:'translateX(0)'},{transform:'translateX(3px)'},{transform:'translateX(0)'}],{duration:220})});
       removeNoteListener?.();
@@ -1300,7 +1320,7 @@
             syncPracticeGuide();
             return;
           }
-          if ((['enable', 'hand', 'explain', 'ready'].includes(state.practiceGuideStage) || (state.practiceGuideStage === 'free' && !state.metronomeUnlocked)) && (snapshot.running || snapshot.state === 'waiting_for_input')) {
+          if ((state.practiceGuideStage === 'ready' && finalPracticeSettingsReady()) && (snapshot.running || snapshot.state === 'waiting_for_input')) {
             clearHints();
             state.practiceGuideStage = 'playing';
             saveState(storage, state);
@@ -1342,6 +1362,7 @@
       }) || null;
       if (resumeRequested) {
         if (state.onboardingStep === 'TRY_IT_YOURSELF') restorePracticeSettings();
+        runtime.restoreLearningSetup?.();
         if (state.onboardingStep === 'CHOOSE_ZERO' && ['select','confirm'].includes(state.zeroSetupStage)) global.dispatchEvent(new CustomEvent('play12:choose-zero-open'));
         recoverMidi();
       }

@@ -17,7 +17,7 @@
   const tempoSteps=Array.from({length:bpmMax-bpmMin+1},(_,i)=>({start:i+bpmMin}));
   function create(playback,tempo=false){
     if(tempo)playback={stage:playback.stage,rounds:tempoSteps,executionY:()=>playback.controller.executionY(),
-      controller:playback,clock:{position:playback.clock.bpm},seek:value=>playback.controller.setUserBpm(value)};
+      controller:playback,clock:{position:playback.clock.bpm}};
     const {stage,rounds}=playback, doc=stage.ownerDocument, last=rounds.length-1;
     if(last<0)return null;
     const root=doc.createElement('div');
@@ -41,19 +41,39 @@
     stage.append(root);
     stage.classList.add(tempo?'has-tempo-navigator':'has-round-navigator');
 
-    let index=-1,travel=0,gesture=null,frame=0,blocked=false;
-    function update(position){
-      const current=indexAt(rounds,position);
-      if(index===current)return;
+    const reference=tempo?doc.createElement('span'):null;
+    if(reference){
+      reference.className='tempo-author-reference';
+      reference.setAttribute('aria-hidden','true');
+      root.append(reference);
+    }
+    let index=-1,travel=0,gesture=null,frame=0,blocked=false,author=null,original=false,label=null;
+    const offset=i=>last?travel*i/last:0;
+    function placeReference(){
+      if(!reference||author===null)return;
+      const anchor=indexAt(rounds,Math.round(author));
+      reference.textContent=String(author);
+      reference.style.setProperty('--tempo-reference-offset',`${offset(index)-offset(anchor)}px`);
+      reference.hidden=original && index===anchor;
+      reference.dataset.beside=String(Math.abs(offset(index)-offset(anchor))<root.offsetHeight/2+5);
+      number.dataset.authorTempo=String(original);
+    }
+    function update(position,source=author,atSource=original){
+      const rounded=tempo?Math.round(position):position;
+      const current=indexAt(rounds,rounded);
+      const nextLabel=tempo?String(rounded):String(current+1);
+      if(index===current&&author===source&&original===atSource&&label===nextLabel)return;
+      author=source;original=atSource;label=nextLabel;
       index=current;
-      number.textContent=tempo?String(rounds[index].start):String(index+1);
+      number.textContent=label;
 
       number.style.fontSize=number.textContent.length>3?`max(1px, calc(var(--round-nav-size) * ${1.36/number.textContent.length}))`:'';
       if(tempo){const unit=doc.createElement('small');unit.textContent='BPM';number.append(unit);}
-      number.setAttribute('aria-label',tempo?t('Metronome')+' · '+rounds[index].start+' BPM':t('Round {number}',{number:index+1})+' · '+t('Go to round'));
+      number.setAttribute('aria-label',tempo?t('Metronome')+' · '+label+' BPM':t('Round {number}',{number:index+1})+' · '+t('Go to round'));
       previous.disabled=index===0;
       next.disabled=index===last;
-      root.style.setProperty('--round-nav-offset',`${last?travel*index/last:0}px`);
+      root.style.setProperty('--round-nav-offset',`${offset(index)}px`);
+      placeReference();
     }
     function layout(){
       const bar=stage.getBoundingClientRect(),grab=doc.getElementById('playback-grid')?.getBoundingClientRect();
@@ -69,13 +89,22 @@
       root.dataset.travel=String(travel*scaleY);
       const current=index;
       index=-1;
-      update(rounds[Math.max(0,current)].start);
+      update(tempo&&label!==null?Number(label):rounds[Math.max(0,current)].start);
     }
     const canMove=direction=>!root.hidden&&index+direction>=0&&index+direction<=last;
     function jump(target){
       if(target===index||target<0||target>last)return false;
-      playback.seek(rounds[target].start);
-      update(rounds[target].start);
+      if(tempo){
+        const c=playback.controller;
+        const delta=rounds[target].start-rounds[index].start;
+        const clock=c.clock, position=clock.position;
+        const visibleOffset=clock.effectiveBpmAt(position)-clock.originalBpmAt(position);
+        const next=clock.originalBpm+visibleOffset+delta;
+        c.setUserBpm(next===c.clock.originalBpm?null:clamp(next,bpmMin,bpmMax));
+      }else{
+        playback.seek(rounds[target].start);
+        update(rounds[target].start);
+      }
       playback.roundBoard?.notifyNavigation?.();
       return true;
     }

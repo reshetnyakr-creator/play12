@@ -40,3 +40,16 @@ test('a tempo edit before a scheduled attack retains the scheduled clock anchor'
   assert.equal(c.position,4);
   assert.equal(c.quarterToAudioTime(5),5);
 });
+test('author reference follows authored changes independently of the effective floor',()=>{
+  const {clock:c}=clock(90,90,[90,150,20,350]);
+  c.setBpm(60);
+  assert.equal(c.originalBpmAt(1),150);
+  assert.equal(c.effectiveBpmAt(1),120);
+  assert.equal(c.originalBpmAt(2),20);
+  assert.equal(c.effectiveBpmAt(2),20);
+  assert.equal(c.tempoOffset(),-30);
+  assert.equal(c.originalBpmAt(3),350);
+  c.setBpm(90,true);
+  assert.equal(c.tempoOffset(),0);
+  assert.equal(c.effectiveBpmAt(3),350);
+});

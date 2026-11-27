@@ -239,3 +239,28 @@ html[data-device-mode="phone-portrait"] .main-layout.training-three-zones.is-thr
 #tempo-navigator .round-navigator-number[aria-pressed="true"][data-ticking="false"] {
   background:#CEF932;
 }
+
+#tempo-navigator .round-navigator-number[data-author-tempo="true"] { border-color:#E96E40; }
+#tempo-navigator .tempo-author-reference {
+  position:absolute;
+  top:calc(50% + var(--tempo-reference-offset, 0px));
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:max-content;
+  max-width:var(--round-nav-size);
+  pointer-events:none;
+  text-align:center;
+  color:#111111;
+  font:600 8px/1 Inter,sans-serif;
+}
+#tempo-navigator .tempo-author-reference::before {
+  content:"";
+  display:block;
+  width:12px;
+  margin:0 auto 2px;
+  border-top:1px solid #E96E40;
+}
+#tempo-navigator .tempo-author-reference[data-beside="true"] {
+  left:100%;
+  transform:translateY(-50%);
+}

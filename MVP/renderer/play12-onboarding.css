@@ -1276,3 +1276,5 @@ html[lang="ru"] .mvp-control-row .mvp-practice-board button{font-size:10px !impo
 #cards-ready { min-width: 112px; min-height: 38px; margin-top: 14px; padding: 9px 18px; font-size: 14px; pointer-events: auto; }
 .piano-visible-card-region { pointer-events: none; }
 
+
+#onboarding-skip:disabled { visibility:hidden; }

@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="play12-renderer.css?v=player-shell-01">
-  <link rel="stylesheet" href="play12-playback.css?v=stage234">
-  <link rel="stylesheet" href="play12-onboarding.css?v=shell-13">
+  <link rel="stylesheet" href="play12-playback.css?v=stage235">
+  <link rel="stylesheet" href="play12-onboarding.css?v=stage235">
   <link rel="stylesheet" href="music-workspace.css?v=zero-board-2">
 <link rel="stylesheet" href="/MVP/mobile-tablet.css?v=stage21"><script src="/MVP/mobile-tablet.js?v=stage21"></script></head>
 <body class="play12-onboarding-boot">
@@ -340,9 +340,9 @@
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=mobile-1"></script>
   <script src="play12-precount-view.js?v=stage12"></script>
-  <script src="play12-round-board.js?v=stage21"></script>
-  <script src="play12-round-navigator.js?v=stage231"></script>
-  <script src="play12-playback.js?v=stage234"></script>
+  <script src="play12-round-board.js?v=stage235"></script>
+  <script src="play12-round-navigator.js?v=stage235"></script>
+  <script src="play12-playback.js?v=stage235"></script>
   <script src="web-midi-diagnostic.js?v=midi-voice-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=stage234"></script>
@@ -350,7 +350,7 @@
   <script src="training-zones.js?v=stage232"></script>
   <script src="tutorial-layout.js?v=stage234"></script>
   <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=zero-board-1','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=stage234'])document.write('<link rel="stylesheet" href="'+href+'">');}</script>
-  <script src="play12-onboarding.js?v=stage234"></script>
+  <script src="play12-onboarding.js?v=stage235"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     window.addEventListener('unhandledrejection', event => { if (new URLSearchParams(location.search).has('composition')) { const msg = document.createElement('p'); msg.textContent = 'Не удалось открыть композицию: ' + (event.reason?.message || event.reason); document.body.prepend(msg); } });
@@ -383,10 +383,11 @@
         .flatMap(measure => measure.tempo_marks || []).find(mark => Number(mark.bpm) > 0)?.bpm) || 120;
       const tempoMap = savedCompositionId ? score.editor.fermataTimeline?.tempoMap??score.editor.tempoMap : null;
       const originalTempo = tempoMap?.find(mark=>mark.at===0)?.bpm ?? firstMarkedTempo;
-      const tempoStorageKey = `play12.tempo.v1:${baseScore.score.title}:${firstMarkedTempo}`;
+      const tutorialMode = !mainMode && !compositionReviewMode;
+      const tempoStorageKey = tutorialMode ? "play12.tutorial.tempo.v1" : null;
       let savedTempo = {};
-      try { savedTempo = JSON.parse(localStorage.getItem(tempoStorageKey)) || {}; } catch (_) {}
-      const onboardingBpm = Number.isFinite(savedTempo.bpm) && Number.isInteger(savedTempo.bpm) && savedTempo.bpm >= 20 && savedTempo.bpm <= 300 ? savedTempo.bpm : Math.max(20,Math.min(300,Math.round(originalTempo)));
+      try { if(tutorialMode) savedTempo = JSON.parse(localStorage.getItem(tempoStorageKey)) || {}; } catch (_) {}
+      const onboardingBpm = Number.isFinite(savedTempo.bpm) && savedTempo.bpm >= 20 && savedTempo.bpm <= 300 ? savedTempo.bpm : Math.max(20,Math.min(300,Math.round(originalTempo)));
       document.getElementById('bpm').value = String(onboardingBpm);
       // BPM persists, but every page/session starts with the metronome explicitly OFF.
       document.getElementById('metronome').checked = false;
@@ -399,8 +400,8 @@
       const savedMetronomeVolume = Number(localStorage.getItem('play12.metronome-volume'));
       document.getElementById('metronome-volume').value = String(Number.isInteger(savedMetronomeVolume) && savedMetronomeVolume >= 0 && savedMetronomeVolume <= 6 ? savedMetronomeVolume : 4);
       const scoreRoot = document.getElementById('play12-score');
-      const zeroStorageKey = 'play12.zero_note.midi';
-      const zeroPitchClassStorageKey = 'play12.zero_note.pitch_class';
+      const zeroStorageKey = tutorialMode ? 'play12.tutorial.zero.midi' : 'play12.zero_note.midi';
+      const zeroPitchClassStorageKey = tutorialMode ? 'play12.tutorial.zero.pitch-class' : 'play12.zero_note.pitch_class';
       const savedZeroMidi = localStorage.getItem(zeroStorageKey)==null?NaN:Number(localStorage.getItem(zeroStorageKey));
       const savedPitchClass = localStorage.getItem(zeroPitchClassStorageKey)==null?NaN:Number(localStorage.getItem(zeroPitchClassStorageKey));
       const pitchClasses = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
@@ -542,9 +543,10 @@
         const back = document.createElement('a');back.href='../editor/';back.textContent='Вернуться в редактор';bar.append(back);document.querySelector('main.playback-page').prepend(bar);
         reviewGrid.addEventListener('change',()=>{window.play12Playback.pauseImmediate();window.play12Playback.replaceSvg(render(reviewGrid.value));syncGridButton();});
       }
-      window.play12Playback.roundBoard = Play12RoundBoard.create({root: document.getElementById('round-loop-board'), playback: window.play12Playback, repetitions: repetitionSegments, title: baseScore.score.title});
+      window.play12Playback.roundBoard = Play12RoundBoard.create({root: document.getElementById('round-loop-board'), playback: window.play12Playback, repetitions: repetitionSegments, title: baseScore.score.title, tutorial: tutorialMode});
       window.play12Playback.roundNavigator = Play12RoundNavigator.create(window.play12Playback);
       window.play12Playback.tempoNavigator = Play12TempoNavigator.create(window.play12Playback);
+      window.play12Playback.syncTempoReference();
       window.play12Playback.syncMetronomeIndicator();
       window.play12Playback.layoutCoreGeometry();
       reviewController?.connect(effectiveScore => {
@@ -663,18 +665,17 @@
       document.getElementById('midi-recalibrate').addEventListener('click', () => {
         window.dispatchEvent(new CustomEvent('play12:manual-recalibrate'));
       });
-      const roundStorageKey = `play12.round-loop.v1:${baseScore.score.title}`;
+      const roundStorageKey = "play12.tutorial.round-loop.v1";
       const resetLearningSetup = () => {
-        for (const key of ['play12.midi-calibration.v1','play12.zero_note.midi','play12.zero_note.pitch_class',
-          tempoStorageKey,roundStorageKey,'play12.loop-gap','play12.metronome-volume']) localStorage.removeItem(key);
-        window.play12MidiDiagnostic.clearCalibration?.();
-        pianoView.setRange(21,108);pianoView.setZeroMidi(defaultZeroMidi);
+        for (const key of [zeroStorageKey,zeroPitchClassStorageKey,tempoStorageKey,roundStorageKey,gridStorageKey]) localStorage.removeItem(key);
+        pianoView.setZeroMidi(defaultZeroMidi);
         window.play12Playback.setRuntimeZeroNote(defaultZeroMidi);
         window.play12Playback.setUserBpm(null,false);
         window.play12Playback.setMetronome(false,false);
         window.play12Playback.setPracticeSettings({practiceModeEnabled:false,practiceLeftHandEnabled:true,practiceRightHandEnabled:true});
         window.play12Playback.roundBoard?.reset?.();
         window.play12Playback.pauseImmediate(0);rangeWarning.hidden=true;
+        localStorage.removeItem(tempoStorageKey);
       };
       window.play12Onboarding?.connectRuntime({
         pianoView,
@@ -682,7 +683,13 @@
         midiDiagnostic: window.play12MidiDiagnostic || null,
         playback: window.play12Playback,
         stage: document.getElementById('playback-stage'),
-        resetLearningSetup
+        resetLearningSetup,
+        restoreLearningSetup: () => {
+          try {
+            const saved=JSON.parse(localStorage.getItem(tempoStorageKey));
+            window.play12Playback.setMetronome(saved?.enabled === true,false);
+          } catch (_) {}
+        }
       });
       if (!mainMode && !compositionReviewMode) reviewGrid.addEventListener('change', event => {
         window.play12Playback.pauseImmediate();
