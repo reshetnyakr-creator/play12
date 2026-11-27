@@ -205,7 +205,7 @@ html[data-device-mode="phone-landscape"] body.tutorial-main-aligned.play12-three
   transform:none; box-shadow:none; flex:none;
 }
 #practice-loop-board .mvp-practice-board button {
-  flex:1 1 0; min-width:0; padding:0 2px;
+  flex:1 1 0; min-width:0; padding:0 2px; border-radius:16px;
 }
 #practice-loop-board .mvp-loop-controls {
   min-height:80px; display:flex; flex-direction:column; gap:5px;

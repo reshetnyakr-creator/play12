@@ -64,7 +64,7 @@
           seen.add(bounds);
           holes.appendChild(node('rect', {x: r.left - origin.left - padding, y: r.top - origin.top - padding, width: r.width + padding * 2, height: r.height + padding * 2, rx: Math.min(28, r.height / 2 + padding), filter: 'url(#play12-coach-feather)'}));
         }
-        if(options.avoidTargets && (card.id==='onboarding-listen-coach'||card.id==='zero-chooser')){
+        if(options.avoidTargets && options.avoidTargetsFor?.(card)!==false && (card.id==='onboarding-listen-coach'||card.id==='zero-chooser')){
           const c=card.getBoundingClientRect(),top=(global.visualViewport?.offsetTop||0)+8,bottom=top+(global.visualViewport?.height||global.innerHeight)-16,height=c.height;
           const field=cardAnchor?.getBoundingClientRect(),preferred=field?.height?field.top+field.height/2:(c.top+c.height/2);
           const intervals=targetRects.filter(r=>r.left<c.right+8&&r.right>c.left-8&&r.bottom>top&&r.top<bottom).map(r=>[Math.max(top,r.top-10),Math.min(bottom,r.bottom+10)]).sort((a,b)=>a[0]-b[0]);

@@ -938,7 +938,7 @@
       }
     }
     preCountEnabled() {
-      return this.countInInput.checked && (!this.roundBoard || !this.roundBoard.root.hidden);
+      return this.countInInput.checked && (!this.roundBoard || (!this.roundBoard.root.hidden && !this.roundBoard.root.inert));
     }
     beginPreCount(selected, cycleAt = null) {
       const signature = this.signatureAt(selected);
@@ -1120,8 +1120,8 @@
     }
     commandAvailable(action) {
       if (this.roundNavigator && ['previous-round','next-round'].includes(action)) return this.roundNavigator.canMove(action==='previous-round'?-1:1);
-      if (action === 'previous-round') return !!this.roundBoard?.navigate && !this.roundBoard.root?.hidden && !this.roundBoard.root?.querySelector?.('#round-previous')?.disabled;
-      if (action === 'next-round') return !!this.roundBoard?.navigate && !this.roundBoard.root?.hidden && !this.roundBoard.root?.querySelector?.('#round-next')?.disabled;
+      if (action === 'previous-round') return !!this.roundBoard?.navigate && !this.roundBoard.root?.hidden && !this.roundBoard.root?.inert && !this.roundBoard.root?.querySelector?.('#round-previous')?.disabled;
+      if (action === 'next-round') return !!this.roundBoard?.navigate && !this.roundBoard.root?.hidden && !this.roundBoard.root?.inert && !this.roundBoard.root?.querySelector?.('#round-next')?.disabled;
       const button = {metronome:this.metronomeButton,'bpm-down':this.bpmMinus,'bpm-up':this.bpmPlus,play:this.playButton,pause:this.pauseButton,restart:this.restartButton}[action];
       return !!button && !button.disabled;
     }
@@ -1358,7 +1358,7 @@
       this.pulseAt(loop.start);
     }
     currentLoop() {
-      if (!this.rounds.length || !this.loopInput.checked || this.roundBoard?.root.hidden) return null;
+      if (!this.rounds.length || !this.loopInput.checked || this.roundBoard?.root.hidden || this.roundBoard?.root.inert) return null;
       const startIndex = Number(this.loopStartInput.value);
       const endIndex = Math.max(startIndex, Number(this.loopEndInput.value));
       return { start: this.rounds[startIndex].start, end: this.rounds[endIndex].end };

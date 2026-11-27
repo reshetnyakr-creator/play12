@@ -12,8 +12,8 @@ body.tutorial-main-aligned{background:#faf9fc}
 .tutorial-main-aligned .mvp-song-title-viewport{width:100%;min-width:0;max-width:100%;overflow:hidden}
 .tutorial-main-aligned .mvp-song-title-track{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:none!important;transform:none!important}
 .tutorial-main-aligned #onboarding-song-step{position:static;white-space:nowrap;justify-self:start}
-.tutorial-main-aligned .tutorial-progress-card{overflow:auto;min-height:0;padding:16px}
-.tutorial-main-aligned .tutorial-progress-card ol{list-style:none;padding:0;margin:0;display:grid;gap:20px}
+.tutorial-main-aligned .tutorial-progress-card{overflow:hidden;min-height:0;padding:14px 16px}
+.tutorial-main-aligned .tutorial-progress-card ol{min-height:0;max-height:none;overflow-y:auto;list-style:none;padding:0;margin:0;display:grid;align-content:start;gap:20px}
 .tutorial-main-aligned .tutorial-progress-card li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:center;font-size:15px}
 .tutorial-main-aligned .tutorial-progress-card li span{border-radius:50%;width:34px;height:34px;display:grid;place-items:center;background:#eee;border:1px solid #ddd}
 .tutorial-main-aligned .tutorial-progress-card li.is-active span,.tutorial-main-aligned .tutorial-progress-card li.is-complete span{background:#CEF932}
@@ -58,6 +58,7 @@ body.tutorial-main-aligned .training-left-controls>#metronome-board[hidden]{disp
 .tutorial-main-aligned .mvp-listen-coach.tutorial-coach-side{left:var(--tutorial-coach-x)!important;width:var(--tutorial-coach-width)!important;max-width:none!important}
 @media(max-width:767px){.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-inline{padding:12px 14px}.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-inline p{font-size:15px;line-height:1.35}.tutorial-main-aligned .has-inline-coach>.main-tools{display:none!important}}
 
-/* The existing landscape dock can be narrower than the standard coach. */
-html[data-device-mode="phone-landscape"] .tutorial-main-aligned .tutorial-coach-centered.tutorial-coach-side{padding:12px 14px}
-html[data-device-mode="phone-landscape"] .tutorial-main-aligned .tutorial-coach-centered.tutorial-coach-side p{font-size:15px;line-height:1.35}
+/* Final instruction floats independently of the training zones. */
+.tutorial-main-aligned .mvp-listen-coach.tutorial-coach-centered{top:50%;max-height:calc(100dvh - 16px);overflow:auto}
+html[data-device-mode="phone-landscape"] .tutorial-main-aligned .mvp-listen-coach.tutorial-coach-centered{top:var(--mvp-coach-y,50%);padding:12px 14px}
+html[data-device-mode="phone-landscape"] .tutorial-main-aligned .mvp-listen-coach.tutorial-coach-centered p{font-size:15px;line-height:1.35}

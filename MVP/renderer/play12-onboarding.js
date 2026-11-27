@@ -151,7 +151,7 @@
     let midiConnectState = 'choice';
     let listenPosition = 0;
     let listenPlaybackState = 'paused';
-    const spotlight = global.Play12Coach.create(root,{padding:3,feather:3,portal:true,avoidTargets:true,dock:(card,target)=>card.id==='onboarding-listen-coach'&&alignedLayout?.dockCoach(card,target,card.classList.contains('tutorial-coach-centered')),reveal:target=>alignedLayout?.reveal(target)});
+    const spotlight = global.Play12Coach.create(root,{padding:3,feather:3,portal:true,avoidTargets:true,avoidTargetsFor:card=>!card.classList.contains('tutorial-coach-centered')||global.Play12Responsive?.state==='phone-landscape',dock:(card,target)=>card.id==='onboarding-listen-coach'&&alignedLayout?.dockCoach(card,target,card.classList.contains('tutorial-coach-centered')),reveal:target=>alignedLayout?.reveal(target)});
     // Targets describe WHERE for each instruction; card positioning is independent.
     const targetsFor = instruction => {
       const element = id => document.getElementById(id);
@@ -428,7 +428,10 @@
       }
       root.classList.toggle('has-metronome-board', boards.metronome);
       const roundBoard = document.getElementById('round-loop-board');
-      if (roundBoard) roundBoard.hidden = !boards.rounds;
+      if (roundBoard) {
+        roundBoard.hidden = !boards.practice;
+        roundBoard.inert = !boards.rounds;
+      }
       const combinedBoard=document.getElementById('practice-loop-board');
       if(combinedBoard)combinedBoard.hidden=!boards.practice&&!boards.rounds;
       if (songStep) songStep.textContent = t('Step {current} of 6', { current: activeStep });
