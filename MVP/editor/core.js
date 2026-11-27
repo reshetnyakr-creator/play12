@@ -52,7 +52,7 @@ function realizeFermatas(score) {
   let total=new Q(0);
   const cumulative=holds.map(([,extra])=>total=total.add(extra));
   const at=(point,after=true)=>{
-    const value=new Q(point);
+    const value=new Q(typeof point==='number'?String(point):point);
     let lo=0,hi=holds.length;
     while(lo<hi){
       const mid=(lo+hi)>>>1,cmp=value.cmp(holds[mid][0]);
@@ -75,11 +75,16 @@ function realizeFermatas(score) {
   }
   score.editor.fermataTimeline={
     holds:holds.map(([q,extra])=>({q:q.toString(),extra:extra.toString(),start:Number(at(q,false)),end:Number(at(q))})),
-    rounds:score.editor.rounds.map(r=>({...r,start:Number(at(r.start)),measureStart:Number(at(r.measureStart)),
-      end:Number(at(r.end)),measureQuarters:Number(at(r.end).sub(at(r.start))),
+    rounds:score.editor.rounds.map(r=>({...r,start:Number(at(r.startQ??r.start)),measureStart:Number(at(r.startQ??r.measureStart)),
+      end:Number(at(r.endQ??r.end)),measureQuarters:Number(at(r.endQ??r.end).sub(at(r.startQ??r.start))),
       nominalMeasureQuarters:r.measureQuarters,beatsAt:Array.from({length:r.beats},
-        (_,i)=>Number(at(r.measureStart+i*r.beatQuarters)))})),
-    tempoMap:score.editor.tempoMap.map(e=>({...e,at:Number(at(e.at))}))
+        (_,i)=>Number(at(new Q(r.startQ??String(r.measureStart)).add(new Q(BigInt(4*i),BigInt(r.beatType))))))})),
+    tempoMap:score.editor.tempoMap.map(e=>({...e,at:Number(at(e.q??e.at))})),
+    metricRounds:score.editor.metricMap?.rounds.map(r=>({...r,start:at(r.start).toString(),end:at(r.end).toString(),counts:r.counts.map(c=>({
+      ...c, start:at(c.start).toString(), duration:at(new Q(c.start).add(c.duration)).sub(at(c.start)).toString(),
+      subdivisions:c.subdivisions.map(step=>({...step,position:at(step.position).toString(),
+        duration:at(new Q(step.position).add(step.duration)).sub(at(step.position)).toString()}))
+    }))}))
   };
   for(const part of score.score.parts){
     part.fermataPedals=(part.pedals||[]).map(e=>({...e,at:at(e.at).toString()}));
@@ -168,20 +173,121 @@ function compatibleArpeggioKey(notes) {
 }
 
 function parseMusicXML(xml){if(/<!ENTITY|<!DOCTYPE[^>]*\[/i.test(xml))throw Error('Определения сущностей не поддерживаются.');const parseSource=xml.replace(/<!DOCTYPE[^>]*>/gi,'');const dom=new G.DOMParser().parseFromString(parseSource,'application/xml');if(dom.querySelector('parsererror')||dom.documentElement.localName!=='score-partwise')throw Error('Нужен корректный MusicXML score-partwise.');return dom;}
-function directionTempo(node){
-  return Number(one(node,'sound')?.getAttribute('tempo')||node.querySelector('per-minute')?.textContent);
+const METRIC_VERSION = 1;
+const TEMPO_UNITS = {whole:'4',half:'2',quarter:'1',eighth:'1/2','16th':'1/4','32nd':'1/8','64th':'1/16','128th':'1/32',breve:'8'};
+function directionTempo(node) {
+  const sound=node.localName==='sound'?node:one(node,'sound');
+  const soundQPM=Number(sound?.getAttribute('tempo'));
+  const metronome=node.querySelector('direction-type metronome');
+  const printedBPM=Number(txt(metronome||{},'per-minute'));
+  const unit=TEMPO_UNITS[txt(metronome||{},'beat-unit')];
+  const dots=children(metronome||{},'beat-unit-dot').length;
+  const base=unit?new Q(unit):null, factor=2n**BigInt(dots);
+  const printedUnit=base?new Q(base.n*(2n*factor-1n),base.d*factor):null;
+  const printedQPM=printedUnit&&printedBPM>0?Number(printedUnit)*printedBPM:null;
+  const hasSound=Number.isFinite(soundQPM)&&soundQPM>0;
+  const normalizedQPM=hasSound?soundQPM:printedQPM;
+  if(!normalizedQPM||!Number.isFinite(normalizedQPM))return null;
+  return {printedBPM:printedBPM>0?printedBPM:null,printedUnit:printedUnit?.toString()??null,
+    soundQPM:hasSound?soundQPM:null,normalizedQPM,source:hasSound?'sound':'metronome',
+    conflict:hasSound&&printedQPM!=null&&Math.abs(soundQPM-printedQPM)>1e-7};
 }
-function importXML(xml,handMap={},partIds=null){const dom=parseMusicXML(xml);const diagnostics=[],parts=[],notes=[],rounds=[],tempoEntries=new Map();let title=dom.querySelector('work-title')?.textContent.trim()||dom.querySelector('movement-title')?.textContent.trim()||'Без названия';let tempo=120,tempoSeen=false;const names={C:0,D:2,E:4,F:5,G:7,A:9,B:11};let total=new Q(0);
+
+function meterFromXML(time) {
+  if(one(time,'senza-misura'))return {free:true,groups:[],beats:4,beatType:4,source:'senza-misura',confidence:'EXPLICIT'};
+  const counts=children(time,'beats'), denominators=children(time,'beat-type');
+  const groups=counts.flatMap((node,i)=>node.textContent.trim().split('+').map(term=>({
+    size:Number(term.trim()), denominator:Number(denominators[i]?.textContent)
+  })));
+  if(!groups.length||counts.length!==denominators.length||groups.some(({size,denominator})=>
+    !Number.isSafeInteger(size)||size<1||size>128||!Number.isSafeInteger(denominator)||denominator<1||denominator>1024)){
+    throw Error('Некорректный размер MusicXML');
+  }
+  // The reduced denominator gives the factor needed to extend this common multiple.
+  const denominator=groups.reduce((acc,g)=>acc*new Q(acc,BigInt(g.denominator)).d,1n);
+  const beats=groups.reduce((sum,g)=>sum+BigInt(g.size)*(denominator/BigInt(g.denominator)),0n);
+  if(beats>1024n||denominator>65536n)throw Error('Слишком сложный составной размер MusicXML');
+  const explicit=groups.length>1;
+  const conventional=!explicit&&([2,3,4].includes(Number(beats))||Number(denominator)===8&&[6,9,12].includes(Number(beats)));
+  return {groups,beats:Number(beats),beatType:Number(denominator),confidence:explicit?'EXPLICIT':conventional?'CONVENTIONAL':'UNKNOWN',source:explicit?'additive':'time'};
+}
+
+function metricRound({meter, measure, partId, start, length, nominal, pickup, boundaries}) {
+  const counts=[];
+  const phase=pickup&&nominal.cmp(length)>0?nominal.sub(length):new Q(0);
+  const round={id:`${partId}:${measure.index}`,start:start.toString(),end:start.add(length).toString(),
+    nominalDuration:meter.free?null:nominal.toString(),metricPhase:phase.toString(),sourceMeasureIds:[measure.number],meter,counts};
+  if(meter.free)return round;
+  const compound=meter.groups.length===1&&meter.beatType===8&&[6,9,12].includes(meter.beats);
+  const base=new Q(compound?'3/2':`4/${meter.beatType}`);
+  const accents=new Set();
+  let groupOffset=0;
+  if(meter.groups.length>1)for(const group of meter.groups){
+    if(groupOffset)accents.add(groupOffset);
+    groupOffset+=group.size*(meter.beatType/group.denominator);
+  }
+  if(meter.groups.length===1&&meter.beats===(compound?12:4))accents.add(2);
+  for(let local=new Q(0),index=0;local.cmp(phase.add(length))<0;local=local.add(base),index++){
+    const end=local.add(base);
+    if(end.cmp(phase)<=0)continue;
+    const lo=max(local,phase), hi=end.cmp(phase.add(length))>0?phase.add(length):end;
+    const binary=new Q(base.n,base.d*2n), ternary=new Q(base.n,base.d*3n);
+    const positions=[{at:local,ru:null,en:null}];
+    const hasBoundary=q=>boundaries.has(q.sub(phase).toString());
+    if(compound||hasBoundary(local.add(ternary))||hasBoundary(local.add(ternary).add(ternary))){
+      positions.push({at:local.add(ternary),ru:'И',en:'AND'},{at:local.add(ternary).add(ternary),ru:'А',en:'A'});
+    }
+    if(hasBoundary(local.add(binary))||!compound&&hasBoundary(local.add(new Q(base.n,base.d*4n)))){
+      positions.push({at:local.add(binary),ru:'И',en:'AND'});
+    }
+    const steps=positions.filter(p=>p.at.cmp(lo)>=0&&p.at.cmp(hi)<0).sort((a,b)=>a.at.cmp(b.at));
+    counts.push({id:`${round.id}:${index}`,index,start:start.add(lo).sub(phase).toString(),
+      duration:hi.sub(lo).toString(),pulse:lo.cmp(local)===0,
+      accent:index===0?'PRIMARY':accents.has(index)?'SECONDARY':'WEAK',
+      subdivisions:steps.map((step,i)=>({position:start.add(step.at).sub(phase).toString(),
+        duration:(steps[i+1]?.at??hi).sub(step.at).toString(),labelRU:step.ru,labelEN:step.en}))});
+  }
+  return round;
+}
+function importXML(xml,handMap={},partIds=null){const dom=parseMusicXML(xml);const diagnostics=[],parts=[],notes=[],rounds=[],metricRounds=[],tempoEntries=new Map();let title=dom.querySelector('work-title')?.textContent.trim()||dom.querySelector('movement-title')?.textContent.trim()||'Без названия';let tempo=120,tempoSeen=false;const names={C:0,D:2,E:4,F:5,G:7,A:9,B:11};let total=new Q(0);
 const sourceParts=children(dom.documentElement,'part');
-const tempoSource=sourceParts.find(part=>Array.from(part.querySelectorAll('direction')).some(direction=>directionTempo(direction)>0));
+const tempoSource=sourceParts.find(part=>Array.from(part.querySelectorAll('measure > direction, measure > sound')).some(directionTempo));
 for(const [pi,part]of sourceParts.entries()){
 const tempoOnly=Boolean(partIds&&!partIds.includes(part.getAttribute('id')));
 if(tempoOnly&&part!==tempoSource)continue;
 const primaryPart=!tempoOnly&&!parts.length;
-let divisions=1,beats=4,beatType=4,offset=new Q(0),transpose=0;const measures=[],pedals=[];const sourceMeasures=children(part,'measure');for(const [mi,m]of sourceMeasures.entries()){let cursor=new Q(0),extent=new Q(0),last=new Q(0),unsupported=false;const events=[],attrs=one(m,'attributes');if(attrs){divisions=Number(txt(attrs,'divisions',String(divisions)));if(!Number.isSafeInteger(divisions)||divisions<=0)throw Error('Некорректные divisions');const time=one(attrs,'time');if(time){beats=Number(txt(time,'beats'));beatType=Number(txt(time,'beat-type'));if(!Number.isInteger(beats)||!Number.isInteger(beatType)||beats<=0||beatType<=0)throw Error('Составной/неопределённый размер пока не поддержан.');}if(one(attrs,'transpose')){const tr=one(attrs,'transpose');transpose=Number(txt(tr,'chromatic','0'))+12*Number(txt(tr,'octave-change','0'));}}
-for(const node of Array.from(m.children)){if(node.localName==='backup'||node.localName==='forward'){const delta=new Q(txt(node,'duration','0'),BigInt(divisions));cursor=node.localName==='backup'?cursor.sub(delta):cursor.add(delta);if(cursor.cmp(0)<0)throw Error('MusicXML backup выходит за начало такта');continue;}if(node.localName==='sound'){if(!tempoOnly)pedals.push(...pedalEvents(node,offset.add(cursor),divisions,pedals.length));continue;}
-if(node.localName==='direction'){if(!tempoOnly)pedals.push(...pedalEvents(node,offset.add(cursor),divisions,pedals.length));const sound=one(node,'sound');const bpm=directionTempo(node);if(bpm>0){if(part===tempoSource){const directionOffset=one(node,'offset');const timingOffset=(sound&&one(sound,'offset'))||(directionOffset?.getAttribute('sound')==='yes'?directionOffset:null);const at=Number(offset.add(cursor).add(new Q(timingOffset?.textContent.trim()||'0',BigInt(divisions))));tempoEntries.set(at,bpm);}if(tempoSeen&&tempo!==bpm)diagnostics.push({code:'TEMPO_CHANGE_UNSUPPORTED',measure:mi+1,message:'Смена темпа сохранена в исходнике; проигрывание пока использует первый темп.'});if(!tempoSeen){tempo=bpm;tempoSeen=true;}}if(!tempoOnly&&node.querySelector('pedal'))diagnostics.push({code:'PEDAL_RELEASE_UNKNOWN',measure:mi+1,message:'Педаль не определяет время снятия пальца.'});}
-if(node.localName!=='note')continue;const rest=!!one(node,'rest'),grace=!!one(node,'grace'),chord=!!one(node,'chord'),pitch=one(node,'pitch'),duration=new Q(txt(node,'duration','0'),BigInt(divisions));if(duration.cmp(0)<0)throw Error('Отрицательная длительность');const start=chord?last:cursor;if(!chord){last=start;cursor=cursor.add(duration);}extent=max(extent,start.add(duration));if(tempoOnly)continue;const staff=Number(txt(node,'staff','1')),voice=txt(node,'voice','1'),pid=part.getAttribute('id')||'P'+pi;const hand=handMap[pid+':'+staff]||handMap[pid]||null;const id=pid+'.m'+mi+'.e'+events.length;const step=pitch?txt(pitch,'step'):null,alter=pitch?Number(txt(pitch,'alter','0')):0,octave=pitch?Number(txt(pitch,'octave')):0,midi=pitch?(octave+1)*12+names[step]+alter+transpose:null;const fnode=node.querySelector('notations technical fingering'),fraw=fnode?.textContent?.trim(),f=fraw&&/^[1-5]$/.test(fraw)?Number(fraw):null;const tied=children(node,'notations').flatMap(n=>children(n,'tied'));
+let divisions=1,beats=4,beatType=4,meter={groups:[{size:4,denominator:4}],beats:4,beatType:4,source:'default',confidence:'UNKNOWN'},offset=new Q(0),transpose=0;const measures=[],pedals=[];const sourceMeasures=children(part,'measure');for(const [mi,m]of sourceMeasures.entries()){let cursor=new Q(0),extent=new Q(0),last=new Q(0),unsupported=false;const events=[],attrs=one(m,'attributes');if(attrs){divisions=Number(txt(attrs,'divisions',String(divisions)));if(!Number.isSafeInteger(divisions)||divisions<=0)throw Error('Некорректные divisions');const times=children(attrs,'time');const time=times.find(t=>!t.getAttribute('number'))??times[0];if(time){
+  meter=meterFromXML(time);beats=meter.beats;beatType=meter.beatType;
+  if(meter.confidence==='UNKNOWN'||meter.free||times.length>1)diagnostics.push({code:meter.free?'METRIC_FREE':times.length>1?'METRIC_MULTIPLE_STAVES':'METRIC_GROUPS_UNKNOWN',measure:mi+1});
+}if(one(attrs,'transpose')){const tr=one(attrs,'transpose');transpose=Number(txt(tr,'chromatic','0'))+12*Number(txt(tr,'octave-change','0'));}}
+const boundaries=new Set();
+for(const node of Array.from(m.children)){
+  if(node.localName==='backup'||node.localName==='forward'){
+    const delta=new Q(txt(node,'duration','0'),BigInt(divisions));
+    cursor=node.localName==='backup'?cursor.sub(delta):cursor.add(delta);
+    if(cursor.cmp(0)<0)throw Error('MusicXML backup выходит за начало такта');
+    if(node.localName==='forward')extent=max(extent,cursor);
+    continue;
+  }
+  if(node.localName==='direction'||node.localName==='sound'){
+    if(!tempoOnly)pedals.push(...pedalEvents(node,offset.add(cursor),divisions,pedals.length));
+    const mark=part===tempoSource?directionTempo(node):null;
+    if(mark){
+      const sound=node.localName==='sound'?node:one(node,'sound');
+      const directionOffset=node.localName==='direction'?one(node,'offset'):null;
+      const timingOffset=(sound&&one(sound,'offset'))||(directionOffset?.getAttribute('sound')==='yes'?directionOffset:null);
+      const at=offset.add(cursor).add(new Q(timingOffset?.textContent.trim()||'0',BigInt(divisions))).toString();
+      const previous=tempoEntries.get(at);
+      if(!previous||mark.soundQPM||!previous.soundQPM)tempoEntries.set(at,{...previous,...mark,position:at,
+        printedBPM:mark.printedBPM??previous?.printedBPM??null,printedUnit:mark.printedUnit??previous?.printedUnit??null});
+      else if(mark.printedBPM)tempoEntries.set(at,{...previous,printedBPM:mark.printedBPM,printedUnit:mark.printedUnit,conflict:Math.abs(previous.normalizedQPM-mark.normalizedQPM)>1e-7});
+      if(tempoEntries.get(at).conflict)diagnostics.push({code:'TEMPO_MARK_CONFLICT',measure:mi+1,at});
+      if(!tempoSeen){tempo=mark.normalizedQPM;tempoSeen=true;}
+    }
+    if(!tempoOnly&&node.querySelector('pedal'))diagnostics.push({code:'PEDAL_RELEASE_UNKNOWN',measure:mi+1,message:'Педаль не определяет время снятия пальца.'});
+    continue;
+  }
+if(node.localName!=='note')continue;const rest=!!one(node,'rest'),grace=!!one(node,'grace'),chord=!!one(node,'chord'),pitch=one(node,'pitch'),duration=new Q(txt(node,'duration','0'),BigInt(divisions));if(duration.cmp(0)<0)throw Error('Отрицательная длительность');const start=chord?last:cursor;if(!chord){last=start;cursor=cursor.add(duration);}extent=max(extent,start.add(duration));if(!grace){boundaries.add(start.toString());boundaries.add(start.add(duration).toString());}if(tempoOnly)continue;const staff=Number(txt(node,'staff','1')),voice=txt(node,'voice','1'),pid=part.getAttribute('id')||'P'+pi;const hand=handMap[pid+':'+staff]||handMap[pid]||null;const id=pid+'.m'+mi+'.e'+events.length;const step=pitch?txt(pitch,'step'):null,alter=pitch?Number(txt(pitch,'alter','0')):0,octave=pitch?Number(txt(pitch,'octave')):0,midi=pitch?(octave+1)*12+names[step]+alter+transpose:null;const fnode=node.querySelector('notations technical fingering'),fraw=fnode?.textContent?.trim(),f=fraw&&/^[1-5]$/.test(fraw)?Number(fraw):null;const tied=children(node,'notations').flatMap(n=>children(n,'tied'));
 const soundTies=children(node,'tie');
 const ties=[...new Set((soundTies.length?soundTies:tied).flatMap(x=>{
   const type=x.getAttribute('type');return type==='continue'?['stop','start']:['start','stop'].includes(type)?[type]:[];
@@ -191,9 +297,13 @@ const event={id,kind:rest?'rest':'note',staff,voice,hand,start_quarters:start.to
   shape:mark.textContent.trim(),type:mark.getAttribute('type')
 })), stem:txt(node,'stem',null),unisonSpecial:Boolean(fraw&&!f||fnode?.getAttribute('alternate')==='yes'||fnode?.getAttribute('substitution')==='yes'||node.querySelector('cue, play, listen, notations technical harmonic, notations glissando, notations slide, notations ornaments'))||children(node,'notations').some(notation=>Array.from(notation.children).some(mark=>!['tied','articulations','technical','slur','arpeggiate','fermata'].includes(mark.localName))||children(notation,'technical').some(tech=>Array.from(tech.children).some(mark=>mark.localName!=='fingering'))),unisonTiming:['attack','release','end-dynamics'].map(name=>node.getAttribute(name)),articulations:children(node,'notations').flatMap(n=>children(n,'articulations').flatMap(a=>Array.from(a.children,x=>x.localName))),editor_onset_q:offset.add(start).toString(),editor_supported:supported&&!hasArpeggio};if(!rest){if(!pitch){event.kind='unpitched';event.unpitched=one(node,'unpitched')?.textContent||null;event.pitch=null;diagnostics.push({code:'UNPITCHED_UNSUPPORTED',event:id,message:'Нота без определённой высоты сохранена, но не преобразована в клавишу.'});}else event.pitch={step,alter,octave,midi};event.play12_symbol={value:'0123456789XY'[((midi||0)%12+12)%12],origin:'conversion'};notes.push(event);}events.push(event);}
 if(m.querySelector('repeat,ending,segno,coda')||m.querySelector('sound[da-capo],sound[dacapo],sound[dalsegno]')){diagnostics.push({code:'TRAVERSAL_UNSUPPORTED',measure:mi+1,message:'Повторы/переходы не раскрыты: показан записанный порядок.'});}
-if(unsupported)diagnostics.push({code:'REALIZATION_MISSING',measure:mi+1,message:'Специальный приём требует исполнительского расписания; участок не назначен автоматически.'});const nominal=new Q(BigInt(beats*4),BigInt(beatType)),length=m.getAttribute('implicit')==='yes'?extent:max(nominal,extent);if(!length.n)throw Error('Пустой такт без длительности');if(tempoOnly){offset=offset.add(length);continue;}const measure={index:mi,number:m.getAttribute('number')||String(mi+1),implicit:m.getAttribute('implicit')==='yes',attributes:{divisions,time:{beats,beat_type:beatType}},events,editor_duration_q:length.toString(),tempo_marks:mi===0?[{start_quarters:'0/1',bpm:tempo}]:[]};measures.push(measure);if(primaryPart)rounds.push({index:mi,start:num(offset),end:num(offset.add(length)),measureStart:num(offset),beats,beatType,beatQuarters:4/beatType,measureQuarters:num(length)});offset=offset.add(length);}if(tempoOnly)continue;total=max(total,offset);parts.push({id:part.getAttribute('id'),name:txt(children(one(dom.documentElement,'part-list')||{},'score-part').find(def=>def.getAttribute('id')===part.getAttribute('id'))||{},'part-name',part.getAttribute('id')),measures,pedals:pedals.sort((a,b)=>new Q(a.at).cmp(b.at)||a.order-b.order)});}
+if(unsupported)diagnostics.push({code:'REALIZATION_MISSING',measure:mi+1,message:'Специальный приём требует исполнительского расписания; участок не назначен автоматически.'});const nominal=new Q(BigInt(beats*4),BigInt(beatType)),short=extent.cmp(0)>0&&extent.cmp(nominal)<0,pickup=mi===0&&m.getAttribute('implicit')==='yes',
+terminalShort=mi===sourceMeasures.length-1&&short&&sourceMeasures.length>1&&
+  new Set(events.map(e=>e.staff+':'+e.voice)).size===1&&!one(m,'forward'),
+length=meter.free||m.getAttribute('implicit')==='yes'||terminalShort?extent:max(nominal,extent);
+if(short&&!meter.free)diagnostics.push({code:length.cmp(extent)===0?'METRIC_SHORT_MEASURE':'METRIC_PADDED_MEASURE',measure:mi+1});if(!length.n)throw Error('Пустой такт без длительности');if(tempoOnly){offset=offset.add(length);continue;}const measure={index:mi,number:m.getAttribute('number')||String(mi+1),implicit:m.getAttribute('implicit')==='yes',attributes:{divisions,time:{beats,beat_type:beatType}},events,editor_duration_q:length.toString(),tempo_marks:mi===0?[{start_quarters:'0/1',bpm:tempo}]:[]};measures.push(measure);if(primaryPart)metricRounds.push(metricRound({meter,measure,partId:part.getAttribute('id'),start:offset,length,nominal,pickup,boundaries}));if(primaryPart)rounds.push({index:mi,startQ:offset.toString(),endQ:offset.add(length).toString(),start:num(offset),end:num(offset.add(length)),measureStart:num(offset),beats,beatType,beatQuarters:4/beatType,measureQuarters:num(length)});offset=offset.add(length);}if(tempoOnly)continue;total=max(total,offset);parts.push({id:part.getAttribute('id'),name:txt(children(one(dom.documentElement,'part-list')||{},'score-part').find(def=>def.getAttribute('id')===part.getAttribute('id'))||{},'part-name',part.getAttribute('id')),measures,pedals:pedals.sort((a,b)=>new Q(a.at).cmp(b.at)||a.order-b.order)});}
 for(const part of parts){realizeArpeggios(part,diagnostics);preserveUnresolvedArpeggioTies(part);}
-if(!notes.length)throw Error('В файле нет нот.');for(const e of notes)if(!e.hand)diagnostics.push({code:'HAND_UNKNOWN',event:e.id,message:'Укажите руку для партии/нотоносца.'});const reference=21;for(const e of notes)if(e.pitch)e.play12_symbol.value='0123456789XY'[((e.pitch.midi-9)%12+12)%12]||'?';const score={format:'play12-json',version:'0.1',source:{type:'musicxml',title},play12:{zero_pitch_class:'A',reference_zero_midi:reference,symbols:'0123456789XY',pitch_class_mapping:Object.fromEntries(Array.from('0123456789XY').map((x,i)=>[String((i+9)%12),x]))},score:{title,creators:[],parts},editor:{schema:'play12-editor/1',sharedUnison:true,total_quarters:total.toString(),rounds,tempo,tempoMap:[...new Map([[0,120],...tempoEntries])].sort(([a],[b])=>a-b).map(([at,bpm])=>({at,bpm})),diagnostics}};return realizeFermatas(score);}
+if(!notes.length)throw Error('В файле нет нот.');for(const e of notes)if(!e.hand)diagnostics.push({code:'HAND_UNKNOWN',event:e.id,message:'Укажите руку для партии/нотоносца.'});const reference=21;for(const e of notes)if(e.pitch)e.play12_symbol.value='0123456789XY'[((e.pitch.midi-9)%12+12)%12]||'?';const score={format:'play12-json',version:'0.1',source:{type:'musicxml',title},play12:{zero_pitch_class:'A',reference_zero_midi:reference,symbols:'0123456789XY',pitch_class_mapping:Object.fromEntries(Array.from('0123456789XY').map((x,i)=>[String((i+9)%12),x]))},score:{title,creators:[],parts},editor:{schema:'play12-editor/1',sharedUnison:true,total_quarters:total.toString(),rounds,tempo,tempoMap:[...new Map([['0/1',{normalizedQPM:120}],...tempoEntries])].sort(([a],[b])=>new Q(a).cmp(b)).map(([q,mark])=>({at:num(q),q,bpm:mark.normalizedQPM})),metricMap:{version:METRIC_VERSION,rounds:metricRounds,tempoMarks:[...tempoEntries.values()].sort((a,b)=>new Q(a.position).cmp(b.position))},diagnostics}};return realizeFermatas(score);}
 const events=score=>score.score.parts.flatMap(p=>p.measures.flatMap(m=>m.events)).filter(e=>e.kind==='note');
 // Manual assignment needs a pitched key and a hand, even when a technique blocks automatic realization.
 function isManuallyAssignable(e){return (e.hand === "L" || e.hand === "R") && !e.grace && Number.isInteger(e.pitch?.midi) && e.pitch.midi >= 0 && e.pitch.midi <= 127 && new Q(e.duration_quarters).cmp(0) > 0;}

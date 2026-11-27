@@ -1,0 +1,4230 @@
+[
+  {
+    "name": "M01.musicxml",
+    "totalQ": "4/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "2/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M02.musicxml",
+    "totalQ": "6/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M03.musicxml",
+    "totalQ": "8/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M04.musicxml",
+    "totalQ": "8/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M05.musicxml",
+    "totalQ": "3/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "3/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/2",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M06.musicxml",
+    "totalQ": "6/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M07.musicxml",
+    "totalQ": "9/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/1",
+          2,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "9/2",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "6/1",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "15/2",
+          2,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M08.musicxml",
+    "totalQ": "12/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          3,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "6/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "15/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "21/2",
+          3,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        94.5
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 63,
+        "printedUnit": "3/2",
+        "soundQPM": 94.5,
+        "normalizedQPM": 94.5,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M09.musicxml",
+    "totalQ": "10/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "5/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "8/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_GROUPS_UNKNOWN"
+    ]
+  },
+  {
+    "name": "M10.musicxml",
+    "totalQ": "14/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "7/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "8/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "10/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "11/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "12/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "13/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_GROUPS_UNKNOWN"
+    ]
+  },
+  {
+    "name": "M11.musicxml",
+    "totalQ": "5/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "5/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "7/2",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/2",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M12.musicxml",
+    "totalQ": "5/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          3,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "5/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "7/2",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          3,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "9/2",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M13.musicxml",
+    "totalQ": "7/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          4,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/2",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "7/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/2",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "11/2",
+          4,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "13/2",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M14.musicxml",
+    "totalQ": "7/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          3,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/2",
+          5,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "7/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/2",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          3,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "11/2",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          5,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "13/2",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M15.musicxml",
+    "totalQ": "11/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/2",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "7/2",
+          7,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          8,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/2",
+          9,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          10,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "11/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "13/2",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "15/2",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "8/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "17/2",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/1",
+          7,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "19/2",
+          8,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "10/1",
+          9,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "21/2",
+          10,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_GROUPS_UNKNOWN"
+    ]
+  },
+  {
+    "name": "M16.musicxml",
+    "totalQ": "7/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M17.musicxml",
+    "totalQ": "7/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "11/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M18.musicxml",
+    "totalQ": "9/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "15/2",
+          3,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M19.musicxml",
+    "totalQ": "5/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "1/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_SHORT_MEASURE"
+    ]
+  },
+  {
+    "name": "M20.musicxml",
+    "totalQ": "5/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_SHORT_MEASURE"
+    ]
+  },
+  {
+    "name": "M21.musicxml",
+    "totalQ": "8/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "5/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M22.musicxml",
+    "totalQ": "6/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M23.musicxml",
+    "totalQ": "6/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M24.musicxml",
+    "totalQ": "8/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M25.musicxml",
+    "totalQ": "6/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [
+      {
+        "q": "1/1",
+        "extra": "1/2",
+        "start": 1,
+        "end": 1.5
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "name": "M26.musicxml",
+    "totalQ": "8/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ],
+      [
+        "4/1",
+        90
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      },
+      {
+        "printedBPM": 90,
+        "printedUnit": "1/1",
+        "soundQPM": 90,
+        "normalizedQPM": 90,
+        "source": "sound",
+        "conflict": false,
+        "position": "4/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M27.musicxml",
+    "totalQ": "6/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ],
+      [
+        "3/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": null,
+        "normalizedQPM": 120,
+        "source": "metronome",
+        "conflict": false,
+        "position": "0/1"
+      },
+      {
+        "printedBPM": 80,
+        "printedUnit": "3/2",
+        "soundQPM": null,
+        "normalizedQPM": 120,
+        "source": "metronome",
+        "conflict": false,
+        "position": "3/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M28.musicxml",
+    "totalQ": "7/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/2",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "7/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/2",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "11/2",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "13/2",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_GROUPS_UNKNOWN"
+    ]
+  },
+  {
+    "name": "M29.musicxml",
+    "totalQ": "12/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          3,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "6/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "15/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "21/2",
+          3,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        90
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 63,
+        "printedUnit": "3/2",
+        "soundQPM": 90,
+        "normalizedQPM": 90,
+        "source": "sound",
+        "conflict": true,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "TEMPO_MARK_CONFLICT"
+    ]
+  },
+  {
+    "name": "M30.musicxml",
+    "totalQ": "6/1",
+    "rounds": 2,
+    "counts": [
+      [],
+      []
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_FREE"
+    ]
+  },
+  {
+    "name": "M31.musicxml",
+    "totalQ": "12/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "6/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "8/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "10/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M32.musicxml",
+    "totalQ": "2/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "1/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M33.musicxml",
+    "totalQ": "7/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/2",
+          5,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "7/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/2",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "11/2",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          5,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "13/2",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "M34.musicxml",
+    "totalQ": "7/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/2",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/2",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/2",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "7/2",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/2",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "11/2",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "13/2",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 120,
+        "printedUnit": "1/1",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_GROUPS_UNKNOWN"
+    ]
+  },
+  {
+    "name": "ed-sheeran-perfect-ed-sheeran-for-piano-qmza1tvsngxm(1).mxl",
+    "totalQ": "414/1",
+    "rounds": 69,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          3,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "6/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "15/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "21/2",
+          3,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        94.5
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 63,
+        "printedUnit": "3/2",
+        "soundQPM": 94.5,
+        "normalizedQPM": 94.5,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "PEDAL_RELEASE_UNKNOWN"
+    ]
+  },
+  {
+    "name": "creep-radiohead(1).mxl",
+    "totalQ": "428/1",
+    "rounds": 107,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "5/1",
+          1,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "7/1",
+          3,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        95
+      ],
+      [
+        "416/1",
+        70
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 95,
+        "printedUnit": "1/1",
+        "soundQPM": 95,
+        "normalizedQPM": 95,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      },
+      {
+        "printedBPM": 70,
+        "printedUnit": "1/1",
+        "soundQPM": 70,
+        "normalizedQPM": 70,
+        "source": "sound",
+        "conflict": false,
+        "position": "416/1"
+      }
+    ],
+    "fermatas": [
+      {
+        "q": "424/1",
+        "extra": "4/1",
+        "start": 424,
+        "end": 428
+      }
+    ],
+    "diagnostics": [
+      "METRIC_PADDED_MEASURE",
+      "PEDAL_RELEASE_UNKNOWN"
+    ]
+  },
+  {
+    "name": "interstellar-suite-hans-zimmer.musicxml(1).xml",
+    "totalQ": "1206/1",
+    "rounds": 372,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "5/1",
+          2,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        80
+      ],
+      [
+        "149/1",
+        93
+      ],
+      [
+        "324/1",
+        60
+      ],
+      [
+        "399/1",
+        62
+      ],
+      [
+        "405/1",
+        80
+      ],
+      [
+        "495/1",
+        60
+      ],
+      [
+        "512/1",
+        100
+      ],
+      [
+        "576/1",
+        90
+      ],
+      [
+        "688/1",
+        100
+      ],
+      [
+        "736/1",
+        150
+      ],
+      [
+        "852/1",
+        55
+      ],
+      [
+        "936/1",
+        80
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 80,
+        "printedUnit": "1/1",
+        "soundQPM": 80,
+        "normalizedQPM": 80,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      },
+      {
+        "printedBPM": 93,
+        "printedUnit": "1/1",
+        "soundQPM": 93,
+        "normalizedQPM": 93,
+        "source": "sound",
+        "conflict": false,
+        "position": "149/1"
+      },
+      {
+        "printedBPM": 60,
+        "printedUnit": "1/1",
+        "soundQPM": 60,
+        "normalizedQPM": 60,
+        "source": "sound",
+        "conflict": false,
+        "position": "324/1"
+      },
+      {
+        "printedBPM": null,
+        "printedUnit": null,
+        "soundQPM": 62,
+        "normalizedQPM": 62,
+        "source": "sound",
+        "conflict": false,
+        "position": "399/1"
+      },
+      {
+        "printedBPM": 80,
+        "printedUnit": "1/1",
+        "soundQPM": 80,
+        "normalizedQPM": 80,
+        "source": "sound",
+        "conflict": false,
+        "position": "405/1"
+      },
+      {
+        "printedBPM": 60,
+        "printedUnit": "1/1",
+        "soundQPM": 60,
+        "normalizedQPM": 60,
+        "source": "sound",
+        "conflict": false,
+        "position": "495/1"
+      },
+      {
+        "printedBPM": 100,
+        "printedUnit": "1/1",
+        "soundQPM": 100,
+        "normalizedQPM": 100,
+        "source": "sound",
+        "conflict": false,
+        "position": "512/1"
+      },
+      {
+        "printedBPM": 90,
+        "printedUnit": "1/1",
+        "soundQPM": 90,
+        "normalizedQPM": 90,
+        "source": "sound",
+        "conflict": false,
+        "position": "576/1"
+      },
+      {
+        "printedBPM": 100,
+        "printedUnit": "1/1",
+        "soundQPM": 100,
+        "normalizedQPM": 100,
+        "source": "sound",
+        "conflict": false,
+        "position": "688/1"
+      },
+      {
+        "printedBPM": 150,
+        "printedUnit": "1/1",
+        "soundQPM": 150,
+        "normalizedQPM": 150,
+        "source": "sound",
+        "conflict": false,
+        "position": "736/1"
+      },
+      {
+        "printedBPM": 55,
+        "printedUnit": "1/1",
+        "soundQPM": 55,
+        "normalizedQPM": 55,
+        "source": "sound",
+        "conflict": false,
+        "position": "852/1"
+      },
+      {
+        "printedBPM": 80,
+        "printedUnit": "1/1",
+        "soundQPM": 80,
+        "normalizedQPM": 80,
+        "source": "sound",
+        "conflict": false,
+        "position": "936/1"
+      }
+    ],
+    "fermatas": [
+      {
+        "q": "576/1",
+        "extra": "2/1",
+        "start": 576,
+        "end": 578
+      },
+      {
+        "q": "852/1",
+        "extra": "4/1",
+        "start": 854,
+        "end": 858
+      },
+      {
+        "q": "1152/1",
+        "extra": "1/1",
+        "start": 1158,
+        "end": 1159
+      },
+      {
+        "q": "2405/2",
+        "extra": "1/8",
+        "start": 1209.5,
+        "end": 1209.625
+      },
+      {
+        "q": "1206/1",
+        "extra": "3/1",
+        "start": 1213.125,
+        "end": 1216.125
+      }
+    ],
+    "diagnostics": [
+      "PEDAL_RELEASE_UNKNOWN",
+      "TRAVERSAL_UNSUPPORTED",
+      "ARPEGGIO_UNRESOLVED"
+    ]
+  },
+  {
+    "name": "Die With A Smile - Lady Gaga + Bruno Mars.mxl",
+    "totalQ": "656/1",
+    "rounds": 219,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        158
+      ],
+      [
+        "597/1",
+        150
+      ],
+      [
+        "600/1",
+        148
+      ],
+      [
+        "617/1",
+        158
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 158,
+        "printedUnit": "1/1",
+        "soundQPM": 158,
+        "normalizedQPM": 158,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      },
+      {
+        "printedBPM": 150,
+        "printedUnit": "1/1",
+        "soundQPM": 150,
+        "normalizedQPM": 150,
+        "source": "sound",
+        "conflict": false,
+        "position": "597/1"
+      },
+      {
+        "printedBPM": 148,
+        "printedUnit": "1/1",
+        "soundQPM": 148,
+        "normalizedQPM": 148,
+        "source": "sound",
+        "conflict": false,
+        "position": "600/1"
+      },
+      {
+        "printedBPM": 158,
+        "printedUnit": "1/1",
+        "soundQPM": 158,
+        "normalizedQPM": 158,
+        "source": "sound",
+        "conflict": false,
+        "position": "617/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "PEDAL_RELEASE_UNKNOWN",
+      "ARPEGGIO_UNRESOLVED"
+    ]
+  },
+  {
+    "name": "clocks-stage21-local.xml",
+    "totalQ": "88/1",
+    "rounds": 22,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "5/1",
+          1,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "7/1",
+          3,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ],
+      [
+        "84/1",
+        80
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 80,
+        "printedUnit": "3/2",
+        "soundQPM": 120,
+        "normalizedQPM": 120,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      },
+      {
+        "printedBPM": 80,
+        "printedUnit": "1/1",
+        "soundQPM": 80,
+        "normalizedQPM": 80,
+        "source": "sound",
+        "conflict": false,
+        "position": "84/1"
+      }
+    ],
+    "fermatas": [
+      {
+        "q": "88/1",
+        "extra": "1/2",
+        "start": 88,
+        "end": 88.5
+      }
+    ],
+    "diagnostics": [
+      "TRAVERSAL_UNSUPPORTED"
+    ]
+  },
+  {
+    "name": "pirate-stage21-local.xml",
+    "totalQ": "258/1",
+    "rounds": 86,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "9/2",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        190
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 190,
+        "printedUnit": "1/1",
+        "soundQPM": 190,
+        "normalizedQPM": 190,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "when_the_saints_play12_beginner.musicxml",
+    "totalQ": "72/1",
+    "rounds": 19,
+    "counts": [
+      [
+        [
+          "0/1",
+          1,
+          "WEAK",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "1/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "3/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        160
+      ]
+    ],
+    "marks": [
+      {
+        "printedBPM": 160,
+        "printedUnit": "1/1",
+        "soundQPM": 160,
+        "normalizedQPM": 160,
+        "source": "sound",
+        "conflict": false,
+        "position": "0/1"
+      }
+    ],
+    "fermatas": [],
+    "diagnostics": [
+      "METRIC_SHORT_MEASURE",
+      "TRAVERSAL_UNSUPPORTED",
+      "METRIC_PADDED_MEASURE"
+    ]
+  }
+]
