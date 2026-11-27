@@ -151,16 +151,17 @@
     let midiConnectState = 'choice';
     let listenPosition = 0;
     let listenPlaybackState = 'paused';
-    const spotlight = global.Play12Coach.create(root,{padding:3,feather:3,portal:true,avoidTargets:true,dock:(card,target)=>card.id==='onboarding-listen-coach'&&alignedLayout?.dockCoach(card,target),reveal:target=>alignedLayout?.reveal(target)});
+    const spotlight = global.Play12Coach.create(root,{padding:3,feather:3,portal:true,avoidTargets:true,dock:(card,target)=>card.id==='onboarding-listen-coach'&&alignedLayout?.dockCoach(card,target,card.classList.contains('tutorial-coach-centered')),reveal:target=>alignedLayout?.reveal(target)});
     // Targets describe WHERE for each instruction; card positioning is independent.
     const targetsFor = instruction => {
       const element = id => document.getElementById(id);
       const piano = runtime?.pianoView?.mount;
       if (instruction === 'choose-zero') return [element('onboarding-choose-zero')];
       if (instruction === 'zero-keyboard') return [piano];
+      if (instruction === 'verify-cards') return [piano?.querySelector('.piano-visible-card-region'), piano];
       if (instruction === 'cards') return [piano?.querySelector('.piano-visible-card-region')];
       if (instruction === 'round-range') return [element('round-range-controls'), element('round-timeline')];
-      if (instruction === 'explain') return [element('play12-score'), piano];
+      if (instruction === 'explain' || instruction === 'final-explain') return [element('play12-score'), piano];
       return instruction ? [element(instruction)] : [];
     };
     const spotlightHint = (element, instruction, pulse = false, onReveal = null) => {
@@ -205,6 +206,7 @@
       const key = `${state.onboardingStep}:${text}`;
       if (hintKeys.get(listenCoach) === key) return;
       if (dismissedHints.has(key)) { hideHint(listenCoach); return; }
+      listenCoach.classList.toggle('tutorial-coach-centered', control === 'final-explain');
       listenCoach.dataset.copy = text;
       listenPrompt.innerHTML = text;
       const deferTimer = Boolean(afterDismiss && alignedLayout);
@@ -777,7 +779,7 @@
       const retryCopy = retry ? `${t('Check that the cards are placed correctly and try again.')}<br>` : '';
       showCoach(target == null
         ? t(yellow ? 'The yellow 1 card is not visible on this keyboard range.' : 'The green 2 card is not visible on this keyboard range.')
-        : `${retryCopy}${t(yellow ? 'Press the key under the <strong>yellow 1</strong> card' : 'Press the key under the <strong>green 2</strong> card')}`, 'cards', true);
+        : `${retryCopy}${t(yellow ? 'Press the key under the <strong>yellow 1</strong> card' : 'Press the key under the <strong>green 2</strong> card')}`, 'verify-cards', true);
       keepCoachUntilAction();
     };
     const startCardVerification = () => {
@@ -1044,7 +1046,7 @@
       else if (stage === 'ready') showActionCoach(t('Now press Play and try to play the melody with your right hand.'), 'play');
       else if(stage==='metronome-info')panelInfo('metronome','Here you can change the tempo to learn at a comfortable speed. The metronome helps you keep the rhythm.','tempo-navigator','metronome-tempo');
       else if (stage === 'metronome-on') showActionCoach(t('Try turning on the metronome.'), 'tempo-metronome');
-      else if (stage === 'metronome-tempo') showCoach(t('Change the speed using the buttons beside BPM.'),'tempo-navigator',false,()=>setGuideStage('metronome-on'));
+      else if (stage === 'metronome-tempo') showCoach(t('Change the tempo using the arrow buttons or drag the panel up and down. Up to play faster, down to play slower.'),'tempo-navigator',false,()=>setGuideStage('metronome-on'));
       else if (stage === 'metronome-play') showActionCoach(`${t('Try playing five notes in a row with the metronome.')}<br>${t('Press Play')}`, 'play');
       else if (stage === 'round-info') showCoach(`<strong>${t('Round Navigation')}</strong><br>${t('Use the arrows to move between rounds. Drag the panel up or down to quickly navigate through the piece. Tap the round number to jump directly to a specific section.')}`, 'round-navigator', false, () => {state.introducedPanels ||= {};state.introducedPanels.rounds=true;setGuideStage('round-go4');});
       else if (stage === 'round-go4') showActionCoach(`${t('Choose the section you want to practise.')}<br>${t('Go to Round 4')}`, 'round-navigator');
@@ -1057,7 +1059,7 @@
         if (roundTraining.started || roundTraining.feedbackPending) showCoach('');
         else showActionCoach(`${t('Play Rounds 2–4 correctly twice')}<br><small>${t("Press Play when you're ready.")}</small>`, 'play');
       }
-      else if (stage === 'final-instruction') showCoach(`${t('Now try to play the whole melody with your right hand from beginning to end.')}<br><br>${t('Take your time. If you lose your place, try again.')}`, 'explain', false, beginFinalPractice);
+      else if (stage === 'final-instruction') showCoach(`${t('Now try to play the whole melody with your right hand from beginning to end.')}<br><br>${t('Take your time. If you lose your place, try again.')}`, 'final-explain', false, beginFinalPractice);
       else showCoach('');
     };
     const isRu = () => i18n.isRu();

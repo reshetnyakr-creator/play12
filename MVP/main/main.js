@@ -43,25 +43,37 @@ let libraryVersion=0;async function library(){const version=++libraryVersion;con
 function cache(){dirty=true;try{localStorage.setItem('play12.main.draft:'+doc.id,JSON.stringify({revision,changes:{title:doc.title,manual:doc.manual,history:doc.history,cursor:doc.cursor,revision:doc.revision,lastValidation:doc.lastValidation}}));}catch(e){error(Error(t('Черновик не сохранён: недостаточно места. Сохраните изменения перед выходом.')));}sync();}
 function melodyName(d){
   const name=element('div',null,{class:'main-melody-name'});
-  const title=melodyTitle(d);
-  const rename=button('✎',()=>{
+  if(!editing||d.id!==doc?.id){
+    name.append(melodyTitle(d));
+    return name;
+  }
+  const openRename=()=>{
     input.value=d.title;input.setCustomValidity('');
-    title.hidden=rename.hidden=true;input.hidden=false;input.focus();input.select();
-  });
-  const label=t('Переименовать мелодию');
-  rename.className='main-rename-melody';rename.title=label;rename.setAttribute('aria-label',label);
-  const input=element('input',null,{type:'text',maxlength:'120','aria-label':t('Название мелодии'),hidden:''});
-  const close=()=>{input.hidden=true;title.hidden=rename.hidden=false;rename.focus();};
+    title.hidden=true;form.hidden=false;input.focus();input.select();
+  };
+  const title=button(d.title,openRename);
+  title.className='main-melody-title main-editable-name';
+  title.setAttribute('aria-label',t('Переименовать мелодию')+': '+d.title);
+  const form=element('form',null,{class:'main-title-form',hidden:''});
+  const input=element('input',null,{type:'text',maxlength:'120','aria-label':t('Название мелодии'),required:''});
+  const commit=element('button','✓',{type:'submit','aria-label':t('Сохранить')});
+  const close=()=>{form.hidden=true;title.hidden=false;title.focus();};
+  const cancel=button('×',close);
+  cancel.setAttribute('aria-label',Play12Routes.locale()==='ru'?'Отмена':'Cancel');
+  form.append(input,commit,cancel);
   input.addEventListener('input',()=>input.setCustomValidity(''));
-  input.addEventListener('keydown',async event=>{
-    if(event.isComposing||!['Enter','Escape'].includes(event.key))return;
-    event.preventDefault();event.stopPropagation();
-    if(event.key==='Escape'){close();return;}
+  form.addEventListener('keydown',event=>{
+    if(event.isComposing)return;
+    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();if(!saving)close();}
+    if(event.key==='Enter')event.stopPropagation();
+  });
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
     const value=input.value.trim();
     if(!value){input.setCustomValidity(t('Введите название мелодии.'));input.reportValidity();return;}
     if(value===d.title){close();return;}
     if(saving)return;
-    saving=true;input.disabled=true;sync();
+    saving=true;for(const control of form.elements)control.disabled=true;sync();
     try{
       const stored=await E.Store.get(d.id);
       if(!stored||stored.revision!==d.revision)throw Error(t('Мелодия изменилась. Обновите список и попробуйте снова.'));
@@ -75,11 +87,11 @@ function melodyName(d){
         document.title=value+' — Play12';
       }
       await library();
-      for(const row of rows.children)if(row.dataset.melodyId===d.id){row.querySelector('.main-rename-melody').focus();break;}
-    }catch(e){error(e);input.disabled=false;input.focus();}
+      for(const row of rows.children)if(row.dataset.melodyId===d.id){row.querySelector('.main-melody-title').focus();break;}
+    }catch(e){error(e);for(const control of form.elements)control.disabled=false;input.focus();}
     finally{saving=false;sync();}
   });
-  name.append(title,rename,input);
+  name.append(title,form);
   return name;
 }
 function sync(){if(!doc)return;document.body.classList.toggle('is-editing',editing);$('main-edit-tools').hidden=!editing;$('main-save').disabled=saving||!dirty;$('main-undo').disabled=!editing||doc.cursor===0;$('main-redo').disabled=!editing||doc.cursor===doc.history.length;for(const g of $('play12-score').querySelectorAll('g[data-event-id]')){g.classList.toggle('main-selected',g.dataset.eventId===selected&&editing);g.style.touchAction=editing?'none':'pan-x pan-y';};$('main-fingers').hidden=!selected||!editing;document.body.classList.toggle('training-nav-locked',!!selected&&editing);if(selected&&editing)positionFingers();}
