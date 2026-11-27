@@ -1,0 +1,4128 @@
+[
+  {
+    "case": "M01",
+    "status": "PASS",
+    "detail": "Простой размер, длина и четвертные доли совпали.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "2/4",
+          "length": "2",
+          "groups": [
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "2/4",
+          "length": "2",
+          "groups": [
+            1,
+            1
+          ],
+          "beatPositions": [
+            "2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "2"
+        }
+      ],
+      "totalQ": "4",
+      "nominalSeconds": "2",
+      "executionSeconds": "2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 2,
+        "beats": 2,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 2
+      },
+      {
+        "start": 2,
+        "end": 4,
+        "beats": 2,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 2
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 2,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 4,
+      "beats": 4,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 4,
+      "total": 4,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M02",
+    "status": "PASS",
+    "detail": "Простой трёхдольный размер.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "3/4",
+          "length": "3",
+          "groups": [
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "3/4",
+          "length": "3",
+          "groups": [
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "3",
+            "4",
+            "5"
+          ],
+          "qpm": "120",
+          "start": "3"
+        }
+      ],
+      "totalQ": "6",
+      "nominalSeconds": "3",
+      "executionSeconds": "3"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 3,
+        "beats": 3,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 3
+      },
+      {
+        "start": 3,
+        "end": 6,
+        "beats": 3,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 3
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 3,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 6,
+      "beats": 6,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 6,
+      "total": 6,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M03",
+    "status": "PASS",
+    "detail": "Базовый транспорт, Pre-count и Loop подтверждены в Main.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "4",
+            "5",
+            "6",
+            "7"
+          ],
+          "qpm": "120",
+          "start": "4"
+        }
+      ],
+      "totalQ": "8",
+      "nominalSeconds": "4",
+      "executionSeconds": "4"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      {
+        "start": 4,
+        "end": 8,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 4,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 8,
+      "beats": 8,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 8,
+      "total": 8,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": {
+      "name": "M03",
+      "rounds": 2,
+      "clockSeconds": 4,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      "bpm": 120,
+      "effective": 120,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.2198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.7198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.2198185941043085,
+            "accent": false
+          }
+        ],
+        "clock": 2.879274376417233,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.230657596371882,
+          1.7298866213151927
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.7198185941043084,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 0
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.2198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.7198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.2198185941043085,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 8,
+          "beats": 8,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-3",
+            "time": 2.2198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.2541156462585032,
+            "accent": false
+          },
+          {
+            "key": "steady-5",
+            "time": 2.4950226757369616,
+            "accent": false
+          }
+        ]
+      },
+      "loopWrap": 1
+    }
+  },
+  {
+    "case": "M04",
+    "status": "PARTIAL",
+    "detail": "Раунд и две половинные доли распознаны. Обычный метроном Main планирует четверти.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "2/2",
+          "length": "4",
+          "groups": [
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "2/2",
+          "length": "4",
+          "groups": [
+            1,
+            1
+          ],
+          "beatPositions": [
+            "4",
+            "6"
+          ],
+          "qpm": "120",
+          "start": "4"
+        }
+      ],
+      "totalQ": "8",
+      "nominalSeconds": "4",
+      "executionSeconds": "4"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4,
+        "beats": 2,
+        "beatType": 2,
+        "beatQuarters": 2,
+        "measureQuarters": 4
+      },
+      {
+        "start": 4,
+        "end": 8,
+        "beats": 2,
+        "beatType": 2,
+        "beatQuarters": 2,
+        "measureQuarters": 4
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 4,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 8,
+      "beats": 4,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 4,
+      "total": 4,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M05",
+    "status": "PARTIAL",
+    "detail": "Импорт сохраняет восьмые доли. Основной планировщик Main идёт четвертями.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "3/8",
+          "length": "3/2",
+          "groups": [
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1/2",
+            "1"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "3/8",
+          "length": "3/2",
+          "groups": [
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "3/2",
+            "2",
+            "5/2"
+          ],
+          "qpm": "120",
+          "start": "3/2"
+        }
+      ],
+      "totalQ": "3",
+      "nominalSeconds": "3/2",
+      "executionSeconds": "3/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 1.5,
+        "beats": 3,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 1.5
+      },
+      {
+        "start": 1.5,
+        "end": 3,
+        "beats": 3,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 1.5
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 1.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 3,
+      "beats": 6,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 6,
+      "total": 6,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M06",
+    "status": "FAIL",
+    "detail": "В Main шесть подписей, две ожидаемые основные доли.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "3",
+            "9/2"
+          ],
+          "qpm": "120",
+          "start": "3"
+        }
+      ],
+      "totalQ": "6",
+      "nominalSeconds": "3",
+      "executionSeconds": "3"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 3,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      },
+      {
+        "start": 3,
+        "end": 6,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 3,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 6,
+      "beats": 12,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 12,
+      "total": 12,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": {
+      "name": "M06",
+      "rounds": 2,
+      "clockSeconds": 3,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 3,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      },
+      "bpm": 120,
+      "effective": 120,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.489750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.989750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.489750566893424,
+            "accent": false
+          }
+        ],
+        "clock": 2.8618594104308386,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.4889795918367348,
+          1.991111111111111
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-2",
+            "time": 1.989750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.489750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.5153401360544216,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 6,
+          "beats": 12,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-3",
+            "time": 2.489750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.5153401360544216,
+            "accent": false
+          },
+          {
+            "key": "steady-5",
+            "time": 2.7359297052154194,
+            "accent": false
+          }
+        ]
+      },
+      "loopWrap": 1
+    }
+  },
+  {
+    "case": "M07",
+    "status": "FAIL",
+    "detail": "Девять позиций в раунде вместо трёх групп.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "9/8",
+          "length": "9/2",
+          "groups": [
+            3,
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "9/8",
+          "length": "9/2",
+          "groups": [
+            3,
+            3,
+            3
+          ],
+          "beatPositions": [
+            "9/2",
+            "6",
+            "15/2"
+          ],
+          "qpm": "120",
+          "start": "9/2"
+        }
+      ],
+      "totalQ": "9",
+      "nominalSeconds": "9/2",
+      "executionSeconds": "9/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4.5,
+        "beats": 9,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 4.5
+      },
+      {
+        "start": 4.5,
+        "end": 9,
+        "beats": 9,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 4.5
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 4.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 9,
+      "beats": 18,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 18,
+      "total": 18,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M08",
+    "status": "FAIL",
+    "detail": "Двенадцать позиций, четыре ожидаемые доли. Нотная длительность верна.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "12/8",
+          "length": "6",
+          "groups": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2",
+            "3",
+            "9/2"
+          ],
+          "qpm": "189/2",
+          "start": "0"
+        },
+        {
+          "meter": "12/8",
+          "length": "6",
+          "groups": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "beatPositions": [
+            "6",
+            "15/2",
+            "9",
+            "21/2"
+          ],
+          "qpm": "189/2",
+          "start": "6"
+        }
+      ],
+      "totalQ": "12",
+      "nominalSeconds": "160/21",
+      "executionSeconds": "160/21"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 6,
+        "beats": 12,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 6
+      },
+      {
+        "start": 6,
+        "end": 12,
+        "beats": 12,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 6
+      }
+    ],
+    "bpmDisplay": 95,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 94.5
+      }
+    ],
+    "clockSeconds": 7.619047619047619,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 12,
+      "beats": 24,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 24,
+      "total": 24,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": {
+      "name": "M08",
+      "rounds": 2,
+      "clockSeconds": 7.619047619047619,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 6,
+        "beats": 12,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 6
+      },
+      "bpm": 95,
+      "effective": 94.5,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.1544671201814058,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.7893877551020407,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.4243083900226754,
+            "accent": false
+          }
+        ],
+        "clock": 2.8982857142857146,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.1493877551020408,
+          1.7908390022675738
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.519546485260771,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.1544671201814058,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.7893877551020407,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.4243083900226754,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 12,
+          "beats": 24,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-3",
+            "time": 2.4243083900226754,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.465997732426304,
+            "accent": false
+          },
+          {
+            "key": "steady-5",
+            "time": 2.6749773242630384,
+            "accent": false
+          }
+        ]
+      },
+      "loopWrap": 1
+    }
+  },
+  {
+    "case": "M09",
+    "status": "AMBIGUOUS",
+    "detail": "Без явных групп 5/4. Сохранены пять четвертей.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "5/4",
+          "length": "5",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "5/4",
+          "length": "5",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "5"
+        }
+      ],
+      "totalQ": "10",
+      "nominalSeconds": "5",
+      "executionSeconds": "5"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 5,
+        "beats": 5,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 5
+      },
+      {
+        "start": 5,
+        "end": 10,
+        "beats": 5,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 5
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 10,
+      "beats": 10,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 10,
+      "total": 10,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M10",
+    "status": "AMBIGUOUS",
+    "detail": "Без явных групп 7/4. Сохранены семь четвертей.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "7/4",
+          "length": "7",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "7/4",
+          "length": "7",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "7"
+        }
+      ],
+      "totalQ": "14",
+      "nominalSeconds": "7",
+      "executionSeconds": "7"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 7,
+        "beats": 7,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 7
+      },
+      {
+        "start": 7,
+        "end": 14,
+        "beats": 7,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 7
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 7,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 14,
+      "beats": 14,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 14,
+      "total": 14,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M11",
+    "status": "UNSUPPORTED",
+    "detail": "Аддитивный числитель отклонён.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "2+3/8",
+          "length": "5/2",
+          "groups": [
+            2,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "1"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "2+3/8",
+          "length": "5/2",
+          "groups": [
+            2,
+            3
+          ],
+          "beatPositions": [
+            "5/2",
+            "7/2"
+          ],
+          "qpm": "120",
+          "start": "5/2"
+        }
+      ],
+      "totalQ": "5",
+      "nominalSeconds": "5/2",
+      "executionSeconds": "5/2"
+    },
+    "importError": "Составной/неопределённый размер пока не поддержан.",
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M12",
+    "status": "UNSUPPORTED",
+    "detail": "Аддитивный числитель отклонён.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "3+2/8",
+          "length": "5/2",
+          "groups": [
+            3,
+            2
+          ],
+          "beatPositions": [
+            "0",
+            "3/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "3+2/8",
+          "length": "5/2",
+          "groups": [
+            3,
+            2
+          ],
+          "beatPositions": [
+            "5/2",
+            "4"
+          ],
+          "qpm": "120",
+          "start": "5/2"
+        }
+      ],
+      "totalQ": "5",
+      "nominalSeconds": "5/2",
+      "executionSeconds": "5/2"
+    },
+    "importError": "Составной/неопределённый размер пока не поддержан.",
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M13",
+    "status": "UNSUPPORTED",
+    "detail": "Аддитивный числитель отклонён.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "2+2+3/8",
+          "length": "7/2",
+          "groups": [
+            2,
+            2,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "2+2+3/8",
+          "length": "7/2",
+          "groups": [
+            2,
+            2,
+            3
+          ],
+          "beatPositions": [
+            "7/2",
+            "9/2",
+            "11/2"
+          ],
+          "qpm": "120",
+          "start": "7/2"
+        }
+      ],
+      "totalQ": "7",
+      "nominalSeconds": "7/2",
+      "executionSeconds": "7/2"
+    },
+    "importError": "Составной/неопределённый размер пока не поддержан.",
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M14",
+    "status": "UNSUPPORTED",
+    "detail": "Аддитивный числитель отклонён.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "3+2+2/8",
+          "length": "7/2",
+          "groups": [
+            3,
+            2,
+            2
+          ],
+          "beatPositions": [
+            "0",
+            "3/2",
+            "5/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "3+2+2/8",
+          "length": "7/2",
+          "groups": [
+            3,
+            2,
+            2
+          ],
+          "beatPositions": [
+            "7/2",
+            "5",
+            "6"
+          ],
+          "qpm": "120",
+          "start": "7/2"
+        }
+      ],
+      "totalQ": "7",
+      "nominalSeconds": "7/2",
+      "executionSeconds": "7/2"
+    },
+    "importError": "Составной/неопределённый размер пока не поддержан.",
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M15",
+    "status": "AMBIGUOUS",
+    "detail": "Без явных групп 11/8. Сохранены 11 позиций.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "11/8",
+          "length": "11/2",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "11/8",
+          "length": "11/2",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "11/2"
+        }
+      ],
+      "totalQ": "11",
+      "nominalSeconds": "11/2",
+      "executionSeconds": "11/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 5.5,
+        "beats": 11,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 5.5
+      },
+      {
+        "start": 5.5,
+        "end": 11,
+        "beats": 11,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 5.5
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 5.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 11,
+      "beats": 22,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 22,
+      "total": 22,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M16",
+    "status": "PASS",
+    "detail": "Границы 4/4 → 3/4 корректны в конвертере.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "3/4",
+          "length": "3",
+          "groups": [
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "4",
+            "5",
+            "6"
+          ],
+          "qpm": "120",
+          "start": "4"
+        }
+      ],
+      "totalQ": "7",
+      "nominalSeconds": "7/2",
+      "executionSeconds": "7/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      {
+        "start": 4,
+        "end": 7,
+        "beats": 3,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 3
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 3.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 8,
+      "beats": 8,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 7,
+      "total": 7,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M17",
+    "status": "FAIL",
+    "detail": "Границы верны, второй раунд в Main имеет шесть основных подписей.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "4",
+            "11/2"
+          ],
+          "qpm": "120",
+          "start": "4"
+        }
+      ],
+      "totalQ": "7",
+      "nominalSeconds": "7/2",
+      "executionSeconds": "7/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      {
+        "start": 4,
+        "end": 7,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 3.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 8,
+      "beats": 8,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 10,
+      "total": 10,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": {
+      "name": "M17",
+      "rounds": 2,
+      "clockSeconds": 3.5,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      "bpm": 120,
+      "effective": 120,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.089206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.589206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.089206349206349,
+            "accent": false
+          }
+        ],
+        "clock": 2.8618594104308395,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.1000453514739228,
+          1.619591836734694
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.5892063492063492,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 0
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.089206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.589206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.089206349206349,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 8,
+          "beats": 8,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-2",
+            "time": 1.589206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.089206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.1235034013605443,
+            "accent": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "case": "M18",
+    "status": "FAIL",
+    "detail": "Границы верны, основные группы сложного метра утрачены.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "12/8",
+          "length": "6",
+          "groups": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "beatPositions": [
+            "3",
+            "9/2",
+            "6",
+            "15/2"
+          ],
+          "qpm": "120",
+          "start": "3"
+        }
+      ],
+      "totalQ": "9",
+      "nominalSeconds": "9/2",
+      "executionSeconds": "9/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 3,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      },
+      {
+        "start": 3,
+        "end": 9,
+        "beats": 12,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 6
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 4.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 6,
+      "beats": 12,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 18,
+      "total": 18,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M19",
+    "status": "PARTIAL",
+    "detail": "Затакт занимает 1 Q. Renderer ставит РАЗ на его старте вместо выбранной слабой фазы.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "4/4",
+          "length": "1",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "qpm": "120",
+          "start": "1"
+        }
+      ],
+      "totalQ": "5",
+      "nominalSeconds": "5/2",
+      "executionSeconds": "5/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 1,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 1
+      },
+      {
+        "start": 1,
+        "end": 5,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 2.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 2,
+      "beats": 2,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 5,
+      "total": 5,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": {
+      "name": "M19",
+      "rounds": 2,
+      "clockSeconds": 2.5,
+      "first": {
+        "index": 0,
+        "implicit": true,
+        "measureStart": 0,
+        "start": 0,
+        "end": 1,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 1
+      },
+      "bpm": 120,
+      "effective": 120,
+      "countLabels": [
+        "РАЗ",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.031156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.531156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.031156462585034,
+            "accent": false
+          }
+        ],
+        "clock": 2.856054421768708,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.0303854875283447,
+          1.5412244897959184
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 0
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.031156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.531156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.031156462585034,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 1,
+          "quarters": 1,
+          "beats": 1,
+          "pickup": true
+        },
+        "clicks": [
+          {
+            "key": "steady-2",
+            "time": 1.531156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.031156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.065453514739229,
+            "accent": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "case": "M20",
+    "status": "FAIL",
+    "detail": "Заключительный 1 Q без implicit дополнен до 4 Q.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "4/4",
+          "length": "1",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "4"
+          ],
+          "qpm": "120",
+          "start": "4"
+        }
+      ],
+      "totalQ": "5",
+      "nominalSeconds": "5/2",
+      "executionSeconds": "5/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      {
+        "start": 4,
+        "end": 8,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 4,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 8,
+      "beats": 8,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 5,
+      "total": 5,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 1.5,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M21",
+    "status": "PASS",
+    "detail": "Рациональные триольные длительности прошли импорт и worker.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "4",
+            "5",
+            "6",
+            "7"
+          ],
+          "qpm": "120",
+          "start": "4"
+        }
+      ],
+      "totalQ": "8",
+      "nominalSeconds": "4",
+      "executionSeconds": "4"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      {
+        "start": 4,
+        "end": 8,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 4,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 8,
+      "beats": 8,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 12,
+      "total": 12,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M22",
+    "status": "PARTIAL",
+    "detail": "Дуоли прошли, группировка 6/8 отсутствует.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "3",
+            "9/2"
+          ],
+          "qpm": "120",
+          "start": "3"
+        }
+      ],
+      "totalQ": "6",
+      "nominalSeconds": "3",
+      "executionSeconds": "3"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 3,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      },
+      {
+        "start": 3,
+        "end": 6,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 3,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 6,
+      "beats": 12,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 10,
+      "total": 10,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M23",
+    "status": "PARTIAL",
+    "detail": "Синкопированные длительности проходят, основной счёт 6/8 отсутствует.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "3",
+            "9/2"
+          ],
+          "qpm": "120",
+          "start": "3"
+        }
+      ],
+      "totalQ": "6",
+      "nominalSeconds": "3",
+      "executionSeconds": "3"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 3,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      },
+      {
+        "start": 3,
+        "end": 6,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 3,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 6,
+      "beats": 12,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 6,
+      "total": 6,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M24",
+    "status": "PASS",
+    "detail": "Лигованные сегменты попали в конвертер и worker. Аудио стык отдельно не измерен.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "4",
+            "5",
+            "6",
+            "7"
+          ],
+          "qpm": "120",
+          "start": "4"
+        }
+      ],
+      "totalQ": "8",
+      "nominalSeconds": "4",
+      "executionSeconds": "4"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      {
+        "start": 4,
+        "end": 8,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 4,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 8,
+      "beats": 8,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 2,
+      "total": 2,
+      "searchStatus": "exact_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M25",
+    "status": "FAIL",
+    "detail": "Дробная точка доли передана в BigInt при реализации фермат.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "3",
+            "9/2"
+          ],
+          "qpm": "120",
+          "start": "3"
+        }
+      ],
+      "totalQ": "6",
+      "nominalSeconds": "3",
+      "executionSeconds": null
+    },
+    "importError": "The number 0.5 cannot be converted to a BigInt because it is not an integer",
+    "browserUi": {
+      "name": "M25",
+      "error": "page.waitForFunction: Timeout 30000ms exceeded.",
+      "status": "Не удалось завершить обработку: The number 0.5 cannot be converted to a BigInt because it is not an integer",
+      "url": "http://127.0.0.1:8374/ru/MVP/import/"
+    }
+  },
+  {
+    "case": "M26",
+    "status": "PASS",
+    "detail": "TempoMap и часы обработали смену скорости 120 → 90.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "4/4",
+          "length": "4",
+          "groups": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "4",
+            "5",
+            "6",
+            "7"
+          ],
+          "qpm": "90",
+          "start": "4"
+        }
+      ],
+      "totalQ": "8",
+      "nominalSeconds": "14/3",
+      "executionSeconds": "14/3"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      {
+        "start": 4,
+        "end": 8,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      },
+      {
+        "at": 4,
+        "bpm": 90
+      }
+    ],
+    "clockSeconds": 4.666666666666666,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 8,
+      "beats": 8,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 8,
+      "total": 8,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 8.881784197001252e-16,
+    "nominalClockDifferenceS": -8.881784197001252e-16,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M27",
+    "status": "FAIL",
+    "detail": "Печатные четверть 120 и четверть с точкой 80 эквивалентны. Fallback создаёт 120 → 80 QPM.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "6/8",
+          "length": "3",
+          "groups": [
+            3,
+            3
+          ],
+          "beatPositions": [
+            "3",
+            "9/2"
+          ],
+          "qpm": "120",
+          "start": "3"
+        }
+      ],
+      "totalQ": "6",
+      "nominalSeconds": "3",
+      "executionSeconds": "3"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 3,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      },
+      {
+        "start": 3,
+        "end": 6,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      },
+      {
+        "at": 3,
+        "bpm": 80
+      }
+    ],
+    "clockSeconds": 3.75,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 6,
+      "beats": 12,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 12,
+      "total": 12,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.75,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M28",
+    "status": "AMBIGUOUS",
+    "detail": "Нет оснований выбрать одну из трёх группировок.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "7/8",
+          "length": "7/2",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "7/8",
+          "length": "7/2",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "7/2"
+        }
+      ],
+      "totalQ": "7",
+      "nominalSeconds": "7/2",
+      "executionSeconds": "7/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 3.5,
+        "beats": 7,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3.5
+      },
+      {
+        "start": 3.5,
+        "end": 7,
+        "beats": 7,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3.5
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 3.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 7,
+      "beats": 14,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 14,
+      "total": 14,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M29",
+    "status": "PARTIAL",
+    "detail": "Активен sound tempo 90 QPM, но расхождение с печатным 94,5 QPM теряется.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "12/8",
+          "length": "6",
+          "groups": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "beatPositions": [
+            "0",
+            "3/2",
+            "3",
+            "9/2"
+          ],
+          "qpm": "90",
+          "start": "0"
+        },
+        {
+          "meter": "12/8",
+          "length": "6",
+          "groups": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "beatPositions": [
+            "6",
+            "15/2",
+            "9",
+            "21/2"
+          ],
+          "qpm": "90",
+          "start": "6"
+        }
+      ],
+      "totalQ": "12",
+      "nominalSeconds": "8",
+      "executionSeconds": "8"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 6,
+        "beats": 12,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 6
+      },
+      {
+        "start": 6,
+        "end": 12,
+        "beats": 12,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 6
+      }
+    ],
+    "bpmDisplay": 90,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 90
+      }
+    ],
+    "clockSeconds": 8,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 12,
+      "beats": 24,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 24,
+      "total": 24,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M30",
+    "status": "UNSUPPORTED",
+    "detail": "Свободный метр отвергнут при разборе размера.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "free",
+          "length": "3",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "free",
+          "length": "3",
+          "groups": null,
+          "beatPositions": [],
+          "qpm": "120",
+          "start": "3"
+        }
+      ],
+      "totalQ": "6",
+      "nominalSeconds": "3",
+      "executionSeconds": "3"
+    },
+    "importError": "Составной/неопределённый размер пока не поддержан.",
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M31",
+    "status": "PARTIAL",
+    "detail": "Три половинные на уровне Converter, обычный метроном Main идёт четвертями.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "3/2",
+          "length": "6",
+          "groups": [
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "2",
+            "4"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "3/2",
+          "length": "6",
+          "groups": [
+            1,
+            1,
+            1
+          ],
+          "beatPositions": [
+            "6",
+            "8",
+            "10"
+          ],
+          "qpm": "120",
+          "start": "6"
+        }
+      ],
+      "totalQ": "12",
+      "nominalSeconds": "6",
+      "executionSeconds": "6"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 6,
+        "beats": 3,
+        "beatType": 2,
+        "beatQuarters": 2,
+        "measureQuarters": 6
+      },
+      {
+        "start": 6,
+        "end": 12,
+        "beats": 3,
+        "beatType": 2,
+        "beatQuarters": 2,
+        "measureQuarters": 6
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 6,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 12,
+      "beats": 6,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 6,
+      "total": 6,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M32",
+    "status": "PARTIAL",
+    "detail": "Две восьмые на уровне Converter, обычный метроном Main идёт четвертями.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "2/8",
+          "length": "1",
+          "groups": [
+            1,
+            1
+          ],
+          "beatPositions": [
+            "0",
+            "1/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "2/8",
+          "length": "1",
+          "groups": [
+            1,
+            1
+          ],
+          "beatPositions": [
+            "1",
+            "3/2"
+          ],
+          "qpm": "120",
+          "start": "1"
+        }
+      ],
+      "totalQ": "2",
+      "nominalSeconds": "1",
+      "executionSeconds": "1"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 1,
+        "beats": 2,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 1
+      },
+      {
+        "start": 1,
+        "end": 2,
+        "beats": 2,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 1
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 1,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 2,
+      "beats": 4,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 4,
+      "total": 4,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M33",
+    "status": "UNSUPPORTED",
+    "detail": "Явная запись 2+3+2/8 отвергнута.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "2+3+2/8",
+          "length": "7/2",
+          "groups": [
+            2,
+            3,
+            2
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "5/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "2+3+2/8",
+          "length": "7/2",
+          "groups": [
+            2,
+            3,
+            2
+          ],
+          "beatPositions": [
+            "7/2",
+            "9/2",
+            "6"
+          ],
+          "qpm": "120",
+          "start": "7/2"
+        }
+      ],
+      "totalQ": "7",
+      "nominalSeconds": "7/2",
+      "executionSeconds": "7/2"
+    },
+    "importError": "Составной/неопределённый размер пока не поддержан.",
+    "browserUi": "NOT TESTED"
+  },
+  {
+    "case": "M34",
+    "status": "FAIL",
+    "detail": "Рёбра позволяют предположить 2+3+2, в модели остались семь равных позиций.",
+    "expected": {
+      "measures": [
+        {
+          "meter": "7/8",
+          "length": "7/2",
+          "groups": [
+            2,
+            3,
+            2
+          ],
+          "beatPositions": [
+            "0",
+            "1",
+            "5/2"
+          ],
+          "qpm": "120",
+          "start": "0"
+        },
+        {
+          "meter": "7/8",
+          "length": "7/2",
+          "groups": [
+            2,
+            3,
+            2
+          ],
+          "beatPositions": [
+            "7/2",
+            "9/2",
+            "6"
+          ],
+          "qpm": "120",
+          "start": "7/2"
+        }
+      ],
+      "totalQ": "7",
+      "nominalSeconds": "7/2",
+      "executionSeconds": "7/2"
+    },
+    "rounds": [
+      {
+        "start": 0,
+        "end": 3.5,
+        "beats": 7,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3.5
+      },
+      {
+        "start": 3.5,
+        "end": 7,
+        "beats": 7,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3.5
+      }
+    ],
+    "bpmDisplay": 120,
+    "tempo": [
+      {
+        "at": 0,
+        "bpm": 120
+      }
+    ],
+    "clockSeconds": 3.5,
+    "preCountFirst": {
+      "measures": 2,
+      "quarters": 7,
+      "beats": 14,
+      "pickup": false
+    },
+    "fingering": {
+      "assigned": 14,
+      "total": 14,
+      "searchStatus": "approximate_complete",
+      "feasibility": "unknown"
+    },
+    "maxRoundTripErrorQ": 0,
+    "nominalClockDifferenceS": 0.0,
+    "browserUi": "NOT TESTED"
+  }
+]

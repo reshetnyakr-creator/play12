@@ -1,0 +1,37 @@
+{
+  "source": "M08.musicxml",
+  "labels": [
+    "ONE",
+    "TWO",
+    "THREE",
+    "FOUR",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "ONE",
+    "TWO",
+    "THREE",
+    "FOUR",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12"
+  ],
+  "input": {
+    "start": 0,
+    "incorrect": false,
+    "afterWrong": true,
+    "correct": true,
+    "finished": true,
+    "practiceStatus": "correct:60:11.61"
+  }
+}

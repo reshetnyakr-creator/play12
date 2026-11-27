@@ -1,0 +1,1734 @@
+{
+  "browser": "131.0.6778.0",
+  "ui": [
+    {
+      "name": "M03",
+      "rounds": 2,
+      "clockSeconds": 4,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      "bpm": 120,
+      "effective": 120,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.2198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.7198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.2198185941043085,
+            "accent": false
+          }
+        ],
+        "clock": 2.879274376417233,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.230657596371882,
+          1.7298866213151927
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.7198185941043084,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 0
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.7198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.2198185941043085,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.2198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.7198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.2198185941043085,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 8,
+          "beats": 8,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-3",
+            "time": 2.2198185941043085,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.2541156462585032,
+            "accent": false
+          },
+          {
+            "key": "steady-5",
+            "time": 2.4950226757369616,
+            "accent": false
+          }
+        ]
+      },
+      "loopWrap": 1
+    },
+    {
+      "name": "M06",
+      "rounds": 2,
+      "clockSeconds": 3,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 3,
+        "beats": 6,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 3
+      },
+      "bpm": 120,
+      "effective": 120,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.489750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.989750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.489750566893424,
+            "accent": false
+          }
+        ],
+        "clock": 2.8618594104308386,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.4889795918367348,
+          1.991111111111111
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 0.5
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.739750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 1.5
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 1.989750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.239750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 2.5
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          },
+          {
+            "when": 2.489750566893424,
+            "quarters": 0.5,
+            "seconds": 0.25,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-2",
+            "time": 1.989750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.489750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.5153401360544216,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 6,
+          "beats": 12,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-3",
+            "time": 2.489750566893424,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.5153401360544216,
+            "accent": false
+          },
+          {
+            "key": "steady-5",
+            "time": 2.7359297052154194,
+            "accent": false
+          }
+        ]
+      },
+      "loopWrap": 1
+    },
+    {
+      "name": "M08",
+      "rounds": 2,
+      "clockSeconds": 7.619047619047619,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 6,
+        "beats": 12,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 6
+      },
+      "bpm": 95,
+      "effective": 94.5,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.1544671201814058,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.7893877551020407,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.4243083900226754,
+            "accent": false
+          }
+        ],
+        "clock": 2.8982857142857146,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.1493877551020408,
+          1.7908390022675738
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.519546485260771,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 0.8370068027210884,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 0.5
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.1544671201814058,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.4719274376417233,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 1.5
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 1.7893877551020407,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.106848072562358,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031744,
+            "start": 2.5
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          },
+          {
+            "when": 2.4243083900226754,
+            "quarters": 0.5,
+            "seconds": 0.31746031746031766,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.1544671201814058,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.7893877551020407,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.4243083900226754,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 12,
+          "beats": 24,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-3",
+            "time": 2.4243083900226754,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.465997732426304,
+            "accent": false
+          },
+          {
+            "key": "steady-5",
+            "time": 2.6749773242630384,
+            "accent": false
+          }
+        ]
+      },
+      "loopWrap": 1
+    },
+    {
+      "name": "M17",
+      "rounds": 2,
+      "clockSeconds": 3.5,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 4,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 4
+      },
+      "bpm": 120,
+      "effective": 120,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.089206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.589206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.089206349206349,
+            "accent": false
+          }
+        ],
+        "clock": 2.8618594104308395,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.1000453514739228,
+          1.619591836734694
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.5892063492063492,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 0
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.589206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.089206349206349,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.089206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.589206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.089206349206349,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 8,
+          "beats": 8,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-2",
+            "time": 1.589206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.089206349206349,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.1235034013605443,
+            "accent": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "M19",
+      "rounds": 2,
+      "clockSeconds": 2.5,
+      "first": {
+        "index": 0,
+        "implicit": true,
+        "measureStart": 0,
+        "start": 0,
+        "end": 1,
+        "beats": 4,
+        "beatType": 4,
+        "beatQuarters": 1,
+        "measureQuarters": 1
+      },
+      "bpm": 120,
+      "effective": 120,
+      "countLabels": [
+        "РАЗ",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.031156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.531156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.031156462585034,
+            "accent": false
+          }
+        ],
+        "clock": 2.856054421768708,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.0303854875283447,
+          1.5412244897959184
+        ],
+        "scheduledNotes": [
+          {
+            "when": 0.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 0
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 1
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 1.531156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 2
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          },
+          {
+            "when": 2.031156462585034,
+            "quarters": 1,
+            "seconds": 0.5,
+            "start": 3
+          }
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 0,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.031156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 1.531156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.031156462585034,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 1,
+          "quarters": 1,
+          "beats": 1,
+          "pickup": true
+        },
+        "clicks": [
+          {
+            "key": "steady-2",
+            "time": 1.531156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.031156462585034,
+            "accent": false
+          },
+          {
+            "key": "steady-4",
+            "time": 2.065453514739229,
+            "accent": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "M25",
+      "error": "page.waitForFunction: Timeout 30000ms exceeded.",
+      "status": "Не удалось завершить обработку: The number 0.5 cannot be converted to a BigInt because it is not an integer",
+      "url": "http://127.0.0.1:8374/ru/MVP/import/"
+    },
+    {
+      "name": "Perfect",
+      "rounds": 69,
+      "clockSeconds": 262.85714285714283,
+      "first": {
+        "index": 0,
+        "implicit": false,
+        "measureStart": 0,
+        "start": 0,
+        "end": 6,
+        "beats": 12,
+        "beatType": 8,
+        "beatQuarters": 0.5,
+        "measureQuarters": 6
+      },
+      "bpm": 95,
+      "effective": 94.5,
+      "countLabels": [
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "РАЗ",
+        "ДВА",
+        "ТРИ",
+        "ЧЕ",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "playback": {
+        "clicks": [
+          {
+            "key": "steady-1",
+            "time": 1.694331065759637,
+            "accent": false
+          },
+          {
+            "key": "steady-2",
+            "time": 2.329251700680272,
+            "accent": false
+          },
+          {
+            "key": "steady-3",
+            "time": 2.9641723356009066,
+            "accent": false
+          }
+        ],
+        "clock": 2.884571428571429,
+        "beatCounter": 3,
+        "visualPulseTimes": [
+          1.7008616780045351,
+          2.330702947845805
+        ],
+        "renderPosition": null
+      },
+      "practice": {
+        "waiting": true,
+        "expected": 4.5,
+        "midi": null,
+        "clicks": [
+          {
+            "key": "steady-6",
+            "time": 4.868934240362812,
+            "accent": false
+          },
+          {
+            "key": "steady-7",
+            "time": 5.503854875283446,
+            "accent": false
+          },
+          {
+            "key": "steady-8",
+            "time": 6.138775510204081,
+            "accent": false
+          }
+        ]
+      },
+      "preCount": {
+        "plan": {
+          "measures": 2,
+          "quarters": 12,
+          "beats": 24,
+          "pickup": false
+        },
+        "clicks": [
+          {
+            "key": "steady-7",
+            "time": 5.503854875283446,
+            "accent": false
+          },
+          {
+            "key": "steady-8",
+            "time": 6.138775510204081,
+            "accent": false
+          },
+          {
+            "key": "steady-9",
+            "time": 6.5352947845805,
+            "accent": false
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

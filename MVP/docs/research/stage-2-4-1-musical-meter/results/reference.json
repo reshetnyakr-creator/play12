@@ -1,0 +1,1236 @@
+{
+  "M01": {
+    "measures": [
+      {
+        "meter": "2/4",
+        "length": "2",
+        "groups": [
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "2/4",
+        "length": "2",
+        "groups": [
+          1,
+          1
+        ],
+        "beatPositions": [
+          "2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "2"
+      }
+    ],
+    "totalQ": "4",
+    "nominalSeconds": "2",
+    "executionSeconds": "2"
+  },
+  "M02": {
+    "measures": [
+      {
+        "meter": "3/4",
+        "length": "3",
+        "groups": [
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "3/4",
+        "length": "3",
+        "groups": [
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "3",
+          "4",
+          "5"
+        ],
+        "qpm": "120",
+        "start": "3"
+      }
+    ],
+    "totalQ": "6",
+    "nominalSeconds": "3",
+    "executionSeconds": "3"
+  },
+  "M03": {
+    "measures": [
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "qpm": "120",
+        "start": "4"
+      }
+    ],
+    "totalQ": "8",
+    "nominalSeconds": "4",
+    "executionSeconds": "4"
+  },
+  "M04": {
+    "measures": [
+      {
+        "meter": "2/2",
+        "length": "4",
+        "groups": [
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "2/2",
+        "length": "4",
+        "groups": [
+          1,
+          1
+        ],
+        "beatPositions": [
+          "4",
+          "6"
+        ],
+        "qpm": "120",
+        "start": "4"
+      }
+    ],
+    "totalQ": "8",
+    "nominalSeconds": "4",
+    "executionSeconds": "4"
+  },
+  "M05": {
+    "measures": [
+      {
+        "meter": "3/8",
+        "length": "3/2",
+        "groups": [
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1/2",
+          "1"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "3/8",
+        "length": "3/2",
+        "groups": [
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "3/2",
+          "2",
+          "5/2"
+        ],
+        "qpm": "120",
+        "start": "3/2"
+      }
+    ],
+    "totalQ": "3",
+    "nominalSeconds": "3/2",
+    "executionSeconds": "3/2"
+  },
+  "M06": {
+    "measures": [
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "3",
+          "9/2"
+        ],
+        "qpm": "120",
+        "start": "3"
+      }
+    ],
+    "totalQ": "6",
+    "nominalSeconds": "3",
+    "executionSeconds": "3"
+  },
+  "M07": {
+    "measures": [
+      {
+        "meter": "9/8",
+        "length": "9/2",
+        "groups": [
+          3,
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "9/8",
+        "length": "9/2",
+        "groups": [
+          3,
+          3,
+          3
+        ],
+        "beatPositions": [
+          "9/2",
+          "6",
+          "15/2"
+        ],
+        "qpm": "120",
+        "start": "9/2"
+      }
+    ],
+    "totalQ": "9",
+    "nominalSeconds": "9/2",
+    "executionSeconds": "9/2"
+  },
+  "M08": {
+    "measures": [
+      {
+        "meter": "12/8",
+        "length": "6",
+        "groups": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2",
+          "3",
+          "9/2"
+        ],
+        "qpm": "189/2",
+        "start": "0"
+      },
+      {
+        "meter": "12/8",
+        "length": "6",
+        "groups": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "beatPositions": [
+          "6",
+          "15/2",
+          "9",
+          "21/2"
+        ],
+        "qpm": "189/2",
+        "start": "6"
+      }
+    ],
+    "totalQ": "12",
+    "nominalSeconds": "160/21",
+    "executionSeconds": "160/21"
+  },
+  "M09": {
+    "measures": [
+      {
+        "meter": "5/4",
+        "length": "5",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "5/4",
+        "length": "5",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "5"
+      }
+    ],
+    "totalQ": "10",
+    "nominalSeconds": "5",
+    "executionSeconds": "5"
+  },
+  "M10": {
+    "measures": [
+      {
+        "meter": "7/4",
+        "length": "7",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "7/4",
+        "length": "7",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "7"
+      }
+    ],
+    "totalQ": "14",
+    "nominalSeconds": "7",
+    "executionSeconds": "7"
+  },
+  "M11": {
+    "measures": [
+      {
+        "meter": "2+3/8",
+        "length": "5/2",
+        "groups": [
+          2,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "1"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "2+3/8",
+        "length": "5/2",
+        "groups": [
+          2,
+          3
+        ],
+        "beatPositions": [
+          "5/2",
+          "7/2"
+        ],
+        "qpm": "120",
+        "start": "5/2"
+      }
+    ],
+    "totalQ": "5",
+    "nominalSeconds": "5/2",
+    "executionSeconds": "5/2"
+  },
+  "M12": {
+    "measures": [
+      {
+        "meter": "3+2/8",
+        "length": "5/2",
+        "groups": [
+          3,
+          2
+        ],
+        "beatPositions": [
+          "0",
+          "3/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "3+2/8",
+        "length": "5/2",
+        "groups": [
+          3,
+          2
+        ],
+        "beatPositions": [
+          "5/2",
+          "4"
+        ],
+        "qpm": "120",
+        "start": "5/2"
+      }
+    ],
+    "totalQ": "5",
+    "nominalSeconds": "5/2",
+    "executionSeconds": "5/2"
+  },
+  "M13": {
+    "measures": [
+      {
+        "meter": "2+2+3/8",
+        "length": "7/2",
+        "groups": [
+          2,
+          2,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "2+2+3/8",
+        "length": "7/2",
+        "groups": [
+          2,
+          2,
+          3
+        ],
+        "beatPositions": [
+          "7/2",
+          "9/2",
+          "11/2"
+        ],
+        "qpm": "120",
+        "start": "7/2"
+      }
+    ],
+    "totalQ": "7",
+    "nominalSeconds": "7/2",
+    "executionSeconds": "7/2"
+  },
+  "M14": {
+    "measures": [
+      {
+        "meter": "3+2+2/8",
+        "length": "7/2",
+        "groups": [
+          3,
+          2,
+          2
+        ],
+        "beatPositions": [
+          "0",
+          "3/2",
+          "5/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "3+2+2/8",
+        "length": "7/2",
+        "groups": [
+          3,
+          2,
+          2
+        ],
+        "beatPositions": [
+          "7/2",
+          "5",
+          "6"
+        ],
+        "qpm": "120",
+        "start": "7/2"
+      }
+    ],
+    "totalQ": "7",
+    "nominalSeconds": "7/2",
+    "executionSeconds": "7/2"
+  },
+  "M15": {
+    "measures": [
+      {
+        "meter": "11/8",
+        "length": "11/2",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "11/8",
+        "length": "11/2",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "11/2"
+      }
+    ],
+    "totalQ": "11",
+    "nominalSeconds": "11/2",
+    "executionSeconds": "11/2"
+  },
+  "M16": {
+    "measures": [
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "3/4",
+        "length": "3",
+        "groups": [
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "4",
+          "5",
+          "6"
+        ],
+        "qpm": "120",
+        "start": "4"
+      }
+    ],
+    "totalQ": "7",
+    "nominalSeconds": "7/2",
+    "executionSeconds": "7/2"
+  },
+  "M17": {
+    "measures": [
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "4",
+          "11/2"
+        ],
+        "qpm": "120",
+        "start": "4"
+      }
+    ],
+    "totalQ": "7",
+    "nominalSeconds": "7/2",
+    "executionSeconds": "7/2"
+  },
+  "M18": {
+    "measures": [
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "12/8",
+        "length": "6",
+        "groups": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "beatPositions": [
+          "3",
+          "9/2",
+          "6",
+          "15/2"
+        ],
+        "qpm": "120",
+        "start": "3"
+      }
+    ],
+    "totalQ": "9",
+    "nominalSeconds": "9/2",
+    "executionSeconds": "9/2"
+  },
+  "M19": {
+    "measures": [
+      {
+        "meter": "4/4",
+        "length": "1",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "qpm": "120",
+        "start": "1"
+      }
+    ],
+    "totalQ": "5",
+    "nominalSeconds": "5/2",
+    "executionSeconds": "5/2"
+  },
+  "M20": {
+    "measures": [
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "4/4",
+        "length": "1",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "4"
+        ],
+        "qpm": "120",
+        "start": "4"
+      }
+    ],
+    "totalQ": "5",
+    "nominalSeconds": "5/2",
+    "executionSeconds": "5/2"
+  },
+  "M21": {
+    "measures": [
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "qpm": "120",
+        "start": "4"
+      }
+    ],
+    "totalQ": "8",
+    "nominalSeconds": "4",
+    "executionSeconds": "4"
+  },
+  "M22": {
+    "measures": [
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "3",
+          "9/2"
+        ],
+        "qpm": "120",
+        "start": "3"
+      }
+    ],
+    "totalQ": "6",
+    "nominalSeconds": "3",
+    "executionSeconds": "3"
+  },
+  "M23": {
+    "measures": [
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "3",
+          "9/2"
+        ],
+        "qpm": "120",
+        "start": "3"
+      }
+    ],
+    "totalQ": "6",
+    "nominalSeconds": "3",
+    "executionSeconds": "3"
+  },
+  "M24": {
+    "measures": [
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "qpm": "120",
+        "start": "4"
+      }
+    ],
+    "totalQ": "8",
+    "nominalSeconds": "4",
+    "executionSeconds": "4"
+  },
+  "M25": {
+    "measures": [
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "3",
+          "9/2"
+        ],
+        "qpm": "120",
+        "start": "3"
+      }
+    ],
+    "totalQ": "6",
+    "nominalSeconds": "3",
+    "executionSeconds": null
+  },
+  "M26": {
+    "measures": [
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "4/4",
+        "length": "4",
+        "groups": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "qpm": "90",
+        "start": "4"
+      }
+    ],
+    "totalQ": "8",
+    "nominalSeconds": "14/3",
+    "executionSeconds": "14/3"
+  },
+  "M27": {
+    "measures": [
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "6/8",
+        "length": "3",
+        "groups": [
+          3,
+          3
+        ],
+        "beatPositions": [
+          "3",
+          "9/2"
+        ],
+        "qpm": "120",
+        "start": "3"
+      }
+    ],
+    "totalQ": "6",
+    "nominalSeconds": "3",
+    "executionSeconds": "3"
+  },
+  "M28": {
+    "measures": [
+      {
+        "meter": "7/8",
+        "length": "7/2",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "7/8",
+        "length": "7/2",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "7/2"
+      }
+    ],
+    "totalQ": "7",
+    "nominalSeconds": "7/2",
+    "executionSeconds": "7/2"
+  },
+  "M29": {
+    "measures": [
+      {
+        "meter": "12/8",
+        "length": "6",
+        "groups": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "beatPositions": [
+          "0",
+          "3/2",
+          "3",
+          "9/2"
+        ],
+        "qpm": "90",
+        "start": "0"
+      },
+      {
+        "meter": "12/8",
+        "length": "6",
+        "groups": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "beatPositions": [
+          "6",
+          "15/2",
+          "9",
+          "21/2"
+        ],
+        "qpm": "90",
+        "start": "6"
+      }
+    ],
+    "totalQ": "12",
+    "nominalSeconds": "8",
+    "executionSeconds": "8"
+  },
+  "M30": {
+    "measures": [
+      {
+        "meter": "free",
+        "length": "3",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "free",
+        "length": "3",
+        "groups": null,
+        "beatPositions": [],
+        "qpm": "120",
+        "start": "3"
+      }
+    ],
+    "totalQ": "6",
+    "nominalSeconds": "3",
+    "executionSeconds": "3"
+  },
+  "M31": {
+    "measures": [
+      {
+        "meter": "3/2",
+        "length": "6",
+        "groups": [
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "2",
+          "4"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "3/2",
+        "length": "6",
+        "groups": [
+          1,
+          1,
+          1
+        ],
+        "beatPositions": [
+          "6",
+          "8",
+          "10"
+        ],
+        "qpm": "120",
+        "start": "6"
+      }
+    ],
+    "totalQ": "12",
+    "nominalSeconds": "6",
+    "executionSeconds": "6"
+  },
+  "M32": {
+    "measures": [
+      {
+        "meter": "2/8",
+        "length": "1",
+        "groups": [
+          1,
+          1
+        ],
+        "beatPositions": [
+          "0",
+          "1/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "2/8",
+        "length": "1",
+        "groups": [
+          1,
+          1
+        ],
+        "beatPositions": [
+          "1",
+          "3/2"
+        ],
+        "qpm": "120",
+        "start": "1"
+      }
+    ],
+    "totalQ": "2",
+    "nominalSeconds": "1",
+    "executionSeconds": "1"
+  },
+  "M33": {
+    "measures": [
+      {
+        "meter": "2+3+2/8",
+        "length": "7/2",
+        "groups": [
+          2,
+          3,
+          2
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "5/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "2+3+2/8",
+        "length": "7/2",
+        "groups": [
+          2,
+          3,
+          2
+        ],
+        "beatPositions": [
+          "7/2",
+          "9/2",
+          "6"
+        ],
+        "qpm": "120",
+        "start": "7/2"
+      }
+    ],
+    "totalQ": "7",
+    "nominalSeconds": "7/2",
+    "executionSeconds": "7/2"
+  },
+  "M34": {
+    "measures": [
+      {
+        "meter": "7/8",
+        "length": "7/2",
+        "groups": [
+          2,
+          3,
+          2
+        ],
+        "beatPositions": [
+          "0",
+          "1",
+          "5/2"
+        ],
+        "qpm": "120",
+        "start": "0"
+      },
+      {
+        "meter": "7/8",
+        "length": "7/2",
+        "groups": [
+          2,
+          3,
+          2
+        ],
+        "beatPositions": [
+          "7/2",
+          "9/2",
+          "6"
+        ],
+        "qpm": "120",
+        "start": "7/2"
+      }
+    ],
+    "totalQ": "7",
+    "nominalSeconds": "7/2",
+    "executionSeconds": "7/2"
+  }
+}

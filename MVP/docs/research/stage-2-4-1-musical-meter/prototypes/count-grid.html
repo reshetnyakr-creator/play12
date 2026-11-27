@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Play12 · Метрическая сетка</title>
+<style>
+:root{color:#111;background:#f5f5f5;font:16px system-ui}body{margin:24px auto;padding:0 16px;max-width:1140px}
+main{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}article{background:white;padding:16px;border:1px solid #dedcd9;border-radius:16px}h1{margin-bottom:8px}h2{font-size:18px;margin:0 0 10px}svg{display:block;width:100%;height:auto}button{font:inherit;border:1px solid #dedcd9;border-radius:8px;background:white;padding:8px 12px;margin-bottom:16px}
+</style>
+<h1>Метрическая сетка Play12</h1>
+<p>Время идёт снизу вверх. Длина блока показывает длительность ноты. Лайм отмечает начало основной доли.</p>
+<button id="subdivisions" type="button" aria-pressed="true">Подразделения</button>
+<main></main>
+<script>
+const panels=[
+ ['3/4',[[2,2,2]]],['4/4',[[2,2,2,2]]],['6/8',[[3,3]]],
+ ['9/8',[[3,3,3]]],['12/8',[[3,3,3,3]]],['5/8 · 2+3',[[2,3]]],
+ ['7/8 · 2+3+2',[[2,3,2]]],['4/4 → 6/8',[[2,2,2,2],[3,3]]],
+];
+const names=['РАЗ','ДВА','ТРИ','ЧЕ'];
+const NS='http://www.w3.org/2000/svg';
+function node(tag, attrs, text){
+ const element=document.createElementNS(NS,tag);
+ for(const [key,value] of Object.entries(attrs))element.setAttribute(key,value);
+ if(text)element.textContent=text;
+ return element;
+}
+function draw(title,bars,showSubdivisions){
+ const article=document.createElement('article');
+ const heading=document.createElement('h2');
+ heading.textContent=title;
+ const unit=19;
+ const bottom=bars.flat().reduce((a,b)=>a+b,0)*unit+10;
+ const svg=node('svg',{viewBox:`0 0 245 ${bottom+10}`,role:'img','aria-label':title});
+ let time=0;
+ bars.forEach((bar,barIndex)=>{
+  const at=time;
+  svg.append(node('line',{x1:6,x2:234,y1:bottom-time*unit,y2:bottom-time*unit,stroke:'#111','stroke-width':1.5}));
+  bar.forEach((size,index)=>{
+   for(let i=0;i<size;i++){
+    const y=bottom-(time+i+1)*unit;
+    const main=i===0;
+    svg.append(node('rect',{x:6,y:y+1,width:228,height:unit-2,rx:3,fill:main?'#cef932':'#dedcd9',opacity:main?(index===0?.9:.38):(showSubdivisions?.32:0)}));
+    if(main||showSubdivisions)svg.append(node('text',{x:123,y:y+14,'text-anchor':'middle','font-size':11,fill:'#111',opacity:main?1:.55},main?names[index]??String(index+1):'и'));
+   }
+   time+=size;
+  });
+  for(const [start,length,lane,color,label] of [[0,1,1,'#edcf40','0'],[1,Math.min(2,time-at-1),3,'#62a764','7'],[time-at-1,1,4,'#598bcb','4']]){
+   svg.append(node('rect',{x:12+lane*43,y:bottom-(at+start+length)*unit+2,width:29,height:length*unit-4,rx:4,fill:color}));
+   svg.append(node('text',{x:26+lane*43,y:bottom-(at+start+length/2)*unit+4,'text-anchor':'middle','font-size':11,fill:'#111'},label));
+  }
+  svg.append(node('text',{x:242,y:bottom-at*unit-4,'text-anchor':'end','font-size':10},String(barIndex+1)));
+ });
+ svg.append(node('line',{x1:6,x2:234,y1:10,y2:10,stroke:'#111','stroke-width':1.5}));
+ article.append(heading,svg);
+ return article;
+}
+const main=document.querySelector('main');
+const toggle=document.querySelector('button');
+function render(){main.replaceChildren(...panels.map(([title,bars])=>draw(title,bars,toggle.getAttribute('aria-pressed')==='true')));}
+toggle.onclick=()=>{toggle.setAttribute('aria-pressed',String(toggle.getAttribute('aria-pressed')!=='true'));render();};
+render();
+</script>
+</html>
