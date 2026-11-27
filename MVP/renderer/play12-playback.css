@@ -197,3 +197,18 @@ html[data-device-mode="phone-landscape"] body.tutorial-main-aligned.play12-three
 }
 #tempo-navigator { left: 23px; }
 #tempo-navigator .round-navigator-number small { display:block; font-size:.55em; line-height:1; }
+
+#practice-loop-board { height:auto; }
+#practice-loop-board .mvp-practice-board {
+  position:static; width:100%; height:36px; margin:0; padding:0;
+  gap:2px; background:none; border:0; border-radius:0;
+  transform:none; box-shadow:none; flex:none;
+}
+#practice-loop-board .mvp-practice-board button {
+  flex:1 1 0; min-width:0; padding:0 2px;
+}
+#practice-loop-board .mvp-loop-controls {
+  min-height:80px; display:flex; flex-direction:column; gap:5px;
+}
+#practice-loop-board [hidden] {display:none}
+.training-three-zones .training-right-controls:has(>#practice-loop-board) {height:auto}

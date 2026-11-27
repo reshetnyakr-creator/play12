@@ -84,7 +84,7 @@
     'Slow down or speed up the piece':'Сделай метроном медленнее или быстрее',
     'Type a BPM, or use − / + to change it by 10':'Введи BPM или меняй темп кнопками − / + с шагом 10',
     'Play it again with a steady beat':'Сыграй ещё раз под метроном','Press Play':'Нажми Play',
-    'Tempo':'Темп','Set tempo':'Установить темп','Restore original tempo':'Вернуть авторский темп','Increase tempo by 1 BPM':'Увеличить темп на 1 BPM','Decrease tempo by 1 BPM':'Уменьшить темп на 1 BPM','Round':'Раунд','Previous round':'Предыдущий раунд','Next round':'Следующий раунд','Current round':'Текущий раунд',
+    'Tempo':'Темп','Practice settings':'Настройки тренировки','Set tempo':'Установить темп','Restore original tempo':'Вернуть авторский темп','Increase tempo by 1 BPM':'Увеличить темп на 1 BPM','Decrease tempo by 1 BPM':'Уменьшить темп на 1 BPM','Round':'Раунд','Previous round':'Предыдущий раунд','Next round':'Следующий раунд','Current round':'Текущий раунд',
     'Rounds divide the piece into sections.':'Раунды делят произведение на участки',
     'You can jump directly to the section you want to practise.':'Можно сразу перейти к участку, который хочешь потренировать',
     'Go to Round 4':'Перейди к раунду 4','Loop':'Повтор',"Round Navigation": "Навигация по произведению",

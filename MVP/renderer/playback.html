@@ -207,12 +207,7 @@
         <button id="onboarding-choose-zero" class="mvp-choose-zero-control" type="button" hidden aria-label="Choose Your 0">0</button>
         </div>
         <aside id="keyboard-range-warning" class="mvp-range-warning" hidden><span>This piece uses notes outside your keyboard range.</span></aside>
-        <section id="practice-board" class="mvp-practice-board" aria-label="Practice Board" hidden>
-          <button id="practice-board-mode" type="button" aria-pressed="false">Practice</button>
-          <button id="practice-left-hand" type="button" aria-pressed="true">Left Hand</button>
-          <button id="practice-right-hand" type="button" aria-pressed="true">Right Hand</button>
-          <button id="practice-one-skill" type="button" disabled title="Coming later">One Skill</button>
-        </section>
+
         </div>
       </section>
     </main>
@@ -250,7 +245,14 @@
       </section>
       <div id="round-training-progress" class="round-training-progress" hidden aria-label="Clean Round progress"><div id="round-success-track" class="round-success-track"></div></div>
       <div id="unified-playback-block" class="unified-playback-block">
-        <section id="round-loop-board" class="mvp-round-loop-board" aria-label="Round controls" hidden>
+        <section id="practice-loop-board" class="mvp-round-loop-board" aria-label="Practice Board" hidden>
+        <section id="practice-board" class="mvp-practice-board" aria-label="Practice settings" hidden>
+          <button id="practice-board-mode" type="button" aria-pressed="false">Practice</button>
+          <button id="practice-left-hand" type="button" aria-pressed="true">Left Hand</button>
+          <button id="practice-right-hand" type="button" aria-pressed="true">Right Hand</button>
+          <button id="practice-one-skill" type="button" disabled title="Coming later">One Skill</button>
+        </section>
+        <div id="round-loop-board" class="mvp-loop-controls" role="group" aria-label="Round controls" hidden>
           <div id="round-timeline" class="round-timeline" aria-label="Composition rounds"><div id="round-strip" class="round-strip"><div id="round-loop-frame" class="round-loop-frame" hidden></div></div><span id="round-playhead" class="round-playhead" aria-hidden="true"></span></div>
           <div class="round-controls">
             <button id="round-loop-toggle" type="button" aria-pressed="false">Loop</button>
@@ -261,6 +263,7 @@
             <button id="round-range-reset" type="button" class="round-range-reset">Reset range</button>
             <button id="round-precount-toggle" type="button" aria-pressed="false">Pre-count</button>
           </div>
+        </div>
         </section>
         <div id="playline" class="playback-zone" aria-label="Playback Zone">
           <span id="timecode" class="playback-timecode">00:00 / 00:00</span>
@@ -343,11 +346,11 @@
   <script src="web-midi-diagnostic.js?v=midi-voice-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=stage21"></script>
-  <script src="training-shell.js?v=1.4"></script>
-  <script src="training-zones.js?v=zero-board-2"></script>
+  <script src="training-shell.js?v=stage23"></script>
+  <script src="training-zones.js?v=stage23"></script>
   <script src="tutorial-layout.js?v=stage21"></script>
   <script>if(!window.__PLAY12_MAIN__&&!['composition','preview','review'].some(key=>new URLSearchParams(location.search).has(key))){for(const href of ['/MVP/main/main.css?v=1.4.3','training-shell.css?v=1.4.3','training-zones.css?v=zero-board-1','training-corrections.css?v=1.4.3','training-viewport.css?v=1.4.3','tutorial-layout.css?v=mobile-1'])document.write('<link rel="stylesheet" href="'+href+'">');}</script>
-  <script src="play12-onboarding.js?v=stage21"></script>
+  <script src="play12-onboarding.js?v=stage23"></script>
   <script src="when-the-saints-review.js?v=editable-review-02d"></script>
   <script>
     window.addEventListener('unhandledrejection', event => { if (new URLSearchParams(location.search).has('composition')) { const msg = document.createElement('p'); msg.textContent = 'Не удалось открыть композицию: ' + (event.reason?.message || event.reason); document.body.prepend(msg); } });
@@ -523,8 +526,7 @@
         host.className='mvp-playback-host';keyboardHost.className='mvp-piano-host';stage.before(host);host.after(keyboardHost);
         Play12TrainingShell.placePiano(pianoView.mount,keyboardHost);
         Play12TrainingShell.mountWorkspace(stage,host,document.getElementById('playline'));
-        pianoView.syncContainer();window.play12Playback.tempoNavigator = Play12TempoNavigator.create(window.play12Playback);
-      window.play12Playback.layoutCoreGeometry();
+        pianoView.syncContainer();window.play12Playback.layoutCoreGeometry();
       }
       if (savedCompositionId && !mainMode) {
         const bar = document.createElement('section'); bar.setAttribute('aria-label','Тренировка сохранённой композиции');
@@ -541,6 +543,7 @@
       }
       window.play12Playback.roundBoard = Play12RoundBoard.create({root: document.getElementById('round-loop-board'), playback: window.play12Playback, repetitions: repetitionSegments, title: baseScore.score.title});
       window.play12Playback.roundNavigator = Play12RoundNavigator.create(window.play12Playback);
+      window.play12Playback.tempoNavigator = Play12TempoNavigator.create(window.play12Playback);
       window.play12Playback.layoutCoreGeometry();
       reviewController?.connect(effectiveScore => {
         score = effectiveScore;

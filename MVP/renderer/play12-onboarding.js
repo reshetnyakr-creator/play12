@@ -422,6 +422,8 @@
       root.classList.toggle('has-metronome-board', boards.metronome);
       const roundBoard = document.getElementById('round-loop-board');
       if (roundBoard) roundBoard.hidden = !boards.rounds;
+      const combinedBoard=document.getElementById('practice-loop-board');
+      if(combinedBoard)combinedBoard.hidden=!boards.practice&&!boards.rounds;
       if (songStep) songStep.textContent = t('Step {current} of 6', { current: activeStep });
       if (skipButton) skipButton.hidden = !['LISTEN_AND_CONTROL', 'CHOOSE_ZERO', 'TRY_IT_YOURSELF'].includes(visibleStep);
       alignedLayout?.resize();
@@ -462,7 +464,7 @@
       if(transport&&row) transportHome ||= transport.parentElement;
       const mount=runtime?.pianoView?.mount;
       if(mount&&listenPianoHost&&!pianoHome) pianoHome={parent:mount.parentElement,nextSibling:mount.nextSibling};
-      global.Play12TrainingShell.place({stage,playbackHost,transport,controlRow:row,roundBoard:document.getElementById('round-loop-board'),piano:mount,pianoHost:listenPianoHost});
+      global.Play12TrainingShell.place({stage,playbackHost,transport,controlRow:row,roundBoard:document.getElementById('practice-loop-board')||document.getElementById('round-loop-board'),piano:mount,pianoHost:listenPianoHost});
       global.Play12TrainingShell.mountWorkspace(stage,playbackHost,transport);
       if(mount&&listenPianoHost){keepPianoFixed();runtime.pianoView.syncContainer?.();}
       document.body.classList.add('play12-onboarding-listen');
@@ -1026,6 +1028,8 @@
       if (!roundTraining.feedbackPending && stage === 'round-precount' && controls?.precount === true) { rewardSuccess('round-precount',prepareRoundPractice); return; }
       practiceBoard.dataset.guideStage = stage;
       practiceBoard.hidden = false;
+      const combinedBoard=document.getElementById('practice-loop-board');
+      if(combinedBoard)combinedBoard.hidden=false;
       practiceModeButton.classList.toggle('is-guided', stage === 'enable');
       leftHandButton.classList.toggle('is-guided', stage === 'hand');
       if(stage==='practice-info')panelInfo('practice','This is the Practice panel. Here you can choose which hand to practise with: right, left, or both.','practice-board','enable');
