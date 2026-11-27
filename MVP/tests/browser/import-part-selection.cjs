@@ -31,6 +31,9 @@ async function run(){
       await page.waitForFunction(()=>document.getElementById('file')?.disabled===false);
       await page.locator('#file').setInputFiles(file);
     };
+    const openMain=()=>page.waitForFunction(()=>window.play12MainController||document.querySelector("#status")?.textContent.startsWith("Could not complete processing:")).then(async()=>{
+      if(new URL(page.url()).pathname.endsWith("/import/"))throw Error(await page.locator("#status").innerText());
+    });
     const journal=()=>page.locator('#diagnostics').textContent().then(JSON.parse);
     const dialog=page.locator('#part-dialog');
     const selected=page.locator('#part-list input');
@@ -68,7 +71,7 @@ async function run(){
     await confirm.click();
     assert.deepEqual(Object.keys((await journal()).hands.map),['P2:1']);
     await save.click();
-    await page.waitForFunction(()=>window.play12MainController);
+    await openMain();
     const saved=await page.evaluate(()=>play12MainController.document);
     assert.deepEqual(saved.partIds,['P2']);
     assert.equal(saved.source,mixed('Unknown',''));
@@ -79,7 +82,7 @@ async function run(){
 
     await upload(payload(solo));
     await save.click();
-    await page.waitForFunction(()=>window.play12MainController);
+    await openMain();
     const nav=page.locator('#round-navigator');
     const up=nav.getByRole('button',{name:'Next round'});
     const down=nav.getByRole('button',{name:'Previous round'});
@@ -102,7 +105,28 @@ async function run(){
       await number.click();
       await entry.fill('1');
       await entry.press('Enter');
+      const center=await number.boundingBox();
+      const travel=Number(await nav.getAttribute('data-travel'));
+      assert(travel>0);
+      await page.mouse.move(center.x+center.width/2,center.y+center.height/2);
+      await page.mouse.down();
+      await page.mouse.move(center.x+center.width/2,center.y+center.height/2-travel,{steps:4});
+      await page.mouse.up();
+      assert.equal(await number.innerText(),'8');
+      await number.click();
+      await entry.fill('1');
+      await entry.press('Enter');
     }
+    const mainUrl=new URL(page.url());
+    await page.goto(base+'/ru'+mainUrl.pathname+mainUrl.search);
+    await page.waitForFunction(()=>window.play12MainController);
+    const ruUp=nav.getByRole('button',{name:'Следующий раунд'});
+    const ruDown=nav.getByRole('button',{name:'Предыдущий раунд'});
+    assert.equal(await ruDown.isEnabled(),false);
+    await ruUp.click();
+    assert.equal(await number.innerText(),'2');
+    await ruDown.click();
+    assert.equal(await number.innerText(),'1');
 
     if(control){
       await page.setViewportSize({width:375,height:667});
@@ -135,7 +159,7 @@ async function run(){
           assert.equal(engine.assigned,0);
           assert.equal(engine.total,3188);
           assert.equal(engine.search_status,'partial');
-          assert.equal(engine.unassignedReasons['absent'],undefined);
+          assert(Object.values(engine.unassignedReasons).includes('MODEL_CONFLICT_UNRESOLVED_KEY'));
           await save.click();
         }
         await page.waitForFunction(()=>window.play12MainController,null,{timeout:35000});
@@ -154,6 +178,12 @@ async function run(){
         console.log(JSON.stringify(result));
       }
       assert.equal(await page.evaluate(async()=> (await Play12Editor.Store.list()).filter(d=>d.score.editor.tempo===158).length),3);
+    }
+    for(const prefix of ['', '/ru']){
+      await page.goto(base+prefix+'/MVP/tutorial/');
+      await page.waitForFunction(()=>document.querySelector('#round-navigator'));
+      assert.equal(await nav.locator('button').first().getAttribute('aria-label'),prefix?'Следующий раунд':'Next round');
+      assert.equal(await nav.locator('button').last().getAttribute('aria-label'),prefix?'Предыдущий раунд':'Previous round');
     }
     assert.deepEqual(errors,[]);
     console.log('Part selection and round navigation passed in Chromium');

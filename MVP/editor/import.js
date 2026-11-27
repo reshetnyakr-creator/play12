@@ -77,9 +77,9 @@ function loadScore(source,name,previousSelection){
     update();
   };
   confirm.onclick=()=>{dialog.close();ready(picked());};
-  $('cancel-parts').onclick=()=>dialog.close('cancel');
-  dialog.onclose=()=>{if(dialog.returnValue==='cancel'||!selection){reset();message('');}if(!dialog.open)$('file').parentElement.focus();};
-  dialog.returnValue='';
+  const cancel=()=>{dialog.close();reset();message('');$('file').parentElement.focus();};
+  $('cancel-parts').onclick=cancel;
+  dialog.oncancel=event=>{event.preventDefault();cancel();};
   update();
   message('');
   dialog.showModal();
@@ -97,6 +97,7 @@ $('file').onchange=async ev=>{
   }catch(e){failure(e);}finally{busy=false;}
 };
 function explainEmpty(run){
+  if(mode==='source')return copy('В выбранных партиях нет поддерживаемых обозначений пальцев.','The selected parts contain no supported fingering marks.');
   if(run.search_status==='budget_exhausted')return copy('Расчёт достиг лимита времени.','The search reached its time limit.');
   const reasons=Object.values(run.unassignedReasons||{});
   if(reasons.includes('MODEL_CONFLICT_UNRESOLVED_KEY'))return copy(
@@ -124,7 +125,7 @@ function calculate(score){
   });
 }
 async function prepare(){
-  if(journal.hands?.unresolved.length)throw Error(t('Не удалось определить руки по структуре файла. Требуется однозначная фортепианная партия.'));
+  if(journal.hands.unresolved.length)throw Error(copy('Не удалось определить руку для нотоносцев: ','Could not determine the hand for staves: ')+journal.hands.unresolved.join(', '));
   if(Object.values(handMap).some(v=>!v))throw Error(t('Укажите руку каждого нотоносца'));
   message(t('Расчёт аппликатуры…'));
   const score=E.importXML(xml,handMap,selection);
