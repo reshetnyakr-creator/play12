@@ -61,3 +61,8 @@ html[data-device-mode="tablet-landscape"] .main-layout-unloaded .main-skill,
 html[data-device-mode="phone-portrait"] .main-layout-unloaded .main-skill {
   min-height: 0;
 }
+
+.play12-main .training-three-zones .main-library-card:not(.tutorial-progress-card) {
+  height:var(--training-library-height,auto);
+  flex:0 0 auto;
+}
