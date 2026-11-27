@@ -249,55 +249,101 @@
     const measureSteps = time.beats * beatSteps;
     const metricMap = cfg.metricMaps[meter] || (cfg.editorTimeline ? Array.from({length:time.beats}, (_,i) => i === 0 ? "primary" : "weak") : undefined);
     const countLabels = [];
-    for (let s = firstRow; s < lastRow; s++) {
-      const y = (steps - 1 - s) * height;
-      const round = cfg.editorTimeline ? editorRounds.find(r => s * stepQ >= r.start && s * stepQ < r.end) : null;
-      const size = round ? round.beatQuarters / stepQ : beatSteps;
-      const relative = round ? s - round.measureStart / stepQ : s % measureSteps;
-      const beat = round?.beatsAt ? round.beatsAt.findIndex(q=>Math.abs(q-s*stepQ)<1e-7) : Math.floor(relative / size);
-      const withinBeat = round?.beatsAt ? (beat<0?1:0) : relative % size;
-      const map = round ? cfg.metricMaps[`${round.beats}/${round.beatType}`] : metricMap;
-      const level = withinBeat === 0 ? (map?.[beat] ?? (beat === 0 ? "primary" : "weak")) : null;
-      make("rect", {
-        x: handWidth,
-        y,
-        width: countWidth,
-        height,
-        rx: width * cfg.radiusRatio,
-        fill: level ? "#CEF932" : "#FFFFFF",
-        "fill-opacity": level ? cfg.metricOpacity[level] : 1,
-        class: "play12-count-space",
-      });
-      for (let lane = 0; lane < 10; lane++) {
-        const x = lane < 5 ? lane * width : rightStart + (lane - 5) * width;
+    const metricRounds=cfg.editorTimeline&&(document.editor?.fermataTimeline?.metricRounds??document.editor?.metricMap?.rounds);
+    if(metricRounds){
+      const lower=firstRow*stepQ, upper=lastRow*stepQ;
+      const words=cfg.countAnd==='И'
+        ? ['РАЗ','ДВА','ТРИ','ЧЕ','ПЯТЬ','ШЕСТЬ','СЕМЬ','ВОСЕМЬ','ДЕВЯТЬ','ДЕСЯТЬ','ОДИННАДЦАТЬ','ДВЕНАДЦАТЬ']
+        : ['ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','ELEVEN','TWELVE'];
+      const drawStep=(start,end,level,label)=>{
+        const top=Math.min(upper,end),bottom=Math.max(lower,start);
+        if(top<=bottom)return;
+        const y=(steps-top/stepQ)*height, h=(top-bottom)/stepQ*height;
+        const background={y,height:h,rx:width*cfg.radiusRatio,fill:level?'#CEF932':'#FFFFFF',
+          'fill-opacity':level?cfg.metricOpacity[level]:1};
+        make('rect',{...background,x:handWidth,width:countWidth,class:'play12-count-space'});
+        for(let lane=0;lane<10;lane++){
+          const x=lane<5?lane*width:rightStart+(lane-5)*width;
+          make('rect',{...background,x,width,class:'play12-cell'});
+        }
+        const center=(start+end)/2;
+        if(label&&center>=lower&&center<upper)countLabels.push({
+          text:label,x:handWidth+countWidth/2,y:(steps-center/stepQ)*height,
+          beat:!!level,primary:level==='primary',fit:true,
+        });
+      };
+      for(const round of metricRounds.slice(0,measureCount)){
+        const start=fraction(round.start),end=fraction(round.end);
+        if(end<=lower||start>=upper)continue;
+        if(!round.counts.length){drawStep(start,end,null,null);continue;}
+        for(const count of round.counts){
+          const at=fraction(count.start),until=at+fraction(count.duration);
+          if(until<=lower||at>=upper)continue;
+          const subdivisions=count.subdivisions;
+          if(!subdivisions.length){drawStep(at,until,null,null);continue;}
+          const first=fraction(subdivisions[0].position);
+          if(first>at)drawStep(at,first,null,null);
+          for(const step of subdivisions){
+            const start=fraction(step.position);
+            const isCount=step.labelRU===null&&count.pulse;
+            const level=isCount?count.accent.toLowerCase():null;
+            const label=isCount?(words[count.index]??String(count.index+1)):(cfg.countAnd==='И'?step.labelRU:step.labelEN);
+            drawStep(start,start+fraction(step.duration),level,label);
+          }
+        }
+      }
+    }else{
+      for (let s = firstRow; s < lastRow; s++) {
+        const y = (steps - 1 - s) * height;
+        const round = cfg.editorTimeline ? editorRounds.find(r => s * stepQ >= r.start && s * stepQ < r.end) : null;
+        const size = round ? round.beatQuarters / stepQ : beatSteps;
+        const relative = round ? s - round.measureStart / stepQ : s % measureSteps;
+        const beat = round?.beatsAt ? round.beatsAt.findIndex(q=>Math.abs(q-s*stepQ)<1e-7) : Math.floor(relative / size);
+        const withinBeat = round?.beatsAt ? (beat<0?1:0) : relative % size;
+        const map = round ? cfg.metricMaps[`${round.beats}/${round.beatType}`] : metricMap;
+        const level = withinBeat === 0 ? (map?.[beat] ?? (beat === 0 ? "primary" : "weak")) : null;
         make("rect", {
-          x,
+          x: handWidth,
           y,
-          width,
+          width: countWidth,
           height,
           rx: width * cfg.radiusRatio,
           fill: level ? "#CEF932" : "#FFFFFF",
           "fill-opacity": level ? cfg.metricOpacity[level] : 1,
-          class: "play12-cell",
+          class: "play12-count-space",
         });
+        for (let lane = 0; lane < 10; lane++) {
+          const x = lane < 5 ? lane * width : rightStart + (lane - 5) * width;
+          make("rect", {
+            x,
+            y,
+            width,
+            height,
+            rx: width * cfg.radiusRatio,
+            fill: level ? "#CEF932" : "#FFFFFF",
+            "fill-opacity": level ? cfg.metricOpacity[level] : 1,
+            class: "play12-cell",
+          });
+        }
+        const inHold=holds.some(h=>h.start<=s*stepQ&&s*stepQ<h.end);
+        const countText = withinBeat === 0 ? (cfg.countWords[beat + 1] ?? String(beat + 1)) : cfg.countAnd;
+        if (!inHold && !(cfg.editorTimeline && (round?.beatQuarters ?? beatSteps*stepQ) < stepQ)) countLabels.push({ text: countText, x: handWidth + countWidth / 2, y: y + height * 0.63, beat: withinBeat === 0, primary: withinBeat === 0 && beat === 0 });
       }
-      const inHold=holds.some(h=>h.start<=s*stepQ&&s*stepQ<h.end);
-      const countText = withinBeat === 0 ? (cfg.countWords[beat + 1] ?? String(beat + 1)) : cfg.countAnd;
-      if (!inHold && !(cfg.editorTimeline && (round?.beatQuarters ?? beatSteps*stepQ) < stepQ)) countLabels.push({ text: countText, x: handWidth + countWidth / 2, y: y + height * 0.63, beat: withinBeat === 0, primary: withinBeat === 0 && beat === 0 });
-    }
 
-    // A coarse grid can have fewer rows than the meter has beats (e.g. 6/8).
-    // Place beat labels at their own times, independent of the editable grid.
-    if (cfg.editorTimeline) {
-      for (const round of editorRounds.slice(0, measureCount)) {
-        if (round.beatQuarters >= stepQ || round.end <= firstRow * stepQ || round.start >= lastRow * stepQ) continue;
-        for (let beat = 0; beat < round.beats; beat++) {
-          const start = round.beatsAt?.[beat]??round.measureStart + beat * round.beatQuarters;
-          if (start < round.start || start >= round.end) continue;
-          const y = (steps - (start + round.beatQuarters / 2) / stepQ) * height;
-          countLabels.push({text: cfg.countWords[beat + 1] ?? String(beat + 1), x: handWidth + countWidth / 2, y, beat: true, primary: beat === 0});
+      // A coarse grid can have fewer rows than the meter has beats (e.g. 6/8).
+      // Place beat labels at their own times, independent of the editable grid.
+      if (cfg.editorTimeline) {
+        for (const round of editorRounds.slice(0, measureCount)) {
+          if (round.beatQuarters >= stepQ || round.end <= firstRow * stepQ || round.start >= lastRow * stepQ) continue;
+          for (let beat = 0; beat < round.beats; beat++) {
+            const start = round.beatsAt?.[beat]??round.measureStart + beat * round.beatQuarters;
+            if (start < round.start || start >= round.end) continue;
+            const y = (steps - (start + round.beatQuarters / 2) / stepQ) * height;
+            countLabels.push({text: cfg.countWords[beat + 1] ?? String(beat + 1), x: handWidth + countWidth / 2, y, beat: true, primary: beat === 0});
+          }
         }
       }
+
     }
 
     const borders = cfg.editorTimeline ? editorRounds.slice(0, measureCount) :
@@ -311,7 +357,9 @@
     }
     for (const item of countLabels) {
       const countClass = item.primary ? "play12-count play12-count-primary" : item.beat ? "play12-count play12-count-beat" : "play12-count play12-count-and";
-      make("text", { x: item.x, y: item.y, "text-anchor": "middle", class: countClass }, item.text);
+      const fit=item.fit&&item.text.length>=5?{textLength:Math.min(countWidth*.9,item.text.length*3.8),lengthAdjust:'spacingAndGlyphs'}:{};
+      make("text", { x: item.x, y: item.y, "text-anchor": "middle", class: countClass,
+        ...(item.fit?{'dominant-baseline':'central'}:{}),...fit }, item.text);
     }
 
     const dynamic = cfg.editorTimeline ? (document.score.parts.flatMap(p => p.measures).flatMap(m => m.dynamic_marks || [])[0]?.value || "mf") : dynamicAtStart(document);
