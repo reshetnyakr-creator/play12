@@ -379,10 +379,10 @@ test('Metronome advances during Practice wait, survives gate release, Pause and 
   c.audioContext.currentTime=4;c.scheduleMetronome();assert(c.metronomeBeatCounter>after);
   c.setMetronome(false);const stopped=c.metronomeBeatCounter;c.audioContext.currentTime=6;c.scheduleMetronome();assert.equal(c.metronomeBeatCounter,stopped);
 });
-test('BPM clamps, +/- 10, invalid restores; shared tempo scales clock and next metronome beat',async()=>{
+test('BPM bounds, MIDI +/- 10, invalid restores; tempo retimes clock and next metronome beat',async()=>{
   const {c}=make(undefined,24,true);c.setMetronome(true);
   c.bpmPlus.handlers.click();assert.equal(c.clock.bpm,70);c.bpmMinus.handlers.click();assert.equal(c.clock.bpm,60);
-  for(const [raw,expected] of [['2',30],['999',240],['',240],['bad',240],['96',96]]){c.bpmInput.value=raw;c.changeBpm();assert.equal(c.clock.bpm,expected);assert.equal(c.bpmInput.value,String(expected));}
+  for(const [raw,expected] of [['2',60],['999',60],['',60],['bad',60],['20',20],['300',300],['96',96]]){c.bpmInput.value=raw;c.changeBpm();assert.equal(c.clock.bpm,expected);assert.equal(c.bpmInput.value,String(expected));}
   c.bpmInput.value='60';c.changeBpm();c.clock.start(0);c.audioContext.currentTime=1;assert.equal(c.clock.position,1);
   c.bpmInput.value='120';c.changeBpm();c.audioContext.currentTime=2;assert.equal(c.clock.position,3);
   const beatTime=c.nextMetronomeBeat;c.audioContext.currentTime=beatTime-.05;c.scheduleMetronome();assert.equal(c.nextMetronomeBeat,beatTime+.5);

@@ -71,7 +71,7 @@ test('fermata continuation keeps a nominal hold without a new contact or automat
   assert.equal(r.contacts[0].end,'2/1');
   assert.equal(r.unassignedReasons.hold,'EXCLUDED');
 });
-test('tempo-map clock scales arpeggio attacks with the selected BPM',()=>{
+test('tempo-map clock retimes arpeggio attacks with the selected BPM',()=>{
   const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
   const win={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../renderer/play12-playback.js'),'utf8'),{window:win});
   const audio={currentTime:0};
@@ -80,5 +80,5 @@ test('tempo-map clock scales arpeggio attacks with the selected BPM',()=>{
   clock.start(0);audio.currentTime=0.0703125;
   assert.equal(clock.position,1/8);
   clock.setBpm(40);
-  assert.equal(clock.secondsBetween(0,1/8),0.140625);
+  assert.equal(clock.secondsBetween(0,1/8),0.125);
 });

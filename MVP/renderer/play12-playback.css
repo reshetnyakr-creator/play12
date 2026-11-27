@@ -191,3 +191,9 @@ html[data-device-mode="phone-landscape"] body.tutorial-main-aligned.play12-three
   grid-template-rows: auto minmax(160px, 1fr) auto;
   overflow-y: auto;
 }
+
+.mvp-playback-host .playback-stage.has-tempo-navigator.has-round-navigator .playback-score {
+  left: 51px !important;
+}
+#tempo-navigator { left: 23px; }
+#tempo-navigator .round-navigator-number small { display:block; font-size:.55em; line-height:1; }

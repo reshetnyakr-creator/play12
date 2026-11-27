@@ -13,14 +13,18 @@
     return Math.max(0,lo-1);
   }
 
-  function create(playback){
+  const bpmMin=20,bpmMax=300;
+  const tempoSteps=Array.from({length:bpmMax-bpmMin+1},(_,i)=>({start:i+bpmMin}));
+  function create(playback,tempo=false){
+    if(tempo)playback={stage:playback.stage,rounds:tempoSteps,executionY:()=>playback.controller.executionY(),
+      controller:playback,clock:{position:playback.clock.bpm},seek:value=>playback.controller.setUserBpm(value)};
     const {stage,rounds}=playback, doc=stage.ownerDocument, last=rounds.length-1;
     if(last<0)return null;
     const root=doc.createElement('div');
-    root.id='round-navigator';
+    root.id=tempo?'tempo-navigator':'round-navigator';
     root.className='round-navigator';
     root.setAttribute('role','group');
-    root.setAttribute('aria-label',t('Round Navigation'));
+    root.setAttribute('aria-label',t(tempo?'Tempo':'Round Navigation'));
     function button(text,label){
       const item=doc.createElement('button');
       item.type='button';
@@ -29,17 +33,18 @@
       root.append(item);
       return item;
     }
-    const next=button('▲','Next round');
-    const number=button('1','Go to round');
-    const previous=button('▼','Previous round');
+    const next=button('▲',tempo?'Increase tempo by 1 BPM':'Next round');
+    const number=button('1',tempo?'Set tempo':'Go to round');
+    const previous=button('▼',tempo?'Decrease tempo by 1 BPM':'Previous round');
     number.className='round-navigator-number';
 
     const dialog=doc.createElement('dialog');
     dialog.className='round-navigator-dialog';
+    if(tempo)dialog.id='tempo-navigator-dialog';
     const form=doc.createElement('form');
     form.method='dialog';
     const label=doc.createElement('label');
-    label.textContent=t('Go to round');
+    label.textContent=t(tempo?'Set tempo':'Go to round');
     const input=doc.createElement('input');
     input.inputMode='numeric';
     input.autocomplete='off';
@@ -47,7 +52,7 @@
     input.required=true;
     label.append(input);
     const range=doc.createElement('small');
-    range.textContent='1–'+rounds.length;
+    range.textContent=tempo?'20–300 BPM':'1–'+rounds.length;
     const go=doc.createElement('button');
     go.textContent=t('Go');
     const cancel=doc.createElement('button');
@@ -55,19 +60,28 @@
     cancel.textContent=t('Cancel');
     cancel.addEventListener('click',()=>dialog.close());
     form.append(label,range,go,cancel);
+    if(tempo){
+      const reset=doc.createElement('button');
+      reset.type='button';
+      reset.textContent=t('Restore original tempo');
+      reset.addEventListener('click',()=>{dialog.close();playback.controller.setUserBpm(null);});
+      form.append(reset);
+    }
     dialog.append(form);
     doc.body.append(dialog);
     stage.append(root);
-    stage.classList.add('has-round-navigator');
+    stage.classList.add(tempo?'has-tempo-navigator':'has-round-navigator');
 
     let index=-1,travel=0,gesture=null,frame=0,blocked=false;
     function update(position){
       const current=indexAt(rounds,position);
       if(index===current)return;
       index=current;
-      number.textContent=String(index+1);
+      number.textContent=tempo?String(rounds[index].start):String(index+1);
+
       number.style.fontSize=number.textContent.length>3?`max(1px, calc(var(--round-nav-size) * ${1.36/number.textContent.length}))`:'';
-      number.setAttribute('aria-label',t('Round {number}',{number:index+1})+' · '+t('Go to round'));
+      if(tempo){const unit=doc.createElement('small');unit.textContent='BPM';number.append(unit);}
+      number.setAttribute('aria-label',tempo?t('Set tempo')+' · '+rounds[index].start+' BPM':t('Round {number}',{number:index+1})+' · '+t('Go to round'));
       previous.disabled=index===0;
       next.disabled=index===last;
       root.style.setProperty('--round-nav-offset',`${last?travel*index/last:0}px`);
@@ -78,7 +92,7 @@
       const scaleX=bar.width/stage.offsetWidth||1,scaleY=bar.height/stage.offsetHeight||1;
       const size=grab?.height ? grab.height/scaleY : 30;
       root.style.setProperty('--round-nav-size',size+'px');
-      if(grab?.width)root.style.setProperty('--round-nav-x',((grab.left+grab.width/2-bar.left)/scaleX)+'px');
+      if(!tempo&&grab?.width)root.style.setProperty('--round-nav-x',((grab.left+grab.width/2-bar.left)/scaleX)+'px');
       const area=Math.min(stage.offsetHeight,playback.executionY());
       const bottom=Math.max(0,stage.offsetHeight-area)+4;
       root.style.bottom=bottom+'px';
@@ -100,7 +114,7 @@
     next.addEventListener('click',()=>{if(!blocked)jump(index+1);});
     number.addEventListener('click',()=>{
       if(blocked)return;
-      input.value=String(index+1);
+      input.value=String(tempo?rounds[index].start:index+1);
       input.setCustomValidity('');
       dialog.showModal();
       input.focus();
@@ -109,7 +123,7 @@
     input.addEventListener('input',()=>input.setCustomValidity(''));
     form.addEventListener('submit',event=>{
       event.preventDefault();
-      const target=Number(input.value);
+      const target=Number(input.value)-(tempo?bpmMin-1:0);
       if(!/^\d+$/.test(input.value)||!Number.isSafeInteger(target)||target<1||target>rounds.length){
         input.setCustomValidity(range.textContent);
         input.reportValidity();
@@ -164,4 +178,5 @@
   }
 
   global.Play12RoundNavigator={create,indexAt};
+  global.Play12TempoNavigator={create:playback=>create(playback,true)};
 })(window);
