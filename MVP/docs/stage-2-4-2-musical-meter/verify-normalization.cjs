@@ -21,8 +21,10 @@ const root=__dirname;
     const bytes=Uint8Array.from(atob(buffer),c=>c.charCodeAt(0));
     const xml=name.endsWith('.mxl')?await Play12MXL.read(new File([bytes],name)):new TextDecoder().decode(bytes);
     const E=Play12Editor;
+    const started=performance.now();
     const {editor}=E.importXML(xml);
-    return {totalQ:editor.total_quarters,rounds:editor.metricMap.rounds.length,
+    const parseMs=performance.now()-started;
+    return {parseMs,totalQ:editor.total_quarters,rounds:editor.metricMap.rounds.length,
      counts:editor.metricMap.rounds.map(r=>r.counts.map(c=>[c.start,c.index,c.accent,c.subdivisions.map(s=>s.labelRU)])),
      tempo:editor.tempoMap.map(e=>[e.q,e.bpm]),marks:editor.metricMap.tempoMarks,
      fermatas:editor.fermataTimeline?.holds??[],diagnostics:[...new Set(editor.diagnostics.map(d=>d.code))].filter(d=>d!=='HAND_UNKNOWN')};
@@ -42,6 +44,23 @@ const root=__dirname;
   assert.equal(rows.M27.tempo[1][1],120);
   assert(rows.M29.diagnostics.includes('TEMPO_MARK_CONFLICT'));
   assert.equal(rows.M30.counts[0].length,0);
+  assert(rows.M34.diagnostics.includes('METRIC_BEAM_GROUP_INFERRED'));
+  assert.deepEqual(rows.M34.counts[0].flatMap(c=>c[2]==='SECONDARY'?[c[1]]:[]),[2,5]);
+  const mReference=JSON.parse(fs.readFileSync(path.join(root,'reference.json'),'utf8'));
+  const rational=value=>{const [n,d=1]=value.split('/').map(Number);return n/d;};
+  for(const [name,expected] of Object.entries(mReference)){
+    assert.equal(rational(rows[name].totalQ),rational(expected.totalQ),name+' score duration');
+  }
+  const reference=JSON.parse(fs.readFileSync(path.join(root,'play12-reference.json'),'utf8'));
+  for(const [name,expected] of Object.entries(reference)){
+    const counts=rows[name].counts[0];
+    assert.equal(counts.length,expected.counts,name);
+    assert.deepEqual(counts.flatMap(c=>c[2]==='SECONDARY'?[c[1]]:[]),expected.secondary,name);
+    if(name!=='P05')assert.deepEqual(counts[0][3],expected.firstSteps,name);
+  }
+  assert.deepEqual(rows.P04.counts[0].map(c=>c[3].length),[1,2,3,1]);
+  assert.deepEqual(rows.P05.counts[0][0][3],[null,'И','И','А']);
+  assert.equal(rows.P18.counts[1].length,3);
   const perfect=matrix.find(r=>r.name.toLowerCase().includes('perfect'));
   if(perfect){
    assert.equal(perfect.rounds,69);

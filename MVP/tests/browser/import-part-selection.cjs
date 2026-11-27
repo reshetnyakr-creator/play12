@@ -78,7 +78,7 @@ async function run(){
     assert.deepEqual(saved.score.score.parts.map(p=>p.id),['P2']);
     assert.equal(saved.score.score.parts[0].measures[0].events[0].voice,'3');
     assert.equal(saved.score.editor.tempo,97);
-    assert.deepEqual(saved.score.editor.tempoMap,[{at:0,bpm:120},{at:1,bpm:97}]);
+    assert.deepEqual(saved.score.editor.tempoMap,[{at:0,q:'0/1',bpm:120},{at:1,q:'1/1',bpm:97}]);
 
     await upload(payload(solo));
     await save.click();

@@ -225,10 +225,10 @@ async function run(){
           await checkHighlight();
           assert.equal(await page.evaluate(()=>play12Onboarding.getState().practiceGuideStage),guide);
           if(guide==='metronome-tempo'&&name==='iphone-portrait'){
-            const before=(await tempo.boundingBox()).y;
-            await page.evaluate(()=>play12Playback.tempoNavigator.update(250));
-            await checkHighlight();
-            assert(Math.abs((await tempo.boundingBox()).y-before)>10);
+            const before=await getBpm();
+            await up.click();
+            assert.equal(await getBpm(),before+1);
+            await page.waitForFunction(()=>play12Onboarding.getState().practiceGuideStage==='metronome-on');
           }
           await shot('spotlight-'+locale+'-'+name+'-'+guide);
           console.log('SPOTLIGHT',locale,name,guide);

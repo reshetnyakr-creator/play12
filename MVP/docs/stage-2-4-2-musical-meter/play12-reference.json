@@ -1,0 +1,203 @@
+{
+  "P01": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P02": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null,
+      "И"
+    ]
+  },
+  "P03": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null,
+      "И",
+      "А"
+    ]
+  },
+  "P04": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P05": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null,
+      "И",
+      "И",
+      "А"
+    ]
+  },
+  "P06": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P07": {
+    "counts": 5,
+    "secondary": [
+      3
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P08": {
+    "counts": 5,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P09": {
+    "counts": 7,
+    "secondary": [
+      2,
+      4
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P10": {
+    "counts": 7,
+    "secondary": [
+      2,
+      5
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P11": {
+    "counts": 7,
+    "secondary": [
+      3,
+      5
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P12": {
+    "counts": 8,
+    "secondary": [
+      3,
+      6
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P13": {
+    "counts": 8,
+    "secondary": [
+      2,
+      5
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P14": {
+    "counts": 8,
+    "secondary": [
+      3,
+      5
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P15": {
+    "counts": 12,
+    "secondary": [
+      2,
+      4,
+      7,
+      9
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P16": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P17": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null,
+      "И",
+      "А"
+    ]
+  },
+  "P18": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null
+    ]
+  },
+  "P19": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null,
+      "И",
+      "А"
+    ]
+  },
+  "P20": {
+    "counts": 4,
+    "secondary": [
+      2
+    ],
+    "firstSteps": [
+      null,
+      "И",
+      "А"
+    ]
+  }
+}

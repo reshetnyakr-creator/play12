@@ -110,7 +110,7 @@ function explainEmpty(run){
 }
 function calculate(score){
   return new Promise((resolve,reject)=>{
-    const worker=new Worker('/MVP/editor/worker.js?v=stage22');
+    const worker=new Worker('/MVP/editor/worker.js?v=stage242');
     const finish=(error,result)=>{
       clearTimeout(timer);
       worker.terminate();
@@ -131,7 +131,9 @@ async function prepare(){
   const score=E.importXML(xml,handMap,selection);
   const run=await calculate(score);
   journal.source=mode;
-  doc={schema:'play12-editor-document/1',id:crypto.randomUUID(),title:$('title').textContent,source:xml,partIds:selection,sourceHash:await E.hash(xml),score,run,runs:[run],mode,manual:{},history:[],cursor:0,revision:1};
+  const sourceHash=await E.hash(xml);
+  score.editor.metricMap.sourceHash=sourceHash;
+  doc={schema:'play12-editor-document/1',id:crypto.randomUUID(),title:$('title').textContent,source:xml,partIds:selection,sourceHash,score,run,runs:[run],mode,manual:{},history:[],cursor:0,revision:1};
   journal.engine=run;
   const notes=E.events(E.effective(doc)),assigned=notes.filter(e=>e.method.finger!=null).length;
   const count=assigned+t(' из ')+notes.length+t(' нот.');
@@ -145,7 +147,13 @@ async function prepare(){
   }
   return true;
 }
-$('save').onclick=async()=>{if(busy)return;busy=true;try{$('save').disabled=true;if(!doc&&!await prepare()){$('save').disabled=false;return;}message(t('Сохранение…'));doc.userId=Play12MainData.profile().userId;const existing=await Play12MainData.findImport(doc.sourceHash,doc.mode,selection,selection.length===journal.import.parts.length);if(existing){
+$('save').onclick=async()=>{if(busy)return;busy=true;try{$('save').disabled=true;if(!doc&&!await prepare()){$('save').disabled=false;return;}message(t('Сохранение…'));doc.userId=Play12MainData.profile().userId;const existing=await Play12MainData.findImport(doc.sourceHash,doc.mode,selection,selection.length===journal.import.parts.length);if(existing&&!E.sameScoreTiming(existing.score,doc.score,true)){
+  if(confirm(copy('Распознанное музыкальное время изменилось. Сохранить новую версию отдельной мелодией? Существующая версия и ручная аппликатура сохранятся.',
+    'The imported musical timing has changed. Save the new version as a separate melody? The existing melody and manual fingering will be kept.'))){
+    doc.parentId=existing.id;
+    await E.Store.put(doc);
+  }else doc=existing;
+}else if(existing){
   const revision=existing.revision;
   const improvedModel=Boolean(doc.score.editor.fermataTimeline||doc.run.releaseShift?.length||doc.run.contacts?.some(c=>c.unisonGroups?.length||c.arpeggio))&&existing.run.version!==doc.run.version&&
     Object.entries(existing.run.assignments).every(([id,finger])=>finger==null||doc.run.assignments[id]!=null);

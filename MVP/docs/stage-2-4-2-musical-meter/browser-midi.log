@@ -1,0 +1,9 @@
+[
+  'existing calibration UI 36–96 -> exact 61-key Desktop SVG',
+  'Start over keeps actual verified MIDI calibration, zero and BPM; same confirmed input resumes without recalibration',
+  'disconnect -> existing reconnect notice and 88-key fallback',
+  'same-input reconnect restores 61 keys without new calibration',
+  'different input returns to existing recalibration flow and disposes layout',
+  'denied MIDI access retains existing help state',
+  'no input retains existing device-not-found state'
+]

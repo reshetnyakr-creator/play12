@@ -68,8 +68,8 @@
       number.textContent=label;
 
       number.style.fontSize=number.textContent.length>3?`max(1px, calc(var(--round-nav-size) * ${1.36/number.textContent.length}))`:'';
-      if(tempo){const unit=doc.createElement('small');unit.textContent='BPM';number.append(unit);}
-      number.setAttribute('aria-label',tempo?t('Metronome')+' · '+label+' BPM':t('Round {number}',{number:index+1})+' · '+t('Go to round'));
+      if(tempo){const unit=doc.createElement('small');unit.textContent=playback.controller.tempoDisplayName??'BPM';number.append(unit);}
+      number.setAttribute('aria-label',tempo?t('Metronome')+' · '+label+' '+(playback.controller.tempoDisplayName??'BPM'):t('Round {number}',{number:index+1})+' · '+t('Go to round'));
       previous.disabled=index===0;
       next.disabled=index===last;
       root.style.setProperty('--round-nav-offset',`${offset(index)}px`);

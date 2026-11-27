@@ -1,0 +1,11 @@
+{
+  "unchanged": true,
+  "storedUnchanged": true,
+  "restoredUnchanged": true,
+  "count": 4,
+  "manual": 3,
+  "missingSourceFallback": true,
+  "changedTimingFallback": true,
+  "changedTimingKept": true,
+  "reimportKeepsPrevious": true
+}

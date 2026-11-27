@@ -287,6 +287,7 @@
       this.metricBeats=this.metricEnabled?options.rounds.flatMap(r=>r.metricBeats??[]):[];
       const pulseUnits=new Set(options.rounds.map(r=>r.pulseQ??null));
       this.tempoDisplayUnit=this.metricEnabled&&pulseUnits.size===1?(options.rounds[0].pulseQ??1):1;
+      this.tempoDisplayName=this.metricEnabled&&(pulseUnits.size!==1||pulseUnits.has(null))?'QPM':'BPM';
       this.clock = new PlaybackClock(this.audioContext, options.initialBpm, 0, options.tempoMap, options.originalTempo,this.metricEnabled?this.tempoDisplayUnit:null);
       if(options.useOriginalTempo)this.clock.setBpm(options.initialBpm,true);
       this.fermataHolds=options.fermataHolds??[];
@@ -760,7 +761,7 @@
       } else {
         timingDeltaMs = this.clock.secondsBetween(expected.start,this.clock.position)*1000;
       }
-      if (this.practiceTimingStrict && this.metronomeAudio && this.metronomeInput.checked) {
+      if (this.practiceTimingStrict && this.metronomeAudio && this.metronomeInput.checked && (!this.metricEnabled||this.signatureAt(expected.start).pulseQ)) {
         const base = expected.expectedAudioTime ?? this.clock.quarterToAudioTime(expected.start);
         const candidateDelta = (this.audioContext.currentTime - expected.candidateBeatTime) * 1000;
         const window = expected.candidateBeatTime != null && candidateDelta >= -150 - EPSILON && candidateDelta <= 200 + EPSILON
@@ -949,7 +950,8 @@
       }
     }
     preCountEnabled() {
-      return this.countInInput.checked && (!this.roundBoard || (!this.roundBoard.root.hidden && !this.roundBoard.root.inert));
+      return this.countInInput.checked && (!this.metricEnabled||Boolean(this.signatureAt(this.clock.position).pulseQ)) &&
+        (!this.roundBoard || (!this.roundBoard.root.hidden && !this.roundBoard.root.inert));
     }
     beginPreCount(selected, cycleAt = null) {
       const signature = this.signatureAt(selected);
@@ -1264,7 +1266,7 @@
         const beat=this.metricBeats[this.nextScoreBeat];
         if(beat.q>=limit-EPSILON||beat.q>gated+EPSILON)break;
         const when=this.clock.quarterToAudioTime(beat.q);
-        if(when>now+.1)break;
+        if(when>now+.25)break;
         this.nextScoreBeat++;
         if(when<now-.06)continue;
         this.scheduleMetricBeat(beat,this.nextScoreBeat-1,anchor,Math.max(now,when));
@@ -1626,7 +1628,7 @@
       this.expireRobotNotes();
       this.expirePracticeCandidate();
       const rhythmicExpected = this.waitingForInput || this.expectedPracticeEvent;
-      if (rhythmicExpected && !this.practicePaused && this.metronomeAudio && this.metronomeInput.checked && Number.isFinite(rhythmicExpected.expectedAudioTime)) {
+      if (rhythmicExpected && !this.practicePaused && this.metronomeAudio && this.metronomeInput.checked && (!this.metricEnabled||this.signatureAt(rhythmicExpected.start).pulseQ) && Number.isFinite(rhythmicExpected.expectedAudioTime)) {
         const window = practiceBeatWindow(rhythmicExpected.expectedAudioTime, this.audioContext.currentTime, this.practicePulseBpm(rhythmicExpected.start));
         this.stage.dataset.practiceTimingWindow = window.accepted ? 'open' : 'closed';
         this.stage.dataset.practiceBeatWindowAudioTime = String(window.when);

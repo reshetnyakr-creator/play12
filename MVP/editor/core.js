@@ -212,12 +212,61 @@ function meterFromXML(time) {
   return {groups,beats:Number(beats),beatType:Number(denominator),confidence:explicit?'EXPLICIT':conventional?'CONVENTIONAL':'UNKNOWN',source:explicit?'additive':'time'};
 }
 
+function repeatedBeamGrouping(source, meter, divisions) {
+  if(meter.confidence!=='UNKNOWN'||meter.beatType!==8)return null;
+  const runs=new Map();
+  for(const note of children(source,'note')){
+    if(one(note,'chord')||one(note,'grace'))continue;
+    const beam=children(note,'beam').find(node=>(node.getAttribute('number')||'1')==='1')?.textContent.trim();
+    const key=txt(note,'staff','1')+':'+txt(note,'voice','1');
+    if(!runs.has(key))runs.set(key,[]);
+    runs.get(key).push(new Q(txt(note,'duration','0'),BigInt(divisions)).cmp('1/2')===0?beam:undefined);
+  }
+  const candidates=[];
+  for(const marks of runs.values()){
+    if(marks.length!==meter.beats)continue;
+    const groups=[];
+    for(let i=0;i<marks.length;){
+      if(marks[i]!=='begin')break;
+      let end=i+1;
+      while(marks[end]==='continue')end++;
+      if(marks[end]!=='end'||end-i>2)break;
+      groups.push(end-i+1);
+      i=end+1;
+    }
+    if(groups.reduce((a,b)=>a+b,0)===meter.beats)candidates.push(groups.join('+'));
+  }
+  return new Set(candidates).size===1?candidates[0]:null;
+}
+
+function applyRepeatedBeamGroups(rounds, diagnostics) {
+  for(let first=0;first<rounds.length;){
+    const signature=JSON.stringify(rounds[first].meter);
+    let last=first+1;
+    while(last<rounds.length&&JSON.stringify(rounds[last].meter)===signature)last++;
+    const block=rounds.slice(first,last);
+    const evidence=block.map(r=>r.beamGrouping).filter(Boolean);
+    if(evidence.length>=2&&new Set(evidence).size===1){
+      const sizes=evidence[0].split('+').map(Number);
+      const secondary=new Set(sizes.slice(0,-1).map((_,i)=>sizes.slice(0,i+1).reduce((a,b)=>a+b,0)));
+      for(const round of block){
+        round.meter={...round.meter,confidence:'INFERRED',source:'repeated-beams',grouping:sizes};
+        round.cycleAccents=round.cycleAccents.map((accent,index)=>secondary.has(index)?'SECONDARY':accent);
+        for(const count of round.counts)if(secondary.has(count.index))count.accent='SECONDARY';
+      }
+      diagnostics.push({code:'METRIC_BEAM_GROUP_INFERRED',measure:first+1,grouping:sizes});
+    }
+    for(const round of block)delete round.beamGrouping;
+    first=last;
+  }
+}
+
 function metricRound({meter, measure, partId, start, length, nominal, pickup, boundaries}) {
   const counts=[];
   const phase=pickup&&nominal.cmp(length)>0?nominal.sub(length):new Q(0);
   const round={id:`${partId}:${measure.index}`,start:start.toString(),end:start.add(length).toString(),
     nominalDuration:meter.free?null:nominal.toString(),metricPhase:phase.toString(),sourceMeasureIds:[measure.number],meter,counts};
-  if(meter.free)return round;
+  if(meter.free)return {...round,pulseUnit:null,defaultSubdivisions:0,cycleAccents:[]};
   const compound=meter.groups.length===1&&meter.beatType===8&&[6,9,12].includes(meter.beats);
   const base=new Q(compound?'3/2':`4/${meter.beatType}`);
   const accents=new Set();
@@ -227,12 +276,18 @@ function metricRound({meter, measure, partId, start, length, nominal, pickup, bo
     groupOffset+=group.size*(meter.beatType/group.denominator);
   }
   if(meter.groups.length===1&&meter.beats===(compound?12:4))accents.add(2);
+  round.pulseUnit=base.toString();
+  round.defaultSubdivisions=compound?3:1;
+  round.cycleAccents=Array.from({length:compound?meter.beats/3:meter.beats},(_,i)=>
+    i===0?'PRIMARY':accents.has(i)?'SECONDARY':'WEAK');
+  const cuts=[...boundaries].map(q=>new Q(q).add(phase)).sort((a,b)=>a.cmp(b));
+  let cut=0;
   for(let local=new Q(0),index=0;local.cmp(phase.add(length))<0;local=local.add(base),index++){
     const end=local.add(base);
     if(end.cmp(phase)<=0)continue;
     const lo=max(local,phase), hi=end.cmp(phase.add(length))>0?phase.add(length):end;
     const binary=new Q(base.n,base.d*2n), ternary=new Q(base.n,base.d*3n);
-    const positions=[{at:local,ru:null,en:null}];
+    const positions=[{at:local,ru:null,en:null,count:true}];
     const hasBoundary=q=>boundaries.has(q.sub(phase).toString());
     if(compound||hasBoundary(local.add(ternary))||hasBoundary(local.add(ternary).add(ternary))){
       positions.push({at:local.add(ternary),ru:'И',en:'AND'},{at:local.add(ternary).add(ternary),ru:'А',en:'A'});
@@ -240,12 +295,16 @@ function metricRound({meter, measure, partId, start, length, nominal, pickup, bo
     if(hasBoundary(local.add(binary))||!compound&&hasBoundary(local.add(new Q(base.n,base.d*4n)))){
       positions.push({at:local.add(binary),ru:'И',en:'AND'});
     }
+    while(cut<cuts.length&&cuts[cut].cmp(end)<0){
+      const at=cuts[cut++];
+      if(at.cmp(lo)>=0&&!positions.some(p=>p.at.cmp(at)===0))positions.push({at,ru:null,en:null});
+    }
     const steps=positions.filter(p=>p.at.cmp(lo)>=0&&p.at.cmp(hi)<0).sort((a,b)=>a.at.cmp(b.at));
     counts.push({id:`${round.id}:${index}`,index,start:start.add(lo).sub(phase).toString(),
       duration:hi.sub(lo).toString(),pulse:lo.cmp(local)===0,
-      accent:index===0?'PRIMARY':accents.has(index)?'SECONDARY':'WEAK',
+      accent:round.cycleAccents[index]??'WEAK',
       subdivisions:steps.map((step,i)=>({position:start.add(step.at).sub(phase).toString(),
-        duration:(steps[i+1]?.at??hi).sub(step.at).toString(),labelRU:step.ru,labelEN:step.en}))});
+        duration:(steps[i+1]?.at??hi).sub(step.at).toString(),count:step.count===true,labelRU:step.ru,labelEN:step.en}))});
   }
   return round;
 }
@@ -301,7 +360,19 @@ if(unsupported)diagnostics.push({code:'REALIZATION_MISSING',measure:mi+1,message
 terminalShort=mi===sourceMeasures.length-1&&short&&sourceMeasures.length>1&&
   new Set(events.map(e=>e.staff+':'+e.voice)).size===1&&!one(m,'forward'),
 length=meter.free||m.getAttribute('implicit')==='yes'||terminalShort?extent:max(nominal,extent);
-if(short&&!meter.free)diagnostics.push({code:length.cmp(extent)===0?'METRIC_SHORT_MEASURE':'METRIC_PADDED_MEASURE',measure:mi+1});if(!length.n)throw Error('Пустой такт без длительности');if(tempoOnly){offset=offset.add(length);continue;}const measure={index:mi,number:m.getAttribute('number')||String(mi+1),implicit:m.getAttribute('implicit')==='yes',attributes:{divisions,time:{beats,beat_type:beatType}},events,editor_duration_q:length.toString(),tempo_marks:mi===0?[{start_quarters:'0/1',bpm:tempo}]:[]};measures.push(measure);if(primaryPart)metricRounds.push(metricRound({meter,measure,partId:part.getAttribute('id'),start:offset,length,nominal,pickup,boundaries}));if(primaryPart)rounds.push({index:mi,startQ:offset.toString(),endQ:offset.add(length).toString(),start:num(offset),end:num(offset.add(length)),measureStart:num(offset),beats,beatType,beatQuarters:4/beatType,measureQuarters:num(length)});offset=offset.add(length);}if(tempoOnly)continue;total=max(total,offset);parts.push({id:part.getAttribute('id'),name:txt(children(one(dom.documentElement,'part-list')||{},'score-part').find(def=>def.getAttribute('id')===part.getAttribute('id'))||{},'part-name',part.getAttribute('id')),measures,pedals:pedals.sort((a,b)=>new Q(a.at).cmp(b.at)||a.order-b.order)});}
+if(short&&!meter.free)diagnostics.push({code:length.cmp(extent)===0?'METRIC_SHORT_MEASURE':'METRIC_PADDED_MEASURE',measure:mi+1});if(!length.n)throw Error('Пустой такт без длительности');if(tempoOnly){offset=offset.add(length);continue;}const measure={index:mi,number:m.getAttribute('number')||String(mi+1),implicit:m.getAttribute('implicit')==='yes',attributes:{divisions,time:{beats,beat_type:beatType}},events,editor_duration_q:length.toString(),tempo_marks:mi===0?[{start_quarters:'0/1',bpm:tempo}]:[]};measures.push(measure);if(primaryPart){
+  const round=metricRound({meter,measure,partId:part.getAttribute('id'),start:offset,length,nominal,pickup,boundaries});
+  round.beamGrouping=repeatedBeamGrouping(m,meter,divisions);
+  metricRounds.push(round);
+}else{
+  const primary=metricRounds[mi];
+  if(primary&&(primary.start!==offset.toString()||primary.end!==offset.add(length).toString()||
+    primary.meter.beatType!==meter.beatType||primary.meter.beats!==meter.beats||
+    JSON.stringify(primary.meter.groups)!==JSON.stringify(meter.groups))){
+    diagnostics.push({code:'METRIC_PART_CONFLICT',measure:mi+1,part:part.getAttribute('id')});
+  }
+}if(primaryPart)rounds.push({index:mi,startQ:offset.toString(),endQ:offset.add(length).toString(),start:num(offset),end:num(offset.add(length)),measureStart:num(offset),beats,beatType,beatQuarters:4/beatType,measureQuarters:num(length)});offset=offset.add(length);}if(tempoOnly)continue;total=max(total,offset);parts.push({id:part.getAttribute('id'),name:txt(children(one(dom.documentElement,'part-list')||{},'score-part').find(def=>def.getAttribute('id')===part.getAttribute('id'))||{},'part-name',part.getAttribute('id')),measures,pedals:pedals.sort((a,b)=>new Q(a.at).cmp(b.at)||a.order-b.order)});}
+applyRepeatedBeamGroups(metricRounds,diagnostics);
 for(const part of parts){realizeArpeggios(part,diagnostics);preserveUnresolvedArpeggioTies(part);}
 if(!notes.length)throw Error('В файле нет нот.');for(const e of notes)if(!e.hand)diagnostics.push({code:'HAND_UNKNOWN',event:e.id,message:'Укажите руку для партии/нотоносца.'});const reference=21;for(const e of notes)if(e.pitch)e.play12_symbol.value='0123456789XY'[((e.pitch.midi-9)%12+12)%12]||'?';const score={format:'play12-json',version:'0.1',source:{type:'musicxml',title},play12:{zero_pitch_class:'A',reference_zero_midi:reference,symbols:'0123456789XY',pitch_class_mapping:Object.fromEntries(Array.from('0123456789XY').map((x,i)=>[String((i+9)%12),x]))},score:{title,creators:[],parts},editor:{schema:'play12-editor/1',sharedUnison:true,total_quarters:total.toString(),rounds,tempo,tempoMap:[...new Map([['0/1',{normalizedQPM:120}],...tempoEntries])].sort(([a],[b])=>new Q(a).cmp(b)).map(([q,mark])=>({at:num(q),q,bpm:mark.normalizedQPM})),metricMap:{version:METRIC_VERSION,rounds:metricRounds,tempoMarks:[...tempoEntries.values()].sort((a,b)=>new Q(a.position).cmp(b.position))},diagnostics}};return realizeFermatas(score);}
 const events=score=>score.score.parts.flatMap(p=>p.measures.flatMap(m=>m.events)).filter(e=>e.kind==='note');
@@ -624,8 +695,47 @@ const checked=validate(all,assign,{profile:cfg,locks,rounds:score.editor?.fermat
 const runtimeFingerings = new WeakMap();
 function setRuntimeFingering(doc, run) { if(run) runtimeFingerings.set(doc,run); else runtimeFingerings.delete(doc); }
 function baseAssignments(doc){return doc.mode==='source'?Object.fromEntries(events(doc.score).map(e=>[e.id,e.source_fingering])):(runtimeFingerings.get(doc)??doc.run).assignments;}
+const runtimeMetrics=new WeakMap();
+function sameScoreTiming(before, after, includeTempo=false) {
+  const a=before.editor,b=after.editor;
+  if(!a||!b||!Array.isArray(a.rounds)||a.rounds.length!==b.rounds.length)return false;
+  if(!a.rounds.every((r,i)=>r.start===b.rounds[i].start&&r.end===b.rounds[i].end))return false;
+  const original=events(before),next=events(after);
+  if(original.length!==next.length||!original.every((e,i)=>e.id===next[i].id&&
+    e.editor_onset_q===next[i].editor_onset_q&&e.duration_quarters===next[i].duration_quarters))return false;
+  if(JSON.stringify(a.fermataTimeline?.holds??[])!==JSON.stringify(b.fermataTimeline?.holds??[]))return false;
+  const tempo=score=>score.tempoMap?.map(e=>[e.at,e.bpm])??[];
+  return !includeTempo||JSON.stringify(tempo(a))===JSON.stringify(tempo(b));
+}
+function metricSidecar(doc, score) {
+  if(!score.editor||score.editor.metricMap?.version===METRIC_VERSION)return;
+  if(!runtimeMetrics.has(doc)){
+    let result=null;
+    try {
+      if(typeof doc.source==='string'&&doc.source.trim()){
+        const normalized=importXML(doc.source,{},doc.partIds??null);
+        if(sameScoreTiming(doc.score,normalized)){
+          result={map:{...normalized.editor.metricMap,sourceHash:doc.sourceHash??null},
+            execution:normalized.editor.fermataTimeline?.metricRounds};
+        }
+      }
+    }catch(_) {
+      // A legacy document stays playable if its source cannot be normalized.
+    }
+    runtimeMetrics.set(doc,result);
+  }
+  const result=runtimeMetrics.get(doc);
+  if(result){
+    score.editor.metricMap=result.map;
+    if(result.execution&&score.editor.fermataTimeline)score.editor.fermataTimeline.metricRounds=result.execution;
+  }else{
+    score.editor.diagnostics??=[];
+    score.editor.diagnostics.push({code:'METRIC_LEGACY_TIMING_PRESERVED'});
+  }
+}
 function effective(doc) {
   const score=clone(doc.score), base=baseAssignments(doc), notes=events(score);
+  metricSidecar(doc,score);
   const byId=new Map(notes.map(e=>[e.id,e]));
   for(const e of notes){
     e.sharedContactLock=doc.manual[e.id]??null;
@@ -667,5 +777,5 @@ function edit(doc,id,finger){if(!Number.isInteger(finger)||finger<1||finger>5)th
 function commit(doc,trial){if(!trial.accepted)throw Error('Rejected');doc.history=doc.history.slice(0,doc.cursor);doc.history.push({before:trial.before,after:trial.after,ids:trial.ids,timestamp:new Date().toISOString(),engine:doc.run.version,profile:doc.run.profile.version});doc.cursor=doc.history.length;doc.manual=trial.after;doc.revision++;return doc;}
 const dbPromise=()=>new Promise((resolve,reject)=>{const req=indexedDB.open('play12-editor',1);req.onupgradeneeded=()=>req.result.createObjectStore('compositions',{keyPath:'id'});req.onerror=()=>reject(req.error);req.onsuccess=()=>resolve(req.result);});
 const Store={async get(id){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions'),r=tx.objectStore('compositions').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close();});},async list(){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions'),r=tx.objectStore('compositions').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close();});},async put(doc,expected){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions','readwrite'),store=tx.objectStore('compositions'),r=store.get(doc.id);r.onsuccess=()=>{if(expected!=null&&r.result&&r.result.revision!==expected){tx.abort();return;}store.put(clone(doc));};tx.oncomplete=()=>{db.close();res();};tx.onabort=()=>{db.close();rej(Error('Конфликт ревизии или ошибка сохранения. Изменения не перезаписаны.'));};tx.onerror=()=>rej(tx.error);});}};
-G.Play12Editor={VERSION,Q,hash,parseMusicXML,importXML,ARPEGGIO_SPREAD_QUARTERS,FERMATA_EXTENSION_FACTOR,realizeFermatas,realizeArpeggios,events,contacts,validate,validateDocument,keyX,propose,setRuntimeFingering,effective,edit,commit,clone,Store};if(typeof module!=='undefined')module.exports=G.Play12Editor;
+G.Play12Editor={VERSION,Q,hash,parseMusicXML,importXML,ARPEGGIO_SPREAD_QUARTERS,FERMATA_EXTENSION_FACTOR,realizeFermatas,realizeArpeggios,events,contacts,validate,validateDocument,sameScoreTiming,keyX,propose,setRuntimeFingering,effective,edit,commit,clone,Store};if(typeof module!=='undefined')module.exports=G.Play12Editor;
 })(typeof window!=='undefined'?window:globalThis);

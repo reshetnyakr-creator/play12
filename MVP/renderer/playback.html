@@ -334,15 +334,15 @@
   </main>
   <script>if(window.Play12Routes){Play12Routes.languages(document.querySelector('.mvp-language-switch'),window.__PLAY12_MAIN__?'main':'tutorial');const mainLink=document.getElementById('tutorial-main-link');if(mainLink)mainLink.href=Play12Routes.path('main');}</script>
   <script src="play12-i18n.js?v=stage233"></script>
-  <script src="../editor/core.js?v=stage19"></script>
+  <script src="../editor/core.js?v=stage242"></script>
   <script src="play12-renderer.js?v=stage242"></script>
   <script src="play12-repetitions.js?v=player-shell-01"></script>
   <script src="cards-svg-theme.js?v=approved-strips-1"></script>
   <script src="piano-view.js?v=mobile-1"></script>
-  <script src="play12-precount-view.js?v=stage12"></script>
+  <script src="play12-precount-view.js?v=stage242"></script>
   <script src="play12-round-board.js?v=stage235"></script>
-  <script src="play12-round-navigator.js?v=stage235"></script>
-  <script src="play12-playback.js?v=stage235"></script>
+  <script src="play12-round-navigator.js?v=stage242"></script>
+  <script src="play12-playback.js?v=stage242"></script>
   <script src="web-midi-diagnostic.js?v=midi-voice-1"></script>
   <script src="draggable-modules.js?v=fixed-core-2"></script>
   <script src="play12-coach.js?v=stage234"></script>
@@ -470,8 +470,7 @@
         const time = measure.attributes.time;
         const expanded = savedCompositionId && score.editor.fermataTimeline?.rounds[measure.index];
         const metric=metricRounds?.[measure.index];
-        const meter=metric?.meter;
-        const pulseQ=meter&&!meter.free?(meter.groups.length===1&&meter.beatType===8&&[6,9,12].includes(meter.beats)?1.5:4/meter.beatType):null;
+        const pulseQ=metric?.pulseUnit?asQuarter(metric.pulseUnit):null;
         const length = savedCompositionId ? expanded?.measureQuarters??Number(new Play12Editor.Q(measure.editor_duration_q)) : time.beats * 4 / time.beat_type;
         rounds.push({
           index: measure.index,
@@ -484,7 +483,7 @@
           beatQuarters: 4 / time.beat_type,
           measureQuarters: length,
           ...(expanded?{beatsAt:expanded.beatsAt,nominalMeasureQuarters:expanded.nominalMeasureQuarters}:{}),
-          ...(metric?{pulseQ,metricPhase:asQuarter(metric.metricPhase),nominalMeasureQuarters:metric.nominalDuration?asQuarter(metric.nominalDuration):length,
+          ...(metric?{pulseQ,defaultSubdivisions:metric.defaultSubdivisions,cycleAccents:metric.cycleAccents,metricPhase:asQuarter(metric.metricPhase),nominalMeasureQuarters:metric.nominalDuration?asQuarter(metric.nominalDuration):length,
             metricBeats:metric.counts.filter(c=>c.pulse).map(c=>({q:asQuarter(c.start)-timelineOffset,accent:c.accent,index:c.index}))}:{})
         });
         globalMeasureStart += length;

@@ -1,0 +1,11 @@
+[
+  'native P -> actual musical start -> OK12',
+  'Practice introduction displays Off with both hands On, Loop and Pre-count Off',
+  'real saved progress resumed after reload',
+  'real on-screen piano -> metronome-info',
+  'real on-screen piano -> round-info',
+  'metronome completed after five accepted actions, before whole-song end',
+  'real on-screen piano -> final-instruction',
+  'two separately completed passes of rounds 2–4',
+  'real on-screen piano -> completed'
+]

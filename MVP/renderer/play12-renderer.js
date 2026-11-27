@@ -285,7 +285,7 @@
           if(first>at)drawStep(at,first,null,null);
           for(const step of subdivisions){
             const start=fraction(step.position);
-            const isCount=step.labelRU===null&&count.pulse;
+            const isCount=count.pulse&&step.count===true;
             const level=isCount?count.accent.toLowerCase():null;
             const label=isCount?(words[count.index]??String(count.index+1)):(cfg.countAnd==='И'?step.labelRU:step.labelEN);
             drawStep(start,start+fraction(step.duration),level,label);

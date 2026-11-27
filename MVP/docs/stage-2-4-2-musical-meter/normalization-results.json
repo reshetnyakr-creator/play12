@@ -1,6 +1,7 @@
 [
   {
     "name": "M01.musicxml",
+    "parseMs": 8.200000000186265,
     "totalQ": "4/1",
     "rounds": 2,
     "counts": [
@@ -63,6 +64,7 @@
   },
   {
     "name": "M02.musicxml",
+    "parseMs": 6.2000000001862645,
     "totalQ": "6/1",
     "rounds": 2,
     "counts": [
@@ -141,6 +143,7 @@
   },
   {
     "name": "M03.musicxml",
+    "parseMs": 1.099999999627471,
     "totalQ": "8/1",
     "rounds": 2,
     "counts": [
@@ -235,6 +238,7 @@
   },
   {
     "name": "M04.musicxml",
+    "parseMs": 1.2000000001862645,
     "totalQ": "8/1",
     "rounds": 2,
     "counts": [
@@ -297,6 +301,7 @@
   },
   {
     "name": "M05.musicxml",
+    "parseMs": 4.6000000005587935,
     "totalQ": "3/1",
     "rounds": 2,
     "counts": [
@@ -375,6 +380,7 @@
   },
   {
     "name": "M06.musicxml",
+    "parseMs": 1.7000000001862645,
     "totalQ": "6/1",
     "rounds": 2,
     "counts": [
@@ -445,6 +451,7 @@
   },
   {
     "name": "M07.musicxml",
+    "parseMs": 1.7999999998137355,
     "totalQ": "9/1",
     "rounds": 2,
     "counts": [
@@ -535,6 +542,7 @@
   },
   {
     "name": "M08.musicxml",
+    "parseMs": 1.3999999994412065,
     "totalQ": "12/1",
     "rounds": 2,
     "counts": [
@@ -645,6 +653,7 @@
   },
   {
     "name": "M09.musicxml",
+    "parseMs": 1.6000000005587935,
     "totalQ": "10/1",
     "rounds": 2,
     "counts": [
@@ -757,6 +766,7 @@
   },
   {
     "name": "M10.musicxml",
+    "parseMs": 1.800000000745058,
     "totalQ": "14/1",
     "rounds": 2,
     "counts": [
@@ -901,6 +911,7 @@
   },
   {
     "name": "M11.musicxml",
+    "parseMs": 1.6000000005587935,
     "totalQ": "5/1",
     "rounds": 2,
     "counts": [
@@ -1011,6 +1022,7 @@
   },
   {
     "name": "M12.musicxml",
+    "parseMs": 0.8999999994412065,
     "totalQ": "5/1",
     "rounds": 2,
     "counts": [
@@ -1121,6 +1133,7 @@
   },
   {
     "name": "M13.musicxml",
+    "parseMs": 7.7000000001862645,
     "totalQ": "7/1",
     "rounds": 2,
     "counts": [
@@ -1263,6 +1276,7 @@
   },
   {
     "name": "M14.musicxml",
+    "parseMs": 1.2000000001862645,
     "totalQ": "7/1",
     "rounds": 2,
     "counts": [
@@ -1405,6 +1419,7 @@
   },
   {
     "name": "M15.musicxml",
+    "parseMs": 7.6000000005587935,
     "totalQ": "11/1",
     "rounds": 2,
     "counts": [
@@ -1613,6 +1628,7 @@
   },
   {
     "name": "M16.musicxml",
+    "parseMs": 0.7999999998137355,
     "totalQ": "7/1",
     "rounds": 2,
     "counts": [
@@ -1699,6 +1715,7 @@
   },
   {
     "name": "M17.musicxml",
+    "parseMs": 2,
     "totalQ": "7/1",
     "rounds": 2,
     "counts": [
@@ -1781,6 +1798,7 @@
   },
   {
     "name": "M18.musicxml",
+    "parseMs": 2.8999999994412065,
     "totalQ": "9/1",
     "rounds": 2,
     "counts": [
@@ -1871,6 +1889,7 @@
   },
   {
     "name": "M19.musicxml",
+    "parseMs": 1.599999999627471,
     "totalQ": "5/1",
     "rounds": 2,
     "counts": [
@@ -1943,6 +1962,7 @@
   },
   {
     "name": "M20.musicxml",
+    "parseMs": 1.400000000372529,
     "totalQ": "5/1",
     "rounds": 2,
     "counts": [
@@ -2015,6 +2035,7 @@
   },
   {
     "name": "M21.musicxml",
+    "parseMs": 1.7000000001862645,
     "totalQ": "8/1",
     "rounds": 2,
     "counts": [
@@ -2113,6 +2134,7 @@
   },
   {
     "name": "M22.musicxml",
+    "parseMs": 1.5,
     "totalQ": "6/1",
     "rounds": 2,
     "counts": [
@@ -2185,6 +2207,7 @@
   },
   {
     "name": "M23.musicxml",
+    "parseMs": 1.2999999998137355,
     "totalQ": "6/1",
     "rounds": 2,
     "counts": [
@@ -2255,6 +2278,7 @@
   },
   {
     "name": "M24.musicxml",
+    "parseMs": 1.2000000001862645,
     "totalQ": "8/1",
     "rounds": 2,
     "counts": [
@@ -2349,6 +2373,7 @@
   },
   {
     "name": "M25.musicxml",
+    "parseMs": 2.2999999998137355,
     "totalQ": "6/1",
     "rounds": 2,
     "counts": [
@@ -2426,6 +2451,7 @@
   },
   {
     "name": "M26.musicxml",
+    "parseMs": 1.7000000001862645,
     "totalQ": "8/1",
     "rounds": 2,
     "counts": [
@@ -2533,6 +2559,7 @@
   },
   {
     "name": "M27.musicxml",
+    "parseMs": 1.7000000001862645,
     "totalQ": "6/1",
     "rounds": 2,
     "counts": [
@@ -2616,6 +2643,7 @@
   },
   {
     "name": "M28.musicxml",
+    "parseMs": 1.599999999627471,
     "totalQ": "7/1",
     "rounds": 2,
     "counts": [
@@ -2760,6 +2788,7 @@
   },
   {
     "name": "M29.musicxml",
+    "parseMs": 2,
     "totalQ": "12/1",
     "rounds": 2,
     "counts": [
@@ -2872,6 +2901,7 @@
   },
   {
     "name": "M30.musicxml",
+    "parseMs": 1.1000000005587935,
     "totalQ": "6/1",
     "rounds": 2,
     "counts": [
@@ -2902,6 +2932,7 @@
   },
   {
     "name": "M31.musicxml",
+    "parseMs": 1,
     "totalQ": "12/1",
     "rounds": 2,
     "counts": [
@@ -2980,6 +3011,7 @@
   },
   {
     "name": "M32.musicxml",
+    "parseMs": 0.7000000001862645,
     "totalQ": "2/1",
     "rounds": 2,
     "counts": [
@@ -3042,6 +3074,7 @@
   },
   {
     "name": "M33.musicxml",
+    "parseMs": 0.900000000372529,
     "totalQ": "7/1",
     "rounds": 2,
     "counts": [
@@ -3184,6 +3217,7 @@
   },
   {
     "name": "M34.musicxml",
+    "parseMs": 3.099999999627471,
     "totalQ": "7/1",
     "rounds": 2,
     "counts": [
@@ -3207,7 +3241,7 @@
         [
           "1/1",
           2,
-          "WEAK",
+          "SECONDARY",
           [
             null
           ]
@@ -3231,7 +3265,7 @@
         [
           "5/2",
           5,
-          "WEAK",
+          "SECONDARY",
           [
             null
           ]
@@ -3265,7 +3299,7 @@
         [
           "9/2",
           2,
-          "WEAK",
+          "SECONDARY",
           [
             null
           ]
@@ -3289,7 +3323,7 @@
         [
           "6/1",
           5,
-          "WEAK",
+          "SECONDARY",
           [
             null
           ]
@@ -3323,11 +3357,1322 @@
     ],
     "fermatas": [],
     "diagnostics": [
-      "METRIC_GROUPS_UNKNOWN"
+      "METRIC_GROUPS_UNKNOWN",
+      "METRIC_BEAM_GROUP_INFERRED"
     ]
   },
   {
+    "name": "P01.musicxml",
+    "parseMs": 0.7999999998137355,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P02.musicxml",
+    "parseMs": 0.900000000372529,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P03.musicxml",
+    "parseMs": 0.7999999998137355,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P04.musicxml",
+    "parseMs": 0.7000000001862645,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null,
+            "И"
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P05.musicxml",
+    "parseMs": 5.199999999254942,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P06.musicxml",
+    "parseMs": 0.7999999998137355,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P07.musicxml",
+    "parseMs": 0.900000000372529,
+    "totalQ": "5/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P08.musicxml",
+    "parseMs": 0.39999999944120646,
+    "totalQ": "5/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P09.musicxml",
+    "parseMs": 1,
+    "totalQ": "7/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P10.musicxml",
+    "parseMs": 0.7000000001862645,
+    "totalQ": "7/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          5,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P11.musicxml",
+    "parseMs": 0.7999999998137355,
+    "totalQ": "7/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          5,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P12.musicxml",
+    "parseMs": 0.7000000001862645,
+    "totalQ": "8/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          6,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          7,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P13.musicxml",
+    "parseMs": 0.5,
+    "totalQ": "8/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          5,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          7,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P14.musicxml",
+    "parseMs": 3.2000000001862645,
+    "totalQ": "8/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          5,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          7,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P15.musicxml",
+    "parseMs": 0.900000000372529,
+    "totalQ": "12/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "4/1",
+          4,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          5,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          6,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "7/1",
+          7,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "8/1",
+          8,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "9/1",
+          9,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "10/1",
+          10,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "11/1",
+          11,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P16.musicxml",
+    "parseMs": 0.599999999627471,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P17.musicxml",
+    "parseMs": 0.599999999627471,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P18.musicxml",
+    "parseMs": 3,
+    "totalQ": "7/1",
+    "rounds": 2,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ],
+      [
+        [
+          "4/1",
+          0,
+          "PRIMARY",
+          [
+            null
+          ]
+        ],
+        [
+          "5/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "6/1",
+          2,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P19.musicxml",
+    "parseMs": 0.6999999992549419,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
+    "name": "P20.musicxml",
+    "parseMs": 0.5,
+    "totalQ": "4/1",
+    "rounds": 1,
+    "counts": [
+      [
+        [
+          "0/1",
+          0,
+          "PRIMARY",
+          [
+            null,
+            "И",
+            "А"
+          ]
+        ],
+        [
+          "1/1",
+          1,
+          "WEAK",
+          [
+            null
+          ]
+        ],
+        [
+          "2/1",
+          2,
+          "SECONDARY",
+          [
+            null
+          ]
+        ],
+        [
+          "3/1",
+          3,
+          "WEAK",
+          [
+            null
+          ]
+        ]
+      ]
+    ],
+    "tempo": [
+      [
+        "0/1",
+        120
+      ]
+    ],
+    "marks": [],
+    "fermatas": [],
+    "diagnostics": []
+  },
+  {
     "name": "ed-sheeran-perfect-ed-sheeran-for-piano-qmza1tvsngxm(1).mxl",
+    "parseMs": 159.29999999981374,
     "totalQ": "414/1",
     "rounds": 69,
     "counts": [
@@ -3440,6 +4785,7 @@
   },
   {
     "name": "creep-radiohead(1).mxl",
+    "parseMs": 143.20000000018626,
     "totalQ": "428/1",
     "rounds": 107,
     "counts": [
@@ -3561,6 +4907,7 @@
   },
   {
     "name": "interstellar-suite-hans-zimmer.musicxml(1).xml",
+    "parseMs": 595,
     "totalQ": "1206/1",
     "rounds": 372,
     "counts": [
@@ -3823,6 +5170,7 @@
   },
   {
     "name": "Die With A Smile - Lady Gaga + Bruno Mars.mxl",
+    "parseMs": 339.70000000018626,
     "totalQ": "656/1",
     "rounds": 219,
     "counts": [
@@ -3943,6 +5291,7 @@
   },
   {
     "name": "clocks-stage21-local.xml",
+    "parseMs": 27.59999999962747,
     "totalQ": "88/1",
     "rounds": 22,
     "counts": [
@@ -4067,6 +5416,7 @@
   },
   {
     "name": "pirate-stage21-local.xml",
+    "parseMs": 54.39999999944121,
     "totalQ": "258/1",
     "rounds": 86,
     "counts": [
@@ -4137,6 +5487,7 @@
   },
   {
     "name": "when_the_saints_play12_beginner.musicxml",
+    "parseMs": 7.7999999998137355,
     "totalQ": "72/1",
     "rounds": 19,
     "counts": [
