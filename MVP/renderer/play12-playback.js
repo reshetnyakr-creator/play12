@@ -35,17 +35,18 @@
     return candidates.find(window => window.accepted) || candidates[0];
   };
   const preCountPlan = (round, position) => {
-    const offset = Math.max(0, position - (round.measureStart ?? round.start));
+    const offset = Math.max(0, position - (round.measureStart ?? round.start))+(round.metricPhase??0);
     const strongStart = !round.implicit && offset < EPSILON;
     const measures = strongStart ? 2 : 1;
     const quarters = measures * (round.nominalMeasureQuarters??round.measureQuarters) + offset;
-    return {measures, quarters, beats: Math.ceil(quarters / round.beatQuarters - EPSILON), pickup: !!round.implicit || offset > EPSILON};
+    const pulse=round.metricBeats?round.pulseQ:round.beatQuarters;
+    return {measures, quarters, beats:pulse?Math.ceil(quarters/pulse-EPSILON):0, pickup: !!round.implicit || offset > EPSILON};
   };
   const effectiveMidiPitch = (sourceMidiPitch, referenceZeroNote, runtimeZeroNote) =>
     sourceMidiPitch + runtimeZeroNote - referenceZeroNote;
 
   class PlaybackClock {
-    constructor(audioContext, bpm, position = 0, tempoMap = null, originalBpm = bpm) {
+    constructor(audioContext, bpm, position = 0, tempoMap = null, originalBpm = bpm, pulseUnit = null) {
       this.context = audioContext;
       this.bpm = bpm;
       this.anchorQuarter = position;
@@ -53,6 +54,7 @@
       this.running = false;
       this.ceiling = Infinity;
       this.originalBpm = originalBpm;
+      this.pulseUnit = pulseUnit;
       this.sourceTempo = [];
       this.tempo = [];
       for (const entry of tempoMap || []) {
@@ -68,7 +70,7 @@
       this.tempo=[];
       for(const entry of this.sourceTempo){
         const previous=this.tempo.at(-1);
-        this.tempo.push({at:entry.at,bpm:Math.max(20,entry.bpm+offset),
+        this.tempo.push({at:entry.at,bpm:original&&this.pulseUnit!=null?entry.bpm:Math.max(20*(this.pulseUnit??1),entry.bpm+offset),
           seconds:previous?previous.seconds+(entry.at-previous.at)*60/previous.bpm:0});
       }
     }
@@ -281,7 +283,11 @@
       this.transposeDelta = this.runtimeZeroNote - this.referenceZeroNote;
       const AudioContext = global.AudioContext || global.webkitAudioContext;
       this.audioContext = new AudioContext();
-      this.clock = new PlaybackClock(this.audioContext, options.initialBpm, 0, options.tempoMap, options.originalTempo);
+      this.metricEnabled=options.rounds.some(r=>r.metricBeats);
+      this.metricBeats=this.metricEnabled?options.rounds.flatMap(r=>r.metricBeats??[]):[];
+      const pulseUnits=new Set(options.rounds.map(r=>r.pulseQ??null));
+      this.tempoDisplayUnit=this.metricEnabled&&pulseUnits.size===1?(options.rounds[0].pulseQ??1):1;
+      this.clock = new PlaybackClock(this.audioContext, options.initialBpm, 0, options.tempoMap, options.originalTempo,this.metricEnabled?this.tempoDisplayUnit:null);
       if(options.useOriginalTempo)this.clock.setBpm(options.initialBpm,true);
       this.fermataHolds=options.fermataHolds??[];
       this.scoreBeatPositions=this.fermataHolds.length ? options.rounds.flatMap(r=>r.beatsAt??[]) : [];
@@ -758,8 +764,8 @@
         const base = expected.expectedAudioTime ?? this.clock.quarterToAudioTime(expected.start);
         const candidateDelta = (this.audioContext.currentTime - expected.candidateBeatTime) * 1000;
         const window = expected.candidateBeatTime != null && candidateDelta >= -150 - EPSILON && candidateDelta <= 200 + EPSILON
-          ? {when: expected.candidateBeatTime, deltaMs: candidateDelta, attempt: Math.round((expected.candidateBeatTime - base) * this.clock.effectiveBpmAt(expected.start) / 60), accepted: true}
-          : practiceBeatWindow(base, this.audioContext.currentTime, this.clock.effectiveBpmAt(expected.start));
+          ? {when: expected.candidateBeatTime, deltaMs: candidateDelta, attempt: Math.round((expected.candidateBeatTime - base) * this.practicePulseBpm(expected.start) / 60), accepted: true}
+          : practiceBeatWindow(base, this.audioContext.currentTime, this.practicePulseBpm(expected.start));
         timingDeltaMs = window.deltaMs;
         this.stage.dataset.practiceBeatWindowAudioTime = String(window.when);
         this.stage.dataset.practiceBeatAttempt = String(window.attempt);
@@ -926,6 +932,7 @@
         return;
       }
       this.lastPlaybackPosition = selected - EPSILON;
+      if(this.metricEnabled)this.scheduleMetronome();
       this.restoreContinuousNotes(selected,audioTime);
       this.scheduleAhead();
       this.updateControls();
@@ -977,6 +984,19 @@
       for (const event of this.mountedEvents) event.group.classList.remove("is-note-on-event");
     }
     scheduleCountIn(fromTime = -Infinity) {
+      const {signature,selected,plan,startedAt}=this.countIn;
+      if(signature.metricBeats){
+        this.stage.dataset.countInClickCount=String(plan.beats);
+        const source=this.metronomeAudio??this.audio;
+        const pulse=signature.pulseQ;
+        if(!pulse||!this.metronomeInput.checked)return;
+        const perCycle=Math.round(signature.nominalMeasureQuarters/pulse);
+        for(let i=0;i<plan.beats;i++){
+          const when=startedAt+i*pulse*60/this.clock.effectiveBpmAt(selected);
+          if(when>=fromTime)source.scheduleClick(`metric-count-in-${startedAt}-${i}`,when,i%perCycle===0);
+        }
+        return;
+      }
       const beatSeconds = this.countIn.signature.beatQuarters * 60 / this.clock.effectiveBpmAt(this.countIn.selected);
       this.stage.dataset.countInClickCount = String((this.countIn.plan?.beats ?? this.countIn.signature.beats));
       for (let i = 0; i < (this.countIn.plan?.beats ?? this.countIn.signature.beats); i++) {
@@ -1006,6 +1026,10 @@
         }
       }
       const signature = this.signatureAt(selected);
+      if(this.metricEnabled&&this.metronomeInput.checked&&this.metronomeAudio&&selected<loopLimit-EPSILON){
+        const index=this.nextMetricBeat(selected),beat=this.metricBeats[index];
+        if(beat&&Math.abs(beat.q-selected)<=EPSILON)this.scheduleMetricBeat(beat,index,audioTime,audioTime);
+      }
       if ((this.metronomeInput.checked && !this.metronomeAudio) && selected < loopLimit - EPSILON && (!Number.isFinite(practiceLimit) || selected < practiceLimit - EPSILON)) {
         this.audio.scheduleClick(`playback-anchor-${audioTime}`, audioTime, Math.abs(selected - signature.start) < EPSILON);
       }
@@ -1147,7 +1171,11 @@
     syncTempoReference() {
       if(!this.tempoNavigator)return;
       const position=this.countIn?.selected??this.clock.position;
-      this.tempoNavigator.update?.(this.clock.effectiveBpmAt(position),this.clock.originalBpmAt(position),this.clock.tempoOffset()===0);
+      const unit=this.tempoDisplayUnit??1;
+      this.tempoNavigator.update?.(this.clock.effectiveBpmAt(position)/unit,this.clock.originalBpmAt(position)/unit,this.clock.tempoOffset()===0);
+    }
+    practicePulseBpm(position) {
+      return this.clock.effectiveBpmAt(position)/(this.signatureAt(position).pulseQ??1);
     }
     saveTempoSettings() {
       if (!this.tempoStorageKey) return;
@@ -1166,7 +1194,7 @@
       if (enabled) {
         if (interaction) this.unlockAudio();
         this.nextMetronomeBeat = this.clock.running
-          ? this.clock.quarterToAudioTime(Math.ceil(this.clock.position - EPSILON))
+          ? this.clock.quarterToAudioTime(this.metricEnabled?(this.metricBeats[this.nextMetricBeat(this.clock.position)]?.q??this.clock.position):Math.ceil(this.clock.position - EPSILON))
           : this.audioContext.currentTime + .025;
         this.metronomePhaseTime = this.nextMetronomeBeat;
         const expected = this.waitingForInput || this.expectedPracticeEvent;
@@ -1175,15 +1203,19 @@
           expected.expectedAudioTime = this.clock.running ? this.clock.quarterToAudioTime(expected.start) : this.nextGridStart(expected.start);
         }
         this.metronomeTimer = setInterval(() => this.scheduleMetronome(), 25);
+        if(this.metricEnabled&&this.countIn)this.scheduleCountIn(this.audioContext.currentTime);
+        if(this.metricEnabled&&this.loopGap)this.scheduleLoopGapMetronome(this.clock.position);
         this.scheduleMetronome();
       }
       this.saveTempoSettings();
       if (interaction) global.dispatchEvent(new CustomEvent('play12:metronome-change', {detail: {enabled}}));
     }
     nextGridStart(position = 0) {
-      const interval = 60 / this.clock.effectiveBpmAt(this.clock.position);
+      const signature=this.signatureAt(position), pulse=signature.pulseQ??1;
+      const interval=60*pulse/this.clock.effectiveBpmAt(position);
       const phase = this.metronomePhaseTime ?? this.nextMetronomeBeat ?? this.audioContext.currentTime;
-      const fraction = position - Math.floor(position);
+      const pulses=signature.metricBeats?(position-signature.start+(signature.metricPhase??0))/pulse:position;
+      const fraction=pulses-Math.floor(pulses);
       const origin = phase + fraction * interval;
       return origin + Math.max(0, Math.ceil((this.audioContext.currentTime + .025 - origin) / interval)) * interval;
     }
@@ -1202,10 +1234,51 @@
       this.metronomeWasRunning=active;
       this.tempoNavigator.metronome(this.metronomeInput.checked,active);
     }
+    nextMetricBeat(position) {
+      let low=0,high=this.metricBeats.length;
+      while(low<high){
+        const middle=(low+high)>>>1;
+        if(this.metricBeats[middle].q<position-EPSILON)low=middle+1;
+        else high=middle;
+      }
+      return low;
+    }
+    scheduleMetricBeat(beat,index,anchor,when) {
+      const key=`metric-${anchor}-${index}`;
+      if(this.metronomeAudio.beatKeys.has(key))return;
+      this.metronomeAudio.scheduleClick(key,when,beat.accent==='PRIMARY');
+      this.stage.dataset.metronomeBeatCounter=String(++this.metronomeBeatCounter);
+      this.metronomePhaseTime=when;
+      this.nextMetronomeBeat=when+60/this.practicePulseBpm(beat.q);
+    }
+    scheduleMetricClicks(now) {
+      if(this.countIn||this.loopGap)return;
+      const anchor=this.clock.anchorAudioTime;
+      if(this.tempoBeatAnchor!==anchor){
+        this.tempoBeatAnchor=anchor;
+        this.nextScoreBeat=this.nextMetricBeat(this.clock.anchorQuarter);
+      }
+      const limit=this.currentLoop()?.end??this.totalQuarters;
+      const gated=this.practiceEnabled()?this.expectedPracticeEvent?.start??Infinity:Infinity;
+      while(this.nextScoreBeat<this.metricBeats.length){
+        const beat=this.metricBeats[this.nextScoreBeat];
+        if(beat.q>=limit-EPSILON||beat.q>gated+EPSILON)break;
+        const when=this.clock.quarterToAudioTime(beat.q);
+        if(when>now+.1)break;
+        this.nextScoreBeat++;
+        if(when<now-.06)continue;
+        this.scheduleMetricBeat(beat,this.nextScoreBeat-1,anchor,Math.max(now,when));
+      }
+    }
     scheduleMetronome() {
       if (!this.metronomeAudio || !this.metronomeInput.checked || this.audioContext.state !== 'running') return;
       if(this.tempoNavigator&&!this.metronomeRunning())return;
       const now = this.audioContext.currentTime;
+      if(this.metricEnabled && (this.countIn||this.loopGap||this.clock.running)){
+        this.scheduleMetricClicks(now);
+        return;
+      }
+      if(this.metricEnabled&&!this.signatureAt(this.clock.position).pulseQ)return;
       if(this.clock.running&&this.clock.tempo.length){
         const anchor=this.clock.anchorAudioTime;
         if(this.tempoBeatAnchor!==anchor){
@@ -1231,7 +1304,7 @@
         return;
       }
       this.tempoBeatAnchor=null;
-      const interval = 60 / this.clock.effectiveBpmAt(this.clock.position);
+      const interval = 60 / this.practicePulseBpm(this.clock.position);
       // After tab suspension skip elapsed beats instead of emitting a burst.
       if (this.nextMetronomeBeat < now - interval) this.nextMetronomeBeat += Math.ceil((now - this.nextMetronomeBeat) / interval) * interval;
       while (this.nextMetronomeBeat <= now + .1) {
@@ -1244,13 +1317,14 @@
     }
     changeBpm(interaction = false) {
       const raw = this.bpmInput.value.trim();
-      if(/^\d+$/.test(raw)&&Number(raw)>=20&&Number(raw)<=300)this.setUserBpm(Number(raw),interaction);
+      if(/^\d+$/.test(raw)&&Number(raw)>=20&&Number(raw)<=300)this.setUserBpm(Number(raw)*(this.tempoDisplayUnit??1),interaction);
       else this.syncTempoControls();
     }
     setUserBpm(value, interaction = true) {
       const original=value===null;
-      const bpm=original?clamp(Math.round(this.clock.originalBpm),20,300):value;
-      if(!Number.isFinite(bpm)||bpm<20||bpm>300)return;
+      const bpm=original?this.clock.originalBpm:value;
+      const unit=this.tempoDisplayUnit??1;
+      if(!Number.isFinite(bpm)||!original&&(bpm<20*unit||bpm>300*unit))return;
       if(bpm===this.clock.bpm&&original===Boolean(this.clock.originalTempoSelected)){
         if(interaction)global.dispatchEvent(new CustomEvent('play12:tempo-change'));
         return;
@@ -1295,6 +1369,9 @@
         const now = this.audioContext.currentTime;
         const next = this.metronomeAudio.pendingBeatVisuals.find(beat => beat.when >= now)?.when ?? this.nextMetronomeBeat;
         this.metronomeAudio.stopAll();
+        this.tempoBeatAnchor=null;
+        if(this.metricEnabled&&this.countIn)this.scheduleCountIn(nowAudio);
+        if(this.metricEnabled&&this.loopGap)this.scheduleLoopGapMetronome(position);
         this.nextMetronomeBeat = now + Math.max(0, next - now) * previousBpm / effective;
         this.metronomePhaseTime = this.nextMetronomeBeat;
         const expected = this.waitingForInput || this.expectedPracticeEvent;
@@ -1309,14 +1386,25 @@
       if(interaction)global.dispatchEvent(new CustomEvent('play12:tempo-change',{detail:{changed:true}}));
     }
     adjustBpm(delta) {
-      this.setUserBpm(clamp(this.clock.bpm+Number(delta||0),20,300));
+      const unit=this.tempoDisplayUnit??1;
+      this.setUserBpm(clamp(this.clock.bpm+Number(delta||0)*unit,20*unit,300*unit));
     }
     setLoopGapVisibility(active) {
       this.stage.classList.toggle("is-loop-gap", active);
     }
     scheduleLoopGapMetronome(fromQuarter) {
-      if (!this.loopGap || !(this.metronomeInput.checked && !this.metronomeAudio)) return;
+      if (!this.loopGap || !this.metronomeInput.checked) return;
       const { start, end, signature } = this.loopGap;
+      if(signature.metricBeats){
+        const source=this.metronomeAudio??this.audio;
+        const pulse=signature.pulseQ;
+        if(!pulse)return;
+        for(let i=0,q=start;q<end-EPSILON;i++,q=start+i*pulse){
+          if(q>fromQuarter+EPSILON)source.scheduleClick(`metric-gap-${this.loopWrapCount}-${i}`,this.clock.quarterToAudioTime(q),i===0);
+        }
+        return;
+      }
+      if(this.metronomeAudio)return;
       const firstBeat = Math.max(0, Math.ceil((fromQuarter - start + EPSILON) / signature.beatQuarters));
       for (let index = firstBeat; index < signature.beats * LOOP_EMPTY_ROUNDS; index++) {
         const quarter = start + index * signature.beatQuarters;
@@ -1539,7 +1627,7 @@
       this.expirePracticeCandidate();
       const rhythmicExpected = this.waitingForInput || this.expectedPracticeEvent;
       if (rhythmicExpected && !this.practicePaused && this.metronomeAudio && this.metronomeInput.checked && Number.isFinite(rhythmicExpected.expectedAudioTime)) {
-        const window = practiceBeatWindow(rhythmicExpected.expectedAudioTime, this.audioContext.currentTime, this.clock.effectiveBpmAt(rhythmicExpected.start));
+        const window = practiceBeatWindow(rhythmicExpected.expectedAudioTime, this.audioContext.currentTime, this.practicePulseBpm(rhythmicExpected.start));
         this.stage.dataset.practiceTimingWindow = window.accepted ? 'open' : 'closed';
         this.stage.dataset.practiceBeatWindowAudioTime = String(window.when);
       } else this.stage.dataset.practiceTimingWindow = this.practicePaused ? 'paused' : 'free';

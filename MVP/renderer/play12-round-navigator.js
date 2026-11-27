@@ -99,8 +99,9 @@
         const delta=rounds[target].start-rounds[index].start;
         const clock=c.clock, position=clock.position;
         const visibleOffset=clock.effectiveBpmAt(position)-clock.originalBpmAt(position);
-        const next=clock.originalBpm+visibleOffset+delta;
-        c.setUserBpm(next===c.clock.originalBpm?null:clamp(next,bpmMin,bpmMax));
+        const unit=c.tempoDisplayUnit??1;
+        const next=clock.originalBpm+visibleOffset+delta*unit;
+        c.setUserBpm(next===clock.originalBpm?null:clamp(next,bpmMin*unit,bpmMax*unit));
       }else{
         playback.seek(rounds[target].start);
         update(rounds[target].start);

@@ -1,0 +1,143 @@
+{
+  "initial": {
+    "display": "63",
+    "length": 262.85714285714283,
+    "pulseQ": 1.5,
+    "marks": [
+      {
+        "q": 0,
+        "accent": "PRIMARY",
+        "index": 0
+      },
+      {
+        "q": 1.5,
+        "accent": "WEAK",
+        "index": 1
+      },
+      {
+        "q": 3,
+        "accent": "SECONDARY",
+        "index": 2
+      },
+      {
+        "q": 4.5,
+        "accent": "WEAK",
+        "index": 3
+      },
+      {
+        "q": 6,
+        "accent": "PRIMARY",
+        "index": 0
+      }
+    ]
+  },
+  "slower": 79.5,
+  "first": {
+    "clicks": [
+      {
+        "key": "metric-2.417018140589569-0",
+        "time": 2.417018140589569,
+        "accent": true
+      },
+      {
+        "key": "metric-2.417018140589569-1",
+        "time": 3.3693990929705215,
+        "accent": false
+      },
+      {
+        "key": "metric-2.417018140589569-2",
+        "time": 4.321780045351474,
+        "accent": false
+      },
+      {
+        "key": "metric-2.417018140589569-3",
+        "time": 5.274160997732427,
+        "accent": false
+      }
+    ],
+    "visuals": [
+      {
+        "key": "metric-2.417018140589569-0",
+        "when": 2.417018140589569,
+        "accent": true,
+        "deliveredAt": 2.4090702947845806
+      },
+      {
+        "key": "metric-2.417018140589569-1",
+        "when": 3.3693990929705215,
+        "accent": false,
+        "deliveredAt": 3.369795918367347
+      },
+      {
+        "key": "metric-2.417018140589569-2",
+        "when": 4.321780045351474,
+        "accent": false,
+        "deliveredAt": 4.31891156462585
+      },
+      {
+        "key": "metric-2.417018140589569-3",
+        "when": 5.274160997732427,
+        "accent": false,
+        "deliveredAt": 5.270929705215419
+      }
+    ],
+    "anchor": 2.417018140589569,
+    "position": 4.508625
+  },
+  "precount": {
+    "plan": {
+      "measures": 2,
+      "quarters": 12,
+      "beats": 8,
+      "pickup": false
+    },
+    "clicks": [
+      {
+        "key": "metric-count-in-6.226541950113379-0",
+        "time": 6.226541950113379,
+        "accent": true
+      },
+      {
+        "key": "metric-count-in-6.226541950113379-1",
+        "time": 7.178922902494332,
+        "accent": false
+      },
+      {
+        "key": "metric-count-in-6.226541950113379-2",
+        "time": 8.131303854875284,
+        "accent": false
+      },
+      {
+        "key": "metric-count-in-6.226541950113379-3",
+        "time": 9.083684807256237,
+        "accent": false
+      },
+      {
+        "key": "metric-count-in-6.226541950113379-4",
+        "time": 10.03606575963719,
+        "accent": true
+      },
+      {
+        "key": "metric-count-in-6.226541950113379-5",
+        "time": 10.988446712018142,
+        "accent": false
+      },
+      {
+        "key": "metric-count-in-6.226541950113379-6",
+        "time": 11.940827664399094,
+        "accent": false
+      },
+      {
+        "key": "metric-count-in-6.226541950113379-7",
+        "time": 12.893208616780047,
+        "accent": false
+      }
+    ],
+    "ends": 13.845589569160998
+  },
+  "loop": {
+    "wraps": 1,
+    "selected": 0,
+    "beats": 8
+  }
+}

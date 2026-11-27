@@ -461,12 +461,17 @@
       const globalStarts = [...svg.querySelectorAll('g[data-event-id]')].map(node => Number(node.dataset.globalStartQuarters));
       // The Manual transcription starts on the strong beat even though its
       // first note enters on TWO. Preserve the empty ONE / AND lead-in.
+      const metricRounds=savedCompositionId?(score.editor.fermataTimeline?.metricRounds??score.editor.metricMap?.rounds):null;
+      const asQuarter=value=>Number(new Play12Editor.Q(value));
       const timelineOffset = saintsReviewMode ? Math.min(...globalStarts) : 0;
       const rounds = [];
       let globalMeasureStart = 0;
       for (const measure of score.score.parts[0].measures.slice(0, reviewMeasureCount)) {
         const time = measure.attributes.time;
         const expanded = savedCompositionId && score.editor.fermataTimeline?.rounds[measure.index];
+        const metric=metricRounds?.[measure.index];
+        const meter=metric?.meter;
+        const pulseQ=meter&&!meter.free?(meter.groups.length===1&&meter.beatType===8&&[6,9,12].includes(meter.beats)?1.5:4/meter.beatType):null;
         const length = savedCompositionId ? expanded?.measureQuarters??Number(new Play12Editor.Q(measure.editor_duration_q)) : time.beats * 4 / time.beat_type;
         rounds.push({
           index: measure.index,
@@ -478,7 +483,9 @@
           beatType: time.beat_type,
           beatQuarters: 4 / time.beat_type,
           measureQuarters: length,
-          ...(expanded?{beatsAt:expanded.beatsAt,nominalMeasureQuarters:expanded.nominalMeasureQuarters}:{})
+          ...(expanded?{beatsAt:expanded.beatsAt,nominalMeasureQuarters:expanded.nominalMeasureQuarters}:{}),
+          ...(metric?{pulseQ,metricPhase:asQuarter(metric.metricPhase),nominalMeasureQuarters:metric.nominalDuration?asQuarter(metric.nominalDuration):length,
+            metricBeats:metric.counts.filter(c=>c.pulse).map(c=>({q:asQuarter(c.start)-timelineOffset,accent:c.accent,index:c.index}))}:{})
         });
         globalMeasureStart += length;
       }
