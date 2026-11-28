@@ -451,6 +451,12 @@ function practicalLimit(profile, first, second) {
 function octaveMatches(hand, lowFinger, highFinger) {
   return hand==='L' ? lowFinger===5&&highFinger===1 : lowFinger===1&&highFinger===5;
 }
+function wideOuterPair(profile, lower, upper, lowFinger, highFinger) {
+  return profile.id==='beginner' && lower.hand===upper.hand &&
+    Number.isFinite(profile.practicalSpan?.['1-5']) &&
+    upper.key-lower.key>profile.practicalSpan['1-5'] &&
+    octaveMatches(lower.hand,lowFinger,highFinger);
+}
 function spanViolation(profile, lower, upper, lowFinger, highFinger) {
   const distance=upper.key-lower.key;
   if(profile.octaveFingers&&distance===12&&!octaveMatches(lower.hand,lowFinger,highFinger))return OCTAVE_FINGERING;
@@ -497,20 +503,27 @@ function checkContactSpan(a,b,first,second,options,conflicts,warnings,extensions
   const advisory=sources.includes('manual')||source==='source';
   const record=rule=>{
     const extension=rule==='PRACTICAL_EXTENSION';
-    (extension?extensions:advisory?warnings:conflicts).push({
-      code:!extension&&sources.includes('manual')?'MANUAL_ASSIGNMENT_SPAN_VIOLATION':rule,
-      rule,severity:extension?'info':advisory?'warning':'error',hand:a.hand,ids:[lower.id,upper.id],
+    const wide=rule==='WIDE_OUTER_PAIR';
+    (wide?options.wideDiagnostics:extension?extensions:advisory?warnings:conflicts).push({
+      code:!wide&&!extension&&sources.includes('manual')?'MANUAL_ASSIGNMENT_SPAN_VIOLATION':rule,
+      ...(wide?{wideIntervalException:true,physical:'unknown',comfortExcess:distance-limit,practicalExcess:distance-hardLimit}:{}),
+      rule,severity:wide?'warning':extension?'info':advisory?'warning':'error',hand:a.hand,ids:[lower.id,upper.id],
       eventIds:[lower.ids,upper.ids],midi:[lower.key,upper.key],fingers:[lowFinger,highFinger],
       distance,limit:(extension?limit:hardLimit)??null,comfortLimit:limit??null,practicalLimit:hardLimit??null,reason:extension?(advisory?'USER_OR_SOURCE_ASSIGNMENT':'MINIMUM_EXCESS_AMONG_RETAINED_FEASIBLE_PATHS'):undefined,excess:limit==null?null:Math.max(0,distance-(extension?limit:hardLimit)),source:sources,
       overlap:[overlapStart.toString(),overlapEnd.toString()],
       rounds:rounds.filter(r=>r.end>Number(overlapStart)&&r.start<Number(overlapEnd)).map(r=>r.index+1)
     });
   };
-  if(spanExceeded)record(profile.practicalSpan?'SPAN_VIOLATION':COMFORT_SPAN);
+  if(spanExceeded)record(options.experimentalWideIntervals===true && !badOctave &&
+    wideOuterPair(profile,lower,upper,lowFinger,highFinger) ? 'WIDE_OUTER_PAIR' :
+    profile.practicalSpan?'SPAN_VIOLATION':COMFORT_SPAN);
   if(extended&&!badOctave)record('PRACTICAL_EXTENSION');
   if(badOctave)record(OCTAVE_FINGERING);
 }
-function validate(cs,assign,options={}){const conflicts=[],unknown=[],extensions=[];for(const c of cs){const f=assign[c.id];if(f!=null&&(!Number.isInteger(f)||f<1||f>5))conflicts.push({code:'INVALID_FINGER',ids:c.ids,severity:'error'});}const timed=cs.map(c=>({c,start:new Q(c.start),end:new Q(c.end)})).sort((a,b)=>a.start.cmp(b.start));for(let i=0;i<timed.length;i++)for(let j=i+1;j<timed.length;j++){const first=timed[i],second=timed[j];if(second.start.cmp(first.end)>=0)break;if(first.start.cmp(second.end)>=0)continue;const {c:a}=first,{c:b}=second;if(a.key===b.key){unknown.push({code:'KEY_OWNERSHIP_UNKNOWN',ids:[a.id,b.id],severity:'warning'});continue;}if(a.hand===b.hand&&assign[a.id]!=null&&assign[a.id]===assign[b.id]){const confirmed=a.releaseBasis!=='assumed_score_duration'&&b.releaseBasis!=='assumed_score_duration';(confirmed?conflicts:unknown).push({code:'FINGER_OVERLAP',ids:[a.id,b.id],severity:confirmed?'error':'warning',basis:[a.releaseBasis,b.releaseBasis]});}checkContactSpan(a,b,assign[a.id],assign[b.id],options,conflicts,unknown,extensions);}
+function validate(cs,assign,options={}){
+  const wideExceptions=options.experimentalWideIntervals===true?[]:null;
+  if(wideExceptions)options={...options,wideDiagnostics:wideExceptions};
+  const conflicts=[],unknown=[],extensions=[];for(const c of cs){const f=assign[c.id];if(f!=null&&(!Number.isInteger(f)||f<1||f>5))conflicts.push({code:'INVALID_FINGER',ids:c.ids,severity:'error'});}const timed=cs.map(c=>({c,start:new Q(c.start),end:new Q(c.end)})).sort((a,b)=>a.start.cmp(b.start));for(let i=0;i<timed.length;i++)for(let j=i+1;j<timed.length;j++){const first=timed[i],second=timed[j];if(second.start.cmp(first.end)>=0)break;if(first.start.cmp(second.end)>=0)continue;const {c:a}=first,{c:b}=second;if(a.key===b.key){unknown.push({code:'KEY_OWNERSHIP_UNKNOWN',ids:[a.id,b.id],severity:'warning'});continue;}if(a.hand===b.hand&&assign[a.id]!=null&&assign[a.id]===assign[b.id]){const confirmed=a.releaseBasis!=='assumed_score_duration'&&b.releaseBasis!=='assumed_score_duration';(confirmed?conflicts:unknown).push({code:'FINGER_OVERLAP',ids:[a.id,b.id],severity:confirmed?'error':'warning',basis:[a.releaseBasis,b.releaseBasis]});}checkContactSpan(a,b,assign[a.id],assign[b.id],options,conflicts,unknown,extensions);}
   const result={conflicts,warnings:unknown,physical:'unknown'};
   if(options.profile?.practicalSpan){
     const categories=Object.fromEntries(cs.filter(c=>Number.isInteger(assign[c.id])).map(c=>[c.id,'COMFORTABLE']));
@@ -519,6 +532,11 @@ function validate(cs,assign,options={}){const conflicts=[],unknown=[],extensions
       for(const id of issue.ids)categories[id]='SPAN_VIOLATION';
     }
     Object.assign(result,{extensions,categories});
+    if(wideExceptions){
+      for(const issue of wideExceptions)for(const id of issue.ids)
+        if(categories[id]!=='SPAN_VIOLATION')categories[id]='WIDE_OUTER_PAIR';
+      result.wideExceptions=wideExceptions;
+    }
   }
   return result;
 }
@@ -692,14 +710,16 @@ if(states[0]){
   alternatives.push({hand,paths:states.slice(0,cfg.search.alternatives).map(s=>({assignments:materialize(s),cost:s.cost,expandedPairs:s.expandedPairs,excess:s.excess,features:s.features}))});
 }}
 const checked=validate(all,assign,{profile:cfg,locks,rounds:score.editor?.fermataTimeline?.rounds??score.editor?.rounds});const unique=new Map();for(const c of all)for(const id of c.ids)unique.set(id,assign[c.id]??null);const notes=events(score),assigned=notes.filter(e=>unique.get(e.id)!=null).length;for(const e of notes) if(unique.get(e.id)==null&&!unassignedReasons[e.id]) unassignedReasons[e.id]=unique.has(e.id)?'NOT_PROCESSED':'EXCLUDED';return{version:VERSION,unassignedReasons,profile:clone(cfg),assignments:Object.fromEntries(unique),contactAssignments:assign,contacts:all,alternatives,stats,details,warnings:[...reasons,...checked.warnings,{code:'EXPERIMENTAL_PROFILE',message:'Экспериментальная аппликатура: проверьте с преподавателем. Физическая достижимость не подтверждена.'}],validation:checked,coverage:notes.length?assigned/notes.length:0,assigned,total:notes.length,search_status:timedOut?'budget_exhausted':assigned<notes.length?'partial':stats.pruned||truncated?'approximate_complete':'exact_complete',optimality:stats.pruned||truncated||assigned<notes.length?'not_proven':'within_declared_finite_model',ranking_status:'experimental_config',feasibility:'unknown',elapsed_ms:Date.now()-started};}
-// Keep the original beam result fixed. Only unresolved contacts participate in
-// the recovery search, with fixed contacts acting as interval constraints.
-function recoverPartial(score, run, locks = {}, clock = Date.now) {
+// Ordinary recovery keeps the original beam result fixed. The research-only
+// path can revisit explicitly selected contacts without dropping them.
+function recoverPartial(score, run, locks = {}, clock = Date.now, research = null) {
   const cfg = run.profile;
   if (cfg.id !== 'beginner' || run.assigned === run.total) return run;
   const started = clock();
   const deadline = started + Math.max(0, cfg.search.maxMilliseconds - run.elapsed_ms);
   const baseline = run.contactAssignments;
+  const experimentalWideIntervals = research?.wideIntervals === true;
+  const reconsider = experimentalWideIntervals ? research.reconsider : null;
   const added = {};
   const recoveredGroups = {};
   const candidates = [1, 2, 3, 4, 5];
@@ -712,11 +732,14 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
     if (a.key === b.key) return 'KEY_OVERLAP';
     if (a.hand !== b.hand) return null;
     if (fa === fb) return 'FINGER_OVERLAP';
-    return a.key<b.key ? spanViolation(cfg,a,b,fa,fb) : spanViolation(cfg,b,a,fb,fa);
+    const [lower,upper,low,high] = a.key<b.key ? [a,b,fa,fb] : [b,a,fb,fa];
+    const violation = spanViolation(cfg,lower,upper,low,high);
+    if(violation==='SPAN_VIOLATION' && experimentalWideIntervals && wideOuterPair(cfg,lower,upper,low,high))return null;
+    return violation;
   };
-  const compare = (a,b) => b.notes-a.notes || a.expansions-b.expansions ||
+  const compare = (a,b) => b.notes-a.notes || (reconsider ? a.changes-b.changes : 0) || a.expansions-b.expansions ||
     a.excess-b.excess || a.cost-b.cost;
-  const zero = {notes:0,expansions:0,excess:0,cost:0};
+  const zero = {notes:0,changes:0,expansions:0,excess:0,cost:0};
   function pairCost(a,b,fa,fb) {
     const excess = Math.max(0, Math.abs(a.key-b.key)-comfortLimit(cfg,fa,fb));
     const dx = (keyX(b.key,cfg)-keyX(a.key,cfg))*(a.hand==='R'?1:-1)/100;
@@ -735,7 +758,8 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
       active = keep.map(i=>active[i]);
       const neighbors = fixed.filter(a=>overlap(a,c));
       const existingLocks = lockByContact[c.id];
-      const options = [0];
+      const previous = baseline[c.id];
+      const options = previous!=null ? [] : [0];
       for(const finger of candidates) {
         if(existingLocks.length && !existingLocks.every(f=>f===finger)){countRejected('LOCK');continue;}
         const violation = neighbors.map(a=>check(a,c,baseline[a.id],finger)).find(Boolean);
@@ -750,7 +774,8 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
         const violation = finger && active.map((a,i)=>fingers[i] && check(a,c,fingers[i],finger)).find(Boolean);
         if(violation){countRejected(violation);continue;}
         const paired = finger ? [...costs.get(finger),...active.flatMap((a,i)=>fingers[i]&&a.hand===c.hand?[pairCost(a,c,fingers[i],finger)]:[])] : [];
-        const result = {notes:state.notes+(finger?c.ids.length:0),expansions:state.expansions,
+        const result = {notes:state.notes+(finger?c.ids.length:0),
+          changes:state.changes+Number(previous!=null && previous!==finger),expansions:state.expansions,
           excess:state.excess,cost:state.cost,fingers:[...fingers,finger],
           path:finger?{id:c.id,finger,previous:state.path}:state.path};
         for(const cost of paired){result.expansions+=cost.expansions;result.excess+=cost.excess;result.cost+=cost.cost;}
@@ -766,8 +791,9 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
     for(const value of layer.values())if(!best||compare(value,best)<0)best=value;
     return best;
   }
-  const fixed = timed.filter(c=>baseline[c.id]!=null);
-  const pending = timed.filter(c=>baseline[c.id]==null)
+  const canReconsider = c => reconsider?.has(c.id) && !lockByContact[c.id].length;
+  const fixed = timed.filter(c=>baseline[c.id]!=null && !canReconsider(c));
+  const pending = timed.filter(c=>baseline[c.id]==null || canReconsider(c))
     .sort((a,b)=>a.from.cmp(b.from)||a.key-b.key||a.id.localeCompare(b.id));
   let i=0;
   while(i<pending.length){
@@ -779,12 +805,14 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
     }
     const solution = solve(pending.slice(i,j),fixed);
     if(!solution){status='budget_exhausted';break;}
-    for(let p=solution.path;p;p=p.previous){added[p.id]=p.finger;recoveredGroups[p.id]=pending[i].id;}
+    for(let p=solution.path;p;p=p.previous)if(p.finger!==baseline[p.id]){
+      added[p.id]=p.finger;recoveredGroups[p.id]=pending[i].id;
+    }
     i=j;
   }
   const contactAssignments = {...baseline,...added};
   // Recheck the proposed map by interval pairs, independent of DP pruning.
-  const validation = validate(run.contacts,contactAssignments,{profile:cfg,locks,
+  const validation = validate(run.contacts,contactAssignments,{profile:cfg,locks,experimentalWideIntervals,
     rounds:score.editor?.fermataTimeline?.rounds??score.editor?.rounds});
   const duplicate = timed.some((a,i)=>contactAssignments[a.id]!=null && timed.slice(0,i).some(b=>
     contactAssignments[b.id]!=null && (added[a.id]||added[b.id]) && overlap(a,b) &&
@@ -797,6 +825,7 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
     const finger = added[c.id];
     if(finger==null)continue;
     for(const id of c.ids){assignments[id]=finger;delete unassignedReasons[id];}
+    if(baseline[c.id]!=null)continue;
     recovered.push({id:c.id,notes:c.ids,hand:c.hand,midi:c.key,finger,group:recoveredGroups[c.id],
       method:'interval_subsets',previous:c.ids.map(id=>run.unassignedReasons[id]),status:'assigned',
       ergonomic:validation.categories?.[c.id],validation:'passed'});

@@ -11,7 +11,7 @@ const panels = new Map();
 const status = document.getElementById('status');
 let replay;
 let originals;
-const scores = new Map();
+let wide;
 const fetchJSON = async name => {
   const res = await fetch(name);
   if (!res.ok) throw new Error(name + ' недоступен');
@@ -44,7 +44,7 @@ function addPanel(row, example) {
   const section = document.createElement('section');
   section.innerHTML = '<h2></h2><p class="explanation"></p><p class="options"></p><div class="views">' +
     '<figure><figcaption>Оригинальная нотная запись</figcaption><img hidden></figure>' +
-    '<figure><figcaption>Play12 · карта Stage 3.0.5</figcaption><div class="play"></div></figure></div>' +
+    '<figure><figcaption>Play12 · до</figcaption><div class="play"></div></figure><figure class="wide-figure" hidden><figcaption>Play12 · после</figcaption><div class="wide-play"></div><p class="wide-result"></p></figure></div>' +
     '<div class="scroll"><table><thead><tr><th>Событие</th><th>MIDI</th><th>Палец</th><th>Контакт</th>' +
     '<th>Расстояние</th><th>Пересечение</th><th>Время →</th></tr></thead><tbody></tbody></table></div>';
   section.querySelector('h2').textContent = names[row.composition] + ' · такт ' + row.measure + ' · ' + types[row.category][0];
@@ -71,43 +71,67 @@ const ready = Promise.all([fetchJSON('register.json'),fetchJSON('examples.json')
   for (const example of examples) addPanel(rows.find(r => r.composition===example.composition && r.id===example.id), example);
 });
 
+function drawScore(composition, original, after) {
+  const { score } = original;
+  const base = replay[composition].run;
+  const fingers = Object.fromEntries(base.contacts.flatMap(c => c.ids.map(id => [id,base.contactAssignments[c.id]])));
+  if (after) {
+    for (const c of after.cases) fingers[c.id] = c.finger;
+    for (const c of after.changed) fingers[c.id] = c.to;
+  }
+  for (const e of Play12Editor.events(score)) e.method.finger = fingers[e.id] ?? null;
+  const bars = score.score.parts[0].measures;
+  const svg = Play12Renderer.render(score,document.createElement('div'),{ measureCount:bars.length, editorTimeline:true,
+    zeroNote:score.play12.zero_pitch_class, unassignedDisplay:true, wrapCycles:true, cellHeight:18 });
+  return {svg,bars,fingers};
+}
+
+function showPanel(panel, rendered, after) {
+  const {section,row,example} = panel;
+  const {svg,bars,fingers} = rendered;
+  const range = new Set(bars.filter(m => Number(m.number)>=example.first && Number(m.number)<=example.last)
+    .flatMap(m => m.events.map(e => e.id)));
+  const clone = svg.cloneNode(true);
+  const nodes = [...clone.querySelectorAll('[data-event-id]')];
+  const relevant = nodes.filter(n => range.has(n.dataset.eventId));
+  const target = relevant.find(n => n.dataset.eventId===row.id);
+  if (!target || Number(target.dataset.midi)!==row.midi || (target.dataset.finger || '')!==String(fingers[row.id] ?? ''))
+    throw new Error('Исходные данные не совпали у '+row.id);
+  target.classList.add('target');
+  const blocked = new Set(row.blockers.filter(b=>b.excess_best_pair).flatMap(b=>b.events));
+  for (const n of relevant) if (blocked.has(n.dataset.eventId)) n.classList.add('blocker');
+  const rects = relevant.map(n=>n.querySelector('rect'));
+  const low = Math.min(...rects.map(r=>Number(r.getAttribute('y'))));
+  const high = Math.max(...rects.map(r=>Number(r.getAttribute('y'))+Number(r.getAttribute('height'))));
+  const width = svg.viewBox.baseVal.width;
+  clone.setAttribute('viewBox',[0,low-2,width,high-low+4].join(' '));
+  clone.setAttribute('width',width);
+  clone.setAttribute('height',high-low+4);
+  for (const node of nodes) if (!range.has(node.dataset.eventId)) node.remove();
+  section.querySelector(after?'.wide-play':'.play').replaceChildren(clone);
+  if (after) {
+    section.querySelector('.wide-figure').hidden=false;
+    const c=after.cases.find(c=>c.id===row.id);
+    const pairs=after.exceptions.filter(e=>e.eventIds.flat().includes(row.id));
+    const pairText=pairs.map(e=>e.midi.map((key,i)=>key+' / палец '+e.fingers[i]).join(' ↔ ')).join(', ');
+    section.querySelector('.wide-result').textContent=c.finger ?
+      'MIDI '+c.midi+' / палец '+c.finger+'. Широкие пары: '+pairText :
+      'MIDI '+c.midi+' по-прежнему без пальца. Соседние контакты не допускают подходящую пару.';
+  }
+}
+
 function draw() {
   if (!replay || !originals) return;
-  for (const [composition, original] of originals) {
-    const { score } = original;
-    const base = replay[composition].run;
-    const fingerprints = Object.fromEntries(base.contacts.flatMap(c => c.ids.map(id => [id,base.contactAssignments[c.id]])));
-    for (const e of Play12Editor.events(score)) e.method.finger = fingerprints[e.id] ?? null;
-    const host = document.createElement('div');
-    const bars = score.score.parts[0].measures;
-    const sourceSVG = Play12Renderer.render(score,host,{ measureCount:bars.length, editorTimeline:true,
-      zeroNote:score.play12.zero_pitch_class, unassignedDisplay:true, wrapCycles:true, cellHeight:18 });
-    scores.set(composition,{svg:sourceSVG,bars,base});
+  for(const [composition,original] of originals){
+    const active=[...panels.values()].filter(p=>p.row.composition===composition);
+    const before=drawScore(composition,original,null);
+    for(const panel of active)showPanel(panel,before,null);
+    if(wide){
+      const after=drawScore(composition,original,wide[composition]);
+      for(const panel of active)showPanel(panel,after,wide[composition]);
+    }
   }
-  for (const {section,row,example} of panels.values()) {
-    const {svg,bars,base} = scores.get(row.composition);
-    const range = new Set(bars.filter(m => Number(m.number)>=example.first && Number(m.number)<=example.last)
-      .flatMap(m => m.events.map(e => e.id)));
-    const clone = svg.cloneNode(true);
-    const nodes = [...clone.querySelectorAll('[data-event-id]')];
-    const relevant = nodes.filter(n => range.has(n.dataset.eventId));
-    const target = relevant.find(n => n.dataset.eventId===row.id);
-    if (!target || Number(target.dataset.midi)!==row.midi || target.dataset.finger ||
-        base.contactAssignments[row.contact_id]) throw new Error('Исходные данные не совпали у '+row.id);
-    target.classList.add('target');
-    const blocked = new Set(row.blockers.filter(b=>b.excess_best_pair).flatMap(b=>b.events));
-    for (const n of relevant) if (blocked.has(n.dataset.eventId)) n.classList.add('blocker');
-    const rects = relevant.map(n=>n.querySelector('rect'));
-    const low = Math.min(...rects.map(r=>Number(r.getAttribute('y'))));
-    const high = Math.max(...rects.map(r=>Number(r.getAttribute('y'))+Number(r.getAttribute('height'))));
-    const width = svg.viewBox.baseVal.width;
-    clone.setAttribute('viewBox',[0,low-2,width,high-low+4].join(' '));
-    clone.setAttribute('width',width);
-    clone.setAttribute('height',high-low+4);
-    for (const node of nodes) if (!range.has(node.dataset.eventId)) node.remove();
-    section.querySelector('.play').replaceChildren(clone);
-  }
-  status.textContent = 'Сверено шесть фрагментов Play12.';
+  status.textContent=wide?'Сверено шесть пар до и после в Play12.':'Сверено шесть фрагментов Play12.';
 }
 
 async function guarded(fn) {
@@ -137,4 +161,9 @@ document.getElementById('engraving').onchange = e => guarded(async () => {
     image.src = URL.createObjectURL(file);
     image.hidden = false;
   }
+});
+
+document.getElementById('wide').onclick = () => guarded(async () => {
+  wide = await fetchJSON('wide-results.json');
+  draw();
 });

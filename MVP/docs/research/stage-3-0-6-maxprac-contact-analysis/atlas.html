@@ -8,11 +8,11 @@
 body{font:16px system-ui;max-width:1100px;margin:20px auto;padding:0 16px;color:#182019}
 section{border-top:1px solid #bbb;margin-top:24px;padding-top:8px}label{display:block;margin:10px 0}
 .views{display:grid;grid-template-columns:minmax(240px,2fr) minmax(180px,1fr);gap:12px}
-figure{margin:0}figcaption{font-weight:600;margin-bottom:6px}img,.play svg{max-width:100%;height:auto}
+figure{margin:0}figcaption{font-weight:600;margin-bottom:6px}img,.play svg,.wide-play svg{max-width:100%;height:auto}
 table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border-bottom:1px solid #ddd;padding:5px;text-align:left}
 .lane{position:relative;height:13px;background:#eee;min-width:100px}.hold{position:absolute;height:100%;background:#afbdc3}
 .goal .hold{background:#e96e40}.wide .hold{background:#68578a}.goal{font-weight:700}
-.play .target>rect:first-of-type{stroke:#db4b18!important;stroke-width:3px}.play .blocker>rect:first-of-type{stroke:#68578a!important;stroke-width:2.5px}
+.views .target>rect:first-of-type{stroke:#db4b18!important;stroke-width:3px}.views .blocker>rect:first-of-type{stroke:#68578a!important;stroke-width:2.5px}
 @media(max-width:680px){.views{grid-template-columns:1fr}.scroll{overflow-x:auto}}
 </style>
 <h1>Stage 3.0.6 · Атлас физических удержаний</h1>
@@ -20,6 +20,7 @@ table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border-bottom:1px 
 <label>Локальный файл расчёта Stage 3.0.5 <input type="file" id="replay" accept=".json"></label>
 <label>Исходные выгрузки Play12 обеих композиций <input type="file" id="imports" accept=".json" multiple></label>
 <label>Нотные фрагменты из оригинальных MXL <input type="file" id="engraving" accept=".svg" multiple></label>
+<button id="wide" type="button">Показать аппликатуру после эксперимента рядом с исходной</button>
 <p id="status" role="status"></p>
 <main></main>
 <script src="../../../editor/core.js"></script>

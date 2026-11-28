@@ -5,7 +5,7 @@ const path = require('node:path');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
 async function verify() {
-  const [base,replay,imports,engraving] = process.argv.slice(2);
+  const [base,replay,imports,engraving,wide] = process.argv.slice(2);
   const browser = await chromium.launch({executablePath:process.env.CHROMIUM,
     args:['--no-sandbox','--disable-gpu','--single-process','--in-process-gpu','--disable-software-rasterizer']});
   try {
@@ -21,6 +21,14 @@ async function verify() {
     assert.equal(await page.locator('main section').count(),6);
     assert.equal(await page.locator('main svg .target').count(),6);
     assert.ok(await page.locator('main svg .blocker').count()>=6);
+    if(wide){
+      await page.locator('#wide').click();
+      await page.waitForFunction(()=>document.getElementById('status').textContent.includes('до и после'));
+      assert.equal(await page.locator('.wide-play svg .target').count(),6);
+      assert.equal(await page.locator('.wide-play svg .target[data-finger=""]').count(),2);
+      assert.equal(await page.locator('.wide-figure:visible').count(),6);
+      console.log('Сверены 6 пар Play12 до и после, 4 назначенные и 2 неназначенные цели.');
+    }
     console.log('Проверены 6 оригинальных нотных фрагментов, 6 SVG Play12 и выделение целей.');
   } finally { await browser.close(); }
 }
