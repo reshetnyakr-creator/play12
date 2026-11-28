@@ -503,7 +503,7 @@ function checkContactSpan(a,b,first,second,options,conflicts,warnings,extensions
   const advisory=sources.includes('manual')||source==='source';
   const record=rule=>{
     const extension=rule==='PRACTICAL_EXTENSION';
-    const wide=rule==='WIDE_OUTER_PAIR';
+    const wide=rule==='WIDE_OUTER_PAIR'||rule==='WIDE_CHORD_PAIR';
     (wide?options.wideDiagnostics:extension?extensions:advisory?warnings:conflicts).push({
       code:!wide&&!extension&&sources.includes('manual')?'MANUAL_ASSIGNMENT_SPAN_VIOLATION':rule,
       ...(wide?{wideIntervalException:true,physical:'unknown',comfortExcess:distance-limit,practicalExcess:distance-hardLimit}:{}),
@@ -514,9 +514,13 @@ function checkContactSpan(a,b,first,second,options,conflicts,warnings,extensions
       rounds:rounds.filter(r=>r.end>Number(overlapStart)&&r.start<Number(overlapEnd)).map(r=>r.index+1)
     });
   };
-  if(spanExceeded)record(options.experimentalWideIntervals===true && !badOctave &&
-    wideOuterPair(profile,lower,upper,lowFinger,highFinger) ? 'WIDE_OUTER_PAIR' :
-    profile.practicalSpan?'SPAN_VIOLATION':COMFORT_SPAN);
+  if(spanExceeded){
+    const chord = options.experimentalWideIntervals===true && options.researchChords?.get(lower.id);
+    const memberPair = chord && chord===options.researchChords.get(upper.id);
+    const exception = !badOctave && options.experimentalWideIntervals===true &&
+      (memberPair ? 'WIDE_CHORD_PAIR' : wideOuterPair(profile,lower,upper,lowFinger,highFinger) && 'WIDE_OUTER_PAIR');
+    record(exception || (profile.practicalSpan?'SPAN_VIOLATION':COMFORT_SPAN));
+  }
   if(extended&&!badOctave)record('PRACTICAL_EXTENSION');
   if(badOctave)record(OCTAVE_FINGERING);
 }
@@ -534,7 +538,7 @@ function validate(cs,assign,options={}){
     Object.assign(result,{extensions,categories});
     if(wideExceptions){
       for(const issue of wideExceptions)for(const id of issue.ids)
-        if(categories[id]!=='SPAN_VIOLATION')categories[id]='WIDE_OUTER_PAIR';
+        if(categories[id]!=='SPAN_VIOLATION')categories[id]=issue.rule;
       result.wideExceptions=wideExceptions;
     }
   }
@@ -720,12 +724,16 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
   const baseline = run.contactAssignments;
   const experimentalWideIntervals = research?.wideIntervals === true;
   const reconsider = experimentalWideIntervals ? research.reconsider : null;
+  const chords = experimentalWideIntervals ? research.chords : null;
+  const required = experimentalWideIntervals ? research.required : null;
+  const domains = experimentalWideIntervals ? research.domains : null;
   const added = {};
   const recoveredGroups = {};
   const candidates = [1, 2, 3, 4, 5];
   const rejected = {};
   let states = 0;
   let status = 'complete';
+  let failureAt;
   const countRejected = code => { rejected[code] = (rejected[code] || 0) + 1; };
   const overlap = (a,b) => a.from.cmp(b.to)<0 && b.from.cmp(a.to)<0;
   const check = (a,b,fa,fb) => {
@@ -733,8 +741,12 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
     if (a.hand !== b.hand) return null;
     if (fa === fb) return 'FINGER_OVERLAP';
     const [lower,upper,low,high] = a.key<b.key ? [a,b,fa,fb] : [b,a,fb,fa];
+    const chord = chords?.get(lower.id);
+    const memberPair = chord && chord===chords.get(upper.id);
+    if(memberPair && (lower.hand==='L'?low<=high:low>=high))return 'WIDE_CHORD_ORDER';
     const violation = spanViolation(cfg,lower,upper,low,high);
-    if(violation==='SPAN_VIOLATION' && experimentalWideIntervals && wideOuterPair(cfg,lower,upper,low,high))return null;
+    if(violation==='SPAN_VIOLATION' && experimentalWideIntervals &&
+      (memberPair || wideOuterPair(cfg,lower,upper,low,high)))return null;
     return violation;
   };
   const compare = (a,b) => b.notes-a.notes || (reconsider ? a.changes-b.changes : 0) || a.expansions-b.expansions ||
@@ -759,8 +771,8 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
       const neighbors = fixed.filter(a=>overlap(a,c));
       const existingLocks = lockByContact[c.id];
       const previous = baseline[c.id];
-      const options = previous!=null ? [] : [0];
-      for(const finger of candidates) {
+      const options = previous!=null || required?.has(c.id) ? [] : [0];
+      for(const finger of domains?.get(c.id) ?? candidates) {
         if(existingLocks.length && !existingLocks.every(f=>f===finger)){countRejected('LOCK');continue;}
         const violation = neighbors.map(a=>check(a,c,baseline[a.id],finger)).find(Boolean);
         if(violation)countRejected(violation);
@@ -785,6 +797,7 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
         if(!next.has(key)||compare(result,next.get(key))<0)next.set(key,result);
       }
       active.push(c);
+      if(!next.size){status='no_compatible_assignment';failureAt=c.id;return null;}
       layer = next;
     }
     let best;
@@ -804,7 +817,7 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
       j++;
     }
     const solution = solve(pending.slice(i,j),fixed);
-    if(!solution){status='budget_exhausted';break;}
+    if(!solution){if(status==='complete')status='budget_exhausted';break;}
     for(let p=solution.path;p;p=p.previous)if(p.finger!==baseline[p.id]){
       added[p.id]=p.finger;recoveredGroups[p.id]=pending[i].id;
     }
@@ -812,7 +825,7 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
   }
   const contactAssignments = {...baseline,...added};
   // Recheck the proposed map by interval pairs, independent of DP pruning.
-  const validation = validate(run.contacts,contactAssignments,{profile:cfg,locks,experimentalWideIntervals,
+  const validation = validate(run.contacts,contactAssignments,{profile:cfg,locks,experimentalWideIntervals,researchChords:chords,
     rounds:score.editor?.fermataTimeline?.rounds??score.editor?.rounds});
   const duplicate = timed.some((a,i)=>contactAssignments[a.id]!=null && timed.slice(0,i).some(b=>
     contactAssignments[b.id]!=null && (added[a.id]||added[b.id]) && overlap(a,b) &&
@@ -833,7 +846,7 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
   const assigned = run.assigned+recovered.reduce((n,c)=>n+c.notes.length,0);
   const elapsed = clock()-started;
   const recovery = {baseline:run.assigned,additional:assigned-run.assigned,contacts:recovered,
-    remaining:run.total-assigned,states,rejected,elapsed_ms:elapsed,status:invalid?'validation_rejected':status};
+    remaining:run.total-assigned,states,rejected,elapsed_ms:elapsed,...(failureAt?{failureAt}:{}),status:invalid?'validation_rejected':status};
   if(invalid)return {...run,recovery};
   const warningCount = run.warnings.length-run.validation.warnings.length-1;
   return {...run,assignments,contactAssignments,unassignedReasons,assigned,coverage:assigned/run.total,

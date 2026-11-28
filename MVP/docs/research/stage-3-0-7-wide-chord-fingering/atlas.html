@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<title>Play12 · Stage 3.0.7 · Time</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{max-width:1100px;margin:20px auto;padding:0 16px;font:16px system-ui}section{border-top:1px solid #ccc;margin:24px 0}img{max-width:100%}.comparison{display:flex;gap:24px;flex-wrap:wrap}figure{margin:10px 0}.target>rect:first-of-type{stroke:#db4b18!important;stroke-width:3px}.changed>rect:first-of-type{stroke:#68578a!important;stroke-width:3px}table{border-collapse:collapse}td,th{padding:4px 9px;border-bottom:1px solid #ddd}label{display:block;margin:12px 0}
+</style>
+<h1>Time · 11 случаев широких и связанных групп</h1>
+<p>Оранжевый контур выделяет целевую ноту, фиолетовый — изменённый соседний палец. Сетка Play12 использует исходное нотное время. Таблица показывает физические интервалы модели Stage 3.0.5.</p>
+<label>Исходная локальная выгрузка Time <input type="file" id="source" accept=".json"></label>
+<label>Оригинальные такты, выгравированные локально <input type="file" id="notation" accept=".svg" multiple></label>
+<p id="status" role="status"></p>
+<main></main>
+<script src="../../../editor/core.js"></script>
+<script src="../../../renderer/play12-renderer.js"></script>
+<script src="atlas.js"></script>
+</html>
