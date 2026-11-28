@@ -1,0 +1,110 @@
+{
+  "PracticalSpanAndRecovery": {
+    "assigned": 1,
+    "total": 4,
+    "reasons": {
+      "P1.m0.e0": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+      "P1.m0.e1": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+      "P1.m0.e3": "RECOVERY_PENDING_RELEASE"
+    },
+    "display": [
+      {
+        "id": "P1.m0.e0",
+        "window": 1,
+        "x": 100,
+        "y": 64,
+        "width": 10.666666666666666,
+        "dash": "3 2",
+        "finger": "",
+        "hand": "L",
+        "midi": 36
+      },
+      {
+        "id": "P1.m0.e1",
+        "window": 1,
+        "x": 100,
+        "y": 64,
+        "width": 10.666666666666666,
+        "dash": "3 2",
+        "finger": "",
+        "hand": "L",
+        "midi": 55
+      },
+      {
+        "id": "P1.m0.e3",
+        "window": 1,
+        "x": 100,
+        "y": 64,
+        "width": 10.666666666666666,
+        "dash": "3 2",
+        "finger": "",
+        "hand": "L",
+        "midi": 52
+      }
+    ]
+  },
+  "OctavePairInteraction": {
+    "assigned": 1,
+    "total": 4,
+    "reasons": {
+      "P1.m0.e0": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+      "P1.m0.e1": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+      "P1.m0.e2": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS"
+    },
+    "display": [
+      {
+        "id": "P1.m0.e0",
+        "window": 1,
+        "x": 100,
+        "y": 64,
+        "width": 10.666666666666666,
+        "dash": "3 2",
+        "finger": "",
+        "hand": "L",
+        "midi": 45
+      },
+      {
+        "id": "P1.m0.e1",
+        "window": 1,
+        "x": 100,
+        "y": 64,
+        "width": 10.666666666666666,
+        "dash": "3 2",
+        "finger": "",
+        "hand": "L",
+        "midi": 57
+      },
+      {
+        "id": "P1.m0.e2",
+        "window": 1,
+        "x": 100,
+        "y": 64,
+        "width": 10.666666666666666,
+        "dash": "3 2",
+        "finger": "",
+        "hand": "L",
+        "midi": 60
+      }
+    ]
+  },
+  "HeldKeyReattack": {
+    "assigned": 2,
+    "total": 3,
+    "reasons": {
+      "P1.m0.e2": "MODEL_CONFLICT_UNRESOLVED_KEY"
+    },
+    "display": [
+      {
+        "id": "P1.m0.e2",
+        "window": 1,
+        "x": 100,
+        "y": 64,
+        "width": 10.666666666666666,
+        "dash": "3 2",
+        "finger": "",
+        "hand": "L",
+        "midi": 48
+      }
+    ]
+  }
+}

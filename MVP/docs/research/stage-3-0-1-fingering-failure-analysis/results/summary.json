@@ -1,0 +1,3373 @@
+{
+  "time": {
+    "groups": [
+      {
+        "id": "L@135",
+        "engine": "MODEL_CONFLICT_UNRESOLVED_KEY",
+        "cause": "C03",
+        "trigger": "P1.m33.e5",
+        "boundary_before_extension": "136",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m33.e6",
+          "P1.m33.e7"
+        ],
+        "attack": [
+          "P1.m33.e5"
+        ]
+      },
+      {
+        "id": "L@140",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m35.e8+P1.m35.e2+P1.m35.e3",
+        "boundary_before_extension": "144",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m35.e8",
+          "P1.m35.e2",
+          "P1.m35.e3"
+        ]
+      },
+      {
+        "id": "L@141",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m35.e8+P1.m35.e2+P1.m35.e3",
+        "boundary_before_extension": "144",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m35.e4"
+        ]
+      },
+      {
+        "id": "L@142",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m35.e8+P1.m35.e2+P1.m35.e3",
+        "boundary_before_extension": "144",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m35.e5"
+        ]
+      },
+      {
+        "id": "L@143",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m35.e8+P1.m35.e2+P1.m35.e3",
+        "boundary_before_extension": "144",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m35.e6"
+        ]
+      },
+      {
+        "id": "L@287/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m35.e8+P1.m35.e2+P1.m35.e3",
+        "boundary_before_extension": "144",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m35.e7"
+        ]
+      },
+      {
+        "id": "L@148",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m37.e7+P1.m37.e8+P1.m37.e3",
+        "boundary_before_extension": "152",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m37.e7",
+          "P1.m37.e8",
+          "P1.m37.e3"
+        ]
+      },
+      {
+        "id": "L@149",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m37.e7+P1.m37.e8+P1.m37.e3",
+        "boundary_before_extension": "152",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m37.e4"
+        ]
+      },
+      {
+        "id": "L@150",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m37.e7+P1.m37.e8+P1.m37.e3",
+        "boundary_before_extension": "152",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m37.e5"
+        ]
+      },
+      {
+        "id": "L@151",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m37.e7+P1.m37.e8+P1.m37.e3",
+        "boundary_before_extension": "152",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m37.e6"
+        ]
+      },
+      {
+        "id": "L@156",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m39.e8+P1.m39.e2+P1.m39.e3",
+        "boundary_before_extension": "160",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m39.e8",
+          "P1.m39.e2",
+          "P1.m39.e3"
+        ]
+      },
+      {
+        "id": "L@157",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m39.e8+P1.m39.e2+P1.m39.e3",
+        "boundary_before_extension": "160",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m39.e4"
+        ]
+      },
+      {
+        "id": "L@158",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m39.e8+P1.m39.e2+P1.m39.e3",
+        "boundary_before_extension": "160",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m39.e5"
+        ]
+      },
+      {
+        "id": "L@159",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m39.e8+P1.m39.e2+P1.m39.e3",
+        "boundary_before_extension": "160",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m39.e6"
+        ]
+      },
+      {
+        "id": "L@319/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m39.e8+P1.m39.e2+P1.m39.e3",
+        "boundary_before_extension": "160",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m39.e7"
+        ]
+      },
+      {
+        "id": "L@162",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C06",
+        "trigger": "P1.m40.e5+P1.m40.e6",
+        "boundary_before_extension": "163",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 2
+        },
+        "active": [
+          "P1.m40.e10"
+        ],
+        "attack": [
+          "P1.m40.e5",
+          "P1.m40.e6"
+        ]
+      },
+      {
+        "id": "L@163",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C06",
+        "trigger": "P1.m40.e7+P1.m40.e8+P1.m40.e9",
+        "boundary_before_extension": "164",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 3
+        },
+        "active": [
+          "P1.m40.e10"
+        ],
+        "attack": [
+          "P1.m40.e7",
+          "P1.m40.e8",
+          "P1.m40.e9"
+        ]
+      },
+      {
+        "id": "L@166",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C06",
+        "trigger": "P1.m41.e5+P1.m41.e6",
+        "boundary_before_extension": "167",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 2
+        },
+        "active": [
+          "P1.m41.e9"
+        ],
+        "attack": [
+          "P1.m41.e5",
+          "P1.m41.e6"
+        ]
+      },
+      {
+        "id": "L@169",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m42.e3+P1.m42.e4",
+        "boundary_before_extension": "170",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m42.e11"
+        ],
+        "attack": [
+          "P1.m42.e3",
+          "P1.m42.e4"
+        ]
+      },
+      {
+        "id": "L@170",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m42.e5+P1.m42.e6+P1.m42.e7",
+        "boundary_before_extension": "171",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m42.e11"
+        ],
+        "attack": [
+          "P1.m42.e5",
+          "P1.m42.e6",
+          "P1.m42.e7"
+        ]
+      },
+      {
+        "id": "L@171",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m42.e8+P1.m42.e9+P1.m42.e10",
+        "boundary_before_extension": "172",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m42.e11"
+        ],
+        "attack": [
+          "P1.m42.e8",
+          "P1.m42.e9",
+          "P1.m42.e10"
+        ]
+      },
+      {
+        "id": "L@173",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m43.e3+P1.m43.e4",
+        "boundary_before_extension": "174",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m43.e10"
+        ],
+        "attack": [
+          "P1.m43.e3",
+          "P1.m43.e4"
+        ]
+      },
+      {
+        "id": "L@174",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m43.e5+P1.m43.e6",
+        "boundary_before_extension": "175",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m43.e10"
+        ],
+        "attack": [
+          "P1.m43.e5",
+          "P1.m43.e6"
+        ]
+      },
+      {
+        "id": "L@175",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m43.e7+P1.m43.e8",
+        "boundary_before_extension": "351/2",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m43.e10"
+        ],
+        "attack": [
+          "P1.m43.e7",
+          "P1.m43.e8"
+        ]
+      },
+      {
+        "id": "L@178",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C06",
+        "trigger": "P1.m44.e5+P1.m44.e6",
+        "boundary_before_extension": "179",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 2
+        },
+        "active": [
+          "P1.m44.e10"
+        ],
+        "attack": [
+          "P1.m44.e5",
+          "P1.m44.e6"
+        ]
+      },
+      {
+        "id": "L@179",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C06",
+        "trigger": "P1.m44.e7+P1.m44.e8+P1.m44.e9",
+        "boundary_before_extension": "180",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 3
+        },
+        "active": [
+          "P1.m44.e10"
+        ],
+        "attack": [
+          "P1.m44.e7",
+          "P1.m44.e8",
+          "P1.m44.e9"
+        ]
+      },
+      {
+        "id": "L@180",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C06",
+        "trigger": "P1.m45.e10+P1.m45.e2+P1.m45.e3",
+        "boundary_before_extension": "184",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 6
+        },
+        "active": [],
+        "attack": [
+          "P1.m45.e10",
+          "P1.m45.e2",
+          "P1.m45.e3"
+        ]
+      },
+      {
+        "id": "L@181",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m45.e10+P1.m45.e2+P1.m45.e3",
+        "boundary_before_extension": "184",
+        "shapes": {
+          "comfortable": 18,
+          "practical": 20,
+          "without_octave": 20
+        },
+        "active": [],
+        "attack": [
+          "P1.m45.e4",
+          "P1.m45.e5"
+        ]
+      },
+      {
+        "id": "L@182",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m45.e10+P1.m45.e2+P1.m45.e3",
+        "boundary_before_extension": "184",
+        "shapes": {
+          "comfortable": 14,
+          "practical": 18,
+          "without_octave": 18
+        },
+        "active": [],
+        "attack": [
+          "P1.m45.e6",
+          "P1.m45.e7"
+        ]
+      },
+      {
+        "id": "L@183",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m45.e10+P1.m45.e2+P1.m45.e3",
+        "boundary_before_extension": "184",
+        "shapes": {
+          "comfortable": 10,
+          "practical": 14,
+          "without_octave": 14
+        },
+        "active": [],
+        "attack": [
+          "P1.m45.e8",
+          "P1.m45.e9"
+        ]
+      },
+      {
+        "id": "L@185",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m46.e3+P1.m46.e4",
+        "boundary_before_extension": "186",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m46.e11"
+        ],
+        "attack": [
+          "P1.m46.e3",
+          "P1.m46.e4"
+        ]
+      },
+      {
+        "id": "L@186",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m46.e5+P1.m46.e6+P1.m46.e7",
+        "boundary_before_extension": "187",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m46.e11"
+        ],
+        "attack": [
+          "P1.m46.e5",
+          "P1.m46.e6",
+          "P1.m46.e7"
+        ]
+      },
+      {
+        "id": "L@187",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m46.e8+P1.m46.e9+P1.m46.e10",
+        "boundary_before_extension": "188",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m46.e11"
+        ],
+        "attack": [
+          "P1.m46.e8",
+          "P1.m46.e9",
+          "P1.m46.e10"
+        ]
+      },
+      {
+        "id": "L@189",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m47.e3+P1.m47.e4",
+        "boundary_before_extension": "190",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m47.e10"
+        ],
+        "attack": [
+          "P1.m47.e3",
+          "P1.m47.e4"
+        ]
+      },
+      {
+        "id": "L@190",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m47.e5+P1.m47.e6",
+        "boundary_before_extension": "191",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m47.e10"
+        ],
+        "attack": [
+          "P1.m47.e5",
+          "P1.m47.e6"
+        ]
+      },
+      {
+        "id": "L@191",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m47.e7+P1.m47.e8",
+        "boundary_before_extension": "383/2",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m47.e10"
+        ],
+        "attack": [
+          "P1.m47.e7",
+          "P1.m47.e8"
+        ]
+      },
+      {
+        "id": "L@230",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m57.e3",
+        "boundary_before_extension": "232",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m57.e4"
+        ],
+        "attack": [
+          "P1.m57.e3"
+        ]
+      },
+      {
+        "id": "R@122",
+        "engine": "MODEL_CONFLICT_UNRESOLVED_KEY",
+        "cause": "C03",
+        "trigger": "P1.m30.e3",
+        "boundary_before_extension": "124",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m30.e0"
+        ],
+        "attack": [
+          "P1.m30.e3"
+        ]
+      }
+    ],
+    "recovery": {
+      "L": [
+        48,
+        0,
+        48,
+        [
+          [
+            "P1.m35.e8",
+            5
+          ],
+          [
+            "P1.m35.e2",
+            3
+          ],
+          [
+            "P1.m35.e4",
+            1
+          ],
+          [
+            "P1.m35.e5",
+            1
+          ],
+          [
+            "P1.m35.e6",
+            3
+          ],
+          [
+            "P1.m35.e7",
+            2
+          ],
+          [
+            "P1.m37.e8",
+            5
+          ],
+          [
+            "P1.m37.e3",
+            2
+          ],
+          [
+            "P1.m37.e4",
+            1
+          ],
+          [
+            "P1.m37.e5",
+            1
+          ],
+          [
+            "P1.m37.e6",
+            1
+          ],
+          [
+            "P1.m39.e8",
+            5
+          ],
+          [
+            "P1.m39.e2",
+            3
+          ],
+          [
+            "P1.m39.e4",
+            1
+          ],
+          [
+            "P1.m39.e5",
+            1
+          ],
+          [
+            "P1.m39.e6",
+            3
+          ],
+          [
+            "P1.m39.e7",
+            2
+          ],
+          [
+            "P1.m40.e6",
+            5
+          ],
+          [
+            "P1.m40.e7",
+            3
+          ],
+          [
+            "P1.m40.e9",
+            5
+          ],
+          [
+            "P1.m41.e6",
+            5
+          ],
+          [
+            "P1.m42.e3",
+            1
+          ],
+          [
+            "P1.m42.e5",
+            3
+          ],
+          [
+            "P1.m42.e6",
+            1
+          ],
+          [
+            "P1.m42.e8",
+            2
+          ],
+          [
+            "P1.m42.e9",
+            1
+          ],
+          [
+            "P1.m43.e3",
+            1
+          ],
+          [
+            "P1.m43.e5",
+            1
+          ],
+          [
+            "P1.m43.e7",
+            3
+          ],
+          [
+            "P1.m44.e6",
+            5
+          ],
+          [
+            "P1.m44.e7",
+            3
+          ],
+          [
+            "P1.m44.e9",
+            5
+          ],
+          [
+            "P1.m45.e2",
+            5
+          ],
+          [
+            "P1.m45.e3",
+            4
+          ],
+          [
+            "P1.m45.e4",
+            5
+          ],
+          [
+            "P1.m45.e5",
+            4
+          ],
+          [
+            "P1.m45.e6",
+            5
+          ],
+          [
+            "P1.m45.e7",
+            4
+          ],
+          [
+            "P1.m45.e8",
+            5
+          ],
+          [
+            "P1.m45.e9",
+            3
+          ],
+          [
+            "P1.m46.e3",
+            1
+          ],
+          [
+            "P1.m46.e5",
+            3
+          ],
+          [
+            "P1.m46.e6",
+            1
+          ],
+          [
+            "P1.m46.e8",
+            2
+          ],
+          [
+            "P1.m46.e9",
+            1
+          ],
+          [
+            "P1.m47.e3",
+            1
+          ],
+          [
+            "P1.m47.e5",
+            1
+          ],
+          [
+            "P1.m47.e7",
+            3
+          ]
+        ],
+        []
+      ],
+      "R": [
+        0,
+        0,
+        0,
+        [],
+        []
+      ]
+    },
+    "fixed_finger_recovery": {
+      "L": [
+        48,
+        0,
+        48,
+        [
+          [
+            "P1.m35.e8",
+            5
+          ],
+          [
+            "P1.m35.e2",
+            3
+          ],
+          [
+            "P1.m35.e4",
+            1
+          ],
+          [
+            "P1.m35.e5",
+            1
+          ],
+          [
+            "P1.m35.e6",
+            3
+          ],
+          [
+            "P1.m35.e7",
+            2
+          ],
+          [
+            "P1.m37.e8",
+            5
+          ],
+          [
+            "P1.m37.e3",
+            2
+          ],
+          [
+            "P1.m37.e4",
+            1
+          ],
+          [
+            "P1.m37.e5",
+            1
+          ],
+          [
+            "P1.m37.e6",
+            1
+          ],
+          [
+            "P1.m39.e8",
+            5
+          ],
+          [
+            "P1.m39.e2",
+            3
+          ],
+          [
+            "P1.m39.e4",
+            1
+          ],
+          [
+            "P1.m39.e5",
+            1
+          ],
+          [
+            "P1.m39.e6",
+            3
+          ],
+          [
+            "P1.m39.e7",
+            2
+          ],
+          [
+            "P1.m40.e6",
+            5
+          ],
+          [
+            "P1.m40.e7",
+            3
+          ],
+          [
+            "P1.m40.e9",
+            5
+          ],
+          [
+            "P1.m41.e6",
+            5
+          ],
+          [
+            "P1.m42.e3",
+            1
+          ],
+          [
+            "P1.m42.e5",
+            3
+          ],
+          [
+            "P1.m42.e6",
+            1
+          ],
+          [
+            "P1.m42.e8",
+            2
+          ],
+          [
+            "P1.m42.e9",
+            1
+          ],
+          [
+            "P1.m43.e3",
+            1
+          ],
+          [
+            "P1.m43.e5",
+            1
+          ],
+          [
+            "P1.m43.e7",
+            3
+          ],
+          [
+            "P1.m44.e6",
+            5
+          ],
+          [
+            "P1.m44.e7",
+            3
+          ],
+          [
+            "P1.m44.e9",
+            5
+          ],
+          [
+            "P1.m45.e2",
+            5
+          ],
+          [
+            "P1.m45.e3",
+            4
+          ],
+          [
+            "P1.m45.e4",
+            5
+          ],
+          [
+            "P1.m45.e5",
+            4
+          ],
+          [
+            "P1.m45.e6",
+            5
+          ],
+          [
+            "P1.m45.e7",
+            4
+          ],
+          [
+            "P1.m45.e8",
+            5
+          ],
+          [
+            "P1.m45.e9",
+            3
+          ],
+          [
+            "P1.m46.e3",
+            1
+          ],
+          [
+            "P1.m46.e5",
+            3
+          ],
+          [
+            "P1.m46.e6",
+            1
+          ],
+          [
+            "P1.m46.e8",
+            2
+          ],
+          [
+            "P1.m46.e9",
+            1
+          ],
+          [
+            "P1.m47.e3",
+            1
+          ],
+          [
+            "P1.m47.e5",
+            1
+          ],
+          [
+            "P1.m47.e7",
+            3
+          ]
+        ],
+        []
+      ],
+      "R": [
+        0,
+        0,
+        0,
+        [],
+        []
+      ]
+    },
+    "causes": {
+      "C03": 2,
+      "C05": 38,
+      "C19": 17,
+      "C06": 15
+    },
+    "reasons": {
+      "MODEL_CONFLICT_UNRESOLVED_KEY": 2,
+      "NO_PATH_UNDER_BEGINNER_CONSTRAINTS": 53,
+      "RECOVERY_PENDING_RELEASE": 17
+    },
+    "display_count": 72,
+    "display_center_count": 72,
+    "display_missing_source_segments": 0,
+    "display_unique_x": [
+      100,
+      121.33333333333333
+    ],
+    "contacts": 541,
+    "assigned_contacts": 469,
+    "tied_contacts": 0,
+    "missing_tied_contacts": 0,
+    "release_shifts": 0,
+    "warning_codes": {
+      "NO_PATH_UNDER_CONTACT_ASSUMPTION": 24,
+      "KEY_OWNERSHIP_UNKNOWN": 14,
+      "EXPERIMENTAL_PROFILE": 1
+    },
+    "solver_stats": {
+      "generated": 367025,
+      "rejected": 192464,
+      "pruned": 101884,
+      "comfortSpanRejected": 0,
+      "practicalSpanRejected": 41047,
+      "octaveRejected": 68708,
+      "admissible": 122829
+    },
+    "source_hash": "68d34417f7db545243ec9f307c993893d7f47589e324d2b6106f867ae85ddd4e",
+    "source_counts": {
+      "notes": 560,
+      "pitched": 541,
+      "ties": 0,
+      "pedal": 0
+    },
+    "runs": [
+      {
+        "assigned": 469,
+        "total": 541,
+        "elapsed_ms": 451,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "de4bf1b3c5d6e7a69758be2e57abe1f6fa9a983d5550a29900217aa75e64c816"
+      },
+      {
+        "assigned": 469,
+        "total": 541,
+        "elapsed_ms": 511,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "de4bf1b3c5d6e7a69758be2e57abe1f6fa9a983d5550a29900217aa75e64c816"
+      },
+      {
+        "assigned": 469,
+        "total": 541,
+        "elapsed_ms": 526,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "de4bf1b3c5d6e7a69758be2e57abe1f6fa9a983d5550a29900217aa75e64c816"
+      },
+      {
+        "assigned": 469,
+        "total": 541,
+        "elapsed_ms": 550,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "de4bf1b3c5d6e7a69758be2e57abe1f6fa9a983d5550a29900217aa75e64c816"
+      },
+      {
+        "assigned": 469,
+        "total": 541,
+        "elapsed_ms": 485,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "de4bf1b3c5d6e7a69758be2e57abe1f6fa9a983d5550a29900217aa75e64c816"
+      }
+    ],
+    "before": {
+      "assigned": 469,
+      "total": 541,
+      "elapsed_ms": 524,
+      "status": "partial",
+      "version": "0.1.7",
+      "fingerprint": "de4bf1b3c5d6e7a69758be2e57abe1f6fa9a983d5550a29900217aa75e64c816"
+    },
+    "comparison": {
+      "events": true,
+      "contacts": true,
+      "assignments": true,
+      "reasons": true
+    },
+    "display_equal": true
+  },
+  "no-surprises": {
+    "groups": [
+      {
+        "id": "L@32",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m8.e8+P1.m8.e11",
+        "boundary_before_extension": "34",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m8.e8",
+          "P1.m8.e11"
+        ]
+      },
+      {
+        "id": "L@36",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m9.e8+P1.m9.e11",
+        "boundary_before_extension": "38",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m9.e8",
+          "P1.m9.e11"
+        ]
+      },
+      {
+        "id": "L@73/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m9.e8+P1.m9.e11",
+        "boundary_before_extension": "38",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m9.e12"
+        ]
+      },
+      {
+        "id": "L@75/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m9.e8+P1.m9.e11",
+        "boundary_before_extension": "38",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m9.e13"
+        ]
+      },
+      {
+        "id": "L@38",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m9.e8+P1.m9.e11",
+        "boundary_before_extension": "39",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m9.e9"
+        ]
+      },
+      {
+        "id": "L@77/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m9.e8+P1.m9.e11",
+        "boundary_before_extension": "39",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m9.e10"
+        ]
+      },
+      {
+        "id": "L@39",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m9.e8+P1.m9.e11",
+        "boundary_before_extension": "40",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m9.e15"
+        ]
+      },
+      {
+        "id": "L@79/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m9.e8+P1.m9.e11",
+        "boundary_before_extension": "40",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m9.e16"
+        ]
+      },
+      {
+        "id": "L@40",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m9.e8+P1.m9.e11",
+        "boundary_before_extension": "42",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m10.e8"
+        ]
+      },
+      {
+        "id": "L@175/4",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m10.e14",
+        "boundary_before_extension": "44",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m10.e10"
+        ],
+        "attack": [
+          "P1.m10.e14"
+        ]
+      },
+      {
+        "id": "L@52",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m13.e9+P1.m13.e12",
+        "boundary_before_extension": "54",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m13.e9",
+          "P1.m13.e12"
+        ]
+      },
+      {
+        "id": "L@105/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m13.e9+P1.m13.e12",
+        "boundary_before_extension": "54",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m13.e13"
+        ]
+      },
+      {
+        "id": "L@107/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m13.e9+P1.m13.e12",
+        "boundary_before_extension": "54",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m13.e14"
+        ]
+      },
+      {
+        "id": "L@54",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m13.e9+P1.m13.e12",
+        "boundary_before_extension": "109/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m13.e10"
+        ]
+      },
+      {
+        "id": "L@56",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m14.e12",
+        "boundary_before_extension": "58",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m13.e17"
+        ],
+        "attack": [
+          "P1.m14.e12"
+        ]
+      },
+      {
+        "id": "L@64",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m16.e8+P1.m16.e11",
+        "boundary_before_extension": "66",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m16.e8",
+          "P1.m16.e11"
+        ]
+      },
+      {
+        "id": "L@68",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m17.e8+P1.m17.e11",
+        "boundary_before_extension": "70",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m17.e8",
+          "P1.m17.e11"
+        ]
+      },
+      {
+        "id": "L@137/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m17.e8+P1.m17.e11",
+        "boundary_before_extension": "70",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m17.e12"
+        ]
+      },
+      {
+        "id": "L@69",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m17.e8+P1.m17.e11",
+        "boundary_before_extension": "70",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m17.e13"
+        ]
+      },
+      {
+        "id": "L@139/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m17.e8+P1.m17.e11",
+        "boundary_before_extension": "70",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m17.e14"
+        ]
+      },
+      {
+        "id": "L@70",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m17.e8+P1.m17.e11",
+        "boundary_before_extension": "141/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m17.e9"
+        ]
+      },
+      {
+        "id": "L@151/2",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m18.e13",
+        "boundary_before_extension": "76",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m18.e10"
+        ],
+        "attack": [
+          "P1.m18.e13"
+        ]
+      },
+      {
+        "id": "L@84",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m21.e9+P1.m21.e12",
+        "boundary_before_extension": "86",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m21.e9",
+          "P1.m21.e12"
+        ]
+      },
+      {
+        "id": "L@169/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m21.e9+P1.m21.e12",
+        "boundary_before_extension": "86",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m21.e13"
+        ]
+      },
+      {
+        "id": "L@171/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m21.e9+P1.m21.e12",
+        "boundary_before_extension": "86",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m21.e14"
+        ]
+      },
+      {
+        "id": "L@86",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m21.e9+P1.m21.e12",
+        "boundary_before_extension": "173/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m21.e10"
+        ]
+      },
+      {
+        "id": "L@88",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m22.e12+P1.m22.e15",
+        "boundary_before_extension": "90",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m22.e12",
+          "P1.m22.e15"
+        ]
+      },
+      {
+        "id": "L@96",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m24.e8+P1.m24.e11",
+        "boundary_before_extension": "98",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m24.e8",
+          "P1.m24.e11"
+        ]
+      },
+      {
+        "id": "L@100",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m25.e8+P1.m25.e11",
+        "boundary_before_extension": "102",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m25.e8",
+          "P1.m25.e11"
+        ]
+      },
+      {
+        "id": "L@201/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m25.e8+P1.m25.e11",
+        "boundary_before_extension": "102",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m25.e12"
+        ]
+      },
+      {
+        "id": "L@203/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m25.e8+P1.m25.e11",
+        "boundary_before_extension": "102",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m25.e13"
+        ]
+      },
+      {
+        "id": "L@102",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m25.e8+P1.m25.e11",
+        "boundary_before_extension": "103",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m25.e9"
+        ]
+      },
+      {
+        "id": "L@205/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m25.e8+P1.m25.e11",
+        "boundary_before_extension": "103",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m25.e10"
+        ]
+      },
+      {
+        "id": "L@103",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m25.e8+P1.m25.e11",
+        "boundary_before_extension": "104",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m25.e15"
+        ]
+      },
+      {
+        "id": "L@207/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m25.e8+P1.m25.e11",
+        "boundary_before_extension": "104",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m25.e16"
+        ]
+      },
+      {
+        "id": "L@104",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m26.e8+P1.m26.e11",
+        "boundary_before_extension": "106",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m26.e8",
+          "P1.m26.e11"
+        ]
+      },
+      {
+        "id": "L@116",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m29.e9",
+        "boundary_before_extension": "118",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m28.e19"
+        ],
+        "attack": [
+          "P1.m29.e9"
+        ]
+      },
+      {
+        "id": "L@117",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m29.e9",
+        "boundary_before_extension": "118",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m29.e13"
+        ]
+      },
+      {
+        "id": "L@235/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m29.e9",
+        "boundary_before_extension": "118",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m29.e14"
+        ]
+      },
+      {
+        "id": "L@118",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m29.e9",
+        "boundary_before_extension": "237/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m29.e10"
+        ]
+      },
+      {
+        "id": "L@124",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m31.e9",
+        "boundary_before_extension": "126",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m30.e19"
+        ],
+        "attack": [
+          "P1.m31.e9"
+        ]
+      },
+      {
+        "id": "L@125",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m31.e9",
+        "boundary_before_extension": "126",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m31.e13"
+        ]
+      },
+      {
+        "id": "L@251/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m31.e9",
+        "boundary_before_extension": "126",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m31.e14"
+        ]
+      },
+      {
+        "id": "L@126",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m31.e9",
+        "boundary_before_extension": "253/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m31.e10"
+        ]
+      },
+      {
+        "id": "L@132",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m33.e9+P1.m33.e12",
+        "boundary_before_extension": "134",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m33.e9",
+          "P1.m33.e12"
+        ]
+      },
+      {
+        "id": "L@133",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m33.e9+P1.m33.e12",
+        "boundary_before_extension": "134",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m33.e13"
+        ]
+      },
+      {
+        "id": "L@267/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m33.e9+P1.m33.e12",
+        "boundary_before_extension": "134",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m33.e14"
+        ]
+      },
+      {
+        "id": "L@134",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m33.e9+P1.m33.e12",
+        "boundary_before_extension": "269/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m33.e10"
+        ]
+      },
+      {
+        "id": "L@172",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m43.e9+P1.m43.e12",
+        "boundary_before_extension": "174",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m43.e9",
+          "P1.m43.e12"
+        ]
+      },
+      {
+        "id": "L@173",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m43.e9+P1.m43.e12",
+        "boundary_before_extension": "174",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m43.e13"
+        ]
+      },
+      {
+        "id": "L@347/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m43.e9+P1.m43.e12",
+        "boundary_before_extension": "174",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m43.e14"
+        ]
+      },
+      {
+        "id": "L@174",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m43.e9+P1.m43.e12",
+        "boundary_before_extension": "349/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m43.e10"
+        ]
+      },
+      {
+        "id": "L@180",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m45.e9",
+        "boundary_before_extension": "182",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m44.e19"
+        ],
+        "attack": [
+          "P1.m45.e9"
+        ]
+      },
+      {
+        "id": "L@181",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m45.e9",
+        "boundary_before_extension": "182",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m45.e13"
+        ]
+      },
+      {
+        "id": "L@363/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m45.e9",
+        "boundary_before_extension": "182",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m45.e14"
+        ]
+      },
+      {
+        "id": "L@182",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m45.e9",
+        "boundary_before_extension": "365/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m45.e10"
+        ]
+      },
+      {
+        "id": "L@188",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m47.e9",
+        "boundary_before_extension": "190",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m46.e19"
+        ],
+        "attack": [
+          "P1.m47.e9"
+        ]
+      },
+      {
+        "id": "L@189",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m47.e9",
+        "boundary_before_extension": "190",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m47.e13"
+        ]
+      },
+      {
+        "id": "L@379/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m47.e9",
+        "boundary_before_extension": "190",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m47.e14"
+        ]
+      },
+      {
+        "id": "L@190",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m47.e9",
+        "boundary_before_extension": "381/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m47.e10"
+        ]
+      },
+      {
+        "id": "L@403/2",
+        "engine": "MODEL_CONFLICT_UNRESOLVED_KEY",
+        "cause": "C03",
+        "trigger": "P1.m50.e17",
+        "boundary_before_extension": "202",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m50.e10"
+        ],
+        "attack": [
+          "P1.m50.e17"
+        ]
+      },
+      {
+        "id": "L@419/2",
+        "engine": "MODEL_CONFLICT_UNRESOLVED_KEY",
+        "cause": "C03",
+        "trigger": "P1.m52.e17",
+        "boundary_before_extension": "210",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m52.e10"
+        ],
+        "attack": [
+          "P1.m52.e17"
+        ]
+      },
+      {
+        "id": "L@211",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m52.e20",
+        "boundary_before_extension": "423/2",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m52.e12"
+        ],
+        "attack": [
+          "P1.m52.e20"
+        ]
+      },
+      {
+        "id": "L@217",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m54.e9",
+        "boundary_before_extension": "435/2",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m54.e15"
+        ],
+        "attack": [
+          "P1.m54.e9"
+        ]
+      },
+      {
+        "id": "L@224",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m56.e10+P1.m56.e8",
+        "boundary_before_extension": "226",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m56.e10",
+          "P1.m56.e8"
+        ]
+      },
+      {
+        "id": "L@226",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m56.e11+P1.m56.e9",
+        "boundary_before_extension": "228",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m56.e11",
+          "P1.m56.e9"
+        ]
+      },
+      {
+        "id": "L@453/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m56.e11+P1.m56.e9",
+        "boundary_before_extension": "228",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m56.e12"
+        ]
+      },
+      {
+        "id": "L@228",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m57.e14+P1.m57.e8",
+        "boundary_before_extension": "230",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m57.e14",
+          "P1.m57.e8"
+        ]
+      },
+      {
+        "id": "L@457/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m57.e14+P1.m57.e8",
+        "boundary_before_extension": "230",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m57.e9"
+        ]
+      },
+      {
+        "id": "L@459/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m57.e14+P1.m57.e8",
+        "boundary_before_extension": "230",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m57.e10"
+        ]
+      },
+      {
+        "id": "L@230",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m57.e14+P1.m57.e8",
+        "boundary_before_extension": "231",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m57.e15"
+        ]
+      },
+      {
+        "id": "L@461/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m57.e14+P1.m57.e8",
+        "boundary_before_extension": "231",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m57.e16"
+        ]
+      },
+      {
+        "id": "L@231",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m57.e14+P1.m57.e8",
+        "boundary_before_extension": "232",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m57.e12"
+        ]
+      },
+      {
+        "id": "L@463/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m57.e14+P1.m57.e8",
+        "boundary_before_extension": "232",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m57.e13"
+        ]
+      },
+      {
+        "id": "L@232",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m57.e14+P1.m57.e8",
+        "boundary_before_extension": "234",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m58.e10"
+        ]
+      },
+      {
+        "id": "L@244",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m61.e14",
+        "boundary_before_extension": "246",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m60.e16"
+        ],
+        "attack": [
+          "P1.m61.e14"
+        ]
+      },
+      {
+        "id": "L@245",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m61.e14",
+        "boundary_before_extension": "246",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m61.e10"
+        ]
+      },
+      {
+        "id": "L@491/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m61.e14",
+        "boundary_before_extension": "246",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m61.e11"
+        ]
+      },
+      {
+        "id": "L@246",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m61.e14",
+        "boundary_before_extension": "493/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m61.e15"
+        ]
+      },
+      {
+        "id": "L@252",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m63.e14",
+        "boundary_before_extension": "254",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [
+          "P1.m62.e16"
+        ],
+        "attack": [
+          "P1.m63.e14"
+        ]
+      },
+      {
+        "id": "L@253",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m63.e14",
+        "boundary_before_extension": "254",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m63.e10"
+        ]
+      },
+      {
+        "id": "L@507/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m63.e14",
+        "boundary_before_extension": "254",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m63.e11"
+        ]
+      },
+      {
+        "id": "L@254",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m63.e14",
+        "boundary_before_extension": "509/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m63.e15"
+        ]
+      },
+      {
+        "id": "L@260",
+        "engine": "NO_PATH_UNDER_BEGINNER_CONSTRAINTS",
+        "cause": "C05",
+        "trigger": "P1.m65.e15+P1.m65.e9",
+        "boundary_before_extension": "262",
+        "shapes": {
+          "comfortable": 0,
+          "practical": 0,
+          "without_octave": 0
+        },
+        "active": [],
+        "attack": [
+          "P1.m65.e15",
+          "P1.m65.e9"
+        ]
+      },
+      {
+        "id": "L@261",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m65.e15+P1.m65.e9",
+        "boundary_before_extension": "262",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m65.e10"
+        ]
+      },
+      {
+        "id": "L@523/2",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m65.e15+P1.m65.e9",
+        "boundary_before_extension": "262",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m65.e11"
+        ]
+      },
+      {
+        "id": "L@262",
+        "engine": "RECOVERY_PENDING_RELEASE",
+        "cause": "C19",
+        "trigger": "P1.m65.e15+P1.m65.e9",
+        "boundary_before_extension": "525/2",
+        "shapes": {
+          "comfortable": 5,
+          "practical": 5,
+          "without_octave": 5
+        },
+        "active": [],
+        "attack": [
+          "P1.m65.e16"
+        ]
+      }
+    ],
+    "recovery": {
+      "L": [
+        86,
+        0,
+        70,
+        [
+          [
+            "P1.m8.e8",
+            5
+          ],
+          [
+            "P1.m9.e11",
+            5
+          ],
+          [
+            "P1.m9.e12",
+            5
+          ],
+          [
+            "P1.m9.e13",
+            1
+          ],
+          [
+            "P1.m9.e9",
+            5
+          ],
+          [
+            "P1.m9.e10",
+            5
+          ],
+          [
+            "P1.m9.e15",
+            1
+          ],
+          [
+            "P1.m10.e8",
+            5
+          ],
+          [
+            "P1.m13.e12",
+            5
+          ],
+          [
+            "P1.m13.e13",
+            5
+          ],
+          [
+            "P1.m13.e14",
+            5
+          ],
+          [
+            "P1.m13.e10",
+            4
+          ],
+          [
+            "P1.m16.e8",
+            5
+          ],
+          [
+            "P1.m17.e11",
+            5
+          ],
+          [
+            "P1.m17.e12",
+            5
+          ],
+          [
+            "P1.m17.e13",
+            5
+          ],
+          [
+            "P1.m17.e14",
+            5
+          ],
+          [
+            "P1.m17.e9",
+            1
+          ],
+          [
+            "P1.m21.e12",
+            5
+          ],
+          [
+            "P1.m21.e13",
+            5
+          ],
+          [
+            "P1.m21.e14",
+            5
+          ],
+          [
+            "P1.m21.e10",
+            4
+          ],
+          [
+            "P1.m22.e15",
+            5
+          ],
+          [
+            "P1.m24.e8",
+            5
+          ],
+          [
+            "P1.m25.e11",
+            5
+          ],
+          [
+            "P1.m25.e12",
+            5
+          ],
+          [
+            "P1.m25.e13",
+            5
+          ],
+          [
+            "P1.m25.e9",
+            1
+          ],
+          [
+            "P1.m25.e15",
+            5
+          ],
+          [
+            "P1.m25.e16",
+            5
+          ],
+          [
+            "P1.m26.e8",
+            5
+          ],
+          [
+            "P1.m29.e13",
+            5
+          ],
+          [
+            "P1.m29.e14",
+            5
+          ],
+          [
+            "P1.m29.e10",
+            4
+          ],
+          [
+            "P1.m31.e13",
+            5
+          ],
+          [
+            "P1.m31.e14",
+            5
+          ],
+          [
+            "P1.m31.e10",
+            4
+          ],
+          [
+            "P1.m33.e12",
+            5
+          ],
+          [
+            "P1.m33.e13",
+            5
+          ],
+          [
+            "P1.m33.e14",
+            5
+          ],
+          [
+            "P1.m33.e10",
+            4
+          ],
+          [
+            "P1.m43.e12",
+            5
+          ],
+          [
+            "P1.m43.e13",
+            5
+          ],
+          [
+            "P1.m43.e14",
+            5
+          ],
+          [
+            "P1.m43.e10",
+            4
+          ],
+          [
+            "P1.m45.e13",
+            5
+          ],
+          [
+            "P1.m45.e14",
+            5
+          ],
+          [
+            "P1.m45.e10",
+            4
+          ],
+          [
+            "P1.m47.e13",
+            5
+          ],
+          [
+            "P1.m47.e14",
+            5
+          ],
+          [
+            "P1.m47.e10",
+            4
+          ],
+          [
+            "P1.m56.e8",
+            5
+          ],
+          [
+            "P1.m56.e11",
+            5
+          ],
+          [
+            "P1.m56.e12",
+            5
+          ],
+          [
+            "P1.m57.e8",
+            5
+          ],
+          [
+            "P1.m57.e9",
+            5
+          ],
+          [
+            "P1.m57.e10",
+            5
+          ],
+          [
+            "P1.m57.e12",
+            5
+          ],
+          [
+            "P1.m57.e13",
+            5
+          ],
+          [
+            "P1.m58.e10",
+            1
+          ],
+          [
+            "P1.m61.e10",
+            5
+          ],
+          [
+            "P1.m61.e11",
+            5
+          ],
+          [
+            "P1.m61.e15",
+            4
+          ],
+          [
+            "P1.m63.e10",
+            5
+          ],
+          [
+            "P1.m63.e11",
+            5
+          ],
+          [
+            "P1.m63.e15",
+            4
+          ],
+          [
+            "P1.m65.e9",
+            5
+          ],
+          [
+            "P1.m65.e10",
+            5
+          ],
+          [
+            "P1.m65.e11",
+            5
+          ],
+          [
+            "P1.m65.e16",
+            4
+          ]
+        ],
+        []
+      ],
+      "R": [
+        0,
+        0,
+        0,
+        [],
+        []
+      ]
+    },
+    "fixed_finger_recovery": {
+      "L": [
+        86,
+        0,
+        70,
+        [
+          [
+            "P1.m8.e8",
+            5
+          ],
+          [
+            "P1.m9.e11",
+            5
+          ],
+          [
+            "P1.m9.e12",
+            5
+          ],
+          [
+            "P1.m9.e13",
+            1
+          ],
+          [
+            "P1.m9.e9",
+            5
+          ],
+          [
+            "P1.m9.e10",
+            5
+          ],
+          [
+            "P1.m9.e15",
+            1
+          ],
+          [
+            "P1.m10.e8",
+            5
+          ],
+          [
+            "P1.m13.e12",
+            5
+          ],
+          [
+            "P1.m13.e13",
+            5
+          ],
+          [
+            "P1.m13.e14",
+            5
+          ],
+          [
+            "P1.m13.e10",
+            4
+          ],
+          [
+            "P1.m16.e8",
+            5
+          ],
+          [
+            "P1.m17.e11",
+            5
+          ],
+          [
+            "P1.m17.e12",
+            5
+          ],
+          [
+            "P1.m17.e13",
+            5
+          ],
+          [
+            "P1.m17.e14",
+            5
+          ],
+          [
+            "P1.m17.e9",
+            1
+          ],
+          [
+            "P1.m21.e12",
+            5
+          ],
+          [
+            "P1.m21.e13",
+            5
+          ],
+          [
+            "P1.m21.e14",
+            5
+          ],
+          [
+            "P1.m21.e10",
+            4
+          ],
+          [
+            "P1.m22.e15",
+            5
+          ],
+          [
+            "P1.m24.e8",
+            5
+          ],
+          [
+            "P1.m25.e11",
+            5
+          ],
+          [
+            "P1.m25.e12",
+            5
+          ],
+          [
+            "P1.m25.e13",
+            5
+          ],
+          [
+            "P1.m25.e9",
+            1
+          ],
+          [
+            "P1.m25.e15",
+            5
+          ],
+          [
+            "P1.m25.e16",
+            5
+          ],
+          [
+            "P1.m26.e8",
+            5
+          ],
+          [
+            "P1.m29.e13",
+            5
+          ],
+          [
+            "P1.m29.e14",
+            5
+          ],
+          [
+            "P1.m29.e10",
+            4
+          ],
+          [
+            "P1.m31.e13",
+            5
+          ],
+          [
+            "P1.m31.e14",
+            5
+          ],
+          [
+            "P1.m31.e10",
+            4
+          ],
+          [
+            "P1.m33.e12",
+            5
+          ],
+          [
+            "P1.m33.e13",
+            5
+          ],
+          [
+            "P1.m33.e14",
+            5
+          ],
+          [
+            "P1.m33.e10",
+            4
+          ],
+          [
+            "P1.m43.e12",
+            5
+          ],
+          [
+            "P1.m43.e13",
+            5
+          ],
+          [
+            "P1.m43.e14",
+            5
+          ],
+          [
+            "P1.m43.e10",
+            4
+          ],
+          [
+            "P1.m45.e13",
+            5
+          ],
+          [
+            "P1.m45.e14",
+            5
+          ],
+          [
+            "P1.m45.e10",
+            4
+          ],
+          [
+            "P1.m47.e13",
+            5
+          ],
+          [
+            "P1.m47.e14",
+            5
+          ],
+          [
+            "P1.m47.e10",
+            4
+          ],
+          [
+            "P1.m56.e8",
+            5
+          ],
+          [
+            "P1.m56.e11",
+            5
+          ],
+          [
+            "P1.m56.e12",
+            5
+          ],
+          [
+            "P1.m57.e8",
+            5
+          ],
+          [
+            "P1.m57.e9",
+            5
+          ],
+          [
+            "P1.m57.e10",
+            5
+          ],
+          [
+            "P1.m57.e12",
+            5
+          ],
+          [
+            "P1.m57.e13",
+            5
+          ],
+          [
+            "P1.m58.e10",
+            1
+          ],
+          [
+            "P1.m61.e10",
+            5
+          ],
+          [
+            "P1.m61.e11",
+            5
+          ],
+          [
+            "P1.m61.e15",
+            4
+          ],
+          [
+            "P1.m63.e10",
+            5
+          ],
+          [
+            "P1.m63.e11",
+            5
+          ],
+          [
+            "P1.m63.e15",
+            4
+          ],
+          [
+            "P1.m65.e9",
+            5
+          ],
+          [
+            "P1.m65.e10",
+            5
+          ],
+          [
+            "P1.m65.e11",
+            5
+          ],
+          [
+            "P1.m65.e16",
+            4
+          ]
+        ],
+        []
+      ],
+      "R": [
+        0,
+        0,
+        0,
+        [],
+        []
+      ]
+    },
+    "causes": {
+      "C05": 43,
+      "C19": 75,
+      "C03": 2
+    },
+    "reasons": {
+      "NO_PATH_UNDER_BEGINNER_CONSTRAINTS": 43,
+      "RECOVERY_PENDING_RELEASE": 75,
+      "MODEL_CONFLICT_UNRESOLVED_KEY": 2
+    },
+    "display_count": 103,
+    "display_center_count": 103,
+    "display_missing_source_segments": 17,
+    "display_unique_x": [
+      100
+    ],
+    "contacts": 1035,
+    "assigned_contacts": 932,
+    "tied_contacts": 66,
+    "missing_tied_contacts": 17,
+    "release_shifts": 0,
+    "warning_codes": {
+      "NO_PATH_UNDER_CONTACT_ASSUMPTION": 29,
+      "KEY_OWNERSHIP_UNKNOWN": 2,
+      "EXPERIMENTAL_PROFILE": 1
+    },
+    "solver_stats": {
+      "generated": 508405,
+      "rejected": 199854,
+      "pruned": 208472,
+      "comfortSpanRejected": 0,
+      "practicalSpanRejected": 66760,
+      "octaveRejected": 65551,
+      "admissible": 259017
+    },
+    "source_hash": "160821fd764e2cae63c7ce1752645185d14ee458e512a2aaf9f1caa6918edad6",
+    "source_counts": {
+      "notes": 1115,
+      "pitched": 1101,
+      "ties": 132,
+      "pedal": 0
+    },
+    "runs": [
+      {
+        "assigned": 981,
+        "total": 1101,
+        "elapsed_ms": 674,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "824b7cda3dd481db8241b8b140004eb7b53f2ad9481b20ce2fdabe1408ec64fe"
+      },
+      {
+        "assigned": 981,
+        "total": 1101,
+        "elapsed_ms": 715,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "824b7cda3dd481db8241b8b140004eb7b53f2ad9481b20ce2fdabe1408ec64fe"
+      },
+      {
+        "assigned": 981,
+        "total": 1101,
+        "elapsed_ms": 964,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "824b7cda3dd481db8241b8b140004eb7b53f2ad9481b20ce2fdabe1408ec64fe"
+      },
+      {
+        "assigned": 981,
+        "total": 1101,
+        "elapsed_ms": 643,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "824b7cda3dd481db8241b8b140004eb7b53f2ad9481b20ce2fdabe1408ec64fe"
+      },
+      {
+        "assigned": 981,
+        "total": 1101,
+        "elapsed_ms": 679,
+        "status": "partial",
+        "version": "0.1.7",
+        "fingerprint": "824b7cda3dd481db8241b8b140004eb7b53f2ad9481b20ce2fdabe1408ec64fe"
+      }
+    ],
+    "before": {
+      "assigned": 981,
+      "total": 1101,
+      "elapsed_ms": 748,
+      "status": "partial",
+      "version": "0.1.7",
+      "fingerprint": "824b7cda3dd481db8241b8b140004eb7b53f2ad9481b20ce2fdabe1408ec64fe"
+    },
+    "comparison": {
+      "events": true,
+      "contacts": true,
+      "assignments": true,
+      "reasons": true
+    },
+    "display_equal": true
+  },
+  "controls": {
+    "HE_S_A_PIRATE.musicxml-0": {
+      "assigned": 436,
+      "total": 436,
+      "elapsed_ms": 371,
+      "status": "approximate_complete",
+      "version": "0.1.7",
+      "fingerprint": "1733410a8d1c9bde51e9b54e891b622e931d51c57694cbc569c0e81be65c946c"
+    },
+    "Clocks.musicxml-0": {
+      "assigned": 195,
+      "total": 195,
+      "elapsed_ms": 338,
+      "status": "approximate_complete",
+      "version": "0.1.7",
+      "fingerprint": "016d4bdad7319600cd6a39d3b391e264544fb977b5b1fdf8b23c4700aedf2761"
+    },
+    "Creep_-_Radiohead.musicxml-0": {
+      "assigned": 1468,
+      "total": 1468,
+      "elapsed_ms": 1108,
+      "status": "approximate_complete",
+      "version": "0.1.7",
+      "fingerprint": "3b08c44d005c68a6e5815bcfc88857fed3b2429bed80210f996381290268f095"
+    },
+    "interstellar-suite-hans-zimmer.musicxml_3_.xml-0": {
+      "assigned": 5249,
+      "total": 5249,
+      "elapsed_ms": 4070,
+      "status": "approximate_complete",
+      "version": "0.1.7",
+      "fingerprint": "60c3fa8df1e9ba2e2fed5121bd2df14ade395d0a3e13475313dacc8e3cb891c4"
+    }
+  }
+}

@@ -41,27 +41,30 @@ def shapes(contacts, limits, octave=True):
     )
 
 
-def recover(contacts, assigned, limits):
+def recover(contacts, assigned, limits, fixed=False):
     """Maximize restored note segments while keeping every existing assigned contact.
     Preserve the finger on each held contact. Older finger choices may change.
     """
     active = []
-    states = {(): (0, 0, ())}
+    states = {(): (0, 0, 0, (), ())}
     for at, group in itertools.groupby(contacts, lambda c: q(c['start'])):
         for c in group:
             keep = [i for i, a in enumerate(active) if q(a['end']) > at]
             previous = [active[i] for i in keep]
             next_states = {}
             optional = c['id'] not in assigned
-            for current, (notes, count, restored) in states.items():
+            for current, (notes, unchanged, count, restored, changed) in states.items():
                 held = tuple(current[i] for i in keep)
-                for finger in ((0,) + FINGERS if optional else FINGERS):
+                candidates = (0,) + FINGERS if optional else (assigned[c['id']],) if fixed else FINGERS
+                for finger in candidates:
                     if finger and any(f and pair(a, c, f, finger, limits)
                                       for a, f in zip(previous, held)):
                         continue
+                    edit = not optional and finger != assigned[c['id']]
                     value = (notes + (len(c['ids']) if optional and finger else 0),
-                             count + bool(optional and finger),
-                             restored + ((c['id'],) if optional and finger else ()))
+                             unchanged - edit, count + bool(optional and finger),
+                             restored + (((c['id'],finger),) if optional and finger else ()),
+                             changed + (((c['id'],finger),) if edit else ()))
                     key = held + (finger,)
                     if key not in next_states or value > next_states[key]:
                         next_states[key] = value
@@ -85,12 +88,23 @@ def analyse(data, destination, name):
     for item in data['display']:
         graphics.setdefault(item['id'], item)
     records = {}
-    summary = {'groups': [], 'recovery': {}}
+    summary = {'groups': [], 'recovery': {}, 'fixed_finger_recovery': {}}
     for hand in ('L','R'):
         hand_contacts = sorted((c for c in contacts if c['hand'] == hand),
                                key=lambda c:(q(c['start']), c['key'], c['id']))
         recovery = recover(hand_contacts, assigned, practical)
         summary['recovery'][hand] = recovery
+        summary['fixed_finger_recovery'][hand] = recover(hand_contacts, assigned, practical, fixed=True)
+        if recovery:
+            witness = assigned | dict(recovery[3]) | dict(recovery[4])
+            held = []
+            for contact in hand_contacts:
+                finger = witness.get(contact['id'])
+                if not finger:
+                    continue
+                held = [other for other in held if q(other['end']) > q(contact['start'])]
+                assert all(not pair(other, contact, witness[other['id']], finger, practical) for other in held)
+                held.append(contact)
         boundary, trigger = None, None
         for at, iterator in itertools.groupby(hand_contacts, lambda c:q(c['start'])):
             group = list(iterator)
@@ -138,7 +152,7 @@ def analyse(data, destination, name):
                       'free_fingers':sorted(set(FINGERS)-{assigned[a['id']] for a in active}),
                       'rejected_against_final_active':rejected,'shapes':local}
     rows = []
-    recovered = {contact for val in summary['recovery'].values() if val for contact in val[2]}
+    recovered = {contact for val in summary['recovery'].values() if val for contact, _ in val[3]}
     for note, error in sorted(run['unassignedReasons'].items(), key=lambda item: (q(events[item[0]][0]['editor_onset_q']),item[0])):
         e, measure = events[note]
         c = contact_map.get(note, {})
@@ -155,17 +169,21 @@ def analyse(data, destination, name):
                'pedal':c.get('pedalCoverage') or c.get('releaseBasis'),
                'recovery':'selected_in_exact_practical_optimum' if c.get('id') in recovered else 'not_selected_in_reported_optimum',
                **records.get(note,{'error':error,'cause':'C18' if not e['editor_supported'] else 'C20'}),
-               'renderer':graphics.get(note)}
+               'renderer':graphics.get(note),
+               'renderer_contact_representative':graphics.get(c.get('id'),{}).get('id')}
         rows.append(row)
     columns = list(dict.fromkeys(k for row in rows for k in row))
     with (destination / f'{name}-unassigned-notes.csv').open('w',encoding='utf-8',newline='') as f:
-        writer = csv.DictWriter(f,columns)
+        writer = csv.DictWriter(f,columns,lineterminator='\n')
         writer.writeheader()
         writer.writerows({k:json.dumps(v,ensure_ascii=False,separators=(',',':')) if isinstance(v,(list,dict)) else v
                           for k,v in row.items()} for row in rows)
     summary.update({'causes':dict(collections.Counter(row['cause'] for row in rows)),
                     'reasons':dict(collections.Counter(row['error'] for row in rows)),
-                    'display_count':len(graphics),'contacts':len(contacts),'assigned_contacts':len(assigned),
+                    'display_count':len(graphics),
+                    'display_center_count':sum(100<=g['x'] and g['x']+g['width']<=132.000001 for g in graphics.values()),
+                    'display_missing_source_segments':len(rows)-len(graphics),
+                    'display_unique_x':sorted(set(g['x'] for g in graphics.values())),'contacts':len(contacts),'assigned_contacts':len(assigned),
                     'tied_contacts':sum(len(c['ids'])>1 for c in contacts),
                     'missing_tied_contacts':sum(len(c['ids'])>1 and c['id'] not in assigned for c in contacts),
                     'release_shifts':len(run.get('releaseShift',[])),
