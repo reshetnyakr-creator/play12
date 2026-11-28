@@ -692,6 +692,128 @@ if(states[0]){
   alternatives.push({hand,paths:states.slice(0,cfg.search.alternatives).map(s=>({assignments:materialize(s),cost:s.cost,expandedPairs:s.expandedPairs,excess:s.excess,features:s.features}))});
 }}
 const checked=validate(all,assign,{profile:cfg,locks,rounds:score.editor?.fermataTimeline?.rounds??score.editor?.rounds});const unique=new Map();for(const c of all)for(const id of c.ids)unique.set(id,assign[c.id]??null);const notes=events(score),assigned=notes.filter(e=>unique.get(e.id)!=null).length;for(const e of notes) if(unique.get(e.id)==null&&!unassignedReasons[e.id]) unassignedReasons[e.id]=unique.has(e.id)?'NOT_PROCESSED':'EXCLUDED';return{version:VERSION,unassignedReasons,profile:clone(cfg),assignments:Object.fromEntries(unique),contactAssignments:assign,contacts:all,alternatives,stats,details,warnings:[...reasons,...checked.warnings,{code:'EXPERIMENTAL_PROFILE',message:'Экспериментальная аппликатура: проверьте с преподавателем. Физическая достижимость не подтверждена.'}],validation:checked,coverage:notes.length?assigned/notes.length:0,assigned,total:notes.length,search_status:timedOut?'budget_exhausted':assigned<notes.length?'partial':stats.pruned||truncated?'approximate_complete':'exact_complete',optimality:stats.pruned||truncated||assigned<notes.length?'not_proven':'within_declared_finite_model',ranking_status:'experimental_config',feasibility:'unknown',elapsed_ms:Date.now()-started};}
+// Keep the original beam result fixed. Only unresolved contacts participate in
+// the recovery search, with fixed contacts acting as interval constraints.
+function recoverPartial(score, run, locks = {}, clock = Date.now) {
+  const cfg = run.profile;
+  if (cfg.id !== 'beginner' || run.assigned === run.total) return run;
+  const started = clock();
+  const deadline = started + Math.max(0, cfg.search.maxMilliseconds - run.elapsed_ms);
+  const baseline = run.contactAssignments;
+  const added = {};
+  const recoveredGroups = {};
+  const candidates = [1, 2, 3, 4, 5];
+  const rejected = {};
+  let states = 0;
+  let status = 'complete';
+  const countRejected = code => { rejected[code] = (rejected[code] || 0) + 1; };
+  const overlap = (a,b) => a.from.cmp(b.to)<0 && b.from.cmp(a.to)<0;
+  const check = (a,b,fa,fb) => {
+    if (a.key === b.key) return 'KEY_OVERLAP';
+    if (fa === fb) return 'FINGER_OVERLAP';
+    return a.key<b.key ? spanViolation(cfg,a,b,fa,fb) : spanViolation(cfg,b,a,fb,fa);
+  };
+  const compare = (a,b) => b.notes-a.notes || a.expansions-b.expansions ||
+    a.excess-b.excess || a.cost-b.cost;
+  const zero = {notes:0,expansions:0,excess:0,cost:0};
+  function pairCost(a,b,fa,fb) {
+    const excess = Math.max(0, Math.abs(a.key-b.key)-comfortLimit(cfg,fa,fb));
+    const dx = (keyX(b.key,cfg)-keyX(a.key,cfg))*(a.hand==='R'?1:-1)/100;
+    return {expansions:Number(excess>0),excess,
+      cost:Math.round(Math.abs(Math.abs(dx)-Math.abs(fb-fa))*10)*cfg.weights.chordShape+
+        (dx*(fb-fa)<0 ? cfg.weights.chordOrder : 0)};
+  }
+  const timed = run.contacts.map(c=>({...c,from:new Q(c.start),to:new Q(c.end)}));
+  const lockByContact = Object.fromEntries(timed.map(c=>[c.id,[...new Set(c.ids.map(id=>locks[id]).filter(f=>f!=null))]]));
+  function solve(group, fixed) {
+    let active = [];
+    let layer = new Map([['',{...zero,fingers:[],path:null}]]);
+    for (const c of group) {
+      if (clock() >= deadline) return null;
+      const keep = active.map((a,i)=>a.to.cmp(c.from)>0?i:-1).filter(i=>i>=0);
+      active = keep.map(i=>active[i]);
+      const neighbors = fixed.filter(a=>overlap(a,c));
+      const existingLocks = lockByContact[c.id];
+      const options = [0];
+      for(const finger of candidates) {
+        if(existingLocks.length && !existingLocks.every(f=>f===finger)){countRejected('LOCK');continue;}
+        const violation = neighbors.map(a=>check(a,c,baseline[a.id],finger)).find(Boolean);
+        if(violation)countRejected(violation);
+        else options.push(finger);
+      }
+      const costs = new Map(options.filter(Boolean).map(f=>[f,neighbors.map(a=>pairCost(a,c,baseline[a.id],f))]));
+      const next = new Map();
+      for(const state of layer.values())for(const finger of options) {
+        if (++states>cfg.search.maxCandidatesPerLayer || (states%256===0 && clock()>=deadline)) return null;
+        const fingers = keep.map(i=>state.fingers[i]);
+        const violation = finger && active.map((a,i)=>fingers[i] && check(a,c,fingers[i],finger)).find(Boolean);
+        if(violation){countRejected(violation);continue;}
+        const paired = finger ? [...costs.get(finger),...active.flatMap((a,i)=>fingers[i]?[pairCost(a,c,fingers[i],finger)]:[])] : [];
+        const result = {notes:state.notes+(finger?c.ids.length:0),expansions:state.expansions,
+          excess:state.excess,cost:state.cost,fingers:[...fingers,finger],
+          path:finger?{id:c.id,finger,previous:state.path}:state.path};
+        for(const cost of paired){result.expansions+=cost.expansions;result.excess+=cost.excess;result.cost+=cost.cost;}
+        if(finger && [1,3,6,8,10].includes(c.key%12))
+          result.cost+=finger===1?cfg.weights.thumbBlack:finger===5?cfg.weights.pinkyBlack:0;
+        const key = result.fingers.join('');
+        if(!next.has(key)||compare(result,next.get(key))<0)next.set(key,result);
+      }
+      active.push(c);
+      layer = next;
+    }
+    let best;
+    for(const value of layer.values())if(!best||compare(value,best)<0)best=value;
+    return best;
+  }
+  for(const hand of ['L','R']){
+    const fixed = timed.filter(c=>c.hand===hand && baseline[c.id]!=null);
+    const pending = timed.filter(c=>c.hand===hand && baseline[c.id]==null)
+      .sort((a,b)=>a.from.cmp(b.from)||a.key-b.key||a.id.localeCompare(b.id));
+    let i=0;
+    while(i<pending.length){
+      let end = pending[i].to;
+      let j=i+1;
+      while(j<pending.length && pending[j].from.cmp(end)<0){
+        if(pending[j].to.cmp(end)>0)end=pending[j].to;
+        j++;
+      }
+      const solution = solve(pending.slice(i,j),fixed);
+      if(!solution){status='budget_exhausted';break;}
+      for(let p=solution.path;p;p=p.previous){added[p.id]=p.finger;recoveredGroups[p.id]=pending[i].id;}
+      i=j;
+    }
+    if(status!=='complete')break;
+  }
+  const contactAssignments = {...baseline,...added};
+  // Recheck the proposed map by interval pairs, independent of DP pruning.
+  const validation = validate(run.contacts,contactAssignments,{profile:cfg,locks,
+    rounds:score.editor?.fermataTimeline?.rounds??score.editor?.rounds});
+  const duplicate = timed.some((a,i)=>contactAssignments[a.id]!=null && timed.slice(0,i).some(b=>
+    contactAssignments[b.id]!=null && a.hand===b.hand && (added[a.id]||added[b.id]) && overlap(a,b) &&
+    (a.key===b.key || contactAssignments[a.id]===contactAssignments[b.id])));
+  const invalid = duplicate || validation.conflicts.some(issue=>issue.ids?.some(id=>added[id]));
+  const assignments = {...run.assignments};
+  const unassignedReasons = {...run.unassignedReasons};
+  const recovered = [];
+  if(!invalid)for(const c of run.contacts){
+    const finger = added[c.id];
+    if(finger==null)continue;
+    for(const id of c.ids){assignments[id]=finger;delete unassignedReasons[id];}
+    recovered.push({id:c.id,notes:c.ids,hand:c.hand,midi:c.key,finger,group:recoveredGroups[c.id],
+      method:'interval_subsets',previous:c.ids.map(id=>run.unassignedReasons[id]),status:'assigned',
+      ergonomic:validation.categories?.[c.id],validation:'passed'});
+  }
+  const assigned = run.assigned+recovered.reduce((n,c)=>n+c.notes.length,0);
+  const elapsed = clock()-started;
+  const recovery = {baseline:run.assigned,additional:assigned-run.assigned,contacts:recovered,
+    remaining:run.total-assigned,states,rejected,elapsed_ms:elapsed,status:invalid?'validation_rejected':status};
+  if(invalid)return {...run,recovery};
+  const warningCount = run.warnings.length-run.validation.warnings.length-1;
+  return {...run,assignments,contactAssignments,unassignedReasons,assigned,coverage:assigned/run.total,
+    validation,warnings:[...run.warnings.slice(0,warningCount),...validation.warnings,run.warnings.at(-1)],
+    elapsed_ms:run.elapsed_ms+elapsed,recovery};
+}
+
 const runtimeFingerings = new WeakMap();
 function setRuntimeFingering(doc, run) { if(run) runtimeFingerings.set(doc,run); else runtimeFingerings.delete(doc); }
 function baseAssignments(doc){return doc.mode==='source'?Object.fromEntries(events(doc.score).map(e=>[e.id,e.source_fingering])):(runtimeFingerings.get(doc)??doc.run).assignments;}
@@ -777,5 +899,5 @@ function edit(doc,id,finger){if(!Number.isInteger(finger)||finger<1||finger>5)th
 function commit(doc,trial){if(!trial.accepted)throw Error('Rejected');doc.history=doc.history.slice(0,doc.cursor);doc.history.push({before:trial.before,after:trial.after,ids:trial.ids,timestamp:new Date().toISOString(),engine:doc.run.version,profile:doc.run.profile.version});doc.cursor=doc.history.length;doc.manual=trial.after;doc.revision++;return doc;}
 const dbPromise=()=>new Promise((resolve,reject)=>{const req=indexedDB.open('play12-editor',1);req.onupgradeneeded=()=>req.result.createObjectStore('compositions',{keyPath:'id'});req.onerror=()=>reject(req.error);req.onsuccess=()=>resolve(req.result);});
 const Store={async get(id){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions'),r=tx.objectStore('compositions').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close();});},async list(){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions'),r=tx.objectStore('compositions').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);tx.oncomplete=()=>db.close();});},async put(doc,expected){const db=await dbPromise();return new Promise((res,rej)=>{const tx=db.transaction('compositions','readwrite'),store=tx.objectStore('compositions'),r=store.get(doc.id);r.onsuccess=()=>{if(expected!=null&&r.result&&r.result.revision!==expected){tx.abort();return;}store.put(clone(doc));};tx.oncomplete=()=>{db.close();res();};tx.onabort=()=>{db.close();rej(Error('Конфликт ревизии или ошибка сохранения. Изменения не перезаписаны.'));};tx.onerror=()=>rej(tx.error);});}};
-G.Play12Editor={VERSION,Q,hash,parseMusicXML,importXML,ARPEGGIO_SPREAD_QUARTERS,FERMATA_EXTENSION_FACTOR,realizeFermatas,realizeArpeggios,events,contacts,validate,validateDocument,sameScoreTiming,keyX,propose,setRuntimeFingering,effective,edit,commit,clone,Store};if(typeof module!=='undefined')module.exports=G.Play12Editor;
+G.Play12Editor={VERSION,Q,hash,parseMusicXML,importXML,ARPEGGIO_SPREAD_QUARTERS,FERMATA_EXTENSION_FACTOR,realizeFermatas,realizeArpeggios,events,contacts,validate,validateDocument,sameScoreTiming,keyX,propose,recoverPartial,setRuntimeFingering,effective,edit,commit,clone,Store};if(typeof module!=='undefined')module.exports=G.Play12Editor;
 })(typeof window!=='undefined'?window:globalThis);

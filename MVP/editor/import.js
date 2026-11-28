@@ -110,7 +110,7 @@ function explainEmpty(run){
 }
 function calculate(score){
   return new Promise((resolve,reject)=>{
-    const worker=new Worker('/MVP/editor/worker.js?v=stage242');
+    const worker=new Worker('/MVP/editor/worker.js?v=stage302');
     const finish=(error,result)=>{
       clearTimeout(timer);
       worker.terminate();
@@ -121,7 +121,7 @@ function calculate(score){
     const timer=setTimeout(()=>finish(Error(t('Превышено время расчёта'))),25000);
     worker.onmessage=({data})=>data.error?finish(workerError(data.error)):finish(null,data.run);
     worker.onerror=e=>finish(workerError(e.message));
-    worker.postMessage({score,config,locks:{},detailed:developer});
+    worker.postMessage({score,config,locks:{},detailed:developer,partialRecovery:true});
   });
 }
 async function prepare(){
@@ -157,7 +157,7 @@ $('save').onclick=async()=>{if(busy)return;busy=true;try{$('save').disabled=true
   const revision=existing.revision;
   const improvedModel=Boolean(doc.score.editor.fermataTimeline||doc.run.releaseShift?.length||doc.run.contacts?.some(c=>c.unisonGroups?.length||c.arpeggio))&&existing.run.version!==doc.run.version&&
     Object.entries(existing.run.assignments).every(([id,finger])=>finger==null||doc.run.assignments[id]!=null);
-  if(existing.mode==='engine'&&(existing.run.search_status==='budget_exhausted'||improvedModel)&&
+  if(!doc.run.recovery && existing.mode==='engine'&&(existing.run.search_status==='budget_exhausted'||improvedModel)&&
      !doc.run.validation.conflicts.length&&!existing.history?.length&&
      doc.run.assigned>existing.run.assigned&&!Object.keys(existing.manual||{}).length&&
      !localStorage.getItem('play12.main.draft:'+existing.id)){

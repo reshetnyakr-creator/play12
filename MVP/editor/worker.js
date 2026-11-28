@@ -1,4 +1,4 @@
-importScripts('core.js?v=stage242','contact-plan.js?v=stage19','beginner-transition.js?v=stage19');
+importScripts('core.js?v=stage302','contact-plan.js?v=stage19','beginner-transition.js?v=stage19');
 onmessage = ({data}) => {
   try {
     const score = data.score;
@@ -10,7 +10,8 @@ onmessage = ({data}) => {
         if (event.pitch.midi < 0 || event.pitch.midi > 127) event.editor_supported = false;
       }
     }
-    const run = Play12BeginnerTransition.proposeBeginner(score,data.config,data.locks,data.detailed);
+    const baseline = Play12BeginnerTransition.proposeBeginner(score,data.config,data.locks,data.detailed);
+    const run = data.partialRecovery ? Play12Editor.recoverPartial(score,baseline,data.locks) : baseline;
     postMessage({id:data.id,run});
   } catch (error) {
     postMessage({id:data.id,error:error.message});
