@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<title>Play12 · No Surprises · Такты 51 и 53</title>
+<link rel="stylesheet" href="../../../renderer/play12-renderer.css">
+<style>
+body{font:16px system-ui;max-width:1050px;margin:20px auto;padding:0 16px;color:#181818}
+section{border-top:1px solid #ccc;margin-top:24px} .views{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+figure{margin:12px 0} img{max-width:min(544px,90vw)} .render svg{width:min(320px,90vw);height:auto}
+table{border-collapse:collapse;margin:12px 0} th,td{border:1px solid #ddd;padding:5px 9px} tr:hover{background:#edf5c8}
+.inspect{stroke:#222!important;stroke-width:2px!important} input{display:block;margin:6px 0}
+</style>
+<h1>No Surprises · Такты 51 и 53</h1>
+<p>Выберите локальную выгрузку оригинального MXL из Play12 и при желании два оригинальных снимка. Файлы читаются в браузере. Выберите строку таблицы, чтобы обвести её блок в Play12. Время указано в четвертях от начала такта.</p>
+<label>Выгрузка оригинала из browser-import.cjs <input id="source" type="file" accept=".json"></label>
+<p id="status" role="status"></p>
+<main></main>
+<script src="../../../editor/core.js"></script>
+<script src="../../../renderer/play12-renderer.js"></script>
+<script>
+'use strict';
+const statusText = document.getElementById('status');
+const register = fetch('c-register.json').then(response => response.json());
+const panels = new Map();
+for (const bar of ['51', '53']) {
+  const section = document.createElement('section');
+  section.innerHTML = `<h2>Такт ${bar}</h2>
+    <div class="views">
+      <figure><figcaption>Нотная запись · исходный снимок автора</figcaption>
+        <input aria-label="Снимок такта ${bar}" type="file" accept="image/*">
+        <img alt="Нотная запись такта ${bar}" hidden>
+      </figure>
+      <figure><figcaption>Play12 · отображение оригинального ввода</figcaption><div class="render"></div></figure>
+    </div>
+    <table><thead><tr><th>Событие</th><th>Нота</th><th>MIDI</th><th>Начало</th><th>Длина</th>
+      <th>Рука</th><th>Стан</th><th>Голос</th><th>Знак Play12</th></tr></thead><tbody></tbody></table>`;
+  document.querySelector('main').append(section);
+  panels.set(bar, section);
+  section.querySelector('input').addEventListener('change', ({ target }) => {
+    const img = section.querySelector('img');
+    if (img.src) URL.revokeObjectURL(img.src);
+    if (!target.files.length) { img.hidden = true; return; }
+    img.src = URL.createObjectURL(target.files[0]);
+    img.hidden = false;
+  });
+}
+
+function renderBar(score, bar, section, rows) {
+  const scoreBar = score.score.parts[0].measures.find(m => String(m.number) === bar);
+  const drawn = new Map();
+  const svg = Play12Renderer.render(score, section.querySelector('.render'), {
+    measureCount: score.score.parts[0].measures.length, editorTimeline: true, unassignedDisplay: true,
+    zeroNote: score.play12.zero_pitch_class, wrapCycles: true, cellHeight: 18
+  });
+  for (const group of svg.querySelectorAll('[data-event-id]')) drawn.set(group.dataset.eventId, group);
+  const rects = scoreBar.events.map(e => drawn.get(e.id)?.querySelector('rect')).filter(Boolean);
+  const low = Math.min(...rects.map(rect => Number(rect.getAttribute('y'))));
+  const high = Math.max(...rects.map(rect => Number(rect.getAttribute('y')) + Number(rect.getAttribute('height'))));
+  const width = svg.viewBox.baseVal.width;
+  svg.setAttribute('viewBox', [0, low - 2, width, high - low + 4].join(' '));
+  svg.setAttribute('width', width);
+  svg.setAttribute('height', high - low + 4);
+  const tbody = section.querySelector('tbody');
+  tbody.replaceChildren();
+  for (const r of rows.filter(row => row.measure === bar)) {
+    const group = drawn.get(r.id);
+    const event = scoreBar.events.find(e => e.id === r.id);
+    if (!group || Number(group.dataset.midi) !== r.midi || group.dataset.hand !== r.hand ||
+        new Play12Editor.Q(event.start_quarters).cmp(r.onset_in_measure) ||
+        new Play12Editor.Q(event.duration_quarters).cmp(r.duration) ||
+        Number(group.dataset.globalStartQuarters) !== Number(new Play12Editor.Q(r.onset)) ||
+        Number(group.dataset.durationQuarters) !== Number(new Play12Editor.Q(r.duration)) ||
+        String(event.staff) !== r.staff || String(event.voice) !== r.voice) {
+      throw new Error('Выгрузка отличается от проверенного оригинала у ' + r.id);
+    }
+    const label = group.querySelector('text')?.textContent ?? '—';
+    const row = tbody.insertRow();
+    for (const value of [r.id, 'C' + (r.midi / 12 - 1), r.midi, r.onset_in_measure, r.duration,
+      r.hand, r.staff, r.voice, label]) row.insertCell().textContent = value;
+    row.tabIndex = 0;
+    function highlight() {
+      svg.querySelector('.inspect')?.classList.remove('inspect');
+      group.querySelector('rect').classList.add('inspect');
+    }
+    row.addEventListener('click', highlight);
+    row.addEventListener('focus', highlight);
+  }
+}
+
+document.getElementById('source').addEventListener('change', async ({ target }) => {
+  try {
+    const { score, run } = JSON.parse(await target.files[0].text());
+    const rows = await register;
+    if (run.total !== 1101) throw new Error('Ожидалась исходная выгрузка No Surprises из 1101 ноты');
+    for (const event of Play12Editor.events(score)) event.method.finger = run.assignments[event.id] ?? null;
+    for (const [bar, section] of panels) renderBar(score, bar, section, rows);
+    statusText.textContent = 'Проверено событий до в SVG Play12 — ' + rows.length;
+  } catch (error) {
+    statusText.textContent = error.message;
+    console.error(error);
+  }
+});
+</script>
+</html>

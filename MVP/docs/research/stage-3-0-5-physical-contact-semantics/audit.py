@@ -10,11 +10,12 @@ from xml.etree import ElementTree as ET
 HERE=Path(__file__).resolve().parent
 OLD=HERE.parent/'stage-3-0-4-residual-fingering-classification'
 
-def inspect(imports, uploads):
+def inspect(imports, uploads, c_register=False):
     targets=list(csv.DictReader((OLD/'results/residual-notes.csv').open()))
     targets=[r for r in targets if r['primary_group'] in ('G1','G2')]
     reports=[]
     simultaneous=[]
+    c_events=[]
     for name,prefix in [('time','hans-zimmer'),('no-surprises','radiohead')]:
         xml_path,=uploads.glob(prefix+'*.mxl')
         with ZipFile(xml_path) as archive:
@@ -72,12 +73,17 @@ def inspect(imports, uploads):
                     strict_finger=neighbors[a['id']]['finger']) for a in same],
                 fixed_plan='H1_DISTINCT_ATTACKS',evidence='no release/reset measurement'))
         if name=='no-surprises':
+            c_events.extend(r for r in raw.values()
+                            if r['measure'] in ('51','53') and r['midi'] % 12 == 0)
             for a,b in combinations((r for r in raw.values() if r['measure'] in ('51','53')),2):
                 if a['midi']==b['midi'] and a['onset']==b['onset']:
                     simultaneous.append(dict(events=[a,b],same_duration=a['duration']==b['duration'],
                                              shared_contact=contacts[a['id']]['id']==contacts[b['id']]['id']))
     assert len(reports)==8 and sum(len(r['blockers']) for r in reports)==16
+    if c_register:
+        return c_events
     return dict(cases=reports,no_surprises_simultaneous_same_midi=simultaneous)
 
 if __name__=='__main__':
-    print(json.dumps(inspect(*map(Path,sys.argv[1:])),ensure_ascii=False,indent=2))
+    paths = [Path(arg) for arg in sys.argv[1:] if arg != '--c-register']
+    print(json.dumps(inspect(*paths, c_register='--c-register' in sys.argv),ensure_ascii=False,indent=2))

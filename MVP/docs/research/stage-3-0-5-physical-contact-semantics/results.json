@@ -1,0 +1,546 @@
+{
+  "time": {
+    "before": 523,
+    "after": 529,
+    "total": 541,
+    "gained": [
+      "P1.m30.e3",
+      "P1.m33.e5",
+      "P1.m40.e0",
+      "P1.m42.e0",
+      "P1.m44.e0",
+      "P1.m46.e0"
+    ],
+    "lost": [],
+    "reassigned": [],
+    "targets": [
+      {
+        "id": "P1.m30.e3",
+        "group": "G2",
+        "measure": "31",
+        "midi": 59,
+        "sequence": [
+          {
+            "id": "P1.m30.e0",
+            "hand": "R",
+            "before": 1,
+            "finger": 1,
+            "start": "120/1",
+            "end": "243/2"
+          },
+          {
+            "id": "P1.m30.e3",
+            "hand": "R",
+            "before": null,
+            "finger": 1,
+            "start": "122/1",
+            "end": "124/1"
+          }
+        ],
+        "resets": [
+          {
+            "id": "P1.m30.e0",
+            "next": [
+              "P1.m30.e3"
+            ],
+            "attack": "122/1",
+            "writtenContactEnd": "124/1",
+            "plannedEnd": "243/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          }
+        ]
+      },
+      {
+        "id": "P1.m33.e5",
+        "group": "G2",
+        "measure": "34",
+        "midi": 47,
+        "sequence": [
+          {
+            "id": "P1.m33.e7",
+            "hand": "L",
+            "before": 2,
+            "finger": 2,
+            "start": "132/1",
+            "end": "269/2"
+          },
+          {
+            "id": "P1.m33.e5",
+            "hand": "L",
+            "before": null,
+            "finger": 1,
+            "start": "135/1",
+            "end": "271/2"
+          }
+        ],
+        "resets": [
+          {
+            "id": "P1.m33.e7",
+            "next": [
+              "P1.m33.e5"
+            ],
+            "attack": "135/1",
+            "writtenContactEnd": "136/1",
+            "plannedEnd": "269/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          }
+        ]
+      },
+      {
+        "id": "P1.m40.e0",
+        "group": "G1",
+        "measure": "41",
+        "midi": 60,
+        "sequence": [
+          {
+            "id": "P1.m40.e0",
+            "hand": "R",
+            "before": null,
+            "finger": 1,
+            "start": "160/1",
+            "end": "321/2"
+          },
+          {
+            "id": "P1.m40.e4",
+            "hand": "L",
+            "before": 5,
+            "finger": 5,
+            "start": "161/1",
+            "end": "323/2"
+          },
+          {
+            "id": "P1.m40.e6",
+            "hand": "L",
+            "before": 2,
+            "finger": 2,
+            "start": "162/1",
+            "end": "325/2"
+          },
+          {
+            "id": "P1.m40.e9",
+            "hand": "L",
+            "before": 2,
+            "finger": 2,
+            "start": "163/1",
+            "end": "164/1"
+          }
+        ],
+        "resets": [
+          {
+            "id": "P1.m40.e0",
+            "next": [
+              "P1.m40.e4"
+            ],
+            "attack": "161/1",
+            "writtenContactEnd": "164/1",
+            "plannedEnd": "321/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          },
+          {
+            "id": "P1.m40.e4",
+            "next": [
+              "P1.m40.e6"
+            ],
+            "attack": "162/1",
+            "writtenContactEnd": "162/1",
+            "plannedEnd": "323/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          },
+          {
+            "id": "P1.m40.e6",
+            "next": [
+              "P1.m40.e9"
+            ],
+            "attack": "163/1",
+            "writtenContactEnd": "163/1",
+            "plannedEnd": "325/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          }
+        ]
+      },
+      {
+        "id": "P1.m42.e0",
+        "group": "G1",
+        "measure": "43",
+        "midi": 59,
+        "sequence": [
+          {
+            "id": "P1.m42.e0",
+            "hand": "R",
+            "before": null,
+            "finger": 1,
+            "start": "168/1",
+            "end": "337/2"
+          },
+          {
+            "id": "P1.m42.e4",
+            "hand": "L",
+            "before": 2,
+            "finger": 2,
+            "start": "169/1",
+            "end": "339/2"
+          },
+          {
+            "id": "P1.m42.e7",
+            "hand": "L",
+            "before": 5,
+            "finger": 5,
+            "start": "170/1",
+            "end": "341/2"
+          },
+          {
+            "id": "P1.m42.e10",
+            "hand": "L",
+            "before": 5,
+            "finger": 5,
+            "start": "171/1",
+            "end": "172/1"
+          }
+        ],
+        "resets": [
+          {
+            "id": "P1.m42.e0",
+            "next": [
+              "P1.m42.e4"
+            ],
+            "attack": "169/1",
+            "writtenContactEnd": "172/1",
+            "plannedEnd": "337/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          },
+          {
+            "id": "P1.m42.e4",
+            "next": [
+              "P1.m42.e7"
+            ],
+            "attack": "170/1",
+            "writtenContactEnd": "170/1",
+            "plannedEnd": "339/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          },
+          {
+            "id": "P1.m42.e7",
+            "next": [
+              "P1.m42.e10"
+            ],
+            "attack": "171/1",
+            "writtenContactEnd": "171/1",
+            "plannedEnd": "341/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          }
+        ]
+      },
+      {
+        "id": "P1.m44.e0",
+        "group": "G1",
+        "measure": "45",
+        "midi": 60,
+        "sequence": [
+          {
+            "id": "P1.m44.e0",
+            "hand": "R",
+            "before": null,
+            "finger": 1,
+            "start": "176/1",
+            "end": "353/2"
+          },
+          {
+            "id": "P1.m44.e4",
+            "hand": "L",
+            "before": 5,
+            "finger": 5,
+            "start": "177/1",
+            "end": "355/2"
+          },
+          {
+            "id": "P1.m44.e6",
+            "hand": "L",
+            "before": 2,
+            "finger": 2,
+            "start": "178/1",
+            "end": "357/2"
+          },
+          {
+            "id": "P1.m44.e9",
+            "hand": "L",
+            "before": 2,
+            "finger": 2,
+            "start": "179/1",
+            "end": "359/2"
+          }
+        ],
+        "resets": [
+          {
+            "id": "P1.m44.e0",
+            "next": [
+              "P1.m44.e4"
+            ],
+            "attack": "177/1",
+            "writtenContactEnd": "180/1",
+            "plannedEnd": "353/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          },
+          {
+            "id": "P1.m44.e4",
+            "next": [
+              "P1.m44.e6"
+            ],
+            "attack": "178/1",
+            "writtenContactEnd": "178/1",
+            "plannedEnd": "355/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          },
+          {
+            "id": "P1.m44.e6",
+            "next": [
+              "P1.m44.e9"
+            ],
+            "attack": "179/1",
+            "writtenContactEnd": "179/1",
+            "plannedEnd": "357/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          }
+        ]
+      },
+      {
+        "id": "P1.m46.e0",
+        "group": "G1",
+        "measure": "47",
+        "midi": 59,
+        "sequence": [
+          {
+            "id": "P1.m46.e0",
+            "hand": "R",
+            "before": null,
+            "finger": 1,
+            "start": "184/1",
+            "end": "369/2"
+          },
+          {
+            "id": "P1.m46.e4",
+            "hand": "L",
+            "before": 2,
+            "finger": 2,
+            "start": "185/1",
+            "end": "371/2"
+          },
+          {
+            "id": "P1.m46.e7",
+            "hand": "L",
+            "before": 5,
+            "finger": 5,
+            "start": "186/1",
+            "end": "373/2"
+          },
+          {
+            "id": "P1.m46.e10",
+            "hand": "L",
+            "before": 5,
+            "finger": 5,
+            "start": "187/1",
+            "end": "188/1"
+          }
+        ],
+        "resets": [
+          {
+            "id": "P1.m46.e0",
+            "next": [
+              "P1.m46.e4"
+            ],
+            "attack": "185/1",
+            "writtenContactEnd": "188/1",
+            "plannedEnd": "369/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          },
+          {
+            "id": "P1.m46.e4",
+            "next": [
+              "P1.m46.e7"
+            ],
+            "attack": "186/1",
+            "writtenContactEnd": "186/1",
+            "plannedEnd": "371/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          },
+          {
+            "id": "P1.m46.e7",
+            "next": [
+              "P1.m46.e10"
+            ],
+            "attack": "187/1",
+            "writtenContactEnd": "187/1",
+            "plannedEnd": "373/2",
+            "gap": "1/2",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          }
+        ]
+      }
+    ],
+    "collateral": {
+      "G3": {
+        "baselineResiduals": 8,
+        "assignedAfter": 0,
+        "contactShortened": 0
+      },
+      "G4": {
+        "baselineResiduals": 4,
+        "assignedAfter": 0,
+        "contactShortened": 0
+      }
+    },
+    "crossHandUnisons": 0,
+    "unresolvedCrossHandUnisons": 0,
+    "shortenedContacts": 60,
+    "newConflicts": 0,
+    "recovery": "complete"
+  },
+  "no-surprises": {
+    "before": 1067,
+    "after": 1069,
+    "total": 1101,
+    "gained": [
+      "P1.m50.e17",
+      "P1.m52.e17"
+    ],
+    "lost": [],
+    "reassigned": [],
+    "targets": [
+      {
+        "id": "P1.m50.e17",
+        "group": "G2",
+        "measure": "51",
+        "midi": 48,
+        "sequence": [
+          {
+            "id": "P1.m50.e10",
+            "hand": "L",
+            "before": 5,
+            "finger": 5,
+            "start": "200/1",
+            "end": "805/4"
+          },
+          {
+            "id": "P1.m50.e17",
+            "hand": "L",
+            "before": null,
+            "finger": 1,
+            "start": "403/2",
+            "end": "807/4"
+          }
+        ],
+        "resets": [
+          {
+            "id": "P1.m50.e10",
+            "next": [
+              "P1.m50.e17"
+            ],
+            "attack": "403/2",
+            "writtenContactEnd": "202/1",
+            "plannedEnd": "805/4",
+            "gap": "1/4",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          }
+        ]
+      },
+      {
+        "id": "P1.m52.e17",
+        "group": "G2",
+        "measure": "53",
+        "midi": 48,
+        "sequence": [
+          {
+            "id": "P1.m52.e10",
+            "hand": "L",
+            "before": 5,
+            "finger": 5,
+            "start": "208/1",
+            "end": "837/4"
+          },
+          {
+            "id": "P1.m52.e17",
+            "hand": "L",
+            "before": null,
+            "finger": 1,
+            "start": "419/2",
+            "end": "839/4"
+          }
+        ],
+        "resets": [
+          {
+            "id": "P1.m52.e10",
+            "next": [
+              "P1.m52.e17"
+            ],
+            "attack": "419/2",
+            "writtenContactEnd": "210/1",
+            "plannedEnd": "837/4",
+            "gap": "1/4",
+            "shortened": true,
+            "reset": "uncalibrated",
+            "sounding": "unverified"
+          }
+        ]
+      }
+    ],
+    "collateral": {
+      "G3": {
+        "baselineResiduals": 32,
+        "assignedAfter": 0,
+        "contactShortened": 14
+      },
+      "G4": {
+        "baselineResiduals": 0,
+        "assignedAfter": 0,
+        "contactShortened": 0
+      }
+    },
+    "crossHandUnisons": 0,
+    "unresolvedCrossHandUnisons": 0,
+    "shortenedContacts": 234,
+    "newConflicts": 0,
+    "recovery": "complete"
+  }
+}
