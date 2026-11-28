@@ -1,0 +1,14 @@
+{
+  "time": {
+    "targets": 8,
+    "verified_events": 56,
+    "explicit_release_events": 0,
+    "explicit_attack_events": 0
+  },
+  "no-surprises": {
+    "targets": 32,
+    "verified_events": 121,
+    "explicit_release_events": 0,
+    "explicit_attack_events": 0
+  }
+}

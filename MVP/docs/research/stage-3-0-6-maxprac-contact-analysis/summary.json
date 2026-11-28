@@ -1,0 +1,128 @@
+{
+  "time": {
+    "assigned": 529,
+    "restored_preserved": [
+      "P1.m30.e3",
+      "P1.m33.e5",
+      "P1.m40.e0",
+      "P1.m42.e0",
+      "P1.m44.e0",
+      "P1.m46.e0"
+    ],
+    "categories": {
+      "A": 3,
+      "B": 1,
+      "C": 4
+    },
+    "shortened_305": 0,
+    "diagnostics": {
+      "strict_keep": {
+        "infeasible": 8
+      },
+      "strict_exchange": {
+        "-2": 4,
+        "-3": 1,
+        "0": 3
+      },
+      "without_maxprac": {
+        "1": 8
+      },
+      "shorter_hold": {
+        "1": 5,
+        "infeasible": 3
+      },
+      "alternate_physical_hand": {
+        "1": 1,
+        "infeasible": 7
+      }
+    },
+    "global_strict": {
+      "gained": [],
+      "lost": [],
+      "net": 0,
+      "quality_before": [
+        16,
+        21
+      ],
+      "quality_after": [
+        16,
+        21
+      ],
+      "g4_gain": []
+    },
+    "g4": [
+      "P1.m40.e10",
+      "P1.m41.e5",
+      "P1.m44.e10",
+      "P1.m45.e10"
+    ],
+    "g4_shared_components": [],
+    "g4_changes": {
+      "strict_exchange": [],
+      "without_maxprac": [],
+      "shorter_hold": [],
+      "alternate_physical_hand": []
+    }
+  },
+  "no-surprises": {
+    "assigned": 1069,
+    "restored_preserved": [
+      "P1.m50.e17",
+      "P1.m52.e17"
+    ],
+    "categories": {
+      "A": 16,
+      "B": 7,
+      "C": 2,
+      "D": 7
+    },
+    "shortened_305": 14,
+    "diagnostics": {
+      "strict_keep": {
+        "infeasible": 32
+      },
+      "strict_exchange": {
+        "-1": 5,
+        "-2": 2,
+        "-3": 6,
+        "-4": 6,
+        "0": 13
+      },
+      "without_maxprac": {
+        "1": 24,
+        "2": 2,
+        "3": 6
+      },
+      "shorter_hold": {
+        "1": 16,
+        "infeasible": 16
+      },
+      "alternate_physical_hand": {
+        "1": 2,
+        "infeasible": 30
+      }
+    },
+    "global_strict": {
+      "gained": [],
+      "lost": [],
+      "net": 0,
+      "quality_before": [
+        32,
+        48
+      ],
+      "quality_after": [
+        32,
+        48
+      ],
+      "g4_gain": []
+    },
+    "g4": [],
+    "g4_shared_components": [],
+    "g4_changes": {
+      "strict_exchange": [],
+      "without_maxprac": [],
+      "shorter_hold": [],
+      "alternate_physical_hand": []
+    }
+  }
+}
