@@ -1,0 +1,349 @@
+{
+  "node": "v24.22.3",
+  "platform": "linux",
+  "report": {
+    "timeDirect": {
+      "input": "imported_score_without_historical_contact_plan",
+      "total": 541,
+      "candidate": {
+        "assigned": 184,
+        "exceptions": 0,
+        "special": 0,
+        "L0Failures": [],
+        "physical": "unknown",
+        "search": {
+          "L": {
+            "status": "infeasible",
+            "visited": 25669,
+            "blockedAt": "149/1",
+            "contacts": [
+              {
+                "id": "P1.m37.e7",
+                "key": 36,
+                "start": "148/1",
+                "end": "152/1"
+              },
+              {
+                "id": "P1.m37.e8",
+                "key": 43,
+                "start": "148/1",
+                "end": "303/2"
+              },
+              {
+                "id": "P1.m37.e4",
+                "key": 57,
+                "start": "149/1",
+                "end": "150/1"
+              }
+            ]
+          },
+          "R": {
+            "status": "exact",
+            "visited": 25720,
+            "cost": [
+              0,
+              0,
+              0,
+              18,
+              0,
+              0,
+              26934,
+              66632
+            ]
+          }
+        }
+      }
+    },
+    "time": {
+      "input": "historical_stage_3_0_10_contact_plan",
+      "total": 541,
+      "previous": {
+        "assigned": 541,
+        "ms": 254.14896899999997,
+        "repeats": 7,
+        "transitionsObserved": 254,
+        "normalizedMovement": 86778
+      },
+      "candidate": {
+        "assigned": 541,
+        "exceptions": 7,
+        "special": 1,
+        "L0Failures": [],
+        "physical": "unknown",
+        "search": {
+          "L": {
+            "status": "exact",
+            "visited": 54784,
+            "cost": [
+              7,
+              0,
+              0,
+              2,
+              33,
+              50,
+              63097,
+              155447
+            ]
+          },
+          "R": {
+            "status": "exact",
+            "visited": 25720,
+            "cost": [
+              0,
+              0,
+              0,
+              18,
+              0,
+              0,
+              26934,
+              66632
+            ]
+          }
+        },
+        "ms": 280.589372,
+        "repeats": 7,
+        "transitionsObserved": 254,
+        "normalizedMovement": 90028
+      },
+      "sameForcedRepeatEdges": 7,
+      "preservedWidePairs": 4,
+      "widePairs": 5,
+      "wideDifferences": [
+        {
+          "ids": [
+            "P1.m37.e7",
+            "P1.m37.e4"
+          ],
+          "expected": [
+            5,
+            1
+          ],
+          "actual": [
+            5,
+            2
+          ]
+        }
+      ],
+      "lost": []
+    },
+    "no-surprises": {
+      "input": "historical_stage_3_0_10_contact_plan",
+      "total": 1101,
+      "previous": {
+        "assigned": 1101,
+        "ms": 477.34752100000014,
+        "repeats": 41,
+        "transitionsObserved": 701,
+        "normalizedMovement": 95262
+      },
+      "candidate": {
+        "assigned": 1101,
+        "exceptions": 41,
+        "special": 0,
+        "L0Failures": [],
+        "physical": "unknown",
+        "search": {
+          "L": {
+            "status": "exact",
+            "visited": 23845,
+            "cost": [
+              41,
+              0,
+              0,
+              43,
+              117,
+              326,
+              56234,
+              183493
+            ]
+          },
+          "R": {
+            "status": "exact",
+            "visited": 28325,
+            "cost": [
+              0,
+              0,
+              0,
+              0,
+              2,
+              2,
+              51099,
+              114902
+            ]
+          }
+        },
+        "ms": 513.1308820000004,
+        "repeats": 41,
+        "transitionsObserved": 701,
+        "normalizedMovement": 107302
+      },
+      "sameForcedRepeatEdges": 41,
+      "preservedWidePairs": 63,
+      "widePairs": 63,
+      "wideDifferences": [],
+      "lost": []
+    },
+    "clocks": {
+      "input": "imported_score",
+      "total": 195,
+      "previous": {
+        "assigned": 195,
+        "ms": 261.02709000000004,
+        "repeats": 9,
+        "transitionsObserved": 141,
+        "normalizedMovement": 7542,
+        "search": "approximate_complete"
+      },
+      "candidate": {
+        "assigned": 195,
+        "exceptions": 0,
+        "special": 0,
+        "L0Failures": [],
+        "physical": "unknown",
+        "search": {
+          "L": {
+            "status": "exact",
+            "visited": 36525,
+            "cost": [
+              0,
+              0,
+              0,
+              1,
+              1,
+              2,
+              1849,
+              6688
+            ]
+          },
+          "R": {
+            "status": "exact",
+            "visited": 3360,
+            "cost": [
+              0,
+              0,
+              0,
+              2,
+              0,
+              0,
+              13285,
+              26594
+            ]
+          }
+        },
+        "preparedMs": 231.29745599999978,
+        "ms": 61.11497300000019,
+        "repeats": 0,
+        "transitionsObserved": 141,
+        "normalizedMovement": 15135
+      }
+    },
+    "interstellar": {
+      "input": "imported_score",
+      "total": 5249,
+      "previous": {
+        "assigned": 5249,
+        "ms": 4733.8171170000005,
+        "repeats": 334,
+        "transitionsObserved": 2456,
+        "normalizedMovement": 540360,
+        "search": "approximate_complete"
+      },
+      "candidate": {
+        "assigned": 5249,
+        "exceptions": 0,
+        "special": 0,
+        "L0Failures": [],
+        "physical": "unknown",
+        "search": {
+          "L": {
+            "status": "exact",
+            "visited": 206130,
+            "cost": [
+              0,
+              0,
+              0,
+              0,
+              6,
+              12,
+              295924,
+              734340
+            ]
+          },
+          "R": {
+            "status": "exact",
+            "visited": 132705,
+            "cost": [
+              0,
+              0,
+              0,
+              54,
+              49,
+              77,
+              241224,
+              617956
+            ]
+          }
+        },
+        "preparedMs": 4287.948095,
+        "ms": 591.9791289999994,
+        "repeats": 0,
+        "transitionsObserved": 2456,
+        "normalizedMovement": 537173
+      }
+    },
+    "saints": {
+      "input": "imported_score",
+      "total": 60,
+      "previous": {
+        "assigned": 60,
+        "ms": 45.974114000000554,
+        "repeats": 1,
+        "transitionsObserved": 38,
+        "normalizedMovement": 730,
+        "search": "approximate_complete"
+      },
+      "candidate": {
+        "assigned": 60,
+        "exceptions": 0,
+        "special": 0,
+        "L0Failures": [],
+        "physical": "unknown",
+        "search": {
+          "L": {
+            "status": "exact",
+            "visited": 390,
+            "cost": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1000,
+              2000
+            ]
+          },
+          "R": {
+            "status": "exact",
+            "visited": 775,
+            "cost": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "preparedMs": 36.966066999999384,
+        "ms": 4.0039879999985715,
+        "repeats": 0,
+        "transitionsObserved": 38,
+        "normalizedMovement": 1000
+      }
+    }
+  }
+}

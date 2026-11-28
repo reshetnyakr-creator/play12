@@ -1,0 +1,41 @@
+{
+  "node": "v24.22.3",
+  "rows": [
+    {
+      "size": 100,
+      "ms": 12.77137900000001,
+      "heapMiB": 9.222671508789062,
+      "assigned": 100,
+      "visited": 1265,
+      "status": "exact",
+      "verified": true
+    },
+    {
+      "size": 1000,
+      "ms": 43.98879099999999,
+      "heapMiB": 13.289138793945312,
+      "assigned": 1000,
+      "visited": 12515,
+      "status": "exact",
+      "verified": true
+    },
+    {
+      "size": 5000,
+      "ms": 164.89455800000002,
+      "heapMiB": 25.333251953125,
+      "assigned": 5000,
+      "visited": 62515,
+      "status": "exact",
+      "verified": true
+    },
+    {
+      "size": 10000,
+      "ms": 285.947303,
+      "heapMiB": 71.85123443603516,
+      "assigned": 10000,
+      "visited": 125015,
+      "status": "exact",
+      "verified": true
+    }
+  ]
+}
