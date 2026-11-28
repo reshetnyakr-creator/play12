@@ -1,5 +1,6 @@
 'use strict';
 const E=require('../../../editor/core');
+const {commonPosition}=require('./position-model.cjs');
 const {Q}=E;
 const cmp=(a,b)=>new Q(a).cmp(b);
 const fingers=[1,2,3,4,5];
@@ -71,6 +72,8 @@ function solveHand(contacts,before,profile,{constraints,events={},locks={},exclu
       !excluded.has(a.id)&&!excluded.has(b.id)&&!(pinned(a)&&pinned(b)));
     sequence.push(...edges);
     const next=new Map();
+    const poses=new Map();
+    const continuations=new Map();
     for(const state of states.values()){
       const map=Object.fromEntries(continuing.map(c=>[c.id,state.fingers[c.id]]));
       const context=continuing.slice();
@@ -89,10 +92,23 @@ function solveHand(contacts,before,profile,{constraints,events={},locks={},exclu
           const shortOnBlack=layer.filter(c=>!constraints.chords.has(c.id)&&!pinned(c)&&black(c.key)&&
             (map[c.id]===1||map[c.id]===5)).length;
           const shift=previous.length?Math.round(Math.abs(position(layer,map,profile)-position(previous,state.fingers,profile))):0;
-          const local=[repeated.length,reversal,nonadjacent,shortOnBlack,expansions,excess,shift,
+          const key=context.map(c=>map[c.id]).join('');
+          if(!poses.has(key))poses.set(key,commonPosition(context,map,profile));
+          // Compare common comfort before residual geometric cost. A failure
+          // of this comfort model does not invalidate an authorized wide form.
+          let lostComfort=0;
+          if(compact.length&&movement.every(m=>!m.reversed)){
+            const prior=previous[0];
+            const pathKey=state.fingers[prior.id]+':'+key;
+            if(!continuations.has(pathKey)){
+              continuations.set(pathKey,commonPosition([prior,...context],{...state.fingers,...map},profile));
+            }
+            lostComfort=Number(!continuations.get(pathKey));
+          }
+          const comfortPenalty=Number(!poses.get(key))+lostComfort;
+          const local=[repeated.length,reversal,nonadjacent,shortOnBlack,expansions+comfortPenalty,excess,shift,
             shape+shift*profile.weights.positionShift+repeated.length*profile.weights.sameFingerMove];
           const cost=state.cost.map((v,i)=>v+local[i]);
-          const key=context.map(c=>map[c.id]).join('');
           if(!next.has(key)||compareCost(cost,next.get(key).cost)<0)next.set(key,{
             cost,fingers:{...map},path:{prev:state.path,assigned:Object.fromEntries(layer.map(c=>[c.id,map[c.id]]))}
           });

@@ -5,6 +5,8 @@ const {specialPositions}=require('../stage-3-0-10-fingering-priority/positions.c
 const {solveHand,compareCost,groupLayers,position}=require('./search.cjs');
 const {verify}=require('./verify.cjs');
 const {certify}=require('./feasibility.cjs');
+const {commonPosition}=require('./position-model.cjs');
+const {describeGroups}=require('./groups.cjs');
 const {releasePlan}=require('../stage-3-0-5-physical-contact-semantics/experiment.cjs');
 const {proposeBeginner}=require('../../../editor/beginner-transition');
 const {experiment}=require('../stage-3-0-5-physical-contact-semantics/experiment.cjs');
@@ -174,10 +176,19 @@ function evaluate(input,{budget=3_000_000,proveRepeats=true}={}){
     for(const id of c.ids)assignments[id]={finger:map[c.id],status:manual[id]!=null?'manual':'assigned',movement:'unknown',sounding:'unknown'};
   for(const p of special)for(const [id,finger] of Object.entries(p.assignments))
     assignments[id]={finger,status:manual[id]!=null?'manual':'assigned',movement:'unknown',sounding:'unknown'};
-  const positions=['L','R'].flatMap(hand=>groupLayers(eligible.filter(c=>c.hand===hand&&map[c.id]!=null))
-    .map(layer=>({at:layer[0].start,hand,ids:layer.map(c=>c.id),center:position(layer,map,profile),
-      geometry:'normalized_key_centres',physical:'unknown'})));
+  const positions=['L','R'].flatMap(hand=>{
+    let held=[];
+    return groupLayers(eligible.filter(c=>c.hand===hand&&map[c.id]!=null)).map(layer=>{
+      held=held.filter(c=>new E.Q(c.end).cmp(layer[0].start)>0);
+      const retained=held.map(c=>c.id);
+      held.push(...layer);
+      return {at:layer[0].start,hand,ids:layer.map(c=>c.id),retained,
+        center:position(layer,map,profile),geometry:'normalized_key_centres',
+        comfort:commonPosition(held,map,profile),physical:'unknown'};
+    });
+  });
   const result={score:structuredClone(score),events:structuredClone(events),contacts,holds:contacts.map(({id,start,end})=>({id,start,end})),positions,
+    executionGroups:describeGroups(eligible.filter(c=>map[c.id]!=null),events,positions),
     phraseCandidates:input.phraseCandidates??[],motifCandidates:input.motifCandidates??[],
     manual,map,assignments,attempts,special,exceptions,unresolved,witnesses,resets:input.resets??[],
     rejected:reject, releases:input.releases??[]};

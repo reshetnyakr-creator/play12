@@ -181,3 +181,93 @@ test('E03 first preserves feasible holdings, then changes only physical contact 
   assert.deepEqual(run(input,{budget:0}).releases,[]);
   assert.deepEqual(run(fixture([[60,0,3],[64,1,2]])).releases,[]);
 });
+
+test('Joint comfort witness constrains unused fingers and respects direction',()=>{
+  const {commonPosition}=require('./position-model.cjs');
+  const r=fixture([[60,0,2],[65,0,2]]);
+  // Pair 2–4 allows five semitones in the fixture. Both adjacent caps
+  // constrain the latent finger 3, so their sum can forbid the full pose.
+  const constrained={...r.profile,comfortSpan:{...r.profile.comfortSpan,'2-3':2,'3-4':2}};
+  assert.equal(constrained.comfortSpan['2-4'],5);
+  assert.equal(commonPosition(r.contacts,{n0:2,n1:4},constrained),null);
+  const witness=commonPosition(r.contacts,{n0:2,n1:4},r.profile);
+  assert.ok(witness);
+  assert.equal(witness.physical,'unknown');
+  assert.equal(commonPosition(r.contacts,{n0:4,n1:2},r.profile),null);
+  const left=r.contacts.map(c=>({...c,hand:'L'}));
+  assert.ok(commonPosition(left,{n0:4,n1:2},r.profile));
+});
+
+test('Execution grouping records a turn across a bar and splits on contact gap',()=>{
+  const {describeGroups}=require('./groups.cjs');
+  const r=fixture([[60,0,1],[62,1,2],[60,2,3],[67,4,5]]);
+  r.events.n1.measure=1;
+  r.events.n2.measure=2;
+  const groups=describeGroups(r.contacts,r.events,[]);
+  assert.equal(groups.length,2);
+  assert.deepEqual(groups[0].turns.map(t=>Number(t.at)),[1]);
+  assert.equal(groups[1].boundary,'notated_contact_gap');
+});
+
+test('T07/M13 merged unison assigns both semantic IDs from one attack',()=>{
+  const r=fixture([[60,0,2]]);
+  r.events.alias={...r.events.n0,id:'alias',voice:'2'};
+  r.contacts[0].ids.push('alias');
+  const out=run(r);
+  assert.equal(out.contacts.length,1);
+  assert.equal(Object.keys(out.assignments).length,2);
+  assert.equal(out.assignments.n0.finger,out.assignments.alias.finger);
+  out.assignments.alias.finger=out.assignments.n0.finger%5+1;
+  assert.ok(verify(r,out).failures.includes('R05:n0'));
+});
+
+test('M17 supplied tie members are one continuous contact, never two attacks',()=>{
+  const r=fixture([[60,0,2],[64,1,2]],{locks:{n0:1}});
+  r.events.n0.ties=['start'];
+  r.events.continuation={...r.events.n0,id:'continuation',ties:['stop']};
+  r.contacts[0].ids.push('continuation');
+  const out=run(r);
+  assert.deepEqual(out.holds[0],{id:'n0',start:'0',end:'2'});
+  assert.equal(out.assignments.continuation.finger,1);
+  assert.notEqual(out.assignments.n1.finger,1);
+});
+
+test('T12/M11 a released leap does not require simultaneous span',()=>{
+  const r=fixture([[60,0,1],[84,2,3]],{locks:{n0:1,n1:1}});
+  const out=run(r);
+  assert.equal(out.validation.ok,true);
+  assert.deepEqual(fingers(out),[1,1]);
+  assert.deepEqual(out.positions[1].retained,[]);
+  assert.equal(out.positions[1].physical,'unknown');
+});
+
+test('T31/M14 simultaneous chords need no notation chord flag',()=>{
+  const r=fixture([[60,0,2],[64,0,2],[67,0,2]]);
+  const out=run(r);
+  assert.equal(new Set(fingers(out)).size,3);
+  assert.equal(out.positions.length,1);
+  assert.equal(out.positions[0].comfort.layout.length,3);
+  assert.equal(out.validation.ok,true);
+});
+
+test('T40/M23 reversed pitch order between hands is not finger crossing',()=>{
+  const r=fixture([[60,0,1],[72,0,1]]);
+  r.events.n1.hand=r.contacts[1].hand='L';
+  const out=run(r);
+  assert.ok(fingers(out).every(f=>f>0));
+  assert.equal(out.validation.ok,true);
+  assert.equal(out.validation.physical,'unknown');
+});
+
+test('Execution grouping preserves held voices and tags an explicit arpeggio',()=>{
+  const {describeGroups}=require('./groups.cjs');
+  const r=fixture([[48,0,3],[60,0,1],[64,1,2],[67,2,3]]);
+  r.events.n0.voice='bass';
+  r.contacts[1].arpeggio={group:'a'};
+  r.contacts[2].arpeggio={group:'a'};
+  const [group]=describeGroups(r.contacts,r.events,[]);
+  assert.deepEqual(group.voiceLines.bass.map(n=>n.key),[48]);
+  assert.deepEqual(group.voiceLines['1'].map(n=>n.key),[60,64,67]);
+  assert.deepEqual(group.voiceHolds.map(h=>h.notes),[['n0'],['n0']]);
+  assert.deepEqual(group.arpeggios.map(a=>a.labels),[['a'],['a']]);
+});
