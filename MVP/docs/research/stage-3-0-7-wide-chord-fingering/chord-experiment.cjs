@@ -142,4 +142,4 @@ function validate(contacts,map,profile,chords) {
   const scoped=policy(chords,contacts);
   return E.validate(assigned,map,{profile,experimentalWideIntervals:true,researchChords:scoped.chords});
 }
-module.exports={experiment,findChords};
+module.exports={experiment,findChords,components,policy,groupValid,validate};
