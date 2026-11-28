@@ -1,0 +1,16 @@
+{
+  "time": {
+    "originalAssigned": 513,
+    "mirroredAssigned": 513,
+    "matchedContactStructure": true,
+    "assignmentsWithDifferentFingerOrPresence": 72,
+    "sameUnassignedIds": true
+  },
+  "no-surprises": {
+    "originalAssigned": 1067,
+    "mirroredAssigned": 1067,
+    "matchedContactStructure": true,
+    "assignmentsWithDifferentFingerOrPresence": 156,
+    "sameUnassignedIds": false
+  }
+}
