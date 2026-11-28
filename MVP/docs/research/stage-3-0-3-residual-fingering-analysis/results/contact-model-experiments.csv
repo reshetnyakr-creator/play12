@@ -1,5 +1,5 @@
 composition,variant,altered_contacts,assigned,gained,dropped,changed,states,peak_frontier,milliseconds,rss_peak_kib,status
-time,release_at_next_same_key_zero_gap,6,529,22,6,0,13482,134,24,27552,exact
-time,release_before_next_same_key_gap_1_16Q,6,529,22,6,0,13482,134,23,27552,exact
-no-surprises,release_at_next_same_key_zero_gap,2,1069,2,0,0,10380,51,25,56048,exact
-no-surprises,release_before_next_same_key_gap_1_16Q,2,1069,2,0,0,10380,51,23,56048,exact
+time,release_at_next_same_key_zero_gap,6,529,22,6,0,13482,134,23,27644,exact
+time,release_before_next_same_key_gap_1_16Q,6,529,22,6,0,13482,134,22,27644,exact
+no-surprises,release_at_next_same_key_zero_gap,2,1069,2,0,0,10380,51,22,56116,exact
+no-surprises,release_before_next_same_key_gap_1_16Q,2,1069,2,0,0,10380,51,23,56116,exact

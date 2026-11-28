@@ -200,6 +200,7 @@ def main(source,dest):
         item=summary[name]={'before':run['assigned'],'total':run['total'],'baseline_conflicts':baseline,
             'input_sha256':d['sourceHash'],'baseline_map_hash':hashlib.sha256(json.dumps(run['assignments'],sort_keys=True).encode()).hexdigest(),
             'unsupported_notes':run['total']-sum(len(c['ids']) for c in contacts)}
+        item['all_prior_assignments_preservable_under_joint_rules']=not baseline
         if name not in ('time','no-surprises'):
             item['strict_control'],_=experiment(contacts,profile,'B05')
             continue
@@ -224,7 +225,7 @@ def main(source,dest):
                     item['key_pairs_in_spec'].append([{k:c[k] for k in ('id','hand','key','start','end','base')} for c in (first,second)])
         groups={c['id']:g for g in components(contacts) for c in g}
         signatures={}
-        for disable in [('span',),('octave',),('ownership',),('span','octave'),('span','octave','ownership')]:
+        for disable in [('span',),('octave',),('ownership',),('span','octave'),('span','ownership'),('octave','ownership'),('span','octave','ownership')]:
             result,_=experiment(contacts,profile,'B05',disable)
             sensitivity.append({'composition':name,'disabled':'+'.join(disable),**result})
         # A counterfactual release at the following distinct attack, with no change to the score.

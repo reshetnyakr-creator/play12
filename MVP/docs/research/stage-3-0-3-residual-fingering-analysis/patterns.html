@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<title>Play12 · Stage 3.0.3 · Синтетические схемы</title>
+<style>
+body{font:16px system-ui;max-width:900px;margin:24px auto;padding:0 16px}section{margin:24px 0;padding:18px;border:1px solid #aaa;border-radius:10px}table{border-collapse:collapse;margin:16px 0}td,th{border:1px solid #aaa;padding:6px 9px}.score{overflow:auto;max-height:420px}
+</style>
+<h1>Синтетические схемы 39 контактных паттернов</h1>
+<p>Диагностические реконструкции сведены к относительным интервалам. Это не выписки оригинальных партитур. Строка «Цель» соответствует пропущенному контакту. В MusicXML для цели отдельно показана длительность исходного сегмента, а контакты — в таблице. Размер и абсолютная высота выбраны для демонстрации.</p>
+<main id="patterns"></main>
+<script src="../../../editor/core.js"></script>
+<script src="../../../renderer/play12-renderer.js"></script>
+<script>
+const q=s=>Number(new Play12Editor.Q(s));
+const pitchNames=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const main=document.getElementById('patterns');
+function parsedCSV(text){
+ const rows=[];
+ let row=[],field='',quoted=false;
+ for(let i=0;i<text.length;i++){
+  const char=text[i];
+  if(char==='"'){
+   if(quoted&&text[i+1]==='"'){field+='"';i++;}
+   else quoted=!quoted;
+  }else if((char===','||char==='\n')&&!quoted){
+   row.push(field);field='';
+   if(char==='\n'){rows.push(row);row=[];}
+  }else field+=char;
+ }
+ const head=rows.shift();
+ return rows.map(values=>Object.fromEntries(head.map((key,i)=>[key,values[i]])));
+}
+function source(notes,title){
+ const division=960;
+ const ticks=value=>Math.round(value*division);
+ const beats=Math.max(4,Math.ceil(Math.max(...notes.map(n=>n.start+n.length))));
+ let cursor=0;
+ const content=notes.map((n,i)=>{
+  const delta=ticks(n.start)-cursor;
+  cursor=ticks(n.start)+ticks(n.length);
+  const move=delta===0?'':delta<0?`<backup><duration>${-delta}</duration></backup>`:`<forward><duration>${delta}</duration></forward>`;
+  const label=pitchNames[n.pitch%12];
+  return move+`<note><pitch><step>${label[0]}</step>${label.length>1?'<alter>1</alter>':''}<octave>${Math.floor(n.pitch/12)-1}</octave></pitch><duration>${ticks(n.length)}</duration><voice>${i+1}</voice><staff>${n.hand==='R'?1:2}</staff></note>`;
+ }).join('');
+ return `<?xml version="1.0"?><score-partwise version="4.0"><work><work-title>${title}</work-title></work><part-list><score-part id="P1"><part-name>Piano</part-name></score-part></part-list><part id="P1"><measure number="1"><attributes><divisions>${division}</divisions><time><beats>${beats}</beats><beat-type>4</beat-type></time><staves>2</staves><clef number="1"><sign>G</sign><line>2</line></clef><clef number="2"><sign>F</sign><line>4</line></clef></attributes>${content}</measure></part></score-partwise>`;
+}
+function render(r){
+ const [on,end]=r.contact_interval.slice(1,-1).split(',').map(q);
+ const blockers=JSON.parse(r.blocking_contacts);
+ const origin=Math.min(on,...blockers.map(a=>q(a[3])));
+ const targets=[{label:'Цель',hand:r.hand,pitch:60,start:on-origin,hold:end-on,length:q(r.duration),finger:null},
+  ...blockers.map((a,i)=>({label:'Контакт '+(i+1),hand:a[1],pitch:60+a[2]-Number(r.midi),
+    start:q(a[3])-origin,hold:q(a[4])-q(a[3]),length:q(a[4])-q(a[3]),finger:a[5]}))];
+ const xml=source(targets,r.pattern);
+ const score=Play12Editor.importXML(xml,{'P1:1':'R','P1:2':'L'});
+ Play12Editor.events(score).forEach((event,i)=>{
+  event.hand=targets[i].hand;
+  event.method.finger=targets[i].finger;
+ });
+ const section=document.createElement('section');
+ const heading=document.createElement('h2');
+ heading.textContent=r.composition+' · '+r.pattern+' · '+r.primary_cause;
+ section.append(heading);
+ const link=document.createElement('a');
+ link.href=URL.createObjectURL(new Blob([xml],{type:'application/vnd.recordare.musicxml+xml'}));
+ link.download=r.pattern+'.musicxml';
+ link.textContent='Открыть синтетическую партитуру в редакторе MusicXML';
+ section.append(link);
+ const table=document.createElement('table');
+ for(const row of [['Событие','Рука','MIDI','Начало Q','Нотный конец Q','Конец удержания Q','Палец'],
+   ...targets.map(n=>[n.label,n.hand,n.pitch,n.start,n.start+n.length,n.start+n.hold,n.finger??'—'])]){
+  const tr=document.createElement('tr');
+  for(const value of row){const td=document.createElement('td');td.textContent=value;tr.append(td);}
+  table.append(tr);
+ }
+ const graph=document.createElement('div');
+ graph.className='score';
+ Play12Renderer.render(score,graph,{measureCount:1,editorTimeline:true,unassignedDisplay:true,cellHeight:18,wrapCycles:true});
+ section.append(table,graph);
+ main.append(section);
+}
+Promise.all(['time','no-surprises'].map(name=>fetch('./results/'+name+'-residual-analysis.csv').then(r=>r.text())))
+ .then(csv=>{
+  const unique=new Map(csv.flatMap(parsedCSV).reverse().map(r=>[r.composition+'/'+r.pattern,r]));
+  for(const r of unique.values())render(r);
+ })
+ .catch(error=>{document.body.append(String(error));throw error;});
+</script>
+</html>

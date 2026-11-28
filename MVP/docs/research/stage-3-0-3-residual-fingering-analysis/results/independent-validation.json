@@ -6,6 +6,7 @@
     "input_sha256": "7524ed145eafc48e80b759088e21a4a223980b0944c45d0c44f2f44de0919288",
     "baseline_map_hash": "3a6a5014e2cb809cf941d2edc869aff8178d5a140c2289dc819159b5b2f5d37b",
     "unsupported_notes": 0,
+    "all_prior_assignments_preservable_under_joint_rules": true,
     "strict_control": {
       "assigned": 195,
       "gained": 0,
@@ -14,7 +15,7 @@
       "states": 0,
       "peak_frontier": 0,
       "milliseconds": 1,
-      "rss_peak_kib": 12604,
+      "rss_peak_kib": 12608,
       "status": "exact"
     }
   },
@@ -25,6 +26,7 @@
     "input_sha256": "cf1cd7550d60ad085c7dab2640b9aafedcf5478b92b1ce439e7b301419050579",
     "baseline_map_hash": "002be28c1722be43bd23e3d1cf90f4857044a742c735b230788f3fe5f94e525e",
     "unsupported_notes": 0,
+    "all_prior_assignments_preservable_under_joint_rules": true,
     "strict_control": {
       "assigned": 1468,
       "gained": 0,
@@ -32,8 +34,8 @@
       "changed": 0,
       "states": 0,
       "peak_frontier": 0,
-      "milliseconds": 18,
-      "rss_peak_kib": 23120,
+      "milliseconds": 17,
+      "rss_peak_kib": 23132,
       "status": "exact"
     }
   },
@@ -44,6 +46,7 @@
     "input_sha256": "0b15dcfb56e2dca89c16122736d9e15b31da61c55f5c5ead6b80a86122a59a92",
     "baseline_map_hash": "185694e58322877d52d28e264997f4d6a8bfe8ab33995be2f3ff9ee4fe051e0e",
     "unsupported_notes": 0,
+    "all_prior_assignments_preservable_under_joint_rules": true,
     "strict_control": {
       "assigned": 436,
       "gained": 0,
@@ -52,7 +55,7 @@
       "states": 0,
       "peak_frontier": 0,
       "milliseconds": 2,
-      "rss_peak_kib": 23120,
+      "rss_peak_kib": 23132,
       "status": "exact"
     }
   },
@@ -102,6 +105,7 @@
     "input_sha256": "68d34417f7db545243ec9f307c993893d7f47589e324d2b6106f867ae85ddd4e",
     "baseline_map_hash": "15fcff19fff4fb2788c99dda4a9aff55af6dec8ef2ef2218f8119603b09cf6c5",
     "unsupported_notes": 0,
+    "all_prior_assignments_preservable_under_joint_rules": false,
     "experiments": {
       "B01": {
         "assigned": 523,
@@ -110,8 +114,8 @@
         "changed": 0,
         "states": 4626,
         "peak_frontier": 128,
-        "milliseconds": 11,
-        "rss_peak_kib": 23120,
+        "milliseconds": 12,
+        "rss_peak_kib": 23132,
         "status": "exact"
       },
       "B02": {
@@ -121,8 +125,8 @@
         "changed": 0,
         "states": 14790,
         "peak_frontier": 312,
-        "milliseconds": 27,
-        "rss_peak_kib": 23120,
+        "milliseconds": 26,
+        "rss_peak_kib": 23132,
         "status": "exact"
       },
       "B03": {
@@ -132,8 +136,8 @@
         "changed": 0,
         "states": 59518,
         "peak_frontier": 1092,
-        "milliseconds": 88,
-        "rss_peak_kib": 23120,
+        "milliseconds": 86,
+        "rss_peak_kib": 23132,
         "status": "exact"
       },
       "B04": {
@@ -143,8 +147,8 @@
         "changed": 0,
         "states": 66264,
         "peak_frontier": 1092,
-        "milliseconds": 93,
-        "rss_peak_kib": 23120,
+        "milliseconds": 92,
+        "rss_peak_kib": 23132,
         "status": "exact"
       },
       "B05": {
@@ -154,8 +158,8 @@
         "changed": 0,
         "states": 66264,
         "peak_frontier": 1092,
-        "milliseconds": 96,
-        "rss_peak_kib": 23120,
+        "milliseconds": 92,
+        "rss_peak_kib": 23132,
         "status": "exact"
       }
     },
@@ -453,6 +457,7 @@
     "input_sha256": "a8c4e243f9b62cabf04cfe5d7e19dec020a6b74b4799f1a181066bbf1b98da5d",
     "baseline_map_hash": "172fba3b3ddbc90dc881dbcc4d42703c655405bd7fc3e00fb50e25bad20535a8",
     "unsupported_notes": 0,
+    "all_prior_assignments_preservable_under_joint_rules": true,
     "strict_control": {
       "assigned": 5249,
       "gained": 0,
@@ -460,8 +465,8 @@
       "changed": 0,
       "states": 0,
       "peak_frontier": 0,
-      "milliseconds": 140,
-      "rss_peak_kib": 56048,
+      "milliseconds": 123,
+      "rss_peak_kib": 56116,
       "status": "exact"
     }
   },
@@ -472,6 +477,7 @@
     "input_sha256": "160821fd764e2cae63c7ce1752645185d14ee458e512a2aaf9f1caa6918edad6",
     "baseline_map_hash": "2ea8726df22eee759350c37626867c96b3cb7b55260cf25ba2bb6ce885a9d8b8",
     "unsupported_notes": 0,
+    "all_prior_assignments_preservable_under_joint_rules": true,
     "experiments": {
       "B01": {
         "assigned": 1067,
@@ -481,7 +487,7 @@
         "states": 2006,
         "peak_frontier": 9,
         "milliseconds": 13,
-        "rss_peak_kib": 56048,
+        "rss_peak_kib": 56116,
         "status": "exact"
       },
       "B02": {
@@ -492,7 +498,7 @@
         "states": 2518,
         "peak_frontier": 11,
         "milliseconds": 13,
-        "rss_peak_kib": 56048,
+        "rss_peak_kib": 56116,
         "status": "exact"
       },
       "B03": {
@@ -502,8 +508,8 @@
         "changed": 0,
         "states": 5382,
         "peak_frontier": 15,
-        "milliseconds": 17,
-        "rss_peak_kib": 56048,
+        "milliseconds": 16,
+        "rss_peak_kib": 56116,
         "status": "exact"
       },
       "B04": {
@@ -513,8 +519,8 @@
         "changed": 0,
         "states": 11808,
         "peak_frontier": 51,
-        "milliseconds": 26,
-        "rss_peak_kib": 56048,
+        "milliseconds": 23,
+        "rss_peak_kib": 56116,
         "status": "exact"
       },
       "B05": {
@@ -524,8 +530,8 @@
         "changed": 0,
         "states": 11808,
         "peak_frontier": 51,
-        "milliseconds": 25,
-        "rss_peak_kib": 56048,
+        "milliseconds": 24,
+        "rss_peak_kib": 56116,
         "status": "exact"
       }
     },
