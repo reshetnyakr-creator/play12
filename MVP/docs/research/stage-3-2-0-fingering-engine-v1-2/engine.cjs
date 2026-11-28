@@ -55,7 +55,7 @@ function snapshot(score,{manual={},profile=defaultProfile,resetByMidi={}}={}){
     phraseCandidates,motifCandidates,resets:plan.resets,diagnostics:projected.warnings};
 }
 
-function run(input,{budget=3_000_000,proveRepeats=true}={}){
+function evaluate(input,{budget=3_000_000,proveRepeats=true}={}){
   const {score,events,profile}=input;
   if(profile?.id!=='beginner')throw Error('Only the beginner profile is supported');
   if(!Number.isSafeInteger(budget)||budget<0)throw Error('Invalid search budget');
@@ -180,7 +180,7 @@ function run(input,{budget=3_000_000,proveRepeats=true}={}){
   const result={score:structuredClone(score),events:structuredClone(events),contacts,holds:contacts.map(({id,start,end})=>({id,start,end})),positions,
     phraseCandidates:input.phraseCandidates??[],motifCandidates:input.motifCandidates??[],
     manual,map,assignments,attempts,special,exceptions,unresolved,witnesses,resets:input.resets??[],
-    rejected:reject};
+    rejected:reject, releases:input.releases??[]};
   const verificationStart=performance.now();
   result.validation=verify(input,result,{budget});
   result.verificationMs=performance.now()-verificationStart;
@@ -220,4 +220,99 @@ function run(input,{budget=3_000_000,proveRepeats=true}={}){
   return result;
 }
 
+function releaseCandidates(input,result){
+  const candidates=[];
+  for(const attempt of Object.values(result.attempts)){
+    if(attempt.status!=='infeasible'||!attempt.contacts)continue;
+    const boundary=attempt.blockedAt;
+    const present=new Set(attempt.contacts.map(c=>c.id));
+    for(const c of input.contacts){
+      if(!present.has(c.id)||new E.Q(c.start).cmp(boundary)>=0||
+        new E.Q(c.end).cmp(boundary)<=0||c.fermata||c.arpeggio||
+        c.ids.some(id=>input.manual?.[id]!=null||input.events[id]?.ties?.length))continue;
+      candidates.push({id:c.id,from:c.end,to:boundary,rule:'E03',movement:'unknown',sounding:'unknown'});
+    }
+  }
+  // Try co-releases at the same boundary. Testing only single releases
+  // would hide the jointly feasible continuation of the group.
+  const byBoundary=new Map();
+  for(const candidate of candidates){
+    const key=candidate.to;
+    if(!byBoundary.has(key))byBoundary.set(key,[]);
+    byBoundary.get(key).push(candidate);
+  }
+  return [...byBoundary.values()].flatMap(group=>{
+    let subsets=[[]];
+    for(const entry of group)subsets=[...subsets,...subsets.map(set=>[...set,entry])];
+    return subsets.slice(1);
+  });
+}
+
+function applyRelease(input,release){
+  return {...input,releases:[...(input.releases??[]),release],
+    contacts:input.contacts.map(c=>c.id===release.id?{...c,end:release.to,releaseBasis:'E03'}:c)};
+}
+
+function run(input,options={}){
+  const literal=evaluate(input,options);
+  if(!Object.values(literal.attempts).some(a=>a.status==='infeasible'))return literal;
+  // Best-first over contact edits. A branch is expanded only at its witnessed
+  // first hard failure, and an exhausted search never authorizes a release.
+  const limit=options.releaseBudget??160;
+  const queue=[{input,result:literal}];
+  const seen=new Set();
+  let explored=0;
+  let best=null;
+  let incomplete=false;
+  while(queue.length&&explored<limit){
+    const current=queue.shift();
+    const depth=current.input.releases?.length??0;
+    if(Object.values(current.result.attempts).some(a=>a.status==='budget'))incomplete=true;
+    if(Object.values(current.result.attempts).every(a=>a.status==='exact')&&current.result.validation.ok){
+      const score=Object.values(current.result.attempts).reduce((sum,a)=>sum.map((n,i)=>n+a.cost[i]),
+        Array(8).fill(0));
+      const rank=[...score.slice(0,4),depth,...score.slice(4)];
+      if(!best||compareCost(rank,best.rank)<0)best={...current,rank};
+      continue;
+    }
+    for(const release of releaseCandidates(current.input,current.result)){
+      if(explored>=limit){incomplete=true;break;}
+      const revised=release.reduce(applyRelease,current.input);
+      const key=JSON.stringify(revised.releases.map(r=>[r.id,r.to]).sort());
+      if(seen.has(key))continue;
+      seen.add(key);
+      explored++;
+      queue.push({input:revised,result:evaluate(revised,options)});
+    }
+  }
+  if(incomplete||queue.length||!best){
+    literal.releaseSearch={status:incomplete||queue.length?'budget':'no_plan',explored};
+    return literal;
+  }
+  const affectedHands=new Set(best.result.releases.map(r=>input.contacts.find(c=>c.id===r.id).hand));
+  const excluded=new Set([...best.result.special.flatMap(p=>p.contacts),...literal.rejected.map(r=>r.contact)]);
+  const witnesses=[...affectedHands].map(hand=>({hand,...certify(input,
+    input.contacts.filter(c=>c.hand===hand&&!excluded.has(c.id)),{budget:options.budget})}));
+  if(witnesses.some(w=>w.status!=='infeasible')){
+    literal.releaseSearch={status:'unproven_original_failure',explored,witnesses};
+    return literal;
+  }
+  const necessity=[];
+  for(const [index,release] of best.result.releases.entries()){
+    const retained=best.result.releases.filter((_,i)=>i!==index);
+    const trial=evaluate(retained.reduce(applyRelease,input),options);
+    const attempts=Object.values(trial.attempts);
+    const status=attempts.some(a=>a.status==='budget')?'budget':
+      attempts.some(a=>a.status==='infeasible')?'infeasible':
+      attempts.every(a=>a.status==='exact')&&trial.validation.ok?'exact':'unproven';
+    const rank=status==='exact'?attempts.reduce((sum,a)=>sum.map((n,i)=>n+a.cost[i]),[0,0,0,0]):null;
+    if(status==='budget'||status==='unproven'||rank&&compareCost(rank,best.rank.slice(0,4))<=0){
+      literal.releaseSearch={status:'release_necessity_unproven',explored,release:release.id};
+      return literal;
+    }
+    necessity.push({id:release.id,status,rank});
+  }
+  best.result.releaseSearch={status:'complete',explored,witnesses,necessity};
+  return best.result;
+}
 module.exports={run,snapshot};

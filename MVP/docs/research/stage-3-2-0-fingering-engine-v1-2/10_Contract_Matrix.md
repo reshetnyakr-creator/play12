@@ -111,7 +111,7 @@
 | A03 | [engine.test.cjs](engine.test.cjs) · held bass; cannot forge E07 | Частично, PASS |
 | A04 | [engine.test.cjs](engine.test.cjs) · budget exhaustion; E07 budget | Частично, PASS |
 | A05 | [engine.test.cjs](engine.test.cjs) · priorities and reflection | Частично, PASS |
-| A06 | Специализированного исполняемого оракула пока нет | Открыто |
+| A06 | [engine.test.cjs](engine.test.cjs) · E03 first preserves feasible holdings | Частично, PASS (удержание, освобождение и оба бюджета) |
 | A07 | Специализированного исполняемого оракула пока нет | Открыто |
 | A08 | Специализированного исполняемого оракула пока нет | Открыто |
 | A09 | [engine.test.cjs](engine.test.cjs) · second key ownership | Частично, PASS |
@@ -122,7 +122,7 @@
 | A14 | Редактор, персональные настройки или будущий пользовательский механизм | Вне изолированного ядра |
 | A15 | [engine.test.cjs](engine.test.cjs) · verifier mutation | Частично, PASS |
 | A16 | Редактор, персональные настройки или будущий пользовательский механизм | Вне изолированного ядра |
-| A17 | [compare.cjs](compare.cjs) · compare.cjs, исторический план (прямой импорт не выполнен полностью) | Исторический PASS; прямой не пройден |
+| A17 | [compare.cjs](compare.cjs) · compare.cjs, исторический план (прямой импорт не выполнен полностью) | PASS, включая прямой MXL после E03 |
 | A18 | [engine.test.cjs](engine.test.cjs) · прямой импорт/две позиции; E05 discovered | Частично, PASS |
 | A19 | [compare.cjs](compare.cjs) · compare.cjs, 48 повторов, 68 пар и 3 тройки | Частично, PASS |
 | A20 | [engine.test.cjs](engine.test.cjs) · directed octave / priorities | Частично, PASS |

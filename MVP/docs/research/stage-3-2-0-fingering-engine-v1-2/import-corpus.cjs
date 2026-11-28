@@ -29,12 +29,22 @@ async function main(){
       const preparedAt=performance.now();
       const result=run(prepared);
       const end=performance.now();
+      if(entry.expected){
+        const assert=require('node:assert/strict');
+        for(const [id,finger] of Object.entries(entry.expected)){
+          assert.equal(prepared.manual[id],undefined);
+          assert.equal(result.assignments[id]?.finger,finger,id);
+        }
+        assert.equal(Object.values(result.assignments).filter(a=>a.finger!=null).length,
+          Object.keys(result.events).length);
+        assert.equal(result.validation.ok,true);
+      }
       summary[name]={total:Object.keys(result.events).length,
         assigned:Object.values(result.assignments).filter(a=>a.finger!=null).length,
         importMs:imported-started,preparationMs:preparedAt-imported,
         searchAndAssemblyMs:end-preparedAt-result.verificationMs,verificationMs:result.verificationMs,
         attempts:result.attempts,rejected:result.rejected,exceptions:result.exceptions.length,
-        proofs:result.validation.proofs.length,failures:result.validation.failures,
+        proofs:result.validation.proofs.length,releases:result.releases,releaseSearch:result.releaseSearch,failures:result.validation.failures,
         special:result.special.map(({contacts,fingers,diagnostic})=>({contacts,fingers,diagnostic}))};
       if(process.env.SCORE_OUTPUT_DIR)fs.writeFileSync(path.join(process.env.SCORE_OUTPUT_DIR,name+'.json'),JSON.stringify({score}));
     }

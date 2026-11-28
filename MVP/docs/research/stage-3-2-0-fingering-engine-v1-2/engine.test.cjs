@@ -165,3 +165,19 @@ test('A03/A04 E07 cannot be forged and verification budget does not create proof
   forged.exceptions=[{id:'E07',from:'n0',to:'n1',status:'infeasible'}];
   assert.ok(verify(free,forged).failures.some(x=>x.startsWith('E07_NOT_PROVEN')));
 });
+
+test('E03 first preserves feasible holdings, then changes only physical contact with complete search',()=>{
+  const input=fixture([[36,0,4],[43,0,4],[52,0,1],[57,1,2],[55,2,3],[54,3,4]],{hand:'L'});
+  input.chords=[['n0','n1','n2']];
+  input.events.n0.voice='2'; input.events.n1.voice='2';
+  const original=structuredClone(input);
+  const result=run(input);
+  assert.deepEqual(input,original);
+  assert.deepEqual(fingers(result),[5,2,1,2,3,4]);
+  assert.equal(result.releaseSearch.status,'complete');
+  assert.equal(result.releases.length,2);
+  assert.ok(result.releases.every(r=>r.to==='1'&&r.sounding==='unknown'));
+  assert.deepEqual(run(input,{releaseBudget:0}).releases,[]);
+  assert.deepEqual(run(input,{budget:0}).releases,[]);
+  assert.deepEqual(run(fixture([[60,0,3],[64,1,2]])).releases,[]);
+});
