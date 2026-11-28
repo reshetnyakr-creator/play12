@@ -1,0 +1,20 @@
+[
+  {
+    "locale": "ru",
+    "recoveredBlock": true,
+    "edit": true,
+    "undo": true,
+    "redo": true,
+    "reopened": true,
+    "backupRestored": true
+  },
+  {
+    "locale": "en",
+    "recoveredBlock": true,
+    "edit": true,
+    "undo": true,
+    "redo": true,
+    "reopened": true,
+    "backupRestored": true
+  }
+]

@@ -1,0 +1,187 @@
+{
+  "time": {
+    "before": 469,
+    "after": 513,
+    "total": 541,
+    "before_ms": [
+      470,
+      486,
+      566
+    ],
+    "after_ms": [
+      478,
+      513,
+      672
+    ],
+    "before_runs": 5,
+    "after_runs": 5,
+    "baseline_stable": true,
+    "deterministic": true,
+    "independent_conflicts": 0,
+    "changed_prior_fingers": 0,
+    "changed_contacts": 0,
+    "maximum_additional": 44,
+    "first_candidate_conflicts": [
+      [
+        "P1.m40.e0",
+        "P1.m40.e6"
+      ],
+      [
+        "P1.m40.e0",
+        "P1.m40.e9"
+      ],
+      [
+        "P1.m44.e0",
+        "P1.m44.e6"
+      ],
+      [
+        "P1.m44.e0",
+        "P1.m44.e9"
+      ]
+    ],
+    "recovered_contacts": 44,
+    "states": 3878,
+    "recovery_cpu_ms": [
+      25,
+      28,
+      29,
+      25,
+      41
+    ],
+    "rejection_counts": {
+      "KEY_OVERLAP": 58,
+      "SPAN_VIOLATION": 899,
+      "FINGER_OVERLAP": 460,
+      "BEGINNER_OCTAVE_FINGERING_VIOLATION": 383
+    },
+    "status": "complete"
+  },
+  "no-surprises": {
+    "before": 981,
+    "after": 1067,
+    "total": 1101,
+    "before_ms": [
+      631,
+      729,
+      867
+    ],
+    "after_ms": [
+      774,
+      823,
+      944
+    ],
+    "before_runs": 5,
+    "after_runs": 5,
+    "baseline_stable": true,
+    "deterministic": true,
+    "independent_conflicts": 0,
+    "changed_prior_fingers": 0,
+    "changed_contacts": 0,
+    "maximum_additional": 86,
+    "first_candidate_conflicts": [],
+    "recovered_contacts": 69,
+    "states": 3973,
+    "recovery_cpu_ms": [
+      71,
+      74,
+      76,
+      99,
+      83
+    ],
+    "rejection_counts": {
+      "FINGER_OVERLAP": 351,
+      "SPAN_VIOLATION": 1062,
+      "BEGINNER_OCTAVE_FINGERING_VIOLATION": 68,
+      "KEY_OVERLAP": 10
+    },
+    "status": "complete"
+  },
+  "interstellar": {
+    "before": 5249,
+    "after": 5249,
+    "total": 5249,
+    "before_ms": [
+      3652,
+      4158,
+      4705
+    ],
+    "after_ms": [
+      3603,
+      4107,
+      4500
+    ],
+    "before_runs": 5,
+    "after_runs": 5,
+    "baseline_stable": true,
+    "deterministic": true,
+    "independent_conflicts": 0,
+    "changed_prior_fingers": 0,
+    "changed_contacts": 0
+  },
+  "creep": {
+    "before": 1468,
+    "after": 1468,
+    "total": 1468,
+    "before_ms": [
+      869,
+      982,
+      1036
+    ],
+    "after_ms": [
+      899,
+      1016,
+      1209
+    ],
+    "before_runs": 5,
+    "after_runs": 5,
+    "baseline_stable": true,
+    "deterministic": true,
+    "independent_conflicts": 0,
+    "changed_prior_fingers": 0,
+    "changed_contacts": 0
+  },
+  "clocks": {
+    "before": 195,
+    "after": 195,
+    "total": 195,
+    "before_ms": [
+      259,
+      298,
+      411
+    ],
+    "after_ms": [
+      245,
+      279,
+      316
+    ],
+    "before_runs": 5,
+    "after_runs": 5,
+    "baseline_stable": true,
+    "deterministic": true,
+    "independent_conflicts": 0,
+    "changed_prior_fingers": 0,
+    "changed_contacts": 0
+  },
+  "pirate": {
+    "before": 436,
+    "after": 436,
+    "total": 436,
+    "before_ms": [
+      336,
+      392,
+      476
+    ],
+    "after_ms": [
+      341,
+      377,
+      382
+    ],
+    "before_runs": 5,
+    "after_runs": 5,
+    "baseline_stable": true,
+    "deterministic": true,
+    "independent_conflicts": 0,
+    "changed_prior_fingers": 0,
+    "changed_contacts": 0
+  }
+}

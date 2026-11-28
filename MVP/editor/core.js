@@ -710,6 +710,7 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
   const overlap = (a,b) => a.from.cmp(b.to)<0 && b.from.cmp(a.to)<0;
   const check = (a,b,fa,fb) => {
     if (a.key === b.key) return 'KEY_OVERLAP';
+    if (a.hand !== b.hand) return null;
     if (fa === fb) return 'FINGER_OVERLAP';
     return a.key<b.key ? spanViolation(cfg,a,b,fa,fb) : spanViolation(cfg,b,a,fb,fa);
   };
@@ -741,14 +742,14 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
         if(violation)countRejected(violation);
         else options.push(finger);
       }
-      const costs = new Map(options.filter(Boolean).map(f=>[f,neighbors.map(a=>pairCost(a,c,baseline[a.id],f))]));
+      const costs = new Map(options.filter(Boolean).map(f=>[f,neighbors.filter(a=>a.hand===c.hand).map(a=>pairCost(a,c,baseline[a.id],f))]));
       const next = new Map();
       for(const state of layer.values())for(const finger of options) {
         if (++states>cfg.search.maxCandidatesPerLayer || (states%256===0 && clock()>=deadline)) return null;
         const fingers = keep.map(i=>state.fingers[i]);
         const violation = finger && active.map((a,i)=>fingers[i] && check(a,c,fingers[i],finger)).find(Boolean);
         if(violation){countRejected(violation);continue;}
-        const paired = finger ? [...costs.get(finger),...active.flatMap((a,i)=>fingers[i]?[pairCost(a,c,fingers[i],finger)]:[])] : [];
+        const paired = finger ? [...costs.get(finger),...active.flatMap((a,i)=>fingers[i]&&a.hand===c.hand?[pairCost(a,c,fingers[i],finger)]:[])] : [];
         const result = {notes:state.notes+(finger?c.ids.length:0),expansions:state.expansions,
           excess:state.excess,cost:state.cost,fingers:[...fingers,finger],
           path:finger?{id:c.id,finger,previous:state.path}:state.path};
@@ -765,32 +766,29 @@ function recoverPartial(score, run, locks = {}, clock = Date.now) {
     for(const value of layer.values())if(!best||compare(value,best)<0)best=value;
     return best;
   }
-  for(const hand of ['L','R']){
-    const fixed = timed.filter(c=>c.hand===hand && baseline[c.id]!=null);
-    const pending = timed.filter(c=>c.hand===hand && baseline[c.id]==null)
-      .sort((a,b)=>a.from.cmp(b.from)||a.key-b.key||a.id.localeCompare(b.id));
-    let i=0;
-    while(i<pending.length){
-      let end = pending[i].to;
-      let j=i+1;
-      while(j<pending.length && pending[j].from.cmp(end)<0){
-        if(pending[j].to.cmp(end)>0)end=pending[j].to;
-        j++;
-      }
-      const solution = solve(pending.slice(i,j),fixed);
-      if(!solution){status='budget_exhausted';break;}
-      for(let p=solution.path;p;p=p.previous){added[p.id]=p.finger;recoveredGroups[p.id]=pending[i].id;}
-      i=j;
+  const fixed = timed.filter(c=>baseline[c.id]!=null);
+  const pending = timed.filter(c=>baseline[c.id]==null)
+    .sort((a,b)=>a.from.cmp(b.from)||a.key-b.key||a.id.localeCompare(b.id));
+  let i=0;
+  while(i<pending.length){
+    let end = pending[i].to;
+    let j=i+1;
+    while(j<pending.length && pending[j].from.cmp(end)<0){
+      if(pending[j].to.cmp(end)>0)end=pending[j].to;
+      j++;
     }
-    if(status!=='complete')break;
+    const solution = solve(pending.slice(i,j),fixed);
+    if(!solution){status='budget_exhausted';break;}
+    for(let p=solution.path;p;p=p.previous){added[p.id]=p.finger;recoveredGroups[p.id]=pending[i].id;}
+    i=j;
   }
   const contactAssignments = {...baseline,...added};
   // Recheck the proposed map by interval pairs, independent of DP pruning.
   const validation = validate(run.contacts,contactAssignments,{profile:cfg,locks,
     rounds:score.editor?.fermataTimeline?.rounds??score.editor?.rounds});
   const duplicate = timed.some((a,i)=>contactAssignments[a.id]!=null && timed.slice(0,i).some(b=>
-    contactAssignments[b.id]!=null && a.hand===b.hand && (added[a.id]||added[b.id]) && overlap(a,b) &&
-    (a.key===b.key || contactAssignments[a.id]===contactAssignments[b.id])));
+    contactAssignments[b.id]!=null && (added[a.id]||added[b.id]) && overlap(a,b) &&
+    (a.key===b.key || (a.hand===b.hand && contactAssignments[a.id]===contactAssignments[b.id]))));
   const invalid = duplicate || validation.conflicts.some(issue=>issue.ids?.some(id=>added[id]));
   const assignments = {...run.assignments};
   const unassignedReasons = {...run.unassignedReasons};

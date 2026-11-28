@@ -84,3 +84,9 @@ test('S18 manual and baseline fingers stay fixed',()=>{
  assert.equal(r.assignments.a,4);
  assert.equal(r.assignments.b,2);
 });
+test('Recovery cannot assign a key already held by the opposite hand',()=>{
+ const r=recover(fixture([contact('right',60,0,2),contact('left',60,1,3,['left'],'L')],{right:1}));
+ assert.equal(r.assignments.left,null);
+ assert.equal(r.assignments.right,1);
+ assert.equal(r.recovery.rejected.KEY_OVERLAP,5);
+});
