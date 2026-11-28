@@ -1,0 +1,11 @@
+composition,disabled,assigned,gained,dropped,changed,states,peak_frontier,milliseconds,rss_peak_kib,status
+time,span,535,26,4,12,121746,1884,182,23120,exact
+time,octave,527,22,8,8,96876,1600,139,23120,exact
+time,ownership,529,22,6,0,78288,1608,125,23120,exact
+time,span+octave,535,26,4,0,341880,6406,542,23200,exact
+time,span+octave+ownership,541,28,0,0,584880,15531,1223,27552,exact
+no-surprises,span,1099,32,0,0,21084,60,40,56048,exact
+no-surprises,octave,1067,0,0,0,12924,65,27,56048,exact
+no-surprises,ownership,1069,2,0,0,11808,51,25,56048,exact
+no-surprises,span+octave,1099,32,0,0,25872,136,52,56048,exact
+no-surprises,span+octave+ownership,1101,34,0,0,25872,136,49,56048,exact

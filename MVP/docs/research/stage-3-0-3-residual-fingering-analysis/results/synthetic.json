@@ -1,0 +1,141 @@
+[
+  {
+    "id": "S01",
+    "expected": 2,
+    "observed": 2,
+    "fingers": {
+      "a": 1,
+      "b": 5
+    }
+  },
+  {
+    "id": "S02",
+    "expected": 3,
+    "observed": 3,
+    "fingers": {
+      "a": 1,
+      "b": 2,
+      "c": 5
+    }
+  },
+  {
+    "id": "S03",
+    "expected": 3,
+    "observed": 3,
+    "fingers": {
+      "a": 1,
+      "b": 5,
+      "c": 1
+    }
+  },
+  {
+    "id": "S04",
+    "expected": 1,
+    "observed": 1,
+    "fingers": {
+      "bass": 1,
+      "high": 0
+    }
+  },
+  {
+    "id": "S05",
+    "expected": 2,
+    "observed": 2,
+    "fingers": {
+      "a": 5,
+      "b": 1,
+      "c": 0
+    }
+  },
+  {
+    "id": "S06",
+    "expected": 1,
+    "observed": 1,
+    "fingers": {
+      "a": 1,
+      "b": 0
+    }
+  },
+  {
+    "id": "S07",
+    "expected": 1,
+    "observed": 1,
+    "fingers": {
+      "a": 5,
+      "b": 0
+    }
+  },
+  {
+    "id": "S08",
+    "expected": 1,
+    "observed": 1,
+    "fingers": {
+      "a": 1,
+      "b": 0
+    }
+  },
+  {
+    "id": "S09",
+    "expected": 2,
+    "observed": 2,
+    "fingers": {
+      "a": 1,
+      "b": 5
+    }
+  },
+  {
+    "id": "S10",
+    "expected": 2,
+    "observed": 2,
+    "fingers": {
+      "held": 1,
+      "octave": 5
+    }
+  },
+  {
+    "id": "S11",
+    "expected": 2,
+    "observed": 2,
+    "fingers": {
+      "a": 1,
+      "b": 5
+    }
+  },
+  {
+    "id": "S12",
+    "expected": 3,
+    "observed": 3,
+    "fingers": {
+      "chain": 1,
+      "octave": 5
+    }
+  },
+  {
+    "id": "S13",
+    "expected": 2,
+    "observed": 2,
+    "fingers": {
+      "bottom": 5,
+      "middle": 4,
+      "top": 0
+    }
+  },
+  {
+    "id": "S14",
+    "expected": 1,
+    "observed": 1,
+    "fingers": {
+      "a": 1,
+      "b": 0
+    }
+  },
+  {
+    "id": "S15",
+    "expected": 1,
+    "observed": 1,
+    "fingers": {
+      "a": 5,
+      "b": 0
+    }
+  }
+]

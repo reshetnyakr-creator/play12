@@ -1,0 +1,555 @@
+{
+  "Clocks": {
+    "before": 195,
+    "total": 195,
+    "baseline_conflicts": [],
+    "input_sha256": "7524ed145eafc48e80b759088e21a4a223980b0944c45d0c44f2f44de0919288",
+    "baseline_map_hash": "3a6a5014e2cb809cf941d2edc869aff8178d5a140c2289dc819159b5b2f5d37b",
+    "unsupported_notes": 0,
+    "strict_control": {
+      "assigned": 195,
+      "gained": 0,
+      "dropped": 0,
+      "changed": 0,
+      "states": 0,
+      "peak_frontier": 0,
+      "milliseconds": 1,
+      "rss_peak_kib": 12604,
+      "status": "exact"
+    }
+  },
+  "Creep": {
+    "before": 1468,
+    "total": 1468,
+    "baseline_conflicts": [],
+    "input_sha256": "cf1cd7550d60ad085c7dab2640b9aafedcf5478b92b1ce439e7b301419050579",
+    "baseline_map_hash": "002be28c1722be43bd23e3d1cf90f4857044a742c735b230788f3fe5f94e525e",
+    "unsupported_notes": 0,
+    "strict_control": {
+      "assigned": 1468,
+      "gained": 0,
+      "dropped": 0,
+      "changed": 0,
+      "states": 0,
+      "peak_frontier": 0,
+      "milliseconds": 18,
+      "rss_peak_kib": 23120,
+      "status": "exact"
+    }
+  },
+  "HE_S": {
+    "before": 436,
+    "total": 436,
+    "baseline_conflicts": [],
+    "input_sha256": "0b15dcfb56e2dca89c16122736d9e15b31da61c55f5c5ead6b80a86122a59a92",
+    "baseline_map_hash": "185694e58322877d52d28e264997f4d6a8bfe8ab33995be2f3ff9ee4fe051e0e",
+    "unsupported_notes": 0,
+    "strict_control": {
+      "assigned": 436,
+      "gained": 0,
+      "dropped": 0,
+      "changed": 0,
+      "states": 0,
+      "peak_frontier": 0,
+      "milliseconds": 2,
+      "rss_peak_kib": 23120,
+      "status": "exact"
+    }
+  },
+  "time": {
+    "before": 513,
+    "total": 541,
+    "baseline_conflicts": [
+      {
+        "ids": [
+          "P1.m40.e0",
+          "P1.m40.e4"
+        ],
+        "type": "same_key",
+        "hands": [
+          "R",
+          "L"
+        ],
+        "midi": [
+          60,
+          60
+        ],
+        "overlap": [
+          "161",
+          "162"
+        ]
+      },
+      {
+        "ids": [
+          "P1.m44.e0",
+          "P1.m44.e4"
+        ],
+        "type": "same_key",
+        "hands": [
+          "R",
+          "L"
+        ],
+        "midi": [
+          60,
+          60
+        ],
+        "overlap": [
+          "177",
+          "178"
+        ]
+      }
+    ],
+    "input_sha256": "68d34417f7db545243ec9f307c993893d7f47589e324d2b6106f867ae85ddd4e",
+    "baseline_map_hash": "15fcff19fff4fb2788c99dda4a9aff55af6dec8ef2ef2218f8119603b09cf6c5",
+    "unsupported_notes": 0,
+    "experiments": {
+      "B01": {
+        "assigned": 523,
+        "gained": 20,
+        "dropped": 10,
+        "changed": 0,
+        "states": 4626,
+        "peak_frontier": 128,
+        "milliseconds": 11,
+        "rss_peak_kib": 23120,
+        "status": "exact"
+      },
+      "B02": {
+        "assigned": 523,
+        "gained": 20,
+        "dropped": 10,
+        "changed": 0,
+        "states": 14790,
+        "peak_frontier": 312,
+        "milliseconds": 27,
+        "rss_peak_kib": 23120,
+        "status": "exact"
+      },
+      "B03": {
+        "assigned": 523,
+        "gained": 20,
+        "dropped": 10,
+        "changed": 0,
+        "states": 59518,
+        "peak_frontier": 1092,
+        "milliseconds": 88,
+        "rss_peak_kib": 23120,
+        "status": "exact"
+      },
+      "B04": {
+        "assigned": 523,
+        "gained": 20,
+        "dropped": 10,
+        "changed": 0,
+        "states": 66264,
+        "peak_frontier": 1092,
+        "milliseconds": 93,
+        "rss_peak_kib": 23120,
+        "status": "exact"
+      },
+      "B05": {
+        "assigned": 523,
+        "gained": 20,
+        "dropped": 10,
+        "changed": 0,
+        "states": 66264,
+        "peak_frontier": 1092,
+        "milliseconds": 96,
+        "rss_peak_kib": 23120,
+        "status": "exact"
+      }
+    },
+    "mirror": {
+      "assigned": 523,
+      "gained": 20,
+      "dropped": 10,
+      "changed": 0,
+      "status": "exact"
+    },
+    "strict_witness_delta": [
+      {
+        "id": "P1.m40.e0",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m40.e10",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m40.e5",
+        "before": 0,
+        "after": 1
+      },
+      {
+        "id": "P1.m40.e6",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m40.e8",
+        "before": 0,
+        "after": 4
+      },
+      {
+        "id": "P1.m40.e9",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m42.e0",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m42.e11",
+        "before": 5,
+        "after": 0
+      },
+      {
+        "id": "P1.m42.e4",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m42.e7",
+        "before": 0,
+        "after": 5
+      },
+      {
+        "id": "P1.m42.e10",
+        "before": 0,
+        "after": 5
+      },
+      {
+        "id": "P1.m43.e10",
+        "before": 5,
+        "after": 0
+      },
+      {
+        "id": "P1.m43.e4",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m43.e6",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m43.e8",
+        "before": 0,
+        "after": 3
+      },
+      {
+        "id": "P1.m44.e0",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m44.e10",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m44.e5",
+        "before": 0,
+        "after": 1
+      },
+      {
+        "id": "P1.m44.e6",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m44.e8",
+        "before": 0,
+        "after": 4
+      },
+      {
+        "id": "P1.m44.e9",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m46.e0",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m46.e11",
+        "before": 5,
+        "after": 0
+      },
+      {
+        "id": "P1.m46.e4",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m46.e7",
+        "before": 0,
+        "after": 5
+      },
+      {
+        "id": "P1.m46.e10",
+        "before": 0,
+        "after": 5
+      },
+      {
+        "id": "P1.m47.e10",
+        "before": 5,
+        "after": 0
+      },
+      {
+        "id": "P1.m47.e4",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m47.e6",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m47.e8",
+        "before": 0,
+        "after": 3
+      }
+    ],
+    "key_pairs_in_spec": [
+      [
+        {
+          "id": "P1.m40.e0",
+          "hand": "R",
+          "key": 60,
+          "start": "160/1",
+          "end": "164/1",
+          "base": 1
+        },
+        {
+          "id": "P1.m40.e4",
+          "hand": "L",
+          "key": 60,
+          "start": "161/1",
+          "end": "162/1",
+          "base": 5
+        }
+      ],
+      [
+        {
+          "id": "P1.m40.e0",
+          "hand": "R",
+          "key": 60,
+          "start": "160/1",
+          "end": "164/1",
+          "base": 1
+        },
+        {
+          "id": "P1.m40.e6",
+          "hand": "L",
+          "key": 60,
+          "start": "162/1",
+          "end": "163/1",
+          "base": 0
+        }
+      ],
+      [
+        {
+          "id": "P1.m40.e0",
+          "hand": "R",
+          "key": 60,
+          "start": "160/1",
+          "end": "164/1",
+          "base": 1
+        },
+        {
+          "id": "P1.m40.e9",
+          "hand": "L",
+          "key": 60,
+          "start": "163/1",
+          "end": "164/1",
+          "base": 0
+        }
+      ],
+      [
+        {
+          "id": "P1.m44.e0",
+          "hand": "R",
+          "key": 60,
+          "start": "176/1",
+          "end": "180/1",
+          "base": 1
+        },
+        {
+          "id": "P1.m44.e4",
+          "hand": "L",
+          "key": 60,
+          "start": "177/1",
+          "end": "178/1",
+          "base": 5
+        }
+      ],
+      [
+        {
+          "id": "P1.m44.e0",
+          "hand": "R",
+          "key": 60,
+          "start": "176/1",
+          "end": "180/1",
+          "base": 1
+        },
+        {
+          "id": "P1.m44.e6",
+          "hand": "L",
+          "key": 60,
+          "start": "178/1",
+          "end": "179/1",
+          "base": 0
+        }
+      ],
+      [
+        {
+          "id": "P1.m44.e0",
+          "hand": "R",
+          "key": 60,
+          "start": "176/1",
+          "end": "180/1",
+          "base": 1
+        },
+        {
+          "id": "P1.m44.e9",
+          "hand": "L",
+          "key": 60,
+          "start": "179/1",
+          "end": "180/1",
+          "base": 0
+        }
+      ]
+    ],
+    "release_counterfactual": {
+      "P1.m30.e0": "122",
+      "P1.m33.e7": "135",
+      "P1.m40.e0": "161",
+      "P1.m42.e0": "169",
+      "P1.m44.e0": "177",
+      "P1.m46.e0": "185"
+    },
+    "unique_signatures": 17,
+    "residual_reasons": {
+      "MODEL_CONFLICT_UNRESOLVED_KEY": 2,
+      "NO_PATH_UNDER_BEGINNER_CONSTRAINTS": 26
+    },
+    "residual_hands": {
+      "R": 1,
+      "L": 27
+    }
+  },
+  "interstellar-suite-hans-zimmer": {
+    "before": 5249,
+    "total": 5249,
+    "baseline_conflicts": [],
+    "input_sha256": "a8c4e243f9b62cabf04cfe5d7e19dec020a6b74b4799f1a181066bbf1b98da5d",
+    "baseline_map_hash": "172fba3b3ddbc90dc881dbcc4d42703c655405bd7fc3e00fb50e25bad20535a8",
+    "unsupported_notes": 0,
+    "strict_control": {
+      "assigned": 5249,
+      "gained": 0,
+      "dropped": 0,
+      "changed": 0,
+      "states": 0,
+      "peak_frontier": 0,
+      "milliseconds": 140,
+      "rss_peak_kib": 56048,
+      "status": "exact"
+    }
+  },
+  "no-surprises": {
+    "before": 1067,
+    "total": 1101,
+    "baseline_conflicts": [],
+    "input_sha256": "160821fd764e2cae63c7ce1752645185d14ee458e512a2aaf9f1caa6918edad6",
+    "baseline_map_hash": "2ea8726df22eee759350c37626867c96b3cb7b55260cf25ba2bb6ce885a9d8b8",
+    "unsupported_notes": 0,
+    "experiments": {
+      "B01": {
+        "assigned": 1067,
+        "gained": 0,
+        "dropped": 0,
+        "changed": 0,
+        "states": 2006,
+        "peak_frontier": 9,
+        "milliseconds": 13,
+        "rss_peak_kib": 56048,
+        "status": "exact"
+      },
+      "B02": {
+        "assigned": 1067,
+        "gained": 0,
+        "dropped": 0,
+        "changed": 0,
+        "states": 2518,
+        "peak_frontier": 11,
+        "milliseconds": 13,
+        "rss_peak_kib": 56048,
+        "status": "exact"
+      },
+      "B03": {
+        "assigned": 1067,
+        "gained": 0,
+        "dropped": 0,
+        "changed": 0,
+        "states": 5382,
+        "peak_frontier": 15,
+        "milliseconds": 17,
+        "rss_peak_kib": 56048,
+        "status": "exact"
+      },
+      "B04": {
+        "assigned": 1067,
+        "gained": 0,
+        "dropped": 0,
+        "changed": 0,
+        "states": 11808,
+        "peak_frontier": 51,
+        "milliseconds": 26,
+        "rss_peak_kib": 56048,
+        "status": "exact"
+      },
+      "B05": {
+        "assigned": 1067,
+        "gained": 0,
+        "dropped": 0,
+        "changed": 0,
+        "states": 11808,
+        "peak_frontier": 51,
+        "milliseconds": 25,
+        "rss_peak_kib": 56048,
+        "status": "exact"
+      }
+    },
+    "mirror": {
+      "assigned": 1067,
+      "gained": 0,
+      "dropped": 0,
+      "changed": 0,
+      "status": "exact"
+    },
+    "strict_witness_delta": [],
+    "key_pairs_in_spec": [],
+    "release_counterfactual": {
+      "P1.m50.e10": "403/2",
+      "P1.m52.e10": "419/2"
+    },
+    "unique_signatures": 22,
+    "residual_reasons": {
+      "NO_PATH_UNDER_BEGINNER_CONSTRAINTS": 27,
+      "RECOVERY_PENDING_RELEASE": 5,
+      "MODEL_CONFLICT_UNRESOLVED_KEY": 2
+    },
+    "residual_hands": {
+      "L": 34
+    }
+  }
+}

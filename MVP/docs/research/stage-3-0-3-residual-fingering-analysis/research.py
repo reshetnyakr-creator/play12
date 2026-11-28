@@ -70,7 +70,7 @@ def components(contacts):
         yield sorted(group,key=lambda a:(a['lo'],a['id']))
 
 
-def frontier(group, movable, profile, disable=(), budget=1500000):
+def frontier(group, movable, profile, disable=(), budget=1500000, required=()):
     state={():((0,0,0,0),())}
     active=[]
     count=peak=0
@@ -79,6 +79,8 @@ def frontier(group, movable, profile, disable=(), budget=1500000):
         active=[active[i] for i in keep]
         next_state={}
         options=(0,c['base']) if c['base'] and c['id'] not in movable else range(6)
+        if c['id'] in required:
+            options=tuple(f for f in options if f)
         for key,(score,path) in state.items():
             retained=tuple(key[i] for i in keep)
             for f in options:
@@ -98,6 +100,8 @@ def frontier(group, movable, profile, disable=(), budget=1500000):
         state=next_state
         active.append(c)
         peak=max(peak,len(state))
+    if not state:
+        return None,count,peak
     score,path=max(state.values())
     return dict(zip((c['id'] for c in group),path)),count,peak
 
@@ -105,25 +109,29 @@ def frontier(group, movable, profile, disable=(), budget=1500000):
 def audit(contacts, fingers, profile, disable=()):
     # Independent pair enumeration rather than using the frontier traversal.
     problems=[]
-    for a,b in itertools.combinations(contacts,2):
-        f,g=fingers.get(a['id'],0),fingers.get(b['id'],0)
-        if not f or not g or not edge(a,b) or not overlap(a,b):
-            continue
-        gap=abs(a['key']-b['key'])
-        code=None
-        if gap==0 and 'ownership' not in disable:
-            code='same_key'
-        elif a['hand']==b['hand']:
-            order=(f,g) if a['key']<b['key'] else (g,f)
-            if f==g:
-                code='same_finger'
-            elif gap==12 and 'octave' not in disable and order!=((1,5) if a['hand']=='R' else (5,1)):
-                code='octave'
-            elif 'span' not in disable and gap>profile['practicalSpan'][f'{min(f,g)}-{max(f,g)}']:
-                code='span'
-        if code:
-            problems.append({'ids':[a['id'],b['id']],'type':code,'hands':[a['hand'],b['hand']],
-                             'midi':[a['key'],b['key']],'overlap':[str(max(a['lo'],b['lo'])),str(min(a['hi'],b['hi']))]})
+    ordered=sorted(contacts,key=lambda c:c['lo'])
+    for i,a in enumerate(ordered):
+        for b in itertools.islice(ordered,i+1,None):
+            if b['lo']>=a['hi']:
+                break
+            f,g=fingers.get(a['id'],0),fingers.get(b['id'],0)
+            if not f or not g or not edge(a,b) or not overlap(a,b):
+                continue
+            gap=abs(a['key']-b['key'])
+            code=None
+            if gap==0 and 'ownership' not in disable:
+                code='same_key'
+            elif a['hand']==b['hand']:
+                order=(f,g) if a['key']<b['key'] else (g,f)
+                if f==g:
+                    code='same_finger'
+                elif gap==12 and 'octave' not in disable and order!=((1,5) if a['hand']=='R' else (5,1)):
+                    code='octave'
+                elif 'span' not in disable and gap>profile['practicalSpan'][f'{min(f,g)}-{max(f,g)}']:
+                    code='span'
+            if code:
+                problems.append({'ids':[a['id'],b['id']],'type':code,'hands':[a['hand'],b['hand']],
+                                 'midi':[a['key'],b['key']],'overlap':[str(max(a['lo'],b['lo'])),str(min(a['hi'],b['hi']))]})
     return problems
 
 
@@ -193,6 +201,7 @@ def main(source,dest):
             'input_sha256':d['sourceHash'],'baseline_map_hash':hashlib.sha256(json.dumps(run['assignments'],sort_keys=True).encode()).hexdigest(),
             'unsupported_notes':run['total']-sum(len(c['ids']) for c in contacts)}
         if name not in ('time','no-surprises'):
+            item['strict_control'],_=experiment(contacts,profile,'B05')
             continue
         item['experiments']={}
         for mode in ('B01','B02','B03','B04','B05'):
@@ -200,6 +209,21 @@ def main(source,dest):
             item['experiments'][mode]=result
             reassignment.append({'composition':name,'mode':mode,**result})
         strict,fixed_fingers=experiment(contacts,profile,'B05')
+        mirrored=[dict(c,hand='L' if c['hand']=='R' else 'R',key=127-c['key']) for c in contacts]
+        mirror,_=experiment(mirrored,profile,'B05')
+        item['mirror']={k:mirror[k] for k in ('assigned','gained','dropped','changed','status')}
+        item['strict_witness_delta']=[dict(id=c['id'],before=c['base'],after=fixed_fingers.get(c['id'],0))
+             for c in contacts if c['base']!=fixed_fingers.get(c['id'],0)]
+        item['key_pairs_in_spec']=[]
+        by_id={c['id']:c for c in contacts}
+        if name=='time':
+            for m,events in ((40,(4,6,9)),(44,(4,6,9))):
+                first=by_id[f'P1.m{m}.e0']
+                for e in events:
+                    second=by_id[f'P1.m{m}.e{e}']
+                    item['key_pairs_in_spec'].append([{k:c[k] for k in ('id','hand','key','start','end','base')} for c in (first,second)])
+        groups={c['id']:g for g in components(contacts) for c in g}
+        signatures={}
         for disable in [('span',),('octave',),('ownership',),('span','octave'),('span','octave','ownership')]:
             result,_=experiment(contacts,profile,'B05',disable)
             sensitivity.append({'composition':name,'disabled':'+'.join(disable),**result})
@@ -214,6 +238,9 @@ def main(source,dest):
         result,_=experiment(clipped,profile,'B05')
         model.append({'composition':name,'variant':'release_at_next_same_key_zero_gap','altered_contacts':len(changes),**result})
         item['release_counterfactual']=changes
+        clipped_gap=[dict(c,hi=max(c['lo']+Q(1,1000),c['hi']-Q(1,16))) if c['id'] in changes else c for c in clipped]
+        result,_=experiment(clipped_gap,profile,'B05')
+        model.append({'composition':name,'variant':'release_before_next_same_key_gap_1_16Q','altered_contacts':len(changes),**result})
         context={e['id']:(m,e) for part in d['score']['score']['parts'] for m in part['measures'] for e in m['events']}
         rows=[]
         for c in contacts:
@@ -229,14 +256,23 @@ def main(source,dest):
                 cause='R01'
             else:
                 cause='U01'
-            patterns[(name,cause)]+=len(c['ids'])
+            group=groups[c['id']]
+            local_max=sum(len(a['ids']) for a in group if fixed_fingers.get(a['id']))
+            forced,_,_=frontier(group,{a['id'] for a in group},profile,required={c['id']})
+            forced_total=sum(len(a['ids']) for a in group if forced and forced.get(a['id']))
+            signature=(c['hand'], str(c['hi']-c['lo']), tuple(sorted((a['hand'],a['key']-c['key'],str(a['lo']-c['lo']),str(a['hi']-c['lo'])) for a in active)))
+            signature_hash=hashlib.sha256(repr(signature).encode()).hexdigest()[:12]
+            patterns[(name,cause,signature_hash)]+=len(c['ids'])
+            signatures[c['id']]=signature_hash
             for id in c['ids']:
                 m,e=context[id]
                 rows.append(dict(composition=name,note_id=id,contact_id=c['id'],measure=m['number'],round=m['index']+1,
                     position=e['editor_onset_q'],hand=c['hand'],midi=c['key'],duration=e['duration_quarters'],
                     contact_interval=f"[{c['lo']},{c['hi']})",staff=e['staff'],voice=e['voice'],
                     ties=json.dumps(e['ties']),articulation=json.dumps(e['articulations']),source_fingering=e['source_fingering'],
-                    original_status=run['unassignedReasons'][id],primary_cause=cause,
+                    original_status=run['unassignedReasons'][id],primary_cause=cause,pattern=signature_hash,
+                    maximum_loss_if_contact_required=local_max-forced_total if forced else '',
+                    secondary_causes=json.dumps(['group_choice'] if forced_total==local_max else ['coverage_tradeoff']),
                     blocking_contacts=json.dumps([[a['id'],a['hand'],a['key'],a['start'],a['end'],a['base']] for a in active]),
                     ruled_out_by_finger=json.dumps(rejected),alternative_fingering=fixed_fingers.get(c['id']) or '',
                     reassignment_result='included_in_B05_witness' if fixed_fingers.get(c['id']) else 'outside_B05_witness',
@@ -244,13 +280,14 @@ def main(source,dest):
                     contact_model_change='investigate_release' if ownership else '',
                     independent_validation='B05_witness_pair_checked'))
         assert len(rows)==run['total']-run['assigned']
+        item['unique_signatures']=len(set(signatures.values()))
         item['residual_reasons']=dict(Counter(r['original_status'] for r in rows))
         item['residual_hands']=dict(Counter(r['hand'] for r in rows))
         save_csv(dest/f'{name}-residual-analysis.csv',rows)
     save_csv(dest/'reassignment-experiments.csv',reassignment)
     save_csv(dest/'rule-sensitivity-analysis.csv',sensitivity)
     save_csv(dest/'contact-model-experiments.csv',model)
-    save_csv(dest/'unique-problem-patterns.csv',[dict(composition=k[0],pattern_family=k[1],notes=v) for k,v in sorted(patterns.items())])
+    save_csv(dest/'unique-problem-patterns.csv',[dict(composition=k[0],pattern_family=k[1],signature=k[2],notes=v) for k,v in sorted(patterns.items())])
     (dest/'independent-validation.json').write_text(json.dumps(summary,indent=2)+'\n')
 
 
