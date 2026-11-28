@@ -1,0 +1,231 @@
+{
+  "time": {
+    "input_hash": "68d34417f7db545243ec9f307c993893d7f47589e324d2b6106f867ae85ddd4e",
+    "baseline_fingering_sha256": "15fcff19fff4fb2788c99dda4a9aff55af6dec8ef2ef2218f8119603b09cf6c5",
+    "total": 541,
+    "stage302": 513,
+    "strict": 523,
+    "added_to_map": 20,
+    "removed_from_map": 10,
+    "reassigned": 0,
+    "groups": {
+      "G2": 2,
+      "G3": 8,
+      "G1": 4,
+      "G4": 4
+    },
+    "secondary": {
+      "G4": 12
+    },
+    "zero_loss_individually": 7,
+    "ids_removed": [
+      "P1.m40.e0",
+      "P1.m40.e10",
+      "P1.m42.e0",
+      "P1.m42.e11",
+      "P1.m43.e10",
+      "P1.m44.e0",
+      "P1.m44.e10",
+      "P1.m46.e0",
+      "P1.m46.e11",
+      "P1.m47.e10"
+    ],
+    "ids_closed": [
+      "P1.m40.e5",
+      "P1.m40.e6",
+      "P1.m40.e8",
+      "P1.m40.e9",
+      "P1.m42.e4",
+      "P1.m42.e7",
+      "P1.m42.e10",
+      "P1.m43.e4",
+      "P1.m43.e6",
+      "P1.m43.e8",
+      "P1.m44.e5",
+      "P1.m44.e6",
+      "P1.m44.e8",
+      "P1.m44.e9",
+      "P1.m46.e4",
+      "P1.m46.e7",
+      "P1.m46.e10",
+      "P1.m47.e4",
+      "P1.m47.e6",
+      "P1.m47.e8"
+    ],
+    "assigned_contact_conflicts": 0,
+    "strict_map_delta": [
+      {
+        "id": "P1.m40.e0",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m40.e10",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m40.e5",
+        "before": 0,
+        "after": 1
+      },
+      {
+        "id": "P1.m40.e6",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m40.e8",
+        "before": 0,
+        "after": 4
+      },
+      {
+        "id": "P1.m40.e9",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m42.e0",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m42.e11",
+        "before": 5,
+        "after": 0
+      },
+      {
+        "id": "P1.m42.e4",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m42.e7",
+        "before": 0,
+        "after": 5
+      },
+      {
+        "id": "P1.m42.e10",
+        "before": 0,
+        "after": 5
+      },
+      {
+        "id": "P1.m43.e10",
+        "before": 5,
+        "after": 0
+      },
+      {
+        "id": "P1.m43.e4",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m43.e6",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m43.e8",
+        "before": 0,
+        "after": 3
+      },
+      {
+        "id": "P1.m44.e0",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m44.e10",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m44.e5",
+        "before": 0,
+        "after": 1
+      },
+      {
+        "id": "P1.m44.e6",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m44.e8",
+        "before": 0,
+        "after": 4
+      },
+      {
+        "id": "P1.m44.e9",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m46.e0",
+        "before": 1,
+        "after": 0
+      },
+      {
+        "id": "P1.m46.e11",
+        "before": 5,
+        "after": 0
+      },
+      {
+        "id": "P1.m46.e4",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m46.e7",
+        "before": 0,
+        "after": 5
+      },
+      {
+        "id": "P1.m46.e10",
+        "before": 0,
+        "after": 5
+      },
+      {
+        "id": "P1.m47.e10",
+        "before": 5,
+        "after": 0
+      },
+      {
+        "id": "P1.m47.e4",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m47.e6",
+        "before": 0,
+        "after": 2
+      },
+      {
+        "id": "P1.m47.e8",
+        "before": 0,
+        "after": 3
+      }
+    ]
+  },
+  "no-surprises": {
+    "input_hash": "160821fd764e2cae63c7ce1752645185d14ee458e512a2aaf9f1caa6918edad6",
+    "baseline_fingering_sha256": "2ea8726df22eee759350c37626867c96b3cb7b55260cf25ba2bb6ce885a9d8b8",
+    "total": 1101,
+    "stage302": 1067,
+    "strict": 1067,
+    "added_to_map": 0,
+    "removed_from_map": 0,
+    "reassigned": 0,
+    "groups": {
+      "G3": 32,
+      "G2": 2
+    },
+    "secondary": {
+      "G4": 5
+    },
+    "zero_loss_individually": 15,
+    "ids_removed": [],
+    "ids_closed": [],
+    "assigned_contact_conflicts": 0,
+    "strict_map_delta": []
+  }
+}

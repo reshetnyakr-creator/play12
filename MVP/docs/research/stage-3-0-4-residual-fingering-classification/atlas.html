@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<title>Play12 · Stage 3.0.4 · Атлас</title>
+<style>
+body{font:16px system-ui;max-width:900px;margin:24px auto;padding:0 16px}section{margin:24px 0;padding:18px;border:1px solid #aaa;border-radius:10px}table{border-collapse:collapse;margin:16px 0}td,th{border:1px solid #aaa;padding:6px 9px}.score{overflow:auto;max-height:420px}
+</style>
+<h1>Атлас четырёх механизмов</h1>
+<p>Диагностические фрагменты по исходным Event ID. Сохранены MIDI, руки и относительные позиции; соседние удержания показаны как контактные интервалы. Это сокращённый музыкальный контекст. Исходное положение в партитуре указано в заголовке. Столбец «Блокирует пальцы» показывает пары именно с целевой нотой.</p>
+<main id="patterns"></main>
+<script src="../../../editor/core.js"></script>
+<script src="../../../renderer/play12-renderer.js"></script>
+<script>
+const q=s=>Number(new Play12Editor.Q(s));
+const pitchNames=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const main=document.getElementById('patterns');
+function parsedCSV(text){
+ const rows=[];
+ let row=[],field='',quoted=false;
+ for(let i=0;i<text.length;i++){
+  const char=text[i];
+  if(char==='"'){
+   if(quoted&&text[i+1]==='"'){field+='"';i++;}
+   else quoted=!quoted;
+  }else if((char===','||char==='\n')&&!quoted){
+   row.push(field);field='';
+   if(char==='\n'){rows.push(row);row=[];}
+  }else field+=char;
+ }
+ const head=rows.shift();
+ return rows.map(values=>Object.fromEntries(head.map((key,i)=>[key,values[i]])));
+}
+function source(notes,title){
+ const division=960;
+ const ticks=value=>Math.round(value*division);
+ const beats=Math.max(4,Math.ceil(Math.max(...notes.map(n=>n.start+n.length))));
+ let cursor=0;
+ const content=notes.map((n,i)=>{
+  const delta=ticks(n.start)-cursor;
+  cursor=ticks(n.start)+ticks(n.length);
+  const move=delta===0?'':delta<0?`<backup><duration>${-delta}</duration></backup>`:`<forward><duration>${delta}</duration></forward>`;
+  const label=pitchNames[n.pitch%12];
+  return move+`<note><pitch><step>${label[0]}</step>${label.length>1?'<alter>1</alter>':''}<octave>${Math.floor(n.pitch/12)-1}</octave></pitch><duration>${ticks(n.length)}</duration><voice>${i+1}</voice><staff>${n.hand==='R'?1:2}</staff></note>`;
+ }).join('');
+ return `<?xml version="1.0"?><score-partwise version="4.0"><work><work-title>${title}</work-title></work><part-list><score-part id="P1"><part-name>Piano</part-name></score-part></part-list><part id="P1"><measure number="1"><attributes><divisions>${division}</divisions><time><beats>${beats}</beats><beat-type>4</beat-type></time><staves>2</staves><clef number="1"><sign>G</sign><line>2</line></clef><clef number="2"><sign>F</sign><line>4</line></clef></attributes>${content}</measure></part></score-partwise>`;
+}
+function render(r){
+ const on=q(r.contact_start),end=q(r.contact_end);
+ const blockers=Object.entries(JSON.parse(r.contact_evidence));
+ const rejected=Object.entries(JSON.parse(r.blocked_by_finger));
+ const origin=Math.min(on,...blockers.map(([,a])=>q(a.start)));
+ const targets=[{label:r.event_id,hand:r.hand,pitch:Number(r.midi),start:on-origin,hold:end-on,length:q(r.duration),finger:null,blocked:'—'},
+  ...blockers.map(([id,a])=>({label:id,hand:a.hand,pitch:a.midi,
+    start:q(a.start)-origin,hold:q(a.end)-q(a.start),length:q(a.end)-q(a.start),finger:a.finger,
+    blocked:rejected.filter(([,ids])=>ids.includes(id)).map(([finger])=>finger).join(', ')||'—'}))];
+ const xml=source(targets,r.event_id);
+ const score=Play12Editor.importXML(xml,{'P1:1':'R','P1:2':'L'});
+ Play12Editor.events(score).forEach((event,i)=>{
+  event.hand=targets[i].hand;
+  event.method.finger=targets[i].finger;
+ });
+ const section=document.createElement('section');
+ const heading=document.createElement('h2');
+ heading.textContent=r.primary_group+' · '+r.composition+' · такт '+r.measure+' · '+r.event_id;
+ section.append(heading);
+ const status=document.createElement('p');
+ status.textContent='Начало контакта: '+r.contact_start+' Q. К '+r.all_fingers_blocked_by_Q+' Q в течение контакта исключены все пять пальцев. '+r.obstacle+'.';
+ section.append(status);
+ const link=document.createElement('a');
+ link.href=URL.createObjectURL(new Blob([xml],{type:'application/vnd.recordare.musicxml+xml'}));
+ link.download=r.event_id+'.musicxml';
+ link.textContent='Скачать диагностический MusicXML для нотного редактора';
+ section.append(link);
+ const table=document.createElement('table');
+ for(const row of [['Событие','Рука','MIDI','Начало Q','Нотный конец Q','Конец удержания Q','Палец','Блокирует пальцы'],
+   ...targets.map(n=>[n.label,n.hand,n.pitch,n.start,n.start+n.length,n.start+n.hold,n.finger??'—',n.blocked])]){
+  const tr=document.createElement('tr');
+  for(const value of row){const td=document.createElement('td');td.textContent=value;tr.append(td);}
+  table.append(tr);
+ }
+ const graph=document.createElement('div');
+ graph.className='score';
+ Play12Renderer.render(score,graph,{measureCount:1,editorTimeline:true,unassignedDisplay:true,cellHeight:18,wrapCycles:true});
+ section.append(table,graph);
+ main.append(section);
+}
+fetch('./results/residual-notes.csv').then(r=>r.text()).then(text=>{
+ const rows=parsedCSV(text);
+ const examples=['P1.m40.e0','P1.m30.e3','P1.m50.e17','P1.m35.e8','P1.m8.e8','P1.m41.e5','P1.m45.e10'];
+ for(const id of examples){
+  const record=rows.find(row=>row.event_id===id&&(id!=='P1.m8.e8'||row.composition==='no-surprises'));
+  if(record)render(record);
+ }
+}).catch(error=>{document.body.append(String(error));throw error;});
+</script>
+</html>
