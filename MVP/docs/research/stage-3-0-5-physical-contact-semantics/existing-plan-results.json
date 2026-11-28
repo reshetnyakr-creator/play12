@@ -1,0 +1,50 @@
+[
+  {
+    "event": "P1.m30.e3",
+    "earlier": "P1.m30.e0",
+    "requested_stop": "122/1",
+    "reason": "RELEASE_NOT_SUPPORTED"
+  },
+  {
+    "event": "P1.m33.e5",
+    "earlier": "P1.m33.e7",
+    "requested_stop": "135/1",
+    "reason": "RELEASE_NOT_SUPPORTED"
+  },
+  {
+    "event": "P1.m40.e0",
+    "earlier": "P1.m40.e0",
+    "requested_stop": "161/1",
+    "reason": "RELEASE_NOT_SUPPORTED"
+  },
+  {
+    "event": "P1.m42.e0",
+    "earlier": "P1.m42.e0",
+    "requested_stop": "169/1",
+    "reason": "RELEASE_NOT_SUPPORTED"
+  },
+  {
+    "event": "P1.m44.e0",
+    "earlier": "P1.m44.e0",
+    "requested_stop": "177/1",
+    "reason": "RELEASE_NOT_SUPPORTED"
+  },
+  {
+    "event": "P1.m46.e0",
+    "earlier": "P1.m46.e0",
+    "requested_stop": "185/1",
+    "reason": "RELEASE_NOT_SUPPORTED"
+  },
+  {
+    "event": "P1.m50.e17",
+    "earlier": "P1.m50.e10",
+    "requested_stop": "403/2",
+    "reason": "RELEASE_NOT_SUPPORTED"
+  },
+  {
+    "event": "P1.m52.e17",
+    "earlier": "P1.m52.e10",
+    "requested_stop": "419/2",
+    "reason": "RELEASE_NOT_SUPPORTED"
+  }
+]

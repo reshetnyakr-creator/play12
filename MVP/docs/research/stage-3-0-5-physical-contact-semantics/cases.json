@@ -1,0 +1,589 @@
+{
+  "cases": [
+    {
+      "composition": "time",
+      "group": "G2",
+      "id": "P1.m30.e3",
+      "measure": "31",
+      "midi": 59,
+      "voice": "2",
+      "staff": "1",
+      "hand": "R",
+      "onset": "122/1",
+      "onset_in_measure": "2",
+      "duration": "2",
+      "ties": [],
+      "notation_ties": [],
+      "attack": null,
+      "release": null,
+      "pedal_marks": 0,
+      "source_fingerings": [],
+      "contact": [
+        "122/1",
+        "124/1"
+      ],
+      "prior_finger": null,
+      "strict_finger": null,
+      "blockers": [
+        {
+          "id": "P1.m30.e0",
+          "measure": "31",
+          "midi": 59,
+          "voice": "1",
+          "staff": "1",
+          "hand": "R",
+          "onset": "120/1",
+          "onset_in_measure": "0",
+          "duration": "4",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "120/1",
+            "124/1"
+          ],
+          "strict_finger": 1
+        }
+      ],
+      "fixed_plan": "H1_DISTINCT_ATTACKS",
+      "evidence": "no release/reset measurement"
+    },
+    {
+      "composition": "time",
+      "group": "G2",
+      "id": "P1.m33.e5",
+      "measure": "34",
+      "midi": 47,
+      "voice": "5",
+      "staff": "2",
+      "hand": "L",
+      "onset": "135/1",
+      "onset_in_measure": "3",
+      "duration": "1",
+      "ties": [],
+      "notation_ties": [],
+      "attack": null,
+      "release": null,
+      "pedal_marks": 0,
+      "source_fingerings": [],
+      "contact": [
+        "135/1",
+        "136/1"
+      ],
+      "prior_finger": null,
+      "strict_finger": null,
+      "blockers": [
+        {
+          "id": "P1.m33.e7",
+          "measure": "34",
+          "midi": 47,
+          "voice": "6",
+          "staff": "2",
+          "hand": "L",
+          "onset": "132/1",
+          "onset_in_measure": "0",
+          "duration": "4",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "132/1",
+            "136/1"
+          ],
+          "strict_finger": 2
+        }
+      ],
+      "fixed_plan": "H1_DISTINCT_ATTACKS",
+      "evidence": "no release/reset measurement"
+    },
+    {
+      "composition": "time",
+      "group": "G1",
+      "id": "P1.m40.e0",
+      "measure": "41",
+      "midi": 60,
+      "voice": "1",
+      "staff": "1",
+      "hand": "R",
+      "onset": "160/1",
+      "onset_in_measure": "0",
+      "duration": "4",
+      "ties": [],
+      "notation_ties": [],
+      "attack": null,
+      "release": null,
+      "pedal_marks": 0,
+      "source_fingerings": [],
+      "contact": [
+        "160/1",
+        "164/1"
+      ],
+      "prior_finger": "1",
+      "strict_finger": null,
+      "blockers": [
+        {
+          "id": "P1.m40.e4",
+          "measure": "41",
+          "midi": 60,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "161/1",
+          "onset_in_measure": "1",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "161/1",
+            "162/1"
+          ],
+          "strict_finger": 5
+        },
+        {
+          "id": "P1.m40.e6",
+          "measure": "41",
+          "midi": 60,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "162/1",
+          "onset_in_measure": "2",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "162/1",
+            "163/1"
+          ],
+          "strict_finger": 2
+        },
+        {
+          "id": "P1.m40.e9",
+          "measure": "41",
+          "midi": 60,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "163/1",
+          "onset_in_measure": "3",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "163/1",
+            "164/1"
+          ],
+          "strict_finger": 2
+        }
+      ],
+      "fixed_plan": "H1_DISTINCT_ATTACKS",
+      "evidence": "no release/reset measurement"
+    },
+    {
+      "composition": "time",
+      "group": "G1",
+      "id": "P1.m42.e0",
+      "measure": "43",
+      "midi": 59,
+      "voice": "1",
+      "staff": "1",
+      "hand": "R",
+      "onset": "168/1",
+      "onset_in_measure": "0",
+      "duration": "4",
+      "ties": [],
+      "notation_ties": [],
+      "attack": null,
+      "release": null,
+      "pedal_marks": 0,
+      "source_fingerings": [],
+      "contact": [
+        "168/1",
+        "172/1"
+      ],
+      "prior_finger": "1",
+      "strict_finger": null,
+      "blockers": [
+        {
+          "id": "P1.m42.e4",
+          "measure": "43",
+          "midi": 59,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "169/1",
+          "onset_in_measure": "1",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "169/1",
+            "170/1"
+          ],
+          "strict_finger": 2
+        },
+        {
+          "id": "P1.m42.e7",
+          "measure": "43",
+          "midi": 59,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "170/1",
+          "onset_in_measure": "2",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "170/1",
+            "171/1"
+          ],
+          "strict_finger": 5
+        },
+        {
+          "id": "P1.m42.e10",
+          "measure": "43",
+          "midi": 59,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "171/1",
+          "onset_in_measure": "3",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "171/1",
+            "172/1"
+          ],
+          "strict_finger": 5
+        }
+      ],
+      "fixed_plan": "H1_DISTINCT_ATTACKS",
+      "evidence": "no release/reset measurement"
+    },
+    {
+      "composition": "time",
+      "group": "G1",
+      "id": "P1.m44.e0",
+      "measure": "45",
+      "midi": 60,
+      "voice": "1",
+      "staff": "1",
+      "hand": "R",
+      "onset": "176/1",
+      "onset_in_measure": "0",
+      "duration": "4",
+      "ties": [],
+      "notation_ties": [],
+      "attack": null,
+      "release": null,
+      "pedal_marks": 0,
+      "source_fingerings": [],
+      "contact": [
+        "176/1",
+        "180/1"
+      ],
+      "prior_finger": "1",
+      "strict_finger": null,
+      "blockers": [
+        {
+          "id": "P1.m44.e4",
+          "measure": "45",
+          "midi": 60,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "177/1",
+          "onset_in_measure": "1",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "177/1",
+            "178/1"
+          ],
+          "strict_finger": 5
+        },
+        {
+          "id": "P1.m44.e6",
+          "measure": "45",
+          "midi": 60,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "178/1",
+          "onset_in_measure": "2",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "178/1",
+            "179/1"
+          ],
+          "strict_finger": 2
+        },
+        {
+          "id": "P1.m44.e9",
+          "measure": "45",
+          "midi": 60,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "179/1",
+          "onset_in_measure": "3",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "179/1",
+            "180/1"
+          ],
+          "strict_finger": 2
+        }
+      ],
+      "fixed_plan": "H1_DISTINCT_ATTACKS",
+      "evidence": "no release/reset measurement"
+    },
+    {
+      "composition": "time",
+      "group": "G1",
+      "id": "P1.m46.e0",
+      "measure": "47",
+      "midi": 59,
+      "voice": "1",
+      "staff": "1",
+      "hand": "R",
+      "onset": "184/1",
+      "onset_in_measure": "0",
+      "duration": "4",
+      "ties": [],
+      "notation_ties": [],
+      "attack": null,
+      "release": null,
+      "pedal_marks": 0,
+      "source_fingerings": [],
+      "contact": [
+        "184/1",
+        "188/1"
+      ],
+      "prior_finger": "1",
+      "strict_finger": null,
+      "blockers": [
+        {
+          "id": "P1.m46.e4",
+          "measure": "47",
+          "midi": 59,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "185/1",
+          "onset_in_measure": "1",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "185/1",
+            "186/1"
+          ],
+          "strict_finger": 2
+        },
+        {
+          "id": "P1.m46.e7",
+          "measure": "47",
+          "midi": 59,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "186/1",
+          "onset_in_measure": "2",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "186/1",
+            "187/1"
+          ],
+          "strict_finger": 5
+        },
+        {
+          "id": "P1.m46.e10",
+          "measure": "47",
+          "midi": 59,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "187/1",
+          "onset_in_measure": "3",
+          "duration": "1",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "187/1",
+            "188/1"
+          ],
+          "strict_finger": 5
+        }
+      ],
+      "fixed_plan": "H1_DISTINCT_ATTACKS",
+      "evidence": "no release/reset measurement"
+    },
+    {
+      "composition": "no-surprises",
+      "group": "G2",
+      "id": "P1.m50.e17",
+      "measure": "51",
+      "midi": 48,
+      "voice": "6",
+      "staff": "2",
+      "hand": "L",
+      "onset": "403/2",
+      "onset_in_measure": "3/2",
+      "duration": "1/2",
+      "ties": [],
+      "notation_ties": [],
+      "attack": null,
+      "release": null,
+      "pedal_marks": 0,
+      "source_fingerings": [],
+      "contact": [
+        "403/2",
+        "202/1"
+      ],
+      "prior_finger": null,
+      "strict_finger": null,
+      "blockers": [
+        {
+          "id": "P1.m50.e10",
+          "measure": "51",
+          "midi": 48,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "200/1",
+          "onset_in_measure": "0",
+          "duration": "2",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "200/1",
+            "202/1"
+          ],
+          "strict_finger": 5
+        }
+      ],
+      "fixed_plan": "H1_DISTINCT_ATTACKS",
+      "evidence": "no release/reset measurement"
+    },
+    {
+      "composition": "no-surprises",
+      "group": "G2",
+      "id": "P1.m52.e17",
+      "measure": "53",
+      "midi": 48,
+      "voice": "6",
+      "staff": "2",
+      "hand": "L",
+      "onset": "419/2",
+      "onset_in_measure": "3/2",
+      "duration": "1/2",
+      "ties": [],
+      "notation_ties": [],
+      "attack": null,
+      "release": null,
+      "pedal_marks": 0,
+      "source_fingerings": [],
+      "contact": [
+        "419/2",
+        "210/1"
+      ],
+      "prior_finger": null,
+      "strict_finger": null,
+      "blockers": [
+        {
+          "id": "P1.m52.e10",
+          "measure": "53",
+          "midi": 48,
+          "voice": "5",
+          "staff": "2",
+          "hand": "L",
+          "onset": "208/1",
+          "onset_in_measure": "0",
+          "duration": "2",
+          "ties": [],
+          "notation_ties": [],
+          "attack": null,
+          "release": null,
+          "pedal_marks": 0,
+          "source_fingerings": [],
+          "contact": [
+            "208/1",
+            "210/1"
+          ],
+          "strict_finger": 5
+        }
+      ],
+      "fixed_plan": "H1_DISTINCT_ATTACKS",
+      "evidence": "no release/reset measurement"
+    }
+  ],
+  "no_surprises_simultaneous_same_midi": []
+}
