@@ -61,7 +61,7 @@ for(const [name,prefix] of [['time','hans-'],['no-surprises','radiohead-']]){
     delete reopen[target.id];
     const baseline={...current,contacts:restored,contactAssignments:reopen,assignments:assignments(restored,reopen)};
     const settings={...options,accepted:options.accepted.filter(g=>g!==group)};
-    const p=rescore(score,baseline,targetId,settings);
+    const p=rescore(score,baseline,targetId,{...settings,sequenceAudit:process.argv[5]==='--priority'});
     assert.ok(p.map,'Refinement failed: '+targetId);
     current=apply(current,p);
     options.accepted=p.groups;
@@ -73,7 +73,7 @@ for(const [name,prefix] of [['time','hans-'],['no-surprises','radiohead-']]){
         referenceFingers:Object.fromEntries(ids.map((id,i)=>[id,reference[i]]))});
       assert.deepEqual(ids.map(id=>witness.map?.[id]),reference);
       control={ids,reference,referenceReleases:witness.releases,automatic:ids.map(id=>p.map[id]),
-        releases:p.releases,physical:'unknown',sounding:'unknown'};
+        releases:p.releases,...(p.alternatives?{alternatives:p.alternatives}:{}),physical:'unknown',sounding:'unknown'};
     }
   }
   const decorated=[];
@@ -108,6 +108,12 @@ for(const [name,prefix] of [['time','hans-'],['no-surprises','radiohead-']]){
     reason:'held_contact_blocks_later_assignment',holdShortened:true,handShiftRequired:'candidate',sequentialRequired:false,
     pedalNotated:Number(data.xml.pedal)>0,physical:'unknown',sounding:'unknown'
   }));
+  if(process.argv[4]){
+    fs.mkdirSync(process.argv[4],{recursive:true});
+    fs.writeFileSync(path.join(process.argv[4],name+'.json'),JSON.stringify({score,
+      contacts:current.contacts,map:current.contactAssignments,chords:options.accepted.map(g=>g.map(c=>c.id)),
+      profile:wide.profile,manual:data.manual,decorated,after,events:data.events}));
+  }
   output[name]={before:prior[name].after,after:Object.values(after).filter(Boolean).length,total:wide.total,
     simultaneousModel:Object.values(current.assignments).filter(Boolean).length,
     exceptions:strict.wideExceptions.map(x=>({...x,category:x.code==='WIDE_CHORD_PAIR'?'wide_chord_outer_pair':'wide_interval_outer_pair',

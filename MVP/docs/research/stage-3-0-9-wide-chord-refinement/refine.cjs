@@ -42,14 +42,19 @@ function improveSuffix(score,baseline,targetId,options,group,initial){
   // Existing position and re-use costs, evaluated only on this detached melodic group.
   const cost=map=>movement(suffix,map,baseline.profile)+suffix.slice(1).reduce((sum,c,i)=>
     sum+(map[c.id]===map[suffix[i].id]&&c.key!==suffix[i].key?baseline.profile.weights.sameFingerMove:0),0);
+  const repeats=map=>suffix.slice(1).filter((c,i)=>c.key!==suffix[i].key&&map[c.id]===map[suffix[i].id]).length;
   let best=initial;
+  const alternatives=[];
   if(5**suffix.length>baseline.profile.search.maxCandidatesPerLayer)return initial;
   const prefix=options.referenceFingers;
   function enumerate(index,fingers){
     if(index===suffix.length){
       const trial=planTarget(score,baseline,targetId,{...options,referenceFingers:{...prefix,...fingers}});
       if(!trial.map)return;
-      const order=cost(trial.map)-cost(best.map) || trial.releases.length-best.releases.length ||
+      if(options.sequenceAudit)alternatives.push({fingers:suffix.map(c=>trial.map[c.id]),repeats:repeats(trial.map),
+        cost:cost(trial.map),releases:trial.releases.length,shortening:trial.shortening.toString(),
+        releasePlan:trial.releases.map(r=>({id:r.id,end:r.end}))});
+      const order=(options.sequenceAudit?repeats(trial.map)-repeats(best.map):0) || cost(trial.map)-cost(best.map) || trial.releases.length-best.releases.length ||
         cmp(trial.shortening,best.shortening) || trial.changed-best.changed || trial.movement-best.movement;
       if(order<0)best=trial;
       return;
@@ -57,7 +62,7 @@ function improveSuffix(score,baseline,targetId,options,group,initial){
     for(let f=1;f<=5;f++)enumerate(index+1,{...fingers,[suffix[index].id]:f});
   }
   enumerate(0,{});
-  return best;
+  return options.sequenceAudit?{...best,alternatives}:best;
 }
 
 // Conditional assignments intentionally have no contact plan and are never

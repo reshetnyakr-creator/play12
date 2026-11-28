@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Play12 · Stage 3.0.10</title>
+<style>
+body{font:16px system-ui;max-width:1050px;padding:16px;margin:auto;color:#171717}label{display:block;margin:10px 0}section{border-top:1px solid #ccc;margin-top:18px}.views{display:flex;flex-wrap:wrap;gap:22px}.views svg,img{max-width:100%;height:auto}figure{margin:8px 0}.focus>rect:first-of-type{stroke:#a03d15!important;stroke-width:3px}th,td{text-align:left;padding:4px 14px 4px 0}.keys{display:flex;margin:10px 0 20px}.key{padding:8px 4px;border:1px solid #aaa;font-size:12px;min-width:24px;background:#eee;text-align:center}.chosen{background:#ffe4c7;color:#6b2908;font-weight:bold}
+</style>
+<h1>Stage 3.0.10 · Атлас исследования</h1>
+<p>В такте 38 отображается кандидат до согласования. В такте 46 все пальцы назначены. Отметка техники указывает на смену позиции и не задаёт фактические моменты атак.</p>
+<label>Исходная локальная выгрузка Time <input type="file" id="score" accept=".json"></label>
+<label>Локальная карта сравнения Time <input type="file" id="map" accept=".json"></label>
+<label>Оригинальные нотные фрагменты <input type="file" id="notation" accept=".svg" multiple></label>
+<p id="status" role="status"></p>
+<main></main>
+<h2>Синтетические примеры внутренних пальцев</h2>
+<p>На шкале показаны полутона. Выделенные позиции обозначают MIDI и палец левой руки. Для этих примеров палец входит в проверенную область MaxComf/MaxPrac.</p>
+<div id="synthetic"></div>
+<script src="../../../editor/core.js"></script>
+<script src="../../../renderer/play12-renderer.js"></script>
+<script src="atlas.js"></script>
+</html>
