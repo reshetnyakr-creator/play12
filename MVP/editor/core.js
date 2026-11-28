@@ -518,7 +518,8 @@ function checkContactSpan(a,b,first,second,options,conflicts,warnings,extensions
     const chord = options.experimentalWideIntervals===true && options.researchChords?.get(lower.id);
     const memberPair = chord && chord===options.researchChords.get(upper.id);
     const exception = !badOctave && options.experimentalWideIntervals===true &&
-      (memberPair ? 'WIDE_CHORD_PAIR' : wideOuterPair(profile,lower,upper,lowFinger,highFinger) && 'WIDE_OUTER_PAIR');
+      (memberPair && !options.refinedChords ? 'WIDE_CHORD_PAIR' :
+        wideOuterPair(profile,lower,upper,lowFinger,highFinger) && (memberPair?'WIDE_CHORD_PAIR':'WIDE_OUTER_PAIR'));
     record(exception || (profile.practicalSpan?'SPAN_VIOLATION':COMFORT_SPAN));
   }
   if(extended&&!badOctave)record('PRACTICAL_EXTENSION');
@@ -746,7 +747,7 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
     if(memberPair && (lower.hand==='L'?low<=high:low>=high))return 'WIDE_CHORD_ORDER';
     const violation = spanViolation(cfg,lower,upper,low,high);
     if(violation==='SPAN_VIOLATION' && experimentalWideIntervals &&
-      (memberPair || wideOuterPair(cfg,lower,upper,low,high)))return null;
+      ((memberPair && !research?.refinedChords) || wideOuterPair(cfg,lower,upper,low,high)))return null;
     return violation;
   };
   const compare = (a,b) => b.notes-a.notes || (reconsider ? a.changes-b.changes : 0) || a.expansions-b.expansions ||
@@ -825,7 +826,7 @@ function recoverPartial(score, run, locks = {}, clock = Date.now, research = nul
   }
   const contactAssignments = {...baseline,...added};
   // Recheck the proposed map by interval pairs, independent of DP pruning.
-  const validation = validate(run.contacts,contactAssignments,{profile:cfg,locks,experimentalWideIntervals,researchChords:chords,
+  const validation = validate(run.contacts,contactAssignments,{profile:cfg,locks,experimentalWideIntervals,researchChords:chords,refinedChords:research?.refinedChords,
     rounds:score.editor?.fermataTimeline?.rounds??score.editor?.rounds});
   const duplicate = timed.some((a,i)=>contactAssignments[a.id]!=null && timed.slice(0,i).some(b=>
     contactAssignments[b.id]!=null && (added[a.id]||added[b.id]) && overlap(a,b) &&

@@ -35,14 +35,22 @@ function findChords(score, contacts, profile) {
   return chords;
 }
 
-function policy(chords, contacts) {
+function middleFingers(chord, profile) {
+  const [low,middle,high]=chord;
+  const [pinky,thumb]=low.hand==='L'?[low,high]:[high,low];
+  return [2,3,4].filter(f=>Math.abs(pinky.key-middle.key)<=profile.comfortSpan[f+'-5'] &&
+    Math.abs(thumb.key-middle.key)<=profile.practicalSpan['1-'+f]);
+}
+
+function policy(chords, contacts, profile = null) {
   const members=new Map(), domains=new Map(), required=new Set();
   for(const chord of chords){
     if(!chord.every(c=>contacts.includes(c)))continue;
     const outer=chord[0].hand==='L'?[5,1]:[1,5];
     for(const [i,c] of chord.entries()){
       members.set(c.id,chord);
-      domains.set(c.id,i===0?[outer[0]]:i===chord.length-1?[outer[1]]:[2,3,4]);
+      const interior=profile&&chord.length===3?middleFingers(chord,profile):[2,3,4];
+      domains.set(c.id,i===0?[outer[0]]:i===chord.length-1?[outer[1]]:interior);
       required.add(c.id);
     }
   }
@@ -137,9 +145,13 @@ function experiment(score, baseline, targets, {locks={},frozen=[]}={}) {
     validation,assigned:contacts.reduce((n,c)=>n+(map[c.id]?c.ids.length:0),0)};
 }
 
-function validate(contacts,map,profile,chords) {
+function validate(contacts,map,profile,chords,refinedChords=false) {
   const assigned=contacts.filter(c=>map[c.id]!=null);
-  const scoped=policy(chords,contacts);
-  return E.validate(assigned,map,{profile,experimentalWideIntervals:true,researchChords:scoped.chords});
+  const scoped=policy(chords,contacts,refinedChords?profile:null);
+  const result=E.validate(assigned,map,{profile,experimentalWideIntervals:true,researchChords:scoped.chords,refinedChords});
+  if(refinedChords)for(const group of chords)if(!groupValid(group,map) ||
+    group.some(c=>!scoped.domains.get(c.id)?.includes(map[c.id])))
+    result.conflicts.push({code:'REFINED_CHORD_SHAPE',ids:group.map(c=>c.id)});
+  return result;
 }
-module.exports={experiment,findChords,components,policy,groupValid,validate};
+module.exports={experiment,findChords,components,policy,groupValid,validate,middleFingers};

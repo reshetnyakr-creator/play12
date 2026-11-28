@@ -40,7 +40,7 @@ function compare(a,b){
 }
 
 function planTarget(score,baseline,targetId,options={}){
-  const {locks={},frozen=[],accepted=[],referenceFingers={},candidateBudget=10000}=options;
+  const {locks={},frozen=[],accepted=[],referenceFingers={},candidateBudget=10000,refinedChords=false}=options;
   const {contacts,profile,contactAssignments:before}=baseline;
   const target=contacts.find(c=>c.ids.includes(targetId));
   if(!target)throw new Error('Missing contact: '+targetId);
@@ -61,7 +61,7 @@ function planTarget(score,baseline,targetId,options={}){
     const byId=new Map(revised.map(c=>[c.id,c]));
     const local=selected.map(c=>byId.get(c.id));
     const groups=groupIds.map(ids=>ids.map(id=>byId.get(id)));
-    const scoped=policy(groups,local);
+    const scoped=policy(groups,local,refinedChords?profile:null);
     scoped.required.add(target.id);
     for(const c of local){
       const current=before[c.id];
@@ -78,12 +78,12 @@ function planTarget(score,baseline,targetId,options={}){
     const assigned=Object.values(assignments).filter(Boolean).length;
     const run={...baseline,contacts:local,assignments,assigned,total:Object.keys(assignments).length,elapsed_ms:0};
     const reconsider=new Set(local.map(c=>c.id));
-    const next=E.recoverPartial(score,run,fixed,Date.now,{wideIntervals:true,reconsider,...scoped});
+    const next=E.recoverPartial(score,run,fixed,Date.now,{wideIntervals:true,refinedChords,reconsider,...scoped});
     if(next.recovery?.status==='budget_exhausted')return {budget:true};
     if(next.recovery?.status!=='complete'||!next.contactAssignments[target.id])return null;
     const map={...before,...next.contactAssignments};
     if(!groups.every(g=>groupValid(g,map)))return null;
-    const validation=validate(revised,map,profile,groups);
+    const validation=validate(revised,map,profile,groups,refinedChords);
     if(validation.conflicts.length||validation.warnings.length)return null;
     return {map,revised,groups,releases,shortening:releases.reduce((total,r)=>total.add(new Q(r.before).sub(r.end)),new Q(0)),
       changed:selected.filter(c=>before[c.id]&&before[c.id]!==map[c.id]).length,
@@ -119,4 +119,4 @@ function planTarget(score,baseline,targetId,options={}){
   }
   return {status:'no_compatible_release',component,attempts};
 }
-module.exports={planTarget};
+module.exports={planTarget,movement};
