@@ -1,0 +1,282 @@
+{
+  "time": {
+    "total": 541,
+    "assigned": 187,
+    "importMs": 494.143979,
+    "preparationMs": 528.9115810000001,
+    "searchAndAssemblyMs": 69.84508299999993,
+    "verificationMs": 14.698325000000068,
+    "attempts": {
+      "L": {
+        "status": "infeasible",
+        "visited": 25669,
+        "blockedAt": "149/1",
+        "contacts": [
+          {
+            "id": "P1.m37.e7",
+            "key": 36,
+            "start": "148/1",
+            "end": "152/1"
+          },
+          {
+            "id": "P1.m37.e8",
+            "key": 43,
+            "start": "148/1",
+            "end": "303/2"
+          },
+          {
+            "id": "P1.m37.e4",
+            "key": 57,
+            "start": "149/1",
+            "end": "150/1"
+          }
+        ]
+      },
+      "R": {
+        "status": "exact",
+        "visited": 25720,
+        "cost": [
+          0,
+          0,
+          0,
+          18,
+          0,
+          0,
+          26934,
+          66632
+        ]
+      }
+    },
+    "rejected": [],
+    "exceptions": 0,
+    "proofs": 1,
+    "failures": [],
+    "special": [
+      {
+        "contacts": [
+          "P1.m45.e10",
+          "P1.m45.e2",
+          "P1.m45.e3"
+        ],
+        "fingers": [
+          5,
+          2,
+          1
+        ],
+        "diagnostic": {
+          "technique": "sequential_execution_with_hand_shift",
+          "hand": "L",
+          "simultaneous": "rejected",
+          "physical": "unknown",
+          "sounding": "unknown",
+          "schedule": null,
+          "positions": [
+            {
+              "events": [
+                [
+                  "P1.m45.e10"
+                ]
+              ],
+              "midi": [
+                48
+              ],
+              "fingers": [
+                5
+              ]
+            },
+            {
+              "events": [
+                [
+                  "P1.m45.e2"
+                ],
+                [
+                  "P1.m45.e3"
+                ]
+              ],
+              "midi": [
+                59,
+                60
+              ],
+              "fingers": [
+                2,
+                1
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "no-surprises": {
+    "total": 1101,
+    "assigned": 1101,
+    "importMs": 530.563834,
+    "preparationMs": 709.4537070000001,
+    "searchAndAssemblyMs": 452.73573599999963,
+    "verificationMs": 333.0837080000001,
+    "attempts": {
+      "L": {
+        "status": "exact",
+        "visited": 23845,
+        "cost": [
+          41,
+          0,
+          0,
+          43,
+          117,
+          326,
+          56234,
+          183493
+        ]
+      },
+      "R": {
+        "status": "exact",
+        "visited": 28325,
+        "cost": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          51099,
+          114902
+        ]
+      }
+    },
+    "rejected": [],
+    "exceptions": 41,
+    "proofs": 41,
+    "failures": [],
+    "special": []
+  },
+  "clocks": {
+    "total": 195,
+    "assigned": 195,
+    "importMs": 109.7922739999999,
+    "preparationMs": 177.8685599999999,
+    "searchAndAssemblyMs": 56.14626800000042,
+    "verificationMs": 3.759928999999829,
+    "attempts": {
+      "L": {
+        "status": "exact",
+        "visited": 36525,
+        "cost": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          2,
+          1849,
+          6688
+        ]
+      },
+      "R": {
+        "status": "exact",
+        "visited": 3360,
+        "cost": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          13285,
+          26594
+        ]
+      }
+    },
+    "rejected": [],
+    "exceptions": 0,
+    "proofs": 0,
+    "failures": [],
+    "special": []
+  },
+  "interstellar": {
+    "total": 5249,
+    "assigned": 5249,
+    "importMs": 3380.17932,
+    "preparationMs": 4219.511330999999,
+    "searchAndAssemblyMs": 504.1680660000002,
+    "verificationMs": 91.14885400000094,
+    "attempts": {
+      "L": {
+        "status": "exact",
+        "visited": 206130,
+        "cost": [
+          0,
+          0,
+          0,
+          0,
+          6,
+          12,
+          295924,
+          734340
+        ]
+      },
+      "R": {
+        "status": "exact",
+        "visited": 132705,
+        "cost": [
+          0,
+          0,
+          0,
+          54,
+          49,
+          77,
+          241224,
+          617956
+        ]
+      }
+    },
+    "rejected": [],
+    "exceptions": 0,
+    "proofs": 0,
+    "failures": [],
+    "special": []
+  },
+  "saints": {
+    "total": 60,
+    "assigned": 60,
+    "importMs": 53.36261399999967,
+    "preparationMs": 46.24917499999901,
+    "searchAndAssemblyMs": 6.141960999999355,
+    "verificationMs": 0.9745430000002671,
+    "attempts": {
+      "L": {
+        "status": "exact",
+        "visited": 390,
+        "cost": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1000,
+          2000
+        ]
+      },
+      "R": {
+        "status": "exact",
+        "visited": 775,
+        "cost": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "rejected": [],
+    "exceptions": 0,
+    "proofs": 0,
+    "failures": [],
+    "special": []
+  }
+}

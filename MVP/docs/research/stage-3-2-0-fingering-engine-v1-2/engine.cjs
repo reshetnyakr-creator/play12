@@ -4,6 +4,7 @@ const {policy,findChords,middleFingers}=require('../stage-3-0-7-wide-chord-finge
 const {specialPositions}=require('../stage-3-0-10-fingering-priority/positions.cjs');
 const {solveHand,compareCost,groupLayers,position}=require('./search.cjs');
 const {verify}=require('./verify.cjs');
+const {certify}=require('./feasibility.cjs');
 const {releasePlan}=require('../stage-3-0-5-physical-contact-semantics/experiment.cjs');
 const {proposeBeginner}=require('../../../editor/beginner-transition');
 const {experiment}=require('../stage-3-0-5-physical-contact-semantics/experiment.cjs');
@@ -91,12 +92,26 @@ function run(input,{budget=3_000_000,proveRepeats=true}={}){
   }
   const byId=new Map(contacts.map(c=>[c.id,c]));
   const special=[];
-  for(const entry of input.decorated??[]){
-    const members=entry.eventIds.map(ids=>contacts.find(c=>c.ids.includes(ids[0])));
-    if(entry.ordinaryProof==='no_compatible_assignment'&&members.every(c=>c&&!forbidden.has(c.id))){
-      const partition=specialPositions(members,profile,manual);
-      if(partition)special.push({...partition,contacts:members.map(c=>c.id),ordinaryProof:entry.ordinaryProof});
+  const planned=contacts.filter(c=>!forbidden.has(c.id));
+  const indicated=(input.decorated??[]).map(entry=>entry.eventIds.map(ids=>
+    planned.find(c=>c.ids.includes(ids[0]))));
+  const ordinaryByHand=['L','R'].map(hand=>planned.filter(c=>c.hand===hand));
+  for(const hand of ordinaryByHand){
+    let held=[];
+    for(const layer of groupLayers(hand)){
+      held=held.filter(c=>new E.Q(c.end).cmp(layer[0].start)>0);
+      if(layer.length===3&&!held.length&&layer[2].key-layer[0].key>=12&&
+        layer.every(c=>!c.arpeggio&&c.ids.length===1))indicated.push(layer);
+      held.push(...layer);
     }
+  }
+  const accounted=new Set();
+  for(const members of indicated){
+    if(members.some(c=>!c||accounted.has(c.id)))continue;
+    const partition=specialPositions(members,profile,manual);
+    if(!partition||certify(input,members,{budget}).status!=='infeasible')continue;
+    special.push({...partition,contacts:members.map(c=>c.id),ordinaryProof:'no_compatible_assignment'});
+    for(const member of members)accounted.add(member.id);
   }
   const separate=new Set(special.flatMap(p=>p.contacts));
   const eligible=contacts.filter(c=>!forbidden.has(c.id)&&!separate.has(c.id));
@@ -166,7 +181,9 @@ function run(input,{budget=3_000_000,proveRepeats=true}={}){
     phraseCandidates:input.phraseCandidates??[],motifCandidates:input.motifCandidates??[],
     manual,map,assignments,attempts,special,exceptions,unresolved,witnesses,resets:input.resets??[],
     rejected:reject};
-  result.validation=verify(input,result);
+  const verificationStart=performance.now();
+  result.validation=verify(input,result,{budget});
+  result.verificationMs=performance.now()-verificationStart;
   const byEvent=new Map(contacts.flatMap(c=>c.ids.map(id=>[id,c])));
   const positionByContact=new Map(positions.flatMap(p=>p.ids.map(id=>[id,p])));
   const alternativeCache=new Map();

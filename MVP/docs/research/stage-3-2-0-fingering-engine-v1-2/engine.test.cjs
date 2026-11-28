@@ -141,3 +141,27 @@ test('T67/A09 invalid second key ownership stays a verifier failure across hands
   }
   assert.ok(verify(input,result).failures.some(x=>x.startsWith('R55:')));
 });
+test('A18 E05 discovered without a prepared plan; feasible shape and budget never qualify',()=>{
+  const input=fixture([[48,0,2],[59,0,2],[60,0,2]],{hand:'L'});
+  const result=run(input);
+  assert.deepEqual(fingers(result),[5,2,1]);
+  assert.equal(result.validation.proofs[0].rule,'E05');
+  assert.equal(result.validation.proofs[0].status,'infeasible');
+  assert.deepEqual(run(input,{budget:0}).special,[]);
+  const feasible=fixture([[48,0,2],[53,0,2],[60,0,2]],{hand:'L'});
+  feasible.decorated=[{eventIds:[['n0'],['n1'],['n2']],ordinaryProof:'no_compatible_assignment'}];
+  assert.deepEqual(run(feasible).special,[]);
+});
+test('A03/A04 E07 cannot be forged and verification budget does not create proof',()=>{
+  const held=fixture([[40,0,3],[54,1,2],[52,2,3]],{hand:'L',locks:{n0:5}});
+  const solution=run(held);
+  assert.ok(verify(held,solution,{budget:0}).failures.some(x=>x.startsWith('E07_NOT_PROVEN')));
+  solution.exceptions=[];
+  assert.ok(verify(held,solution).failures.some(x=>x.startsWith('E07_MISSING')));
+  const free=fixture([[60,0,1],[62,1,2]]);
+  const forged=run(free);
+  forged.map.n1=forged.map.n0;
+  forged.assignments.n1.finger=forged.map.n0;
+  forged.exceptions=[{id:'E07',from:'n0',to:'n1',status:'infeasible'}];
+  assert.ok(verify(free,forged).failures.some(x=>x.startsWith('E07_NOT_PROVEN')));
+});

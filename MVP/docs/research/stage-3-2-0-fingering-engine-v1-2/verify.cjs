@@ -1,10 +1,13 @@
 'use strict';
 const {isDeepStrictEqual}=require('node:util');
 const E=require('../../../editor/core');
+const {certify}=require('./feasibility.cjs');
+const {groupLayers,transitions}=require('../stage-3-0-10-fingering-priority/priority.cjs');
 const {validate,policy,middleFingers}=require('../stage-3-0-7-wide-chord-fingering/chord-experiment.cjs');
 
-function verify(source,result){
+function verify(source,result,{budget}={}){
   const failures=[];
+  const proofs=[];
   if(!isDeepStrictEqual(source.events,result.events)||!isDeepStrictEqual(source.score,result.score))
     failures.push('R01_SOURCE_CHANGED');
   for(const [id,finger] of Object.entries(source.manual??{}))
@@ -59,8 +62,25 @@ function verify(source,result){
       originals.some(id=>eventSet.has(id)||result.assignments[id]?.finger!==partition.assignments[id]))
       failures.push('E05_MAPPING');
     for(const id of originals)eventSet.add(id);
+    if(shape.every(Boolean)){
+      const proof=certify(source,shape,{budget});
+      proofs.push({rule:'E05',ids:partition.contacts,...proof});
+      if(proof.status!=='infeasible')failures.push('E05_ORDINARY_NOT_EXCLUDED');
+    }
     if(partition.ordinaryProof!=='no_compatible_assignment'||partition.diagnostic.schedule!==null)
       failures.push('E05_UNJUSTIFIED');
+    const seen=new Set();
+    const byEvent=new Map(shape.filter(Boolean).flatMap(c=>c.ids.map(id=>[id,c])));
+    for(const pos of partition.diagnostic.positions){
+      if(pos.events.length!==pos.midi.length||pos.fingers.length!==pos.midi.length||
+        new Set(pos.fingers).size!==pos.fingers.length)failures.push('E05_POSITION');
+      for(const [i,ids] of pos.events.entries())for(const id of ids){
+        if(seen.has(id)||byEvent.get(id)?.key!==pos.midi[i]||
+          partition.assignments[id]!==pos.fingers[i])failures.push('E05_POSITION_MAPPING');
+        seen.add(id);
+      }
+    }
+    if(seen.size!==byEvent.size)failures.push('E05_POSITION_MAPPING');
     for(const pos of partition.diagnostic.positions)for(let i=0;i<pos.midi.length;i++){
       for(let j=i+1;j<pos.midi.length;j++){
         const pair=[pos.fingers[i],pos.fingers[j]].sort((a,b)=>a-b).join('-');
@@ -70,8 +90,29 @@ function verify(source,result){
   }
   for(const [id,a] of Object.entries(result.assignments))if(a.status==='assigned'&&!eventSet.has(id))
     failures.push('ASSIGNMENT_WITHOUT_CONTACT:'+id);
-  for(const exception of result.exceptions)if(exception.id!=='E07'||exception.status!=='infeasible')
-    failures.push('E07_UNJUSTIFIED');
-  return {ok:failures.length===0,failures,physical:'unknown',sounding:'unknown'};
+  const repeatedEdges=new Set();
+  const fingerprint=(from,to)=>JSON.stringify([from,to]);
+  for(const hand of ['L','R']){
+    const layers=groupLayers(assigned.filter(c=>c.hand===hand));
+    for(let i=1;i<layers.length;i++)for(const [a,b] of transitions(layers[i-1],layers[i],source.events)){
+      const pinned=c=>c.ids.some(id=>source.manual?.[id]!=null);
+      if(a.key!==b.key&&result.map[a.id]===result.map[b.id]&&!(pinned(a)&&pinned(b)))
+        repeatedEdges.add(fingerprint(a.id,b.id));
+    }
+  }
+  for(const exception of result.exceptions){
+    const {from,to}=exception;
+    const a=lookup.get(from),b=lookup.get(to);
+    if(exception.id!=='E07'||!a||!b||!repeatedEdges.delete(fingerprint(from,to))||a.hand!==b.hand||a.key===b.key||
+      new E.Q(a.start).cmp(b.start)>=0||result.map[from]!==result.map[to]){
+      failures.push('E07_UNJUSTIFIED');
+      continue;
+    }
+    const proof=certify(source,assigned.filter(c=>c.hand===a.hand),{avoid:{from,to},budget});
+    proofs.push({rule:'E07',from,to,...proof});
+    if(proof.status!=='infeasible')failures.push('E07_NOT_PROVEN:'+from+':'+to);
+  }
+  for(const edge of repeatedEdges)failures.push('E07_MISSING:'+edge);
+  return {ok:failures.length===0,failures,proofs,physical:'unknown',sounding:'unknown'};
 }
 module.exports={verify};

@@ -6,9 +6,9 @@
       "input": "imported_score_without_historical_contact_plan",
       "total": 541,
       "candidate": {
-        "assigned": 184,
+        "assigned": 187,
         "exceptions": 0,
-        "special": 0,
+        "special": 1,
         "L0Failures": [],
         "physical": "unknown",
         "search": {
@@ -59,7 +59,7 @@
       "total": 541,
       "previous": {
         "assigned": 541,
-        "ms": 254.14896899999997,
+        "ms": 201.035822,
         "repeats": 7,
         "transitionsObserved": 254,
         "normalizedMovement": 86778
@@ -100,7 +100,7 @@
             ]
           }
         },
-        "ms": 280.589372,
+        "ms": 336.376511,
         "repeats": 7,
         "transitionsObserved": 254,
         "normalizedMovement": 90028
@@ -131,7 +131,7 @@
       "total": 1101,
       "previous": {
         "assigned": 1101,
-        "ms": 477.34752100000014,
+        "ms": 411.7122790000003,
         "repeats": 41,
         "transitionsObserved": 701,
         "normalizedMovement": 95262
@@ -172,7 +172,7 @@
             ]
           }
         },
-        "ms": 513.1308820000004,
+        "ms": 925.1835379999998,
         "repeats": 41,
         "transitionsObserved": 701,
         "normalizedMovement": 107302
@@ -188,7 +188,7 @@
       "total": 195,
       "previous": {
         "assigned": 195,
-        "ms": 261.02709000000004,
+        "ms": 187.75646899999992,
         "repeats": 9,
         "transitionsObserved": 141,
         "normalizedMovement": 7542,
@@ -230,8 +230,8 @@
             ]
           }
         },
-        "preparedMs": 231.29745599999978,
-        "ms": 61.11497300000019,
+        "preparedMs": 184.14919599999985,
+        "ms": 40.29908400000022,
         "repeats": 0,
         "transitionsObserved": 141,
         "normalizedMovement": 15135
@@ -242,7 +242,7 @@
       "total": 5249,
       "previous": {
         "assigned": 5249,
-        "ms": 4733.8171170000005,
+        "ms": 4306.513822999999,
         "repeats": 334,
         "transitionsObserved": 2456,
         "normalizedMovement": 540360,
@@ -284,8 +284,8 @@
             ]
           }
         },
-        "preparedMs": 4287.948095,
-        "ms": 591.9791289999994,
+        "preparedMs": 4302.240414,
+        "ms": 553.6841779999995,
         "repeats": 0,
         "transitionsObserved": 2456,
         "normalizedMovement": 537173
@@ -296,7 +296,7 @@
       "total": 60,
       "previous": {
         "assigned": 60,
-        "ms": 45.974114000000554,
+        "ms": 58.4294890000001,
         "repeats": 1,
         "transitionsObserved": 38,
         "normalizedMovement": 730,
@@ -338,8 +338,8 @@
             ]
           }
         },
-        "preparedMs": 36.966066999999384,
-        "ms": 4.0039879999985715,
+        "preparedMs": 36.156363999998575,
+        "ms": 4.370323999999528,
         "repeats": 0,
         "transitionsObserved": 38,
         "normalizedMovement": 1000
